@@ -1,0 +1,73 @@
+From 9b68eecd89ad161bcff61ec3c319081868130f3a Mon Sep 17 00:00:00 2001
+From: Tad <tad@spotco.us>
+Date: Sat, 3 Oct 2020 12:35:50 -0400
+Subject: [PATCH] DNM: DSA bridge FDB sync workaround
+
+CONFIG_PACKAGE_ip-bridge=y is required!
+
+Credits: Wout Mertens and Pavel Stano
+
+Original Bash implementation:
+https://forum.turris.cz/t/omnia-vlan-on-dsa-port-breaks-arp-responses-tos-4-0-5/12584/47
+
+Original Python implementation:
+https://github.com/stanojr/tempfix_fdb_dsa
+
+Required reading:
+https://gitlab.nic.cz/turris/turris-build/-/issues/165
+---
+ package/base-files/files/etc/fdb_dsa.sh     | 11 ++++++++++
+ package/base-files/files/etc/init.d/fdb_dsa | 23 +++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100755 package/base-files/files/etc/fdb_dsa.sh
+ create mode 100755 package/base-files/files/etc/init.d/fdb_dsa
+
+diff --git a/package/base-files/files/etc/fdb_dsa.sh b/package/base-files/files/etc/fdb_dsa.sh
+new file mode 100755
+index 0000000000..1b1038b11f
+--- /dev/null
++++ b/package/base-files/files/etc/fdb_dsa.sh
+@@ -0,0 +1,11 @@
++  /usr/sbin/bridge monitor fdb | while read mac d dev rest; do
++    if [ $mac != Deleted ]; then
++      echo "FDB: Found $mac on $dev";
++      /usr/sbin/bridge fdb show br br-lan | while read omac d odev rest; do
++        if [ $omac = $mac ] && [ $odev != $dev ]; then
++          echo "FDB: Removing $mac from $odev as old";
++          /usr/sbin/bridge fdb del $mac dev $odev $rest;
++        fi;
++      done;
++    fi;
++  done;
+diff --git a/package/base-files/files/etc/init.d/fdb_dsa b/package/base-files/files/etc/init.d/fdb_dsa
+new file mode 100755
+index 0000000000..ce25daccbc
+--- /dev/null
++++ b/package/base-files/files/etc/init.d/fdb_dsa
+@@ -0,0 +1,23 @@
++#!/bin/sh /etc/rc.common
++
++USE_PROCD=1
++START=99
++PIDFILE=/var/run/fdb_dsa.pid
++
++start_service() {
++    procd_open_instance "fdb_dsa"
++    procd_set_param command /bin/sh /etc/fdb_dsa.sh
++    procd_set_param pidfile $PIDFILE
++    procd_set_param stdout 1
++    procd_set_param stderr 1
++    procd_close_instance
++}
++
++stop_service() {
++    killall bridge;
++    #kill $(cat $PIDFILE)
++}
++
++status_service() {
++    return 0;
++}
+-- 
+2.28.0
+

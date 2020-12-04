@@ -1,0 +1,149 @@
+From 5a8601dc149824aa9c14d614dc21de5685c93f1a Mon Sep 17 00:00:00 2001
+From: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+Date: Tue, 29 Oct 2019 23:18:25 +0800
+Subject: [PATCH 1/3] mac80211: allow VHT on 2.4GHz
+
+Allow VHT rate on 2.4GHz in order to use 256-QAM
+
+Signed-off-by: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+---
+ .../files/lib/netifd/wireless/mac80211.sh     |  4 +--
+ .../subsys/600-mac80211-allow-vht-on-2g.patch | 36 +++++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+ create mode 100644 package/kernel/mac80211/patches/subsys/600-mac80211-allow-vht-on-2g.patch
+
+diff --git a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+index 7ca138c68c57..28123ed82ccd 100644
+--- a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
++++ b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+@@ -107,7 +107,7 @@ mac80211_hostapd_setup_base() {
+ 	[ -n "$acs_exclude_dfs" ] && [ "$acs_exclude_dfs" -gt 0 ] &&
+ 		append base_cfg "acs_exclude_dfs=1" "$N"
+ 
+-	json_get_vars noscan ht_coex
++	json_get_vars noscan ht_coex vendor_vht
+ 	json_get_values ht_capab_list ht_capab tx_burst
+ 
+ 	set_default noscan 0
+@@ -223,7 +223,7 @@ mac80211_hostapd_setup_base() {
+ 		;;
+ 	esac
+ 
+-	if [ "$enable_ac" != "0" ]; then
++	if [ "$enable_ac" != "0" -o "$vendor_vht" = "1" ]; then
+ 		json_get_vars \
+ 			rxldpc:1 \
+ 			short_gi_80:1 \
+diff --git a/package/kernel/mac80211/patches/subsys/600-mac80211-allow-vht-on-2g.patch b/package/kernel/mac80211/patches/subsys/600-mac80211-allow-vht-on-2g.patch
+new file mode 100644
+index 000000000000..da9fcd218558
+--- /dev/null
++++ b/package/kernel/mac80211/patches/subsys/600-mac80211-allow-vht-on-2g.patch
+@@ -0,0 +1,36 @@
++--- a/net/mac80211/vht.c
+++++ b/net/mac80211/vht.c
++@@ -135,7 +135,8 @@ ieee80211_vht_cap_ie_to_sta_vht_cap(stru
++ 	have_80mhz = false;
++ 	for (i = 0; i < sband->n_channels; i++) {
++ 		if (sband->channels[i].flags & (IEEE80211_CHAN_DISABLED |
++-						IEEE80211_CHAN_NO_80MHZ))
+++						IEEE80211_CHAN_NO_80MHZ) &&
+++						(sband->band != NL80211_BAND_2GHZ))
++ 			continue;
++ 
++ 		have_80mhz = true;
++--- a/net/mac80211/util.c
+++++ b/net/mac80211/util.c
++@@ -1769,7 +1769,8 @@ static int ieee80211_build_preq_ies_band
++ 	/* Check if any channel in this sband supports at least 80 MHz */
++ 	for (i = 0; i < sband->n_channels; i++) {
++ 		if (sband->channels[i].flags & (IEEE80211_CHAN_DISABLED |
++-						IEEE80211_CHAN_NO_80MHZ))
+++						IEEE80211_CHAN_NO_80MHZ) &&
+++						(sband->band != NL80211_BAND_2GHZ))
++ 			continue;
++ 
++ 		have_80mhz = true;
++--- a/net/mac80211/mlme.c
+++++ b/net/mac80211/mlme.c
++@@ -4824,7 +4824,8 @@ static int ieee80211_prep_channel(struct
++ 	have_80mhz = false;
++ 	for (i = 0; i < sband->n_channels; i++) {
++ 		if (sband->channels[i].flags & (IEEE80211_CHAN_DISABLED |
++-						IEEE80211_CHAN_NO_80MHZ))
+++						IEEE80211_CHAN_NO_80MHZ) &&
+++						(sband->band != NL80211_BAND_2GHZ))
++ 			continue;
++ 
++ 		have_80mhz = true;
+
+From f2d9c20041b02d1ae371688ae4c91dc6a7bd3635 Mon Sep 17 00:00:00 2001
+From: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+Date: Tue, 29 Oct 2019 23:22:17 +0800
+Subject: [PATCH 2/3] ath10k: allow VHT on 2.4GHz
+
+Signed-off-by: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+---
+ .../patches/ath/983-ath10k-allow-vht-on-2g.patch       | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 package/kernel/mac80211/patches/ath/983-ath10k-allow-vht-on-2g.patch
+
+diff --git a/package/kernel/mac80211/patches/ath/983-ath10k-allow-vht-on-2g.patch b/package/kernel/mac80211/patches/ath/983-ath10k-allow-vht-on-2g.patch
+new file mode 100644
+index 000000000000..eeca88a613fb
+--- /dev/null
++++ b/package/kernel/mac80211/patches/ath/983-ath10k-allow-vht-on-2g.patch
+@@ -0,0 +1,10 @@
++--- a/drivers/net/wireless/ath/ath10k/mac.c
+++++ b/drivers/net/wireless/ath/ath10k/mac.c
++@@ -4718,6 +4718,7 @@ static void ath10k_mac_setup_ht_vht_cap(
++ 	if (ar->phy_capability & WHAL_WLAN_11G_CAPABILITY) {
++ 		band = &ar->mac.sbands[NL80211_BAND_2GHZ];
++ 		band->ht_cap = ht_cap;
+++		band->vht_cap = vht_cap;
++ 	}
++ 	if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY) {
++ 		band = &ar->mac.sbands[NL80211_BAND_5GHZ];
+
+From b07786397f60d5c0942df56d47f671e962e2a1df Mon Sep 17 00:00:00 2001
+From: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+Date: Tue, 29 Oct 2019 23:23:38 +0800
+Subject: [PATCH 3/3] hostapd: add vendor_vht option
+
+hostapd has vendor_vht option to enable VHT (256-QAM) on 2.4GHz
+Add this option to hostapd.sh so users can enable it via uci
+
+Signed-off-by: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
+---
+ package/network/services/hostapd/files/hostapd.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
+index 637f298ad914..252622b8637b 100644
+--- a/package/network/services/hostapd/files/hostapd.sh
++++ b/package/network/services/hostapd/files/hostapd.sh
+@@ -95,6 +95,7 @@ hostapd_common_add_device_config() {
+ 	config_add_int local_pwr_constraint
+ 	config_add_string require_mode
+ 	config_add_boolean legacy_rates
++	config_add_boolean vendor_vht
+ 
+ 	config_add_string acs_chan_bias
+ 	config_add_array hostapd_options
+@@ -110,7 +111,7 @@ hostapd_prepare_device_config() {
+ 	local base_cfg=
+ 
+ 	json_get_vars country country_ie beacon_int:100 dtim_period:2 doth require_mode legacy_rates \
+-		acs_chan_bias local_pwr_constraint spectrum_mgmt_required
++		acs_chan_bias local_pwr_constraint spectrum_mgmt_required vendor_vht
+ 
+ 	hostapd_set_log_options base_cfg
+ 
+@@ -145,6 +146,7 @@ hostapd_prepare_device_config() {
+ 	[ "$hwmode" = "g" ] && {
+ 		[ "$legacy_rates" -eq 0 ] && set_default rate_list "6000 9000 12000 18000 24000 36000 48000 54000"
+ 		[ -n "$require_mode" ] && set_default basic_rate_list "6000 12000 24000"
++		[ -n "$vendor_vht" ] && append base_cfg "vendor_vht=$vendor_vht" "$N"
+ 	}
+ 
+ 	case "$require_mode" in

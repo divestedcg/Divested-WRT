@@ -1,0 +1,22 @@
+From a9f0d2b56000d6ada27f43f8ffda89dfe60a4ebf Mon Sep 17 00:00:00 2001
+From: Tad <tad@spotco.us>
+Date: Fri, 27 Nov 2020 13:47:56 -0500
+Subject: [PATCH] dnsmasq: only listen on br-lan interface
+
+---
+ package/network/services/dnsmasq/files/dnsmasq.conf | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/package/network/services/dnsmasq/files/dnsmasq.conf b/package/network/services/dnsmasq/files/dnsmasq.conf
+index bf5816be56..24440b5e1c 100644
+--- a/package/network/services/dnsmasq/files/dnsmasq.conf
++++ b/package/network/services/dnsmasq/files/dnsmasq.conf
+@@ -35,3 +35,5 @@
+ # "bert" another name, bertrand
+ # The fields are <cname>,<target>
+ #cname=bertand,bert
++
++interface=br-lan
+-- 
+2.28.0
+

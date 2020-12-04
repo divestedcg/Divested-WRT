@@ -1,0 +1,5 @@
+- GPG signing of releases
+- bmon
+- selinux
+- investigate/fix perf. regression from kconfig hardening
+  DEBUG_VIRTUAL? INIT_ON_FREE_DEFAULT_ON?

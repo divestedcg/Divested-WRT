@@ -1,0 +1,20 @@
+20201203-00
+- update to d346beb08c3a7867497000dc382635ee8ea0eedb
+- basic kernel hardening via config
+
+20201201-00
+- add a patch to disable tx amsdu on mwlwifi
+  fixes high latencies
+
+20201130-01
+- cleanup config
+
+20201130-00
+- update to c71500fd4555307f1d1810cdcfe5e9a0a4b6c469
+- drop 0001-2522-80211n_256QAM-Rebased.patch
+- enable CONFIG_PACKAGE_mwlwifi-firmware-88w8964
+
+20201127-00
+- update to b0cb305236524095bfd899449b0ad8eb821cb3bb
+- initial public release
+- cleanup patches
