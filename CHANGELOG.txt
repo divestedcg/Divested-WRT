@@ -1,3 +1,8 @@
+20201204-00
+- update to 9c13513ce1fdfbd4adc8bc7bce54f34b3689e940
+- enable CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE
+  mamba: 2496250 -> 2858426 <= 3MB limit
+
 20201203-00
 - update to d346beb08c3a7867497000dc382635ee8ea0eedb
 - basic kernel hardening via config
