@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
 7c7e0669d69414e04e38794b6cc58c7928c7251d47a682863aebb751112893ad *config.buildinfo
 df5eb10a576a5e759c56b2e15a77dd5379a0c500f55ee52fbde7d627fa59519d *feeds.buildinfo
 cb397363c90b70f7b1477f4efbe132506ff2715e9a82eb8d339221da0d6f2d6d *openwrt-mvebu-cortexa9-linksys_wrt1200ac-initramfs-kernel.bin
@@ -20,3 +23,19 @@ f6adcdce27e682a336fa5c86d6fd8460f3433488998f213d8fe8ca9746e395fa *openwrt-mvebu-
 097afc2efc6618ef39abf77d3647a0c1e9a96f58c8576dd00b0ccc60e41990d7 *openwrt-mvebu-cortexa9-linksys_wrt32x-squashfs-sysupgrade.bin
 6681e454fc51dfdf7d085bb7899c10fdab53da9bfd517922ca1dd32b2c2973e3 *openwrt-mvebu-cortexa9.manifest
 15125cf98706a55c7e0d66357e02196fee6f724c095462bb6ac872846b1145e4 *version.buildinfo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAl/LdSoACgkQut/Kvdv1
+tpQbHA//WVMrxtQpGHUIKDcFdS9uOpnAwt9qBWhGfmXP4i1E92YpApfSrdT40pkP
+csW+Fj5DeuuSkp/K7nkMA4rfnaJbHYX+uRSD8+AmgI7jEMh0JA0uMr/4igDu5P5k
+55AF5D3oYstXESBpQRRQrf0kz9M5xsCAwjKOF65VjjY4XissUlFO7gIinvOwZnOQ
+teuV6NalyGci9KbA5qEq4T6OniIBeHxjYCRRVNbG9UyxYgVvw1C4CWfUKu8SbohI
+luZWd7J8Q0GRsUOwyrUhRLSj0GVTywqYI2z9usd8JygXlgxm0he1ek6xHQgrtaWq
+3S3lEA4OLPDmPkV8qmYPa3YTmABYyQZx3wH1Dn9XV9BU4qGl9jI6MPxXOOyujrKW
+kJyotZ9vlEiF0fL7UC/wmPvLZ+FmgItEe0ow/fWIthN39WiAhmNBHZogb8RGGm+G
+mdDl763n38XV962OxlAMJQa+CcmLQcil9NCT7RChCJ/bMX6KOxKspJmfMsHsJmq9
+h5c8Lt/Qo2iH5qhPQCvqx6dSQyLTLNMFMSSnwSIB0PayVTl7qooYXt+qJejJ0j9s
+ca6U8Ga047FWuIUpwz3aY66cxbbyxefEaUrN1WyvoKXvHOrhDYzur4W0FQw3I84e
+PI1ae9hYugVhI8rgoKHNjrMxzXWy+oNUG9C3b17rIzrgqoG5dWk=
+=03GK
+-----END PGP SIGNATURE-----

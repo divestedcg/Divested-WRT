@@ -1,4 +1,3 @@
-- GPG signing of releases
 - bmon
 - selinux
 - consider disabling for perf:
