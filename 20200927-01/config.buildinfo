@@ -1,0 +1,176 @@
+CONFIG_TARGET_mvebu=y
+CONFIG_TARGET_mvebu_cortexa9=y
+CONFIG_TARGET_MULTI_PROFILE=y
+CONFIG_TARGET_DEVICE_mvebu_cortexa9_DEVICE_linksys_wrt1200ac=y
+CONFIG_TARGET_DEVICE_mvebu_cortexa9_DEVICE_linksys_wrt1900ac-v1=y
+CONFIG_BUILD_PATENTED=y
+CONFIG_BUSYBOX_DEFAULT_PIE=y
+# CONFIG_FEED_freifunk is not set
+# CONFIG_FEED_telephony is not set
+CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB=y
+CONFIG_IPK_FILES_CHECKSUMS=y
+CONFIG_KERNEL_BUILD_DOMAIN="dcg.v1"
+CONFIG_KERNEL_BUILD_USER="emy"
+# CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE is not set
+CONFIG_KERNEL_CC_OPTIMIZE_FOR_SIZE=y
+# CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR is not set
+CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG=y
+# CONFIG_KERNEL_CRASH_DUMP is not set
+# CONFIG_KERNEL_DEBUG_INFO is not set
+# CONFIG_KERNEL_DEBUG_KERNEL is not set
+# CONFIG_KERNEL_ELF_CORE is not set
+# CONFIG_KERNEL_KALLSYMS is not set
+# CONFIG_KERNEL_KEXEC is not set
+# CONFIG_KERNEL_MAGIC_SYSRQ is not set
+CONFIG_KERNEL_STACKPROTECTOR_STRONG=y
+# CONFIG_KERNEL_SWAP is not set
+CONFIG_LUCI_LANG_en=y
+CONFIG_LUCI_SRCDIET=y
+CONFIG_OPENSSL_ENGINE=y
+CONFIG_OPENSSL_PREFER_CHACHA_OVER_GCM=y
+CONFIG_OPENSSL_WITH_ASM=y
+CONFIG_OPENSSL_WITH_CHACHA_POLY1305=y
+CONFIG_OPENSSL_WITH_CMS=y
+CONFIG_OPENSSL_WITH_DEPRECATED=y
+CONFIG_OPENSSL_WITH_ERROR_MESSAGES=y
+CONFIG_OPENSSL_WITH_PSK=y
+CONFIG_OPENSSL_WITH_SRP=y
+CONFIG_OPENSSL_WITH_TLS13=y
+CONFIG_PACKAGE_adblock=y
+CONFIG_PACKAGE_banip=y
+CONFIG_PACKAGE_ca-certificates=y
+CONFIG_PACKAGE_cgi-io=y
+CONFIG_PACKAGE_coreutils=y
+CONFIG_PACKAGE_coreutils-sort=y
+# CONFIG_PACKAGE_dnsmasq is not set
+CONFIG_PACKAGE_dnsmasq-dhcpv6=y
+CONFIG_PACKAGE_file=y
+CONFIG_PACKAGE_fstrim=y
+CONFIG_PACKAGE_htop=y
+CONFIG_PACKAGE_ip-tiny=y
+CONFIG_PACKAGE_iperf3=y
+CONFIG_PACKAGE_ipset=y
+CONFIG_PACKAGE_irqbalance=y
+CONFIG_PACKAGE_kmod-crypto-aead=m
+CONFIG_PACKAGE_kmod-crypto-cbc=m
+CONFIG_PACKAGE_kmod-crypto-ccm=m
+CONFIG_PACKAGE_kmod-crypto-cmac=m
+CONFIG_PACKAGE_kmod-crypto-crc32c=m
+CONFIG_PACKAGE_kmod-crypto-ctr=m
+CONFIG_PACKAGE_kmod-crypto-cts=m
+CONFIG_PACKAGE_kmod-crypto-des=m
+CONFIG_PACKAGE_kmod-crypto-ecdh=m
+CONFIG_PACKAGE_kmod-crypto-gcm=m
+CONFIG_PACKAGE_kmod-crypto-gf128=m
+CONFIG_PACKAGE_kmod-crypto-ghash=m
+CONFIG_PACKAGE_kmod-crypto-hash=m
+CONFIG_PACKAGE_kmod-crypto-hmac=m
+CONFIG_PACKAGE_kmod-crypto-kpp=m
+CONFIG_PACKAGE_kmod-crypto-manager=m
+CONFIG_PACKAGE_kmod-crypto-md5=m
+CONFIG_PACKAGE_kmod-crypto-null=m
+CONFIG_PACKAGE_kmod-crypto-pcompress=m
+CONFIG_PACKAGE_kmod-crypto-rng=m
+CONFIG_PACKAGE_kmod-crypto-seqiv=m
+CONFIG_PACKAGE_kmod-crypto-sha1=m
+CONFIG_PACKAGE_kmod-crypto-sha256=m
+CONFIG_PACKAGE_kmod-crypto-sha512=m
+CONFIG_PACKAGE_kmod-crypto-xts=m
+CONFIG_PACKAGE_kmod-ipt-ipset=y
+CONFIG_PACKAGE_kmod-ledtrig-default-on=y
+CONFIG_PACKAGE_kmod-ledtrig-heartbeat=y
+CONFIG_PACKAGE_kmod-ledtrig-netdev=y
+CONFIG_PACKAGE_kmod-ledtrig-timer=y
+CONFIG_PACKAGE_kmod-nfnetlink=y
+CONFIG_PACKAGE_kmod-nft-core=m
+CONFIG_PACKAGE_kmod-nft-nat=m
+CONFIG_PACKAGE_kmod-nft-offload=m
+CONFIG_PACKAGE_libblkid=y
+CONFIG_PACKAGE_libbz2=y
+CONFIG_PACKAGE_libipset=y
+CONFIG_PACKAGE_libiwinfo-lua=y
+CONFIG_PACKAGE_liblua=y
+CONFIG_PACKAGE_liblucihttp=y
+CONFIG_PACKAGE_liblucihttp-lua=y
+CONFIG_PACKAGE_liblzma=y
+CONFIG_PACKAGE_libmagic=y
+CONFIG_PACKAGE_libmnl=y
+CONFIG_PACKAGE_libmount=y
+CONFIG_PACKAGE_libncurses=y
+CONFIG_PACKAGE_libopenssl=y
+CONFIG_PACKAGE_libopenssl-conf=y
+CONFIG_PACKAGE_libpcap=y
+CONFIG_PACKAGE_librt=y
+CONFIG_PACKAGE_libsmartcols=y
+CONFIG_PACKAGE_libsysfs=y
+CONFIG_PACKAGE_libubus-lua=y
+CONFIG_PACKAGE_libusb-1.0=y
+CONFIG_PACKAGE_libustream-openssl=y
+# CONFIG_PACKAGE_libustream-wolfssl is not set
+CONFIG_PACKAGE_libuuid=y
+# CONFIG_PACKAGE_libwolfssl is not set
+CONFIG_PACKAGE_lsblk=y
+CONFIG_PACKAGE_lscpu=y
+CONFIG_PACKAGE_lua=y
+CONFIG_PACKAGE_lua-openssl=y
+CONFIG_PACKAGE_luasec=y
+CONFIG_PACKAGE_luasocket=y
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-app-adblock=y
+CONFIG_PACKAGE_luci-app-advanced-reboot=y
+CONFIG_PACKAGE_luci-app-banip=y
+CONFIG_PACKAGE_luci-app-firewall=y
+CONFIG_PACKAGE_luci-app-opkg=y
+CONFIG_PACKAGE_luci-base=y
+CONFIG_PACKAGE_luci-compat=y
+CONFIG_PACKAGE_luci-i18n-adblock-en=y
+CONFIG_PACKAGE_luci-i18n-advanced-reboot-en=y
+CONFIG_PACKAGE_luci-i18n-banip-en=y
+CONFIG_PACKAGE_luci-i18n-base-en=y
+CONFIG_PACKAGE_luci-i18n-firewall-en=y
+CONFIG_PACKAGE_luci-i18n-opkg-en=y
+CONFIG_PACKAGE_luci-lib-base=y
+CONFIG_PACKAGE_luci-lib-ip=y
+CONFIG_PACKAGE_luci-lib-jsonc=y
+CONFIG_PACKAGE_luci-lib-nixio=y
+# CONFIG_PACKAGE_luci-lib-nixio_notls is not set
+CONFIG_PACKAGE_luci-lib-nixio_openssl=y
+CONFIG_PACKAGE_luci-mod-admin-full=y
+CONFIG_PACKAGE_luci-mod-network=y
+CONFIG_PACKAGE_luci-mod-status=y
+CONFIG_PACKAGE_luci-mod-system=y
+CONFIG_PACKAGE_luci-proto-ipv6=y
+CONFIG_PACKAGE_luci-proto-ppp=y
+CONFIG_PACKAGE_luci-ssl-openssl=y
+CONFIG_PACKAGE_luci-theme-bootstrap=y
+CONFIG_PACKAGE_mtr=y
+CONFIG_PACKAGE_nano=y
+CONFIG_PACKAGE_ncdu=y
+CONFIG_PACKAGE_openssl-util=y
+CONFIG_PACKAGE_procd-seccomp=y
+CONFIG_PACKAGE_procd-ujail=y
+CONFIG_PACKAGE_rng-tools=y
+CONFIG_PACKAGE_rpcd=y
+CONFIG_PACKAGE_rpcd-mod-file=y
+CONFIG_PACKAGE_rpcd-mod-iwinfo=y
+CONFIG_PACKAGE_rpcd-mod-luci=y
+CONFIG_PACKAGE_rpcd-mod-rrdns=y
+CONFIG_PACKAGE_screen=y
+CONFIG_PACKAGE_tcpdump=y
+CONFIG_PACKAGE_terminfo=y
+CONFIG_PACKAGE_tree=y
+CONFIG_PACKAGE_uhttpd=y
+CONFIG_PACKAGE_uhttpd-mod-ubus=y
+CONFIG_PACKAGE_usbutils=y
+# CONFIG_PACKAGE_wpad-basic-wolfssl is not set
+CONFIG_PACKAGE_wpad-openssl=y
+CONFIG_PACKAGE_zlib=y
+CONFIG_PKG_ASLR_PIE_ALL=y
+# CONFIG_PKG_ASLR_PIE_REGULAR is not set
+# CONFIG_PKG_CC_STACKPROTECTOR_REGULAR is not set
+CONFIG_PKG_CC_STACKPROTECTOR_STRONG=y
+# CONFIG_PKG_FORTIFY_SOURCE_1 is not set
+CONFIG_PKG_FORTIFY_SOURCE_2=y
+CONFIG_REPRODUCIBLE_DEBUG_INFO=y
+CONFIG_STRIP_KERNEL_EXPORTS=y
+# CONFIG_WPA_WOLFSSL is not set
