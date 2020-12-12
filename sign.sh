@@ -1,17 +1,17 @@
-#!/bin/bash
+#!/bin/sh
 #Copyright (c) 2020 Divested Computing Group
 #License: GPL-2.0
 
-function sign() {
+sign() {
 	checksum=$1;
-	echo -e "\e[0;32mGPG signing $checksum\e[0m";
+	echo "GPG signing $checksum";
 	gpg --sign --local-user 6395FC9911EDCD6158712DF7BADFCABDDBF5B694 --clearsign "$checksum";
 	if [ "$?" -eq "0" ]; then
 		mv -f "$checksum.asc" "$checksum";
 	fi;
 }
 
-function signAll() {
+signAll() {
 	for checksum in */sha256sums; do
 		sign "$checksum";
 	done;
