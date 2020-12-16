@@ -1,5 +1,5 @@
 <h1>UNOFFICIAL OpenWRT builds</h1>
-<p>Last updated: 2020/12/09<p>
+<p>README last updated: 2020/12/16<p>
 
 <hr>
 <h2>License</h2>
@@ -19,13 +19,36 @@ All modifications are contained in the /patches directory.
 </ul>
 
 <hr>
-<h2>FAQ</h2>
+<h2>Disclaimer</h2>
+<p>
+If they work for you, cool!<br>
+If they don't, find something else.<br>
+If somethings breaks, you get to keep both pieces!
+</p>
 
+<hr>
+<h2>Credits</h2>
+<ul>
+	<li>Wout Mertens and Pavel Stano for the FDB workaround</li>
+	<li>The mystery person who figured out that TX-AMSDU causes high latencies on mwlwifi</li>
+	<li>OpenWRT, its contributors, and its community for all that it is</li>
+	<li>Alexander Popov, for maintaing a detailed list of kernel config hardening options <a href="https://github.com/a13xp0p0v/kconfig-hardened-check" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+</ul>
+
+<hr>
+<h2>FAQ</h2>
 <p>Why make these builds?</p>
 <ul>
 	<li>I need wpad-full compiled in for RADIUS support.</li>
 	<li>I want extra security features that aren't enabled by default.</li>
 	<li>There are no official snapshots for wrt1900ac-v1 anymore due to kernel size limits.</li>
+</ul>
+
+<p>What devices have been tested?</p>
+<ul>
+	<li>WRT1900ACv1/mamba</li>
+	<li>WRT1200AC/caiman</li>
+	<li>WRT32X/venom (via user report)</li>
 </ul>
 
 <p>How often will these be updated?</p>
@@ -47,32 +70,44 @@ All modifications are contained in the /patches directory.
 	<li>Patches and configs are included for you to compile this yourself.</li>
 </ul>
 
-<p>What devices have been tested?</p>
+<p>How to create my own builds?</p>
 <ul>
-	<li>WRT1900ACv1/mamba</li>
-	<li>WRT1200AC/caiman</li>
-	<li>WRT32X/venom (via user report)</li>
+	<li>Create a VM with Debian or Fedora or what have you</li>
+	<li>Install all the necessary dependencies listed <a href="https://openwrt.org/docs/guide-developer/build-system/install-buildsystem" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>$ git clone https://git.openwrt.org/openwrt/openwrt.git</li>
+	<li>$ cd openwrt</li>
+	<li>$ git config pull.rebase true #makes updating easier</li>
+	<li>$ ./scripts/feeds update -a -f</li>
+	<li>$ ./scripts/feeds install -a -f</li>
+	<li>#copy in the config from the latest build here, name it .config</li>
+	<li>#git am the .patches from /patches here</li>
+	<li>$ make nconfig #make any changes you want</li>
+	<li>$ make download -j4</li>
+	<li>$ make -j16</li>
+</ul>
+
+<p>How to update my own builds?</p>
+<ul>
+	<li>$ cd openwrt</li>
+	<li>$ git pull</li>
+	<li>$ ./scripts/feeds update -a -f</li>
+	<li>$ ./scripts/feeds install -a -f</li>
+	<li>$ make nconfig #save and exit</li>
+	<li>$ make download -j4</li>
+	<li>$ make -j16</li>
 </ul>
 
 <p>Other things we should know?</p>
 <ul>
-	<li>These are routers/APs you shouldn't run anything else on them.</li>
 	<li>You need to manually migrate if you are still on a swconfig build.</li>
 	<li>There is a forum thread <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>These are routers/APs, please don't run anything else on them. If you need a home server go buy an HP EliteDesk 800 G1/G2 Desk-Mini.</li>
 	<li>Have fun!</li>
 </ul>
 
 <hr>
-<h2>Disclaimer</h2>
-<p>
-If they work for you, cool!<br>
-If they don't, find something else.<br>
-If somethings breaks, you get to keep both pieces!
-</p>
-
-<hr>
-<h2>Credits</h2>
+<h2>Notices</h2>
 <ul>
-	<li>Wout Mertens and Pavel Stano for the FDB workaround</li>
 	<li>OpenWRT is a trademark of the Software Freedom Conservancy.</li>
+	<li>Linux is a trademark of Linus Torvalds</li>
 </ul>
