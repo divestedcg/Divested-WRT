@@ -1,3 +1,7 @@
+20201225-00
+- update to 57e6f3ae65e1e77db6291f29b40002646b76db3b
+- revert 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015
+
 20201216-00
 - update to bfc433efd4a0c6875a92981d1bd2a5e3e60c61c6
 - reinitialized workspace
