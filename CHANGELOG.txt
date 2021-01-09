@@ -1,3 +1,10 @@
+20210109-01
+- add the SQM packages, untested
+  mamba: 2887378 -> 2903986 <= 3MB limit
+
+20210109-00
+- update to 2e590a63645a5c89ad752abfe36458dc0f49c739
+
 20210102-00
 - update to 55e23f2c02ae95e84613ed7d1cbf8aba557b8682
 
