@@ -1,0 +1,34 @@
+From 7552e4325f63f86be4490ad3e6dac91b4adff47a Mon Sep 17 00:00:00 2001
+From: Daniel Engberg <daniel.engberg.lists@pyret.net>
+Date: Thu, 28 Mar 2019 12:57:45 +0000
+Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
+
+Platforms using Cortex-A processor cores aren't constrained in
+terms of storage as much as other supported platforms such as MIPS.
+Set O2 as default since Os can severly limit performance as it's
+more targeted at keeping down binary size.
+
+Tested on mvebu, sunxi
+
+Signed-off-by: Daniel Engberg <daniel.engberg.lists@pyret.net>
+---
+ include/target.mk | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/target.mk b/include/target.mk
+index 5346ea1a9140..5fc4d99fc6eb 100644
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -162,7 +162,11 @@ LINUX_RECONF_DIFF = $(call __linux_confcmd,$(filter-out $(LINUX_RECONFIG_TARGET)
+ ifeq ($(DUMP),1)
+   BuildTarget=$(BuildTargets/DumpCurrent)
+ 
+-  CPU_CFLAGS = -Os -pipe
++  ifneq ($(findstring cortex-a,$(CPU_TYPE)),)
++    CPU_CFLAGS = -O2 -pipe
++  else
++    CPU_CFLAGS = -Os -pipe
++  endif
+   ifneq ($(findstring mips,$(ARCH)),)
+     ifneq ($(findstring mips64,$(ARCH)),)
+       CPU_TYPE ?= mips64

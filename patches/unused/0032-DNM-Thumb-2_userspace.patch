@@ -1,5 +1,5 @@
 From rsalvaterra at gmail.com  Fri Jun 19 05:45:25 2020
-From: rsalvaterra at gmail.com (Rui Salvaterra)
+From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
 Subject: [OpenWrt-Devel] [RFC PATCH] ARM Cortex-A9: build the userspace with
  Thumb-2 instructions

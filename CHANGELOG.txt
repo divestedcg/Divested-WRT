@@ -1,3 +1,7 @@
+20210110-00
+- update to cbd67dbdcd6f45ed54a4ec382c5a8ea4d082fa84
+- enable -O2 -mthumb for userspace
+
 20210109-01
 - add the SQM packages, untested
   mamba: 2887378 -> 2903986 <= 3MB limit

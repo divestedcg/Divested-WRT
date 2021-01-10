@@ -3,6 +3,8 @@ From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:47:56 -0500
 Subject: [PATCH] dnsmasq: only listen on br-lan interface
 
+Note: this will break if your LAN isn't br-lan
+
 ---
  package/network/services/dnsmasq/files/dnsmasq.conf | 2 ++
  1 file changed, 2 insertions(+)
