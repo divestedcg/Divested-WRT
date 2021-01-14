@@ -1,3 +1,8 @@
+20210114-00
+- update to f841855f10535529e9cba99469fbbe7f4d73cbda
+- branding
+- drop old builds
+
 20210110-00
 - update to cbd67dbdcd6f45ed54a4ec382c5a8ea4d082fa84
 - enable -O2 -mthumb for userspace
