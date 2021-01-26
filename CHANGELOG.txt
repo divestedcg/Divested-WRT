@@ -1,53 +1,72 @@
+202101XX-00 (PENDING FOR NEXT RELEASE)
+- update to
+- [upstream] update to kernel 5.4.92 (security and bug fixes)
+- [upstream] glibc update (security fix)
+- [upstream] update to dnsmasq 2.84test3 (bug fix)
+- [upstream] minstrel_ht overhaul (performance improvement)
+
 20210120-00
 - update to 20a0d435d80a98ecf5405c0c0bc9a56bcd04add1
+- [upstream] update to kernel 5.4.91 (security and bug fixes)
+- [upstream] update to dnsmasq 2.83 (security fix) (CVE-2020-25681-7)
 
 20210118-00
 - update to f13b623f5e53a72b65f45cbaf56c73df35e70ed2
+- [upstream] update to kernel 5.4.89 (security and bug fixes)
+- [upstream] glibc update (security fix)
 
 20210114-00
 - update to f841855f10535529e9cba99469fbbe7f4d73cbda
 - branding
-- drop old builds
+- drop old builds (out of date and therefore insecure)
+- [upstream] hostapd and wpa_supplicant drop privs (security hardening)
 
 20210110-00
 - update to cbd67dbdcd6f45ed54a4ec382c5a8ea4d082fa84
-- enable -O2 -mthumb for userspace
+- enable -O2 -mthumb for userspace (performance improvement)
+- [upstream] glibc update (security fix)
 
 20210109-01
-- add the SQM packages, untested
+- add the SQM packages, untested (functionality improvement)
   mamba: 2887378 -> 2903986 <= 3MB limit
 
 20210109-00
 - update to 2e590a63645a5c89ad752abfe36458dc0f49c739
+- [upstream] update to kernel 5.4.87 (security and bug fixes)
 
 20210102-00
 - update to 55e23f2c02ae95e84613ed7d1cbf8aba557b8682
+- [upstream] update to kernel 5.4.86 (security and bug fixes)
 
 20201225-00
 - update to 57e6f3ae65e1e77db6291f29b40002646b76db3b
-- revert 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015
+- revert 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015 (security regression)
+- [upstream] update to kernel 5.4.85 (security and bug fixes)
 
 20201216-00
 - update to bfc433efd4a0c6875a92981d1bd2a5e3e60c61c6
-- reinitialized workspace
+- reinitialized workspace (sanity)
+- [upstream] update to kernel 5.4.83 (security and bug fixes)
 
 20201209-00
 - update to dd3464023f1836ef4fa417509830aaf5618b9ae9
+- [upstream] update to kernel 5.4.82 (security and bug fixes)
 
 20201204-01
 - update to 33c27ccf4aef677d28246d30e815050ead68b434
+- [upstream] update to kernel 5.4.81 (security and bug fixes)
 
 20201204-00
 - update to 9c13513ce1fdfbd4adc8bc7bce54f34b3689e940
-- enable CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE
+- enable CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE (performance improvement)
   mamba: 2496250 -> 2858426 <= 3MB limit
 
 20201203-00
 - update to d346beb08c3a7867497000dc382635ee8ea0eedb
-- basic kernel hardening via config
+- basic kernel hardening via config (security hardening)
 
 20201201-00
-- add a patch to disable tx amsdu on mwlwifi
+- add a patch to disable tx amsdu on mwlwifi (bug workaround)
   fixes high latencies
 
 20201130-01
@@ -62,3 +81,4 @@
 - update to b0cb305236524095bfd899449b0ad8eb821cb3bb
 - initial public release
 - cleanup patches
+- [upstream] update to kernel 5.4.80 (security and bug fixes)
