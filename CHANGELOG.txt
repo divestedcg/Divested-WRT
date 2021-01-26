@@ -1,9 +1,8 @@
-202101XX-00 (PENDING FOR NEXT RELEASE)
-- update to
+20210126-00
+- update to 7ca75a2d01a10711e58a92ae4ed747e23c030814
 - [upstream] update to kernel 5.4.92 (security and bug fixes)
 - [upstream] glibc update (security fix)
 - [upstream] update to dnsmasq 2.84test3 (bug fix)
-- [upstream] minstrel_ht overhaul (performance improvement)
 
 20210120-00
 - update to 20a0d435d80a98ecf5405c0c0bc9a56bcd04add1
@@ -27,7 +26,7 @@
 - [upstream] glibc update (security fix)
 
 20210109-01
-- add the SQM packages, untested (functionality improvement)
+- add the SQM packages (functionality improvement)
   mamba: 2887378 -> 2903986 <= 3MB limit
 
 20210109-00
