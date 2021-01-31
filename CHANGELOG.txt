@@ -1,3 +1,11 @@
+20210131-00
+- update to cbedb5de75440b336072ee32bf97a81fac529a6a
+- enable openssl devcrypto support (performance improvement)
+  must be manually enabled in /etc/ssl/openssl.cnf
+  mamba: 2907378 -> 2908818 <= 3MB limit
+- include bmon and iperf3 (functionality)
+- [upstream] update to kernel 5.4.93 (security and bug fixes)
+
 20210126-00
 - update to 7ca75a2d01a10711e58a92ae4ed747e23c030814
 - [upstream] update to kernel 5.4.92 (security and bug fixes)
@@ -26,7 +34,7 @@
 - [upstream] glibc update (security fix)
 
 20210109-01
-- add the SQM packages (functionality improvement)
+- add the SQM packages (functionality)
   mamba: 2887378 -> 2903986 <= 3MB limit
 
 20210109-00
