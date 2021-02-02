@@ -3,3 +3,4 @@
   DEBUG_VIRTUAL? INIT_ON_FREE_DEFAULT_ON?
 - disable CONFIG_KERNEL_IO_URING
 - neon?
+- WireGuard?

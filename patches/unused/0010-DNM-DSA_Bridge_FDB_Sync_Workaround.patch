@@ -15,6 +15,9 @@ https://github.com/stanojr/tempfix_fdb_dsa
 
 Required reading:
 https://gitlab.nic.cz/turris/turris-build/-/issues/165
+
+Replaced by:
+https://lists.openwrt.org/pipermail/openwrt-devel/2021-February/033620.html
 ---
  package/base-files/files/etc/fdb_dsa.sh     | 11 ++++++++++
  package/base-files/files/etc/init.d/fdb_dsa | 23 +++++++++++++++++++++

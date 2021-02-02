@@ -1,5 +1,5 @@
 <h1 id="top">UNOFFICIAL <i>OpenWrt</i> builds<a href="#top">^</a></h1>
-<p>README last updated: 2021/01/29<p>
+<p>README last updated: 2021/02/02<p>
 
 <hr>
 <h2 id="license">License<a href="#license">^</a></h2>
@@ -29,7 +29,8 @@ If somethings breaks, you get to keep both pieces!
 <hr>
 <h2 id="credits">Credits<a href="#credits">^</a></h2>
 <ul>
-	<li>Wout Mertens and Pavel Stano for the FDB workaround</li>
+	<li>Vladimir Oltean, Tobias Waldekranz, and DENG Qingfang for the DSA/FDB fixes and backports</li>
+	<li>Wout Mertens and Pavel Stano for the previously used DSA/FDB workaround</li>
 	<li>The mystery person who figured out that TX-AMSDU causes high latencies on mwlwifi</li>
 	<li><i>OpenWrt</i>, its contributors, and its community for all that it is</li>
 	<li>Alexander Popov, for maintaining a detailed list of kernel config hardening options <a href="https://github.com/a13xp0p0v/kconfig-hardened-check" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
@@ -74,7 +75,7 @@ If somethings breaks, you get to keep both pieces!
 <p id="selfBuild">How to create my own builds?<a href="#selfBuild">^</a></p>
 <ul>
 	<li>Create a VM with Debian or Fedora or what have you</li>
-	<li>Install all the necessary dependencies listed <a href="https://openwrt.org/docs/guide-developer/build-system/install-buildsystem" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>Install all the necessary dependencies listed <a href="https://openwrt.org/docs/guide-developer/build-system/install-buildsystem#linux_distributions" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
 	<li>$ git clone https://git.openwrt.org/openwrt/openwrt.git</li>
 	<li>$ cd openwrt</li>
 	<li>$ git config pull.rebase true #makes updating easier</li>
