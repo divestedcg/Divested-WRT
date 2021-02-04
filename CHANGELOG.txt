@@ -1,8 +1,13 @@
+20210204-01
+- update to 43ff6e641e7c321ab3b67c43ba73a6877d8f0439
+- enable all available LuCI translations (usability)
+- [upstream] hostapd update (security fix)
+- [upstream] procd update (security fix)
+
 20210202-00
 - update to d33cd383ed64f3b387c8e3111c3c0c663763c0ea
 - add a set of proper backported DSA fixes from DENG Qingfang
   Thanks!
-  Needs testing!
 - reinitialized workspace (sanity)
 - [upstream] update to kernel 5.4.94 (security and bug fixes)
 
