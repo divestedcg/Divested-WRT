@@ -101,6 +101,13 @@ If somethings breaks, you get to keep both pieces!
 	<li>$ make -j16</li>
 </ul>
 
+<p id="postInstall">Anything to change after install?<a href="#postInstall">^</a></p>
+<ul>
+	<li>Change 'enabled' to '1' in '/etc/config/irqbalance' for improved Wi-Fi performance.</li>
+	<li>Uncomment 'devcrypto=devcrypto' under the '[engine]' block in '/etc/ssl/openssl.cnf' for improved OpenSSL performance.</li>
+	<li>Enable SQM/Cake if you have an asymmetric WAN.</li>
+</ul>
+
 <p id="goodies">Other things we should know?<a href="#goodies">^</a></p>
 <ul>
 	<li>Wiki pages are <a href="https://openwrt.org/toh/linksys/wrt_ac_series" target="_blank" rel="nofollow noopener noreferrer">here</a> and <a href="https://oldwiki.archive.openwrt.org/toh/linksys/wrt_ac_series" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
