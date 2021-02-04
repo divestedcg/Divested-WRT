@@ -1,5 +1,6 @@
 20210204-02
-- unset CONFIG_DEBUG_VIRTUAL and INIT_ON_FREE_DEFAULT_ON (performance)
+- unset DEBUG_VIRTUAL and INIT_ON_FREE_DEFAULT_ON (performance)
+- refresh patches
 
 20210204-01
 - update to 43ff6e641e7c321ab3b67c43ba73a6877d8f0439
