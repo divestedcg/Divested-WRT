@@ -1,9 +1,7 @@
-From dqfext@gmail.com Tue Feb  2 09:14:39 2021
+From f69a7b0a9b234f448cda926d2db3714c02aa1219 Mon Sep 17 00:00:00 2001
 From: DENG Qingfang <dqfext@gmail.com>
-Subject: [PATCH] kernel: DSA roaming fix for Marvell Link Street switch
- series
-Date: Tue,  2 Feb 2021 17:14:09 +0800
-Content-Transfer-Encoding: 8bit
+Date: Tue, 2 Feb 2021 17:14:09 +0800
+Subject: [PATCH] kernel: DSA roaming fix for Marvell Link Street switch series
 
 Marvell Link Street switch series cannot perform MAC learning from
 CPU-injected (FROM_CPU) DSA frames, which results in 2 issues.
@@ -1350,4 +1348,5 @@ index 0000000000..653a782f52
 + 	dev_set_drvdata(dev, ds);
 + 
 -- 
-2.25.1
+2.29.2
+

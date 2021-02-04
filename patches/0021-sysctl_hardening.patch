@@ -1,19 +1,19 @@
-From 3c7a18a5d51b8b85e258cbb445af23bc4a78239d Mon Sep 17 00:00:00 2001
+From 17fdde3b7395ba5276b5ce22712e7fec80659d1c Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:49:59 -0500
 Subject: [PATCH] sysctl.d: basic hardening
 
 ---
- .../files/etc/sysctl.d/60-restrict.conf       | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ .../files/etc/sysctl.d/60-restrict.conf       | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
  create mode 100644 package/base-files/files/etc/sysctl.d/60-restrict.conf
 
 diff --git a/package/base-files/files/etc/sysctl.d/60-restrict.conf b/package/base-files/files/etc/sysctl.d/60-restrict.conf
 new file mode 100644
-index 0000000000..0d6af267b4
+index 0000000000..2b5162fdb7
 --- /dev/null
 +++ b/package/base-files/files/etc/sysctl.d/60-restrict.conf
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,27 @@
 +dev.tty.ldisc_autoload=0
 +fs.protected_fifos=2
 +fs.protected_hardlinks=1
@@ -30,15 +30,17 @@ index 0000000000..0d6af267b4
 +net.ipv4.icmp_ignore_bogus_error_responses=1
 +net.ipv6.conf.all.addr_gen_mode=3
 +net.ipv6.conf.all.max_addresses=128
++net.ipv6.conf.all.regen_max_retry=32
 +net.ipv6.conf.all.temp_prefered_lft=21600
 +net.ipv6.conf.all.use_tempaddr=2
 +net.ipv6.conf.default.addr_gen_mode=3
 +net.ipv6.conf.default.max_addresses=128
++net.ipv6.conf.default.regen_max_retry=32
 +net.ipv6.conf.default.temp_prefered_lft=21600
 +net.ipv6.conf.default.use_tempaddr=2
 +vm.mmap_rnd_bits=32
 +vm.mmap_rnd_compat_bits=16
 +vm.unprivileged_userfaultfd=0
 -- 
-2.28.0
+2.29.2
 

@@ -1,9 +1,7 @@
-From rsalvaterra at gmail.com  Fri Jun 19 05:45:25 2020
+From f1db56393dd0115b5dbb80a89f2c53238bad169b Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
-Subject: [OpenWrt-Devel] [RFC PATCH] ARM Cortex-A9: build the userspace with
- Thumb-2 instructions
-Message-ID: <20200619094523.3162-1-rsalvaterra@gmail.com>
+Subject: [PATCH] ARM Cortex-A9: build the userspace with Thumb-2 instructions
 
 Thumb-2 code is denser than pure ARM, reducing RAM usage and improving
 performance due to better instruction cache footprint.
@@ -13,14 +11,14 @@ There's no reason for not enabling this feature on other ARMv7 targets
 
 Signed-off-by: Rui Salvaterra <rsalvaterra at gmail.com>
 ---
- include/target.mk | 3 +++
- 1 file changed, 3 insertions(+)
+ include/target.mk | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/include/target.mk b/include/target.mk
-index a2ceb7f783..dfc6f4e480 100644
+index 1c46049219..d1d4ba14b1 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -196,6 +196,11 @@ ifeq ($(DUMP),1)
+@@ -237,6 +237,11 @@ ifeq ($(DUMP),1)
      CPU_TYPE = sparc
      CPU_CFLAGS_ultrasparc = -mcpu=ultrasparc
    endif
@@ -33,4 +31,5 @@ index a2ceb7f783..dfc6f4e480 100644
      CPU_TYPE ?= generic
      CPU_CFLAGS_generic = -mcpu=generic
 -- 
-2.27.0
+2.29.2
+

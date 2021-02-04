@@ -1,0 +1,26 @@
+From 07937c6bb955fb197b93412fe7962e422af6be97 Mon Sep 17 00:00:00 2001
+From: Tad <tad@spotco.us>
+Date: Tue, 2 Feb 2021 06:14:22 -0500
+Subject: [PATCH] Revert "uhttpd: don't redirect to HTTPS by default"
+
+This reverts commit 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015.
+---
+ package/network/services/uhttpd/files/uhttpd.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/network/services/uhttpd/files/uhttpd.config b/package/network/services/uhttpd/files/uhttpd.config
+index 40ce67fd01..aeded08afc 100644
+--- a/package/network/services/uhttpd/files/uhttpd.config
++++ b/package/network/services/uhttpd/files/uhttpd.config
+@@ -10,7 +10,7 @@ config uhttpd main
+ 	list listen_https	[::]:443
+ 
+ 	# Redirect HTTP requests to HTTPS if possible
+-	option redirect_https	0
++	option redirect_https	1
+ 
+ 	# Server document root
+ 	option home		/www
+-- 
+2.29.2
+

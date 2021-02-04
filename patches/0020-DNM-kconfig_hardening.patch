@@ -1,17 +1,17 @@
-From 066d9a3d5028738d2de50d67a23be92841af4d4c Mon Sep 17 00:00:00 2001
+From 391e924db3cc428b621b0cd9553adfd6e9e69c59 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
 Subject: [PATCH] DNM: generic: 5.4: config hardening
 
 ---
- target/linux/generic/config-5.4 | 125 ++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ target/linux/generic/config-5.4 | 123 ++++++++++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
 diff --git a/target/linux/generic/config-5.4 b/target/linux/generic/config-5.4
-index 10d14f6be5..3c9c3ef98a 100644
+index a0193ca718..abe8bb70a0 100644
 --- a/target/linux/generic/config-5.4
 +++ b/target/linux/generic/config-5.4
-@@ -6504,3 +6504,128 @@ CONFIG_ZONE_DMA=y
+@@ -6509,3 +6509,126 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
@@ -29,14 +29,12 @@ index 10d14f6be5..3c9c3ef98a 100644
 +CONFIG_DEBUG_RODATA=y
 +CONFIG_DEBUG_SET_MODULE_RONX=y
 +CONFIG_DEBUG_SG=y
-+CONFIG_DEBUG_VIRTUAL=y
 +CONFIG_DEBUG_WX=y
 +CONFIG_FORTIFY_SOURCE=y
 +CONFIG_HARDEN_BRANCH_PREDICTOR=y
 +CONFIG_HARDENED_USERCOPY=y
 +CONFIG_HARDEN_EL2_VECTORS=y
 +CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
-+CONFIG_INIT_ON_FREE_DEFAULT_ON=y
 +CONFIG_INIT_STACK_ALL=y
 +CONFIG_INIT_STACK_ALL_ZERO=y
 +CONFIG_IO_STRICT_DEVMEM=y
@@ -141,5 +139,5 @@ index 10d14f6be5..3c9c3ef98a 100644
 +CONFIG_X86_VSYSCALL_EMULATION=n
 +CONFIG_ZSMALLOC_STAT=n
 -- 
-2.28.0
+2.29.2
 
