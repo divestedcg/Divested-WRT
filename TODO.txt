@@ -1,3 +1,12 @@
-- selinux (likely won't fit)
-- neon?
+- SELinux
+  should fit fine on 6MB devices
+  will need CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE disabled to fit on 3MB devices
+- neon? (missing the fp16 compat mode?)
 - WireGuard?
+- Repartition to bring 3MB devices in line with 6MB ones.
+  From what I understand the values can be simply updated in the DTS.
+  But sysupgrade flashes new images with current values.
+  Reportedly you can flash the factory image from stock in one pass.
+  Will require user intervention.
+  Backup, flash to stock, flash Divested-WRT, restore backup.
+  Backup restore should work fine since it is just a tar with files.
