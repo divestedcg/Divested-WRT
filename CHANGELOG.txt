@@ -1,7 +1,17 @@
-20210206-00-RESIZE_TESTING
+20210206-01-RESIZED
+- update to 17fa01bb79be12a08f8f7a0beb7f0d73618a6193
+- enable WireGuard support
+- disable KERNEL_IO_URING
+- enable KERNEL_KEYS
+- restore wrt32* third radio support
+  enables usb, sdio, bluetooth, firmware, etc.
+- kernel size still only 2.92MB
+- Resized! Use with caution!
+
+20210206-00-RESIZED
 - resize mamba from 3MB to 4MB (tested)
 - resize venom from 3MB to 6MB (untested)
-- USE WITH EXTREME CAUTION!
+- Resized! Use with caution!
 
 20210205-01
 - reinitialized workspace (sanity)
