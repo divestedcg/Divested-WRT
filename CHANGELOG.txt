@@ -1,3 +1,8 @@
+20210206-00-RESIZE_TESTING
+- resize mamba from 3MB to 4MB (tested)
+- resize venom from 3MB to 6MB (untested)
+- USE WITH EXTREME CAUTION!
+
 20210205-01
 - reinitialized workspace (sanity)
 
