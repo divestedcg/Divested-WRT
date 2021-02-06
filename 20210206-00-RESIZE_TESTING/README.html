@@ -2,6 +2,12 @@
 <p>The mamba and venom builds on this page are built using a modified DTS that increases the kernel partition to 4MB and 6MB respectively.</p>
 <p>There is a forum thread about this <a href="https://forum.openwrt.org/t/increasing-mamba-and-venom-kernel-partition-to-6mb/87807" target="_blank" rel="nofollow noopener noreferrer">here</a></p>
 <hr>
+<p>Compatibility check</p>
+<ul>
+	<li>$ fw_printenv | grep "pri_kern_size"; #mamba MUST equal 0x400000</li>
+	<li>$ fw_printenv | grep "priKernSize"; #venom MUST equal 0x0600000</li>
+	<li>Do not try to change them!</li>
+</ul>
 <p>Flashing process</p>
 <ul>
 	<li>Accept that this might destroy your box.</li>
