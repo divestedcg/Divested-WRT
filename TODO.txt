@@ -1,7 +1,2 @@
 - SELinux
-  should fit fine on 6MB devices
-  will need CONFIG_KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE disabled to fit on 3MB devices
 - neon? (missing the fp16 compat mode?)
-- WireGuard?
-- Repartition to bring 3MB devices in line with 6MB ones.
-  Will require user intervention.
