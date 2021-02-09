@@ -1,4 +1,4 @@
-From e3d33bba813c582be62fdc3d21fcb3146beb8af3 Mon Sep 17 00:00:00 2001
+From 2716a2f390ffc677eebdf8e2e82f06700a146179 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 1 Dec 2020 03:57:45 -0500
 Subject: [PATCH] mwlwifi: Disable tx_amsdu
@@ -8,6 +8,8 @@ Unsure who figured this out.
 https://forum.archive.openwrt.org/viewtopic.php?id=64949&p=161
 https://forum.openwrt.org/t/linksys-wrt1200ac-wireless-performance-on-latest-stable/39392/4
 https://github.com/kaloz/mwlwifi/commit/574e24e7dd661676e585dacd54e4f93b24e78ba0
+
+Signed-off-by: Tad <tad@spotco.us>
 ---
  package/base-files/files/etc/init.d/amsdu-disable | 10 ++++++++++
  1 file changed, 10 insertions(+)

@@ -1,4 +1,4 @@
-From f1db56393dd0115b5dbb80a89f2c53238bad169b Mon Sep 17 00:00:00 2001
+From 4844b85577d06d3a189897a682d22260396849a7 Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
 Subject: [PATCH] ARM Cortex-A9: build the userspace with Thumb-2 instructions
@@ -15,10 +15,10 @@ Signed-off-by: Rui Salvaterra <rsalvaterra at gmail.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/include/target.mk b/include/target.mk
-index 1c46049219..d1d4ba14b1 100644
+index b92cd7e467..8fbe3fedcb 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -237,6 +237,11 @@ ifeq ($(DUMP),1)
+@@ -234,6 +234,11 @@ ifeq ($(DUMP),1)
      CPU_TYPE = sparc
      CPU_CFLAGS_ultrasparc = -mcpu=ultrasparc
    endif

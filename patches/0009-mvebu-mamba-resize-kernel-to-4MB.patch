@@ -1,8 +1,25 @@
-From efa8a50b70f11b22270ece8019a5e977605b304f Mon Sep 17 00:00:00 2001
+From 2c00038e74151fef20927382e3fcc8b9915d2801 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:38:03 -0500
-Subject: [PATCH] DNM: mvebu: mamba resize kernel to 4MB
+Subject: [PATCH] mvebu: mamba resize kernel to 4MB
 
+mamba has a 3MB kernel partition as specified by the DTS.
+3MB is not sufficient for building with many kernel modules or newer
+kernel versions.
+
+mamba uboot however as set from factory will load up to 4MB.
+This can be observed by looking a uboot log:
+	NAND read: device 0 offset 0xa00000, size 0x400000
+	4194304 bytes read: OK
+and from uboot environment variables:
+	$ fw_printenv | grep "pri_kern_size";
+	pri_kern_size=0x400000
+
+Resize the root partitions from 37MB to 36MB to let kernel expand
+into it another 1MB.
+And set kernel target size to 4MB.
+
+Signed-off-by: Tad <tad@spotco.us>
 ---
  target/linux/mvebu/image/cortexa9.mk          |  2 +-
  .../999-DNM-dts-mamba-resize-3MB_to_4MB.patch | 41 +++++++++++++++++++

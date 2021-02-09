@@ -1,4 +1,4 @@
-From a978708623a15d2f083cdcd27c5262418b563f57 Mon Sep 17 00:00:00 2001
+From e3098b841a85763f5727ab6a8f732ba21d4b740f Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
 Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
@@ -16,10 +16,10 @@ Signed-off-by: Daniel Engberg <daniel.engberg.lists@pyret.net>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/include/target.mk b/include/target.mk
-index edc6a146de..1c46049219 100644
+index 7526224972..b92cd7e467 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -194,7 +194,11 @@ LINUX_RECONF_DIFF = $(SCRIPT_DIR)/kconfig.pl - '>' $(call __linux_confcmd,$(filt
+@@ -191,7 +191,11 @@ LINUX_RECONF_DIFF = $(SCRIPT_DIR)/kconfig.pl - '>' $(call __linux_confcmd,$(filt
  ifeq ($(DUMP),1)
    BuildTarget=$(BuildTargets/DumpCurrent)
  

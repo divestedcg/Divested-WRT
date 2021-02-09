@@ -1,4 +1,4 @@
-From f69a7b0a9b234f448cda926d2db3714c02aa1219 Mon Sep 17 00:00:00 2001
+From d5ba31a2cfb26e3d7e3cf62bd9635f3ac3e56dac Mon Sep 17 00:00:00 2001
 From: DENG Qingfang <dqfext@gmail.com>
 Date: Tue, 2 Feb 2021 17:14:09 +0800
 Subject: [PATCH] kernel: DSA roaming fix for Marvell Link Street switch series

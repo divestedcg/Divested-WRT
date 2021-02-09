@@ -1,8 +1,25 @@
-From 80b53a7edb8def3b8c0c3a07333316a4debde791 Mon Sep 17 00:00:00 2001
+From 49ef925386caf2179b489b232f16f18927a21fa6 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:42:47 -0500
-Subject: [PATCH] DNM: mvebu: venom resize kernel to 6MB
+Subject: [PATCH] mvebu: venom resize kernel to 6MB
 
+venom has a 3MB kernel partition as specified by the DTS.
+3MB is not sufficient for building with many kernel modules or newer
+kernel versions.
+
+venom uboot however as set from factory will load up to 6MB.
+This can be observed by looking a uboot log:
+	NAND read: device 0 offset 0x900000, size 0x600000
+	6291456 bytes read: OK
+and from uboot environment variables:
+	$ fw_printenv | grep "priKernSize";
+	priKernSize=0x0600000
+
+Resize the root partitions from 120MB to 117MB to let kernel expand
+into it another 3MB.
+And set kernel target size to 6MB.
+
+Signed-off-by: Tad <tad@spotco.us>
 ---
  .../files/arch/arm/boot/dts/armada-385-linksys-venom.dts  | 8 ++++----
  target/linux/mvebu/image/cortexa9.mk                      | 2 +-
@@ -37,7 +54,7 @@ index de81600a80..a2ca3158cf 100644
  
  		/* last MB is for the BBT, not writable */
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
-index 968e2a38f4..081e6d326e 100644
+index c6c40efe8e..3fd07a4307 100644
 --- a/target/linux/mvebu/image/cortexa9.mk
 +++ b/target/linux/mvebu/image/cortexa9.mk
 @@ -157,7 +157,7 @@ define Device/linksys_wrt32x

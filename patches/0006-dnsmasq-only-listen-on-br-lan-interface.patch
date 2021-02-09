@@ -1,9 +1,12 @@
-From b6e3dca618e44c485a5019bb3faaa77369e6ef41 Mon Sep 17 00:00:00 2001
+From 33a2517a42fa81b4b9abbb441f41ab51199f3dda Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:47:56 -0500
 Subject: [PATCH] dnsmasq: only listen on br-lan interface
 
-Note: this will break if your LAN isn't br-lan
+dnsmasq should not listen on all interfaces, restrict it to br-lan.
+
+Note: this will break default config if your LAN isn't br-lan.
+Signed-off-by: Tad <tad@spotco.us>
 ---
  package/network/services/dnsmasq/files/dnsmasq.conf | 2 ++
  1 file changed, 2 insertions(+)

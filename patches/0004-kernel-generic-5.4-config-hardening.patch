@@ -1,8 +1,12 @@
-From 391e924db3cc428b621b0cd9553adfd6e9e69c59 Mon Sep 17 00:00:00 2001
+From 50b36db97c7d875dd0939b6be3f7e149cbbae10f Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
-Subject: [PATCH] DNM: generic: 5.4: config hardening
+Subject: [PATCH] kernel: generic 5.4: config hardening
 
+Enables various security options.
+Disables various high-risk bits.
+
+Signed-off-by: Tad <tad@spotco.us>
 ---
  target/linux/generic/config-5.4 | 123 ++++++++++++++++++++++++++++++++
  1 file changed, 123 insertions(+)
