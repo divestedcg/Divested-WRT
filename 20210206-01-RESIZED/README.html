@@ -1,22 +1,29 @@
 <h1 style="color: #f44336; background-color: #000000;">WARNING! WARNING! WARNING!</h1>
-<p>The mamba and venom builds on this page are built using a modified DTS that increases the kernel partition to 4MB and 6MB respectively.</p>
+<p>The mamba and venom builds on this page are built using a modified device tree that increases the kernel partition to 4MB and 6MB respectively.</p>
 <p>There is a forum thread about this <a href="https://forum.openwrt.org/t/increasing-mamba-and-venom-kernel-partition-to-6mb/87807" target="_blank" rel="nofollow noopener noreferrer">here</a></p>
 <hr>
-<p>Compatibility check</p>
+<p>The below processes are only applicable to mamba and venom. Once migrated you can flash other resized builds as usual.</p>
+</p>Other devices should too be handled as usual.<p>
+
+<h3>Disclaimer</h3>
+<ul>
+	<li>Accept that this might destroy your box.</li>
+	<li>Be prepared that you might need to recover via serial.</li>
+</ul>
+
+<h3>Verify compatibility</h3>
 <ul>
 	<li>$ fw_printenv | grep "pri_kern_size"; #mamba MUST equal 0x400000</li>
 	<li>$ fw_printenv | grep "priKernSize"; #venom MUST equal 0x0600000</li>
 	<li>Do not try to change them!</li>
 </ul>
-<p>Flashing process</p>
+
+<h3>Flashing process</h3>
+<p>You must always use a factory image when flashing to or away from a resized build.</p>
 <ul>
-	<li>Accept that this might destroy your box.</li>
-	<li>Be prepared that you might need to recover via serial.</li>
 	<li>Create a backup tar</li>
-	<li>Force flash the corresponding factory image via sysupgrade or stock</li>
+	<li>Flash the corresponding factory image via sysupgrade. 'Force' enabled, 'Keep settings' disabled.</li>
 	<li>Restore the backup</li>
-	<li>Success!?</li>
-	<li>Once migrated, you can flash as you normally would.</li>
 </ul>
 <hr>
 <h1 style="color: #f44336; background-color: #000000;">WARNING! WARNING! WARNING!</h1>

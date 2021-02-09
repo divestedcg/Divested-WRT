@@ -1,4 +1,9 @@
-20210206-01-RESIZED (testing)
+20210208-00-RESIZED
+- update to 98d61b516fa2087dab8d3e3eb845c47b55e2b704
+- Resized! Use with caution on mamba and venom!
+- [upstream] update to kernel 5.4.96 (security and bug fixes)
+
+20210206-01-RESIZED
 - update to 17fa01bb79be12a08f8f7a0beb7f0d73618a6193
 - enable WireGuard support (functionality)
 - disable KERNEL_IO_URING
@@ -8,9 +13,9 @@
 - kernel size still only 2.92MB
 - Resized! Use with caution on mamba and venom!
 
-20210206-00-RESIZED (testing)
-- resize mamba from 3MB to 4MB (tested)
-- resize venom from 3MB to 6MB (untested)
+20210206-00-RESIZED
+- resize mamba from 3MB to 4MB
+- resize venom from 3MB to 6MB
 - Resized! Use with caution on mamba and venom!
 
 20210205-01
