@@ -1,4 +1,4 @@
-From 2c00038e74151fef20927382e3fcc8b9915d2801 Mon Sep 17 00:00:00 2001
+From 8010cb9e0544055fcc9525d6eb6924e8303f787e Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:38:03 -0500
 Subject: [PATCH] mvebu: mamba resize kernel to 4MB
@@ -19,18 +19,18 @@ Resize the root partitions from 37MB to 36MB to let kernel expand
 into it another 1MB.
 And set kernel target size to 4MB.
 
-Signed-off-by: Tad <tad@spotco.us>
+Signed-off-by: Tad Davanzo <tad@spotco.us>
 ---
  target/linux/mvebu/image/cortexa9.mk          |  2 +-
- .../999-DNM-dts-mamba-resize-3MB_to_4MB.patch | 41 +++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
- create mode 100644 target/linux/mvebu/patches-5.4/999-DNM-dts-mamba-resize-3MB_to_4MB.patch
+ ...rmada-xp-linksys-mamba-resize-kernel.patch | 42 +++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+ create mode 100644 target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
 
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
-index 968e2a38f4..c6c40efe8e 100644
+index 61f4d17813..ad3b8ee6d4 100644
 --- a/target/linux/mvebu/image/cortexa9.mk
 +++ b/target/linux/mvebu/image/cortexa9.mk
-@@ -118,7 +118,7 @@ define Device/linksys_wrt1900ac-v1
+@@ -115,7 +115,7 @@ define Device/linksys_wrt1900ac-v1
    DEVICE_ALT0_MODEL := Mamba
    DEVICE_DTS := armada-xp-linksys-mamba
    DEVICE_PACKAGES += mwlwifi-firmware-88w8864
@@ -39,18 +39,19 @@ index 968e2a38f4..c6c40efe8e 100644
    SUPPORTED_DEVICES += armada-xp-linksys-mamba linksys,mamba
    DEFAULT := n
  endef
-diff --git a/target/linux/mvebu/patches-5.4/999-DNM-dts-mamba-resize-3MB_to_4MB.patch b/target/linux/mvebu/patches-5.4/999-DNM-dts-mamba-resize-3MB_to_4MB.patch
+diff --git a/target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch b/target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
 new file mode 100644
-index 0000000000..2752a92a3f
+index 0000000000..43934caeb6
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.4/999-DNM-dts-mamba-resize-3MB_to_4MB.patch
-@@ -0,0 +1,41 @@
++++ b/target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
+@@ -0,0 +1,42 @@
 +From 258233f00bcd013050efee00c5d9128ef8cd62dd Mon Sep 17 00:00:00 2001
 +From: Tad <tad@spotco.us>
 +Date: Fri, 5 Feb 2021 22:32:11 -0500
-+Subject: [PATCH] DNM: ARM: dts: armada-xp-linksys-mamba: Increase kernel
++Subject: [PATCH] ARM: dts: armada-xp-linksys-mamba: Increase kernel
 + partition to 4MB
 +
++Signed-off-by: Tad Davanzo <tad@spotco.us>
 +---
 + arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 8 ++++----
 + 1 file changed, 4 insertions(+), 4 deletions(-)

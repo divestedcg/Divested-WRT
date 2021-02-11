@@ -1,4 +1,4 @@
-From d5ba31a2cfb26e3d7e3cf62bd9635f3ac3e56dac Mon Sep 17 00:00:00 2001
+From ade7e1e6eb78537e2d054173fc3771b9f93e4c5f Mon Sep 17 00:00:00 2001
 From: DENG Qingfang <dqfext@gmail.com>
 Date: Tue, 2 Feb 2021 17:14:09 +0800
 Subject: [PATCH] kernel: DSA roaming fix for Marvell Link Street switch series
@@ -21,6 +21,7 @@ Link: https://lore.kernel.org/netdev/20210116012515.3152-1-tobias@waldekranz.com
 Link: https://lore.kernel.org/netdev/20210130134334.10243-1-dqfext@gmail.com/
 Ref: https://gitlab.nic.cz/turris/turris-build/-/issues/165
 Signed-off-by: DENG Qingfang <dqfext@gmail.com>
+Tested-by: Tad <tad@spotco.us>
 ---
  ...y-switchdev-of-disappearance-of-old-.patch | 126 +++++++++
  ...r-when-a-non-legacy-FDB-operation-fa.patch |  52 ++++
@@ -28,7 +29,6 @@ Signed-off-by: DENG Qingfang <dqfext@gmail.com>
  ...tchdev-event-implementation-under-th.patch |  85 ++++++
  ...ly-in-dsa_slave_switchdev_event-if-w.patch |  42 +++
  ...or-SWITCHDEV_-FDB-DEL-_ADD_TO_DEVICE.patch | 263 ++++++++++++++++++
- ...v88e6xxx-override-portvec-if-unicast.patch |  35 +++
  .../710-net-dsa-mv88e6xxx-default-VID-1.patch |  18 ++
  ...hdev-Refactor-br_switchdev_fdb_notif.patch |  71 +++++
  ...hdev-Include-local-flag-in-FDB-notif.patch |  42 +++
@@ -37,14 +37,13 @@ Signed-off-by: DENG Qingfang <dqfext@gmail.com>
  ...bridge-addresses-in-assisted-CPU-por.patch |  30 ++
  ...tic-FDB-entries-on-foreign-interface.patch |  56 ++++
  ...equest-assisted-learning-on-CPU-port.patch |  27 ++
- 15 files changed, 1203 insertions(+)
+ 14 files changed, 1168 insertions(+)
  create mode 100644 target/linux/generic/backport-5.4/770-v5.12-net-bridge-notify-switchdev-of-disappearance-of-old-.patch
  create mode 100644 target/linux/generic/backport-5.4/771-v5.12-net-dsa-be-louder-when-a-non-legacy-FDB-operation-fa.patch
  create mode 100644 target/linux/generic/backport-5.4/772-v5.12-net-dsa-don-t-use-switchdev_notifier_fdb_info-in-dsa.patch
  create mode 100644 target/linux/generic/backport-5.4/773-v5.12-net-dsa-move-switchdev-event-implementation-under-th.patch
  create mode 100644 target/linux/generic/backport-5.4/774-v5.12-net-dsa-exit-early-in-dsa_slave_switchdev_event-if-w.patch
  create mode 100644 target/linux/generic/backport-5.4/775-v5.12-net-dsa-listen-for-SWITCHDEV_-FDB-DEL-_ADD_TO_DEVICE.patch
- create mode 100644 target/linux/generic/backport-5.4/776-v5.12-net-dsa-mv88e6xxx-override-portvec-if-unicast.patch
  create mode 100644 target/linux/generic/hack-5.4/710-net-dsa-mv88e6xxx-default-VID-1.patch
  create mode 100644 target/linux/generic/pending-5.4/762-net-bridge-switchdev-Refactor-br_switchdev_fdb_notif.patch
  create mode 100644 target/linux/generic/pending-5.4/763-net-bridge-switchdev-Include-local-flag-in-FDB-notif.patch
@@ -884,47 +883,6 @@ index 0000000000..ecc74ea050
 + 		dsa_schedule_work(&switchdev_work->work);
 + 		break;
 + 	default:
-diff --git a/target/linux/generic/backport-5.4/776-v5.12-net-dsa-mv88e6xxx-override-portvec-if-unicast.patch b/target/linux/generic/backport-5.4/776-v5.12-net-dsa-mv88e6xxx-override-portvec-if-unicast.patch
-new file mode 100644
-index 0000000000..9b8f3bbba7
---- /dev/null
-+++ b/target/linux/generic/backport-5.4/776-v5.12-net-dsa-mv88e6xxx-override-portvec-if-unicast.patch
-@@ -0,0 +1,35 @@
-+From f72f2fb8fb6be095b98af5d740ac50cffd0b0cae Mon Sep 17 00:00:00 2001
-+From: DENG Qingfang <dqfext@gmail.com>
-+Date: Sat, 30 Jan 2021 21:43:34 +0800
-+Subject: net: dsa: mv88e6xxx: override existent unicast portvec in
-+ port_fdb_add
-+
-+Having multiple destination ports for a unicast address does not make
-+sense.
-+Make port_db_load_purge override existent unicast portvec instead of
-+adding a new port bit.
-+
-+Fixes: 884729399260 ("net: dsa: mv88e6xxx: handle multiple ports in ATU")
-+Signed-off-by: DENG Qingfang <dqfext@gmail.com>
-+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-+Link: https://lore.kernel.org/r/20210130134334.10243-1-dqfext@gmail.com
-+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-+---
-+ drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
-+ 1 file changed, 5 insertions(+), 1 deletion(-)
-+
-+--- a/drivers/net/dsa/mv88e6xxx/chip.c
-++++ b/drivers/net/dsa/mv88e6xxx/chip.c
-+@@ -1517,7 +1517,11 @@ static int mv88e6xxx_port_db_load_purge(
-+ 		if (!entry.portvec)
-+ 			entry.state = 0;
-+ 	} else {
-+-		entry.portvec |= BIT(port);
-++		if (state == MV88E6XXX_G1_ATU_DATA_STATE_UC_STATIC)
-++			entry.portvec = BIT(port);
-++		else
-++			entry.portvec |= BIT(port);
-++
-+ 		entry.state = state;
-+ 	}
-+ 
 diff --git a/target/linux/generic/hack-5.4/710-net-dsa-mv88e6xxx-default-VID-1.patch b/target/linux/generic/hack-5.4/710-net-dsa-mv88e6xxx-default-VID-1.patch
 new file mode 100644
 index 0000000000..60f958f57c

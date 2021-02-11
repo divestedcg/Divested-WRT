@@ -1,4 +1,4 @@
-From 4844b85577d06d3a189897a682d22260396849a7 Mon Sep 17 00:00:00 2001
+From 816611e31522045fe7828bd1b4a07c3790db2c56 Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
 Subject: [PATCH] ARM Cortex-A9: build the userspace with Thumb-2 instructions
@@ -10,6 +10,7 @@ There's no reason for not enabling this feature on other ARMv7 targets
 (cortex-a7 and cortex-a8), but I don't have the hardware to test it.
 
 Signed-off-by: Rui Salvaterra <rsalvaterra at gmail.com>
+Tested-by: Tad <tad@spotco.us>
 ---
  include/target.mk | 5 +++++
  1 file changed, 5 insertions(+)

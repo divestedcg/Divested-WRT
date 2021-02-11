@@ -1,4 +1,4 @@
-From 684a05c2ba24971d79c81f461866ed0681bb8380 Mon Sep 17 00:00:00 2001
+From ed49b3c3793ca3f34baa33812a8d75b2ec4132a9 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 2 Feb 2021 06:14:22 -0500
 Subject: [PATCH] Revert "uhttpd: don't redirect to HTTPS by default"

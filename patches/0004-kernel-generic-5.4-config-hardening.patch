@@ -1,4 +1,4 @@
-From 50b36db97c7d875dd0939b6be3f7e149cbbae10f Mon Sep 17 00:00:00 2001
+From 13a11be352da0c4457e477969f22530c92d6d1b7 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
 Subject: [PATCH] kernel: generic 5.4: config hardening

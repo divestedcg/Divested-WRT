@@ -1,4 +1,4 @@
-From 49ef925386caf2179b489b232f16f18927a21fa6 Mon Sep 17 00:00:00 2001
+From fe79b1eee46dfbe28f3b3977e7b76c4ef93fe397 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:42:47 -0500
 Subject: [PATCH] mvebu: venom resize kernel to 6MB
@@ -19,7 +19,7 @@ Resize the root partitions from 120MB to 117MB to let kernel expand
 into it another 3MB.
 And set kernel target size to 6MB.
 
-Signed-off-by: Tad <tad@spotco.us>
+Signed-off-by: Tad Davanzo <tad@spotco.us>
 ---
  .../files/arch/arm/boot/dts/armada-385-linksys-venom.dts  | 8 ++++----
  target/linux/mvebu/image/cortexa9.mk                      | 2 +-
@@ -54,10 +54,10 @@ index de81600a80..a2ca3158cf 100644
  
  		/* last MB is for the BBT, not writable */
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
-index c6c40efe8e..3fd07a4307 100644
+index ad3b8ee6d4..ad6b7a19a7 100644
 --- a/target/linux/mvebu/image/cortexa9.mk
 +++ b/target/linux/mvebu/image/cortexa9.mk
-@@ -157,7 +157,7 @@ define Device/linksys_wrt32x
+@@ -154,7 +154,7 @@ define Device/linksys_wrt32x
    DEVICE_ALT0_MODEL := Venom
    DEVICE_DTS := armada-385-linksys-venom
    DEVICE_PACKAGES += kmod-btmrvl kmod-mwifiex-sdio mwlwifi-firmware-88w8964

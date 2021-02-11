@@ -1,4 +1,4 @@
-From e3098b841a85763f5727ab6a8f732ba21d4b740f Mon Sep 17 00:00:00 2001
+From 1eea96a5a5826e26b81871b73c54e0074300c0d3 Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
 Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
@@ -11,6 +11,7 @@ more targeted at keeping down binary size.
 Tested on mvebu, sunxi
 
 Signed-off-by: Daniel Engberg <daniel.engberg.lists@pyret.net>
+Tested-by: Tad <tad@spotco.us>
 ---
  include/target.mk | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
