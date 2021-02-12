@@ -1,3 +1,8 @@
+20210212-00-RESIZED
+- update to d8afae0be8f0a2a4a26e303dd5212e2a2f8d69a3
+- Resized! Use with caution on mamba and venom!
+- [upstream] update to kernel 5.4.97 (security and bug fixes)
+
 20210208-00-RESIZED
 - update to 98d61b516fa2087dab8d3e3eb845c47b55e2b704
 - Resized! Use with caution on mamba and venom!
