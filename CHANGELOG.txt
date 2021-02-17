@@ -1,3 +1,11 @@
+20210217-01-RESIZED-5.10 (testing)
+- update to f323dec4f866d9ea75eae11c6762d0144d100628
+- Linux 5.10 for testing thanks to Sebastian Careba (nitroshift)
+- Does not include the DSA/FDB fixes!
+- Does not include WireGuard
+- Resized! Use with caution on mamba and venom!
+- [upstream] update to kernel 5.10.16 (security and bug fixes)
+
 20210217-00-RESIZED
 - update to 5bb9954826229782d4d285d65dfcca8a1c9e20d9
 - temporarily drop bmon due to not compiling
