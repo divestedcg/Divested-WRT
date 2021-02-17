@@ -1,4 +1,4 @@
-From 84f428a65b9680725fb4d983369bec7ca4c0e979 Mon Sep 17 00:00:00 2001
+From c27ac09eea32a1aa188bc940447f1b6a988a9859 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:38:03 -0500
 Subject: [PATCH] mvebu: mamba resize kernel to 4MB

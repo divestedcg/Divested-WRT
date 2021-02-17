@@ -1,4 +1,4 @@
-From a929fe302fb1bc59b47ced105048c89f4cf9343f Mon Sep 17 00:00:00 2001
+From a0e41a0a3f3dcea2321b941d65302aa3b70ac4dc Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:47:56 -0500
 Subject: [PATCH] dnsmasq: only listen on br-lan interface
