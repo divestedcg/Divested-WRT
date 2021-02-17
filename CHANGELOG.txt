@@ -1,9 +1,10 @@
-20210214-00-RESIZED-BAD
-- This build was deleted due to serious breakage!
-- update to 4894a3ff2870438cf812d88704c92c8d997a69db
+20210217-00-RESIZED
+- update to 5bb9954826229782d4d285d65dfcca8a1c9e20d9
 - temporarily drop bmon due to not compiling
 - Resized! Use with caution on mamba and venom!
 - [upstream] update to kernel 5.4.98 (security and bug fixes)
+- [upstream] update to openssl 1.1.1j (security fix)
+- [upstream] many other updates with fixes and improvements
 
 20210212-00-RESIZED
 - update to d8afae0be8f0a2a4a26e303dd5212e2a2f8d69a3
