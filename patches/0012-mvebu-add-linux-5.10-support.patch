@@ -1,71 +1,61 @@
-From acd9466ea9e9e5711b0a359446be51c12a18acad Mon Sep 17 00:00:00 2001
-From: Sebastian Careba <nitroshift at yahoo.com>
-Date: Wed, 17 Feb 2021 09:00:32 +0200
+From d67010a64c5231fcfacb97cdd6f6edf2ac10b5f6 Mon Sep 17 00:00:00 2001
+From: Sebastian Careba <nitroshift@yahoo.com>
+Date: Thu, 18 Feb 2021 14:24:18 +0200
 Subject: [PATCH] mvebu: add linux 5.10 support
 
-Signed-off-by: Sebastian Careba <nitroshift at yahoo.com>
+Signed-off-by: Sebastian Careba <nitroshift@yahoo.com>
 Tested-by: Tad <tad@spotco.us>
 ---
  target/linux/mvebu/Makefile                   |   2 +-
  target/linux/mvebu/config-5.10                | 436 ++++++++++
- .../patches-5.10/002-add_powertables.patch    | 770 ++++++++++++++++++
- .../004-add_sata_disk_activity_trigger.patch  |  39 +
- ...5-linksys_hardcode_nand_ecc_settings.patch |  17 +
+ ...-t-touch-PCIe-registers-if-no-card-c.patch |  50 ++
+ ...l-espressobin-Add-ethernet-switch-al.patch |  88 ++
+ ...s-mcbin-singleshot-add-heartbeat-LED.patch |  65 ++
  ...Mangle-bootloader-s-kernel-arguments.patch | 189 +++++
- ...sallow-XDP-program-on-hardware-buffe.patch |  53 ++
- .../030-linkstation-poweroff.patch            |  20 +
- .../patches-5.10/100-find_active_root.patch   |  60 ++
- .../patches-5.10/102-revert_i2c_delay.patch   |  15 +
- .../205-armada-385-rd-mtd-partitions.patch    |  19 +
- .../206-ARM-mvebu-385-ap-Add-partitions.patch |  35 +
+ ...-mvebu-armada-38x-enable-libata-leds.patch |  10 +
+ .../patches-5.10/302-add_powertables.patch    | 770 ++++++++++++++++++
+ ...3-linksys_hardcode_nand_ecc_settings.patch |  17 +
+ .../patches-5.10/304-revert_i2c_delay.patch   |  15 +
+ .../305-armada-385-rd-mtd-partitions.patch    |  19 +
+ .../306-ARM-mvebu-385-ap-Add-partitions.patch |  35 +
  ...-armada-xp-linksys-mamba-broken-idle.patch |  10 +
- .../231-armada-xp-linksys-mamba-wan.patch     |  11 +
- .../patches-5.10/240-linksys-status-led.patch |  50 ++
- .../241-linksys-use-eth0-as-cpu-port.patch    |  25 +
- .../250-adjust-compatible-for-linksys.patch   |  68 ++
- .../300-mvneta-tx-queue-workaround.patch      |  26 +
+ .../308-armada-xp-linksys-mamba-wan.patch     |  11 +
+ .../patches-5.10/309-linksys-status-led.patch |  50 ++
+ .../310-linksys-use-eth0-as-cpu-port.patch    |  25 +
+ .../311-adjust-compatible-for-linksys.patch   |  68 ++
+ ...da388-clearfog-emmc-on-clearfog-base.patch |  87 ++
+ .../312-helios4-dts-status-led-alias.patch    |  28 +
+ ...ts-marvell-armada37xx-Add-eth0-alias.patch |  20 +
+ ...witch-PHY-operation-mode-to-2500base.patch |  34 +
+ .../patches-5.10/400-find_active_root.patch   |  60 ++
+ .../700-mvneta-tx-queue-workaround.patch      |  36 +
  ...dicate-failure-to-enter-deeper-sleep.patch |  40 +
  ...-pci-mvebu-time-out-reset-on-link-up.patch |  60 ++
- ...5-PCI-aardvark-Improve-link-training.patch | 135 +++
- ...06-PCI-aardvark-Issue-PERST-via-GPIO.patch |  57 ++
- .../407-PCI-aardvark-Add-PHY-support.patch    | 116 +++
- ...-t-touch-PCIe-registers-if-no-card-c.patch |  50 ++
- ...-initialization-with-old-Marvell-s-A.patch |  44 +
- ...da388-clearfog-emmc-on-clearfog-base.patch |  87 ++
- ...ts-marvell-armada37xx-Add-eth0-alias.patch |  20 +
- ...witch-PHY-operation-mode-to-2500base.patch |  20 +
- .../560-helios4-dts-status-led-alias.patch    |  28 +
- ...-mvebu-armada-38x-enable-libata-leds.patch |  10 +
- 30 files changed, 2511 insertions(+), 1 deletion(-)
+ 25 files changed, 2224 insertions(+), 1 deletion(-)
  create mode 100644 target/linux/mvebu/config-5.10
- create mode 100644 target/linux/mvebu/patches-5.10/002-add_powertables.patch
- create mode 100644 target/linux/mvebu/patches-5.10/004-add_sata_disk_activity_trigger.patch
- create mode 100644 target/linux/mvebu/patches-5.10/005-linksys_hardcode_nand_ecc_settings.patch
- create mode 100644 target/linux/mvebu/patches-5.10/006-mvebu-Mangle-bootloader-s-kernel-arguments.patch
- create mode 100644 target/linux/mvebu/patches-5.10/022-mvneta-driver-disallow-XDP-program-on-hardware-buffe.patch
- create mode 100644 target/linux/mvebu/patches-5.10/030-linkstation-poweroff.patch
- create mode 100644 target/linux/mvebu/patches-5.10/100-find_active_root.patch
- create mode 100644 target/linux/mvebu/patches-5.10/102-revert_i2c_delay.patch
- create mode 100644 target/linux/mvebu/patches-5.10/205-armada-385-rd-mtd-partitions.patch
- create mode 100644 target/linux/mvebu/patches-5.10/206-ARM-mvebu-385-ap-Add-partitions.patch
- create mode 100644 target/linux/mvebu/patches-5.10/230-armada-xp-linksys-mamba-broken-idle.patch
- create mode 100644 target/linux/mvebu/patches-5.10/231-armada-xp-linksys-mamba-wan.patch
- create mode 100644 target/linux/mvebu/patches-5.10/240-linksys-status-led.patch
- create mode 100644 target/linux/mvebu/patches-5.10/241-linksys-use-eth0-as-cpu-port.patch
- create mode 100644 target/linux/mvebu/patches-5.10/250-adjust-compatible-for-linksys.patch
- create mode 100644 target/linux/mvebu/patches-5.10/300-mvneta-tx-queue-workaround.patch
- create mode 100644 target/linux/mvebu/patches-5.10/400-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
- create mode 100644 target/linux/mvebu/patches-5.10/401-pci-mvebu-time-out-reset-on-link-up.patch
- create mode 100644 target/linux/mvebu/patches-5.10/405-PCI-aardvark-Improve-link-training.patch
- create mode 100644 target/linux/mvebu/patches-5.10/406-PCI-aardvark-Issue-PERST-via-GPIO.patch
- create mode 100644 target/linux/mvebu/patches-5.10/407-PCI-aardvark-Add-PHY-support.patch
- create mode 100644 target/linux/mvebu/patches-5.10/408-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
- create mode 100644 target/linux/mvebu/patches-5.10/410-PCI-aardvark-Fix-initialization-with-old-Marvell-s-A.patch
- create mode 100644 target/linux/mvebu/patches-5.10/412-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
- create mode 100644 target/linux/mvebu/patches-5.10/520-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
- create mode 100644 target/linux/mvebu/patches-5.10/550-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
- create mode 100644 target/linux/mvebu/patches-5.10/560-helios4-dts-status-led-alias.patch
- create mode 100644 target/linux/mvebu/patches-5.10/561-mvebu-armada-38x-enable-libata-leds.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/024-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/027-arm64-dts-marvell-espressobin-Add-ethernet-switch-al.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/301-mvebu-armada-38x-enable-libata-leds.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/302-add_powertables.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/303-linksys_hardcode_nand_ecc_settings.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/304-revert_i2c_delay.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/305-armada-385-rd-mtd-partitions.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/306-ARM-mvebu-385-ap-Add-partitions.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/307-armada-xp-linksys-mamba-broken-idle.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/308-armada-xp-linksys-mamba-wan.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/309-linksys-status-led.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/310-linksys-use-eth0-as-cpu-port.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/311-adjust-compatible-for-linksys.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/312-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/314-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/400-find_active_root.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/800-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/801-pci-mvebu-time-out-reset-on-link-up.patch
 
 diff --git a/target/linux/mvebu/Makefile b/target/linux/mvebu/Makefile
 index 1e67bcfacb..1550309a92 100644
@@ -522,11 +512,443 @@ index 0000000000..ced3b4ff7a
 +CONFIG_ZBOOT_ROM_TEXT=0x0
 +CONFIG_ZLIB_DEFLATE=y
 +CONFIG_ZLIB_INFLATE=y
-diff --git a/target/linux/mvebu/patches-5.10/002-add_powertables.patch b/target/linux/mvebu/patches-5.10/002-add_powertables.patch
+diff --git a/target/linux/mvebu/patches-5.10/024-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch b/target/linux/mvebu/patches-5.10/024-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
+new file mode 100644
+index 0000000000..dfc068c8cb
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/024-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
+@@ -0,0 +1,50 @@
++From 70e380250c3621c55ff218cbaf2272830d9dbb1d Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
++Date: Thu, 2 Jul 2020 10:30:36 +0200
++Subject: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
++ connected
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++When there is no PCIe card connected and advk_pcie_rd_conf() or
++advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
++root bridge, the aardvark driver throws the following error message:
++
++  advk-pcie d0070000.pcie: config read/write timed out
++
++Obviously accessing PCIe registers of disconnected card is not possible.
++
++Extend check in advk_pcie_valid_device() function for validating
++availability of PCIe bus. If PCIe link is down, then the device is marked
++as Not Found and the driver does not try to access these registers.
++
++This is just an optimization to prevent accessing PCIe registers when card
++is disconnected. Trying to access PCIe registers of disconnected card does
++not cause any crash, kernel just needs to wait for a timeout. So if card
++disappear immediately after checking for PCIe link (before accessing PCIe
++registers), it does not cause any problems.
++
++Link: https://lore.kernel.org/r/20200702083036.12230-1-pali@kernel.org
++Signed-off-by: Pali Rohár <pali@kernel.org>
++Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
++---
++ drivers/pci/controller/pci-aardvark.c | 7 +++++++
++ 1 file changed, 7 insertions(+)
++
++--- a/drivers/pci/controller/pci-aardvark.c
+++++ b/drivers/pci/controller/pci-aardvark.c
++@@ -639,6 +639,13 @@ static bool advk_pcie_valid_device(struc
++ 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
++ 		return false;
++ 
+++	/*
+++	 * If the link goes down after we check for link-up, nothing bad
+++	 * happens but the config access times out.
+++	 */
+++	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+++		return false;
+++
++ 	return true;
++ }
++ 
+diff --git a/target/linux/mvebu/patches-5.10/027-arm64-dts-marvell-espressobin-Add-ethernet-switch-al.patch b/target/linux/mvebu/patches-5.10/027-arm64-dts-marvell-espressobin-Add-ethernet-switch-al.patch
+new file mode 100644
+index 0000000000..927670d8b3
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/027-arm64-dts-marvell-espressobin-Add-ethernet-switch-al.patch
+@@ -0,0 +1,88 @@
++From b64d814257b027e29a474bcd660f6372490138c7 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
++Date: Mon, 7 Sep 2020 13:27:17 +0200
++Subject: [PATCH] arm64: dts: marvell: espressobin: Add ethernet switch aliases
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++Espressobin boards have 3 ethernet ports and some of them got assigned more
++then one MAC address. MAC addresses are stored in U-Boot environment.
++
++Since commit a2c7023f7075c ("net: dsa: read mac address from DT for slave
++device") kernel can use MAC addresses from DT for particular DSA port.
++
++Currently Espressobin DTS file contains alias just for ethernet0.
++
++This patch defines additional ethernet aliases in Espressobin DTS files, so
++bootloader can fill correct MAC address for DSA switch ports if more MAC
++addresses were specified.
++
++DT alias ethernet1 is used for wan port, DT aliases ethernet2 and ethernet3
++are used for lan ports for both Espressobin revisions (V5 and V7).
++
++Fixes: 5253cb8c00a6f ("arm64: dts: marvell: espressobin: add ethernet alias")
++Cc: <stable@vger.kernel.org> # a2c7023f7075c: dsa: read mac address
++Signed-off-by: Pali Rohár <pali@kernel.org>
++Reviewed-by: Andrew Lunn <andrew@lunn.ch>
++Reviewed-by: Andre Heider <a.heider@gmail.com>
++Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
++---
++ .../dts/marvell/armada-3720-espressobin-v7-emmc.dts  | 10 ++++++++--
++ .../boot/dts/marvell/armada-3720-espressobin-v7.dts  | 10 ++++++++--
++ 3 files changed, 24 insertions(+), 8 deletions(-)
++
++--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
++@@ -15,16 +15,22 @@
++ 	compatible = "globalscale,espressobin-v7-emmc", "globalscale,espressobin-v7",
++ 		     "globalscale,espressobin", "marvell,armada3720",
++ 		     "marvell,armada3710";
+++
+++	aliases {
+++		/* ethernet1 is wan port */
+++		ethernet1 = &switch0port3;
+++		ethernet3 = &switch0port1;
+++	};
++ };
++ 
++ &ports {
++-	port@1 {
+++	switch0port1: port@1 {
++ 		reg = <1>;
++ 		label = "lan1";
++ 		phy-handle = <&switch0phy0>;
++ 	};
++ 
++-	port@3 {
+++	switch0port3: port@3 {
++ 		reg = <3>;
++ 		label = "wan";
++ 		phy-handle = <&switch0phy2>;
++--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
++@@ -14,16 +14,22 @@
++ 	model = "Globalscale Marvell ESPRESSOBin Board V7";
++ 	compatible = "globalscale,espressobin-v7", "globalscale,espressobin",
++ 		     "marvell,armada3720", "marvell,armada3710";
+++
+++	aliases {
+++		/* ethernet1 is wan port */
+++		ethernet1 = &switch0port3;
+++		ethernet3 = &switch0port1;
+++	};
++ };
++ 
++ &ports {
++-	port@1 {
+++	switch0port1: port@1 {
++ 		reg = <1>;
++ 		label = "lan1";
++ 		phy-handle = <&switch0phy0>;
++ 	};
++ 
++-	port@3 {
+++	switch0port3: port@3 {
++ 		reg = <3>;
++ 		label = "wan";
++ 		phy-handle = <&switch0phy2>;
+diff --git a/target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch b/target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+new file mode 100644
+index 0000000000..c3abae60a6
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+@@ -0,0 +1,65 @@
++From da57203dc7fd556fbb3f0ec7d7d7c0b0e893b386 Mon Sep 17 00:00:00 2001
++From: Tomasz Maciej Nowak <tmn505@gmail.com>
++Date: Tue, 10 Nov 2020 16:38:31 +0100
++Subject: [PATCH] arm64: dts: mcbin-singleshot: add heartbeat LED
++
++With board revision 1.3, SolidRun moved the power LED to the middle of
++the board. In old place of power LED a GPIO controllable heartbeat LED
++was added. This commit only touches Single Shot variant, since only this
++variant is all revision 1.3.
++
++Note:
++This is slightly modified patch. Some boards could be placed in an
++enclosure, so the LED18 is enabled by default, since that'll be the only
++visible indicator that the board is operating.
++
++Reported-by: Alexandra Alth <alexandra@alth.de>
++Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
++Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
++---
++ .../marvell/armada-8040-mcbin-singleshot.dts  | 22 +++++++++++++++++++
++ 1 file changed, 22 insertions(+)
++
++--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts
+++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts
++@@ -5,6 +5,8 @@
++  * Device Tree file for MACCHIATOBin Armada 8040 community board platform
++  */
++ 
+++#include <dt-bindings/leds/common.h>
+++
++ #include "armada-8040-mcbin.dtsi"
++ 
++ / {
++@@ -12,6 +14,20 @@
++ 	compatible = "marvell,armada8040-mcbin-singleshot",
++ 			"marvell,armada8040-mcbin", "marvell,armada8040",
++ 			"marvell,armada-ap806-quad", "marvell,armada-ap806";
+++
+++	leds {
+++		compatible = "gpio-leds";
+++		pinctrl-0 = <&cp0_led18_pins>;
+++		pinctrl-names = "default";
+++
+++		led18 {
+++			gpios = <&cp0_gpio2 1 GPIO_ACTIVE_LOW>;
+++			function = LED_FUNCTION_HEARTBEAT;
+++			color = <LED_COLOR_ID_GREEN>;
+++			linux,default-trigger = "heartbeat";
+++			default-state = "on";
+++		};
+++	};
++ };
++ 
++ &cp0_eth0 {
++@@ -27,3 +43,10 @@
++ 	managed = "in-band-status";
++ 	sfp = <&sfp_eth1>;
++ };
+++
+++&cp0_pinctrl {
+++	cp0_led18_pins: led18-pins {
+++		marvell,pins = "mpp33";
+++		marvell,function = "gpio";
+++	};
+++};
+diff --git a/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch b/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
+new file mode 100644
+index 0000000000..93ede177c6
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
+@@ -0,0 +1,189 @@
++From 71270226b14733a4b1f2cde58ea9265caa50b38d Mon Sep 17 00:00:00 2001
++From: Adrian Panella <ianchi74@outlook.com>
++Date: Thu, 9 Mar 2017 09:37:17 +0100
++Subject: [PATCH 67/69] generic: Mangle bootloader's kernel arguments
++
++The command-line arguments provided by the boot loader will be
++appended to a new device tree property: bootloader-args.
++If there is a property "append-rootblock" in DT under /chosen
++and a root= option in bootloaders command line it will be parsed
++and added to DT bootargs with the form: <append-rootblock>XX.
++Only command line ATAG will be processed, the rest of the ATAGs
++sent by bootloader will be ignored.
++This is usefull in dual boot systems, to get the current root partition
++without afecting the rest of the system.
++
++Signed-off-by: Adrian Panella <ianchi74@outlook.com>
++
++This patch has been modified to be mvebu specific. The original patch 
++did not pass the bootloader cmdline on if no append-rootblock stanza 
++was found, resulting in blank cmdline and failure to boot.
++
++Signed-off-by: Michael Gray <michael.gray@lantisproject.com>
++---
++ arch/arm/Kconfig                        | 11 ++++
++ arch/arm/boot/compressed/atags_to_fdt.c | 85 ++++++++++++++++++++++++-
++ init/main.c                             | 16 +++++
++ 3 files changed, 111 insertions(+), 1 deletion(-)
++
++--- a/arch/arm/Kconfig
+++++ b/arch/arm/Kconfig
++@@ -1827,6 +1827,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
++ 	  The command-line arguments provided by the boot loader will be
++ 	  appended to the the device tree bootargs property.
++ 
+++config ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE
+++	bool "Append rootblock parsing bootloader's kernel arguments"
+++	help
+++	  The command-line arguments provided by the boot loader will be
+++	  appended to a new device tree property: bootloader-args.
+++	  If there is a property "append-rootblock" in DT under /chosen 
+++	  and a root= option in bootloaders command line it will be parsed 
+++	  and added to DT bootargs with the form: <append-rootblock>XX.
+++	  Only command line ATAG will be processed, the rest of the ATAGs
+++	  sent by bootloader will be ignored.
+++
++ endchoice
++ 
++ config CMDLINE
++--- a/arch/arm/boot/compressed/atags_to_fdt.c
+++++ b/arch/arm/boot/compressed/atags_to_fdt.c
++@@ -4,6 +4,8 @@
++ 
++ #if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND)
++ #define do_extend_cmdline 1
+++#elif defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
+++#define do_extend_cmdline 1
++ #else
++ #define do_extend_cmdline 0
++ #endif
++@@ -67,6 +69,72 @@ static uint32_t get_cell_size(const void
++ 	return cell_size;
++ }
++ 
+++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
+++
+++static char *append_rootblock(char *dest, const char *str, int len, void *fdt)
+++{
+++	char *ptr, *end;
+++	char *root="root=";
+++	int i, l;
+++	const char *rootblock;
+++
+++	//ARM doesn't have __HAVE_ARCH_STRSTR, so search manually
+++	ptr = str - 1;
+++
+++	do {
+++		//first find an 'r' at the begining or after a space
+++		do {
+++			ptr++;
+++			ptr = strchr(ptr, 'r');
+++			if (!ptr)
+++				goto no_append;
+++
+++		} while (ptr != str && *(ptr-1) != ' ');
+++
+++		//then check for the rest
+++		for(i = 1; i <= 4; i++)
+++			if(*(ptr+i) != *(root+i)) break;
+++
+++	} while (i != 5);
+++
+++	end = strchr(ptr, ' ');
+++	end = end ? (end - 1) : (strchr(ptr, 0) - 1);
+++
+++	//find partition number (assumes format root=/dev/mtdXX | /dev/mtdblockXX | yy:XX )
+++	for( i = 0; end >= ptr && *end >= '0' && *end <= '9'; end--, i++);
+++	ptr = end + 1;
+++
+++	/* if append-rootblock property is set use it to append to command line */
+++	rootblock = getprop(fdt, "/chosen", "append-rootblock", &l);
+++	if (rootblock == NULL)
+++		goto no_append;
+++
+++	if (*dest != ' ') {
+++		*dest = ' ';
+++		dest++;
+++		len++;
+++	}
+++
+++	if (len + l + i <= COMMAND_LINE_SIZE) {
+++		memcpy(dest, rootblock, l);
+++		dest += l - 1;
+++		memcpy(dest, ptr, i);
+++		dest += i;
+++	}
+++
+++	return dest;
+++
+++no_append:
+++	len = strlen(str);
+++	if (len + 1 < COMMAND_LINE_SIZE) {
+++		memcpy(dest, str, len);
+++		dest += len;
+++	}
+++
+++	return dest;
+++}
+++#endif
+++
++ static void merge_fdt_bootargs(void *fdt, const char *fdt_cmdline)
++ {
++ 	char cmdline[COMMAND_LINE_SIZE];
++@@ -86,12 +154,21 @@ static void merge_fdt_bootargs(void *fdt
++ 
++ 	/* and append the ATAG_CMDLINE */
++ 	if (fdt_cmdline) {
+++
+++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
+++		//save original bootloader args
+++		//and append ubi.mtd with root partition number to current cmdline
+++		setprop_string(fdt, "/chosen", "bootloader-args", fdt_cmdline);
+++		ptr = append_rootblock(ptr, fdt_cmdline, len, fdt);
+++
+++#else
++ 		len = strlen(fdt_cmdline);
++ 		if (ptr - cmdline + len + 2 < COMMAND_LINE_SIZE) {
++ 			*ptr++ = ' ';
++ 			memcpy(ptr, fdt_cmdline, len);
++ 			ptr += len;
++ 		}
+++#endif
++ 	}
++ 	*ptr = '\0';
++ 
++@@ -166,7 +243,9 @@ int atags_to_fdt(void *atag_list, void *
++ 			else
++ 				setprop_string(fdt, "/chosen", "bootargs",
++ 					       atag->u.cmdline.cmdline);
++-		} else if (atag->hdr.tag == ATAG_MEM) {
+++		}
+++#ifndef CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE
+++		else if (atag->hdr.tag == ATAG_MEM) {
++ 			if (memcount >= sizeof(mem_reg_property)/4)
++ 				continue;
++ 			if (!atag->u.mem.size)
++@@ -210,6 +289,10 @@ int atags_to_fdt(void *atag_list, void *
++ 		setprop(fdt, "/memory", "reg", mem_reg_property,
++ 			4 * memcount * memsize);
++ 	}
+++#else
+++
+++	}
+++#endif
++ 
++ 	return fdt_pack(fdt);
++ }
++--- a/init/main.c
+++++ b/init/main.c
++@@ -104,6 +104,10 @@
++ #define CREATE_TRACE_POINTS
++ #include <trace/events/initcall.h>
++ 
+++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
+++#include <linux/of.h>
+++#endif
+++
++ static int kernel_init(void *);
++ 
++ extern void init_IRQ(void);
+diff --git a/target/linux/mvebu/patches-5.10/301-mvebu-armada-38x-enable-libata-leds.patch b/target/linux/mvebu/patches-5.10/301-mvebu-armada-38x-enable-libata-leds.patch
+new file mode 100644
+index 0000000000..b8ab700c97
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/301-mvebu-armada-38x-enable-libata-leds.patch
+@@ -0,0 +1,10 @@
++--- a/arch/arm/mach-mvebu/Kconfig
+++++ b/arch/arm/mach-mvebu/Kconfig
++@@ -69,6 +69,7 @@ config MACH_ARMADA_38X
++ 	select HAVE_SMP
++ 	select MACH_MVEBU_V7
++ 	select PINCTRL_ARMADA_38X
+++	select ARCH_WANT_LIBATA_LEDS
++ 	help
++ 	  Say 'Y' here if you want your kernel to support boards based
++ 	  on the Marvell Armada 380/385 SoC with device tree.
+diff --git a/target/linux/mvebu/patches-5.10/302-add_powertables.patch b/target/linux/mvebu/patches-5.10/302-add_powertables.patch
 new file mode 100644
 index 0000000000..efbbbc7d78
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/002-add_powertables.patch
++++ b/target/linux/mvebu/patches-5.10/302-add_powertables.patch
 @@ -0,0 +1,770 @@
 +--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
 ++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
@@ -1298,56 +1720,11 @@ index 0000000000..efbbbc7d78
 + 	};
 + };
 + 
-diff --git a/target/linux/mvebu/patches-5.10/004-add_sata_disk_activity_trigger.patch b/target/linux/mvebu/patches-5.10/004-add_sata_disk_activity_trigger.patch
-new file mode 100644
-index 0000000000..2cb8f25490
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/004-add_sata_disk_activity_trigger.patch
-@@ -0,0 +1,39 @@
-+From 172230195068703b78ad5733a09492f5d6814c09 Mon Sep 17 00:00:00 2001
-+From: Ansuel Smith <ansuelsmth@gmail.com>
-+Date: Tue, 28 Feb 2017 14:15:50 +0100
-+Subject: [PATCH] ARM: dts: armada: Add default trigger for sata led
-+
-+In others board we have the sata led set to function
-+with the sata led trigger by default.
-+This patch makes the same for these board that have sata
-+led but get disabled by not associating it to any trigger.
-+
-+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-+Acked-by: Jason Cooper <jason@lakedaemon.net>
-+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-+---
-+ arch/arm/boot/dts/armada-385-linksys-caiman.dts | 1 +
-+ arch/arm/boot/dts/armada-385-linksys-cobra.dts  | 1 +
-+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts   | 1 +
-+ 3 files changed, 3 insertions(+)
-+
-+--- a/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-++++ b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-+@@ -68,6 +68,7 @@
-+ 
-+ 	sata {
-+ 		label = "caiman:white:sata";
-++		linux,default-trigger = "disk-activity";
-+ 	};
-+ };
-+ 
-+--- a/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-++++ b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-+@@ -68,6 +68,7 @@
-+ 
-+ 	sata {
-+ 		label = "cobra:white:sata";
-++		linux,default-trigger = "disk-activity";
-+ 	};
-+ };
-+ 
-diff --git a/target/linux/mvebu/patches-5.10/005-linksys_hardcode_nand_ecc_settings.patch b/target/linux/mvebu/patches-5.10/005-linksys_hardcode_nand_ecc_settings.patch
+diff --git a/target/linux/mvebu/patches-5.10/303-linksys_hardcode_nand_ecc_settings.patch b/target/linux/mvebu/patches-5.10/303-linksys_hardcode_nand_ecc_settings.patch
 new file mode 100644
 index 0000000000..89a5e19803
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/005-linksys_hardcode_nand_ecc_settings.patch
++++ b/target/linux/mvebu/patches-5.10/303-linksys_hardcode_nand_ecc_settings.patch
 @@ -0,0 +1,17 @@
 +Newer Linksys boards might come with a Winbond W29N02GV which can be
 +configured in different ways. Make sure we configure it the same way
@@ -1366,357 +1743,11 @@ index 0000000000..89a5e19803
 + 		marvell,nand-keep-config;
 + 		nand-on-flash-bbt;
 + 	};
-diff --git a/target/linux/mvebu/patches-5.10/006-mvebu-Mangle-bootloader-s-kernel-arguments.patch b/target/linux/mvebu/patches-5.10/006-mvebu-Mangle-bootloader-s-kernel-arguments.patch
-new file mode 100644
-index 0000000000..7be06318dc
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/006-mvebu-Mangle-bootloader-s-kernel-arguments.patch
-@@ -0,0 +1,189 @@
-+From 71270226b14733a4b1f2cde58ea9265caa50b38d Mon Sep 17 00:00:00 2001
-+From: Adrian Panella <ianchi74@outlook.com>
-+Date: Thu, 9 Mar 2017 09:37:17 +0100
-+Subject: [PATCH 67/69] generic: Mangle bootloader's kernel arguments
-+
-+The command-line arguments provided by the boot loader will be
-+appended to a new device tree property: bootloader-args.
-+If there is a property "append-rootblock" in DT under /chosen
-+and a root= option in bootloaders command line it will be parsed
-+and added to DT bootargs with the form: <append-rootblock>XX.
-+Only command line ATAG will be processed, the rest of the ATAGs
-+sent by bootloader will be ignored.
-+This is usefull in dual boot systems, to get the current root partition
-+without afecting the rest of the system.
-+
-+Signed-off-by: Adrian Panella <ianchi74@outlook.com>
-+
-+This patch has been modified to be mvebu specific. The original patch 
-+did not pass the bootloader cmdline on if no append-rootblock stanza 
-+was found, resulting in blank cmdline and failure to boot.
-+
-+Signed-off-by: Michael Gray <michael.gray@lantisproject.com>
-+---
-+ arch/arm/Kconfig                        | 11 ++++
-+ arch/arm/boot/compressed/atags_to_fdt.c | 85 ++++++++++++++++++++++++-
-+ init/main.c                             | 16 +++++
-+ 3 files changed, 111 insertions(+), 1 deletion(-)
-+
-+--- a/arch/arm/Kconfig
-++++ b/arch/arm/Kconfig
-+@@ -1825,6 +1825,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
-+ 	  The command-line arguments provided by the boot loader will be
-+ 	  appended to the the device tree bootargs property.
-+ 
-++config ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE
-++	bool "Append rootblock parsing bootloader's kernel arguments"
-++	help
-++	  The command-line arguments provided by the boot loader will be
-++	  appended to a new device tree property: bootloader-args.
-++	  If there is a property "append-rootblock" in DT under /chosen 
-++	  and a root= option in bootloaders command line it will be parsed 
-++	  and added to DT bootargs with the form: <append-rootblock>XX.
-++	  Only command line ATAG will be processed, the rest of the ATAGs
-++	  sent by bootloader will be ignored.
-++
-+ endchoice
-+ 
-+ config CMDLINE
-+--- a/arch/arm/boot/compressed/atags_to_fdt.c
-++++ b/arch/arm/boot/compressed/atags_to_fdt.c
-+@@ -4,6 +4,8 @@
-+ 
-+ #if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND)
-+ #define do_extend_cmdline 1
-++#elif defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
-++#define do_extend_cmdline 1
-+ #else
-+ #define do_extend_cmdline 0
-+ #endif
-+@@ -67,6 +69,72 @@ static uint32_t get_cell_size(const void
-+ 	return cell_size;
-+ }
-+ 
-++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
-++
-++static char *append_rootblock(char *dest, const char *str, int len, void *fdt)
-++{
-++	char *ptr, *end;
-++	char *root="root=";
-++	int i, l;
-++	const char *rootblock;
-++
-++	//ARM doesn't have __HAVE_ARCH_STRSTR, so search manually
-++	ptr = str - 1;
-++
-++	do {
-++		//first find an 'r' at the begining or after a space
-++		do {
-++			ptr++;
-++			ptr = strchr(ptr, 'r');
-++			if (!ptr)
-++				goto no_append;
-++
-++		} while (ptr != str && *(ptr-1) != ' ');
-++
-++		//then check for the rest
-++		for(i = 1; i <= 4; i++)
-++			if(*(ptr+i) != *(root+i)) break;
-++
-++	} while (i != 5);
-++
-++	end = strchr(ptr, ' ');
-++	end = end ? (end - 1) : (strchr(ptr, 0) - 1);
-++
-++	//find partition number (assumes format root=/dev/mtdXX | /dev/mtdblockXX | yy:XX )
-++	for( i = 0; end >= ptr && *end >= '0' && *end <= '9'; end--, i++);
-++	ptr = end + 1;
-++
-++	/* if append-rootblock property is set use it to append to command line */
-++	rootblock = getprop(fdt, "/chosen", "append-rootblock", &l);
-++	if (rootblock == NULL)
-++		goto no_append;
-++
-++	if (*dest != ' ') {
-++		*dest = ' ';
-++		dest++;
-++		len++;
-++	}
-++
-++	if (len + l + i <= COMMAND_LINE_SIZE) {
-++		memcpy(dest, rootblock, l);
-++		dest += l - 1;
-++		memcpy(dest, ptr, i);
-++		dest += i;
-++	}
-++
-++	return dest;
-++
-++no_append:
-++	len = strlen(str);
-++	if (len + 1 < COMMAND_LINE_SIZE) {
-++		memcpy(dest, str, len);
-++		dest += len;
-++	}
-++
-++	return dest;
-++}
-++#endif
-++
-+ static void merge_fdt_bootargs(void *fdt, const char *fdt_cmdline)
-+ {
-+ 	char cmdline[COMMAND_LINE_SIZE];
-+@@ -86,12 +154,21 @@ static void merge_fdt_bootargs(void *fdt
-+ 
-+ 	/* and append the ATAG_CMDLINE */
-+ 	if (fdt_cmdline) {
-++
-++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
-++		//save original bootloader args
-++		//and append ubi.mtd with root partition number to current cmdline
-++		setprop_string(fdt, "/chosen", "bootloader-args", fdt_cmdline);
-++		ptr = append_rootblock(ptr, fdt_cmdline, len, fdt);
-++
-++#else
-+ 		len = strlen(fdt_cmdline);
-+ 		if (ptr - cmdline + len + 2 < COMMAND_LINE_SIZE) {
-+ 			*ptr++ = ' ';
-+ 			memcpy(ptr, fdt_cmdline, len);
-+ 			ptr += len;
-+ 		}
-++#endif
-+ 	}
-+ 	*ptr = '\0';
-+ 
-+@@ -166,7 +243,9 @@ int atags_to_fdt(void *atag_list, void *
-+ 			else
-+ 				setprop_string(fdt, "/chosen", "bootargs",
-+ 					       atag->u.cmdline.cmdline);
-+-		} else if (atag->hdr.tag == ATAG_MEM) {
-++		}
-++#ifndef CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE
-++		else if (atag->hdr.tag == ATAG_MEM) {
-+ 			if (memcount >= sizeof(mem_reg_property)/4)
-+ 				continue;
-+ 			if (!atag->u.mem.size)
-+@@ -210,6 +289,10 @@ int atags_to_fdt(void *atag_list, void *
-+ 		setprop(fdt, "/memory", "reg", mem_reg_property,
-+ 			4 * memcount * memsize);
-+ 	}
-++#else
-++
-++	}
-++#endif
-+ 
-+ 	return fdt_pack(fdt);
-+ }
-+--- a/init/main.c
-++++ b/init/main.c
-+@@ -104,6 +104,10 @@
-+ #define CREATE_TRACE_POINTS
-+ #include <trace/events/initcall.h>
-+ 
-++#if defined(CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_MANGLE)
-++#include <linux/of.h>
-++#endif
-++
-+ static int kernel_init(void *);
-+ 
-+ extern void init_IRQ(void);
-diff --git a/target/linux/mvebu/patches-5.10/022-mvneta-driver-disallow-XDP-program-on-hardware-buffe.patch b/target/linux/mvebu/patches-5.10/022-mvneta-driver-disallow-XDP-program-on-hardware-buffe.patch
-new file mode 100644
-index 0000000000..e8a41d9eb2
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/022-mvneta-driver-disallow-XDP-program-on-hardware-buffe.patch
-@@ -0,0 +1,53 @@
-+From 79572c98c554dcdb080bca547c871a51716dcdf8 Mon Sep 17 00:00:00 2001
-+From: Sven Auhagen <sven.auhagen@voleatech.de>
-+Date: Sat, 25 Jan 2020 08:07:03 +0000
-+Subject: [PATCH] mvneta driver disallow XDP program on hardware buffer
-+ management
-+
-+Recently XDP Support was added to the mvneta driver
-+for software buffer management only.
-+It is still possible to attach an XDP program if
-+hardware buffer management is used.
-+It is not doing anything at that point.
-+
-+The patch disallows attaching XDP programs to mvneta
-+if hardware buffer management is used.
-+
-+I am sorry about that. It is my first submission and I am having
-+some troubles with the format of my emails.
-+
-+v4 -> v5:
-+- Remove extra tabs
-+
-+v3 -> v4:
-+- Please ignore v3 I accidentally submitted
-+  my other patch with git-send-mail and v4 is correct
-+
-+v2 -> v3:
-+- My mailserver corrupted the patch
-+  resubmission with git-send-email
-+
-+v1 -> v2:
-+- Fixing the patches indentation
-+
-+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-+Signed-off-by: David S. Miller <davem@davemloft.net>
-+---
-+ drivers/net/ethernet/marvell/mvneta.c | 6 ++++++
-+ 1 file changed, 6 insertions(+)
-+
-+--- a/drivers/net/ethernet/marvell/mvneta.c
-++++ b/drivers/net/ethernet/marvell/mvneta.c
-+@@ -4263,6 +4263,12 @@ static int mvneta_xdp_setup(struct net_d
-+ 		return -EOPNOTSUPP;
-+ 	}
-+ 
-++	if (pp->bm_priv) {
-++		NL_SET_ERR_MSG_MOD(extack,
-++				   "Hardware Buffer Management not supported on XDP");
-++		return -EOPNOTSUPP;
-++	}
-++
-+ 	need_update = !!pp->xdp_prog != !!prog;
-+ 	if (running && need_update)
-+ 		mvneta_stop(dev);
-diff --git a/target/linux/mvebu/patches-5.10/030-linkstation-poweroff.patch b/target/linux/mvebu/patches-5.10/030-linkstation-poweroff.patch
-new file mode 100644
-index 0000000000..173527332a
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/030-linkstation-poweroff.patch
-@@ -0,0 +1,20 @@
-+--- a/drivers/power/reset/Kconfig
-++++ b/drivers/power/reset/Kconfig
-+@@ -99,6 +99,17 @@ config POWER_RESET_HISI
-+ 	help
-+ 	  Reboot support for Hisilicon boards.
-+ 
-++config POWER_RESET_LINKSTATION
-++	tristate "Buffalo LinkStation power-off driver"
-++	depends on ARCH_MVEBU || COMPILE_TEST
-++	depends on OF_MDIO && PHYLIB
-++	help
-++	  This driver supports turning off some Buffalo LinkStations by
-++	  setting an output pin at the ethernet PHY to the correct state.
-++	  It also makes the device compatible with the WoL function.
-++
-++	  Say Y here if you have a Buffalo LinkStation LS421D/E.
-++
-+ config POWER_RESET_MSM
-+ 	bool "Qualcomm MSM power-off driver"
-+ 	depends on ARCH_QCOM
-diff --git a/target/linux/mvebu/patches-5.10/100-find_active_root.patch b/target/linux/mvebu/patches-5.10/100-find_active_root.patch
-new file mode 100644
-index 0000000000..854031b0d5
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/100-find_active_root.patch
-@@ -0,0 +1,60 @@
-+The WRT1900AC among other Linksys routers uses a dual-firmware layout.
-+Dynamically rename the active partition to "ubi".
-+
-+Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
-+
-+--- a/drivers/mtd/parsers/ofpart.c
-++++ b/drivers/mtd/parsers/ofpart.c
-+@@ -21,6 +21,8 @@ static bool node_has_compatible(struct d
-+ 	return of_get_property(pp, "compatible", NULL);
-+ }
-+ 
-++static int mangled_rootblock;
-++
-+ static int parse_fixed_partitions(struct mtd_info *master,
-+ 				  const struct mtd_partition **pparts,
-+ 				  struct mtd_part_parser_data *data)
-+@@ -29,6 +31,7 @@ static int parse_fixed_partitions(struct
-+ 	struct device_node *mtd_node;
-+ 	struct device_node *ofpart_node;
-+ 	const char *partname;
-++	const char *owrtpart = "ubi";
-+ 	struct device_node *pp;
-+ 	int nr_parts, i, ret = 0;
-+ 	bool dedicated = true;
-+@@ -106,9 +109,13 @@ static int parse_fixed_partitions(struct
-+ 		parts[i].size = of_read_number(reg + a_cells, s_cells);
-+ 		parts[i].of_node = pp;
-+ 
-+-		partname = of_get_property(pp, "label", &len);
-+-		if (!partname)
-+-			partname = of_get_property(pp, "name", &len);
-++		if (mangled_rootblock && (i == mangled_rootblock)) {
-++			partname = owrtpart;
-++		} else {
-++			partname = of_get_property(pp, "label", &len);
-++			if (!partname)
-++				partname = of_get_property(pp, "name", &len);
-++		}
-+ 		parts[i].name = partname;
-+ 
-+ 		if (of_get_property(pp, "read-only", &len))
-+@@ -215,6 +222,18 @@ static int __init ofpart_parser_init(voi
-+ 	return 0;
-+ }
-+ 
-++static int __init active_root(char *str)
-++{
-++	get_option(&str, &mangled_rootblock);
-++
-++	if (!mangled_rootblock)
-++		return 1;
-++
-++	return 1;
-++}
-++
-++__setup("mangled_rootblock=", active_root);
-++
-+ static void __exit ofpart_parser_exit(void)
-+ {
-+ 	deregister_mtd_parser(&ofpart_parser);
-diff --git a/target/linux/mvebu/patches-5.10/102-revert_i2c_delay.patch b/target/linux/mvebu/patches-5.10/102-revert_i2c_delay.patch
+diff --git a/target/linux/mvebu/patches-5.10/304-revert_i2c_delay.patch b/target/linux/mvebu/patches-5.10/304-revert_i2c_delay.patch
 new file mode 100644
 index 0000000000..930c0f9494
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/102-revert_i2c_delay.patch
++++ b/target/linux/mvebu/patches-5.10/304-revert_i2c_delay.patch
 @@ -0,0 +1,15 @@
 +--- a/arch/arm/boot/dts/armada-xp.dtsi
 ++++ b/arch/arm/boot/dts/armada-xp.dtsi
@@ -1733,11 +1764,11 @@ index 0000000000..930c0f9494
 + 	reg = <0x11100 0x100>;
 + };
 + 
-diff --git a/target/linux/mvebu/patches-5.10/205-armada-385-rd-mtd-partitions.patch b/target/linux/mvebu/patches-5.10/205-armada-385-rd-mtd-partitions.patch
+diff --git a/target/linux/mvebu/patches-5.10/305-armada-385-rd-mtd-partitions.patch b/target/linux/mvebu/patches-5.10/305-armada-385-rd-mtd-partitions.patch
 new file mode 100644
 index 0000000000..31bd53b1f3
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/205-armada-385-rd-mtd-partitions.patch
++++ b/target/linux/mvebu/patches-5.10/305-armada-385-rd-mtd-partitions.patch
 @@ -0,0 +1,19 @@
 +--- a/arch/arm/boot/dts/armada-388-rd.dts
 ++++ b/arch/arm/boot/dts/armada-388-rd.dts
@@ -1758,11 +1789,11 @@ index 0000000000..31bd53b1f3
 + 	};
 + };
 + 
-diff --git a/target/linux/mvebu/patches-5.10/206-ARM-mvebu-385-ap-Add-partitions.patch b/target/linux/mvebu/patches-5.10/206-ARM-mvebu-385-ap-Add-partitions.patch
+diff --git a/target/linux/mvebu/patches-5.10/306-ARM-mvebu-385-ap-Add-partitions.patch b/target/linux/mvebu/patches-5.10/306-ARM-mvebu-385-ap-Add-partitions.patch
 new file mode 100644
 index 0000000000..2057e31c7e
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/206-ARM-mvebu-385-ap-Add-partitions.patch
++++ b/target/linux/mvebu/patches-5.10/306-ARM-mvebu-385-ap-Add-partitions.patch
 @@ -0,0 +1,35 @@
 +From 9861f93a59142a3131870df2521eb2deb73026d7 Mon Sep 17 00:00:00 2001
 +From: Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -1799,11 +1830,11 @@ index 0000000000..2057e31c7e
 + 				reg = <0x00c00000 0x3f400000>;
 + 			};
 + 		};
-diff --git a/target/linux/mvebu/patches-5.10/230-armada-xp-linksys-mamba-broken-idle.patch b/target/linux/mvebu/patches-5.10/230-armada-xp-linksys-mamba-broken-idle.patch
+diff --git a/target/linux/mvebu/patches-5.10/307-armada-xp-linksys-mamba-broken-idle.patch b/target/linux/mvebu/patches-5.10/307-armada-xp-linksys-mamba-broken-idle.patch
 new file mode 100644
 index 0000000000..16112d53fc
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/230-armada-xp-linksys-mamba-broken-idle.patch
++++ b/target/linux/mvebu/patches-5.10/307-armada-xp-linksys-mamba-broken-idle.patch
 @@ -0,0 +1,10 @@
 +--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
 ++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
@@ -1815,11 +1846,11 @@ index 0000000000..16112d53fc
 ++&coherencyfab {
 ++	broken-idle;
 ++};
-diff --git a/target/linux/mvebu/patches-5.10/231-armada-xp-linksys-mamba-wan.patch b/target/linux/mvebu/patches-5.10/231-armada-xp-linksys-mamba-wan.patch
+diff --git a/target/linux/mvebu/patches-5.10/308-armada-xp-linksys-mamba-wan.patch b/target/linux/mvebu/patches-5.10/308-armada-xp-linksys-mamba-wan.patch
 new file mode 100644
 index 0000000000..4315abc7d2
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/231-armada-xp-linksys-mamba-wan.patch
++++ b/target/linux/mvebu/patches-5.10/308-armada-xp-linksys-mamba-wan.patch
 @@ -0,0 +1,11 @@
 +--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
 ++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
@@ -1832,11 +1863,11 @@ index 0000000000..4315abc7d2
 + 			};
 + 
 + 			port@5 {
-diff --git a/target/linux/mvebu/patches-5.10/240-linksys-status-led.patch b/target/linux/mvebu/patches-5.10/240-linksys-status-led.patch
+diff --git a/target/linux/mvebu/patches-5.10/309-linksys-status-led.patch b/target/linux/mvebu/patches-5.10/309-linksys-status-led.patch
 new file mode 100644
 index 0000000000..e5e83572c9
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/240-linksys-status-led.patch
++++ b/target/linux/mvebu/patches-5.10/309-linksys-status-led.patch
 @@ -0,0 +1,50 @@
 +--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
 ++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
@@ -1888,11 +1919,11 @@ index 0000000000..e5e83572c9
 + 			label = "mamba:white:power";
 + 			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
 + 			default-state = "on";
-diff --git a/target/linux/mvebu/patches-5.10/241-linksys-use-eth0-as-cpu-port.patch b/target/linux/mvebu/patches-5.10/241-linksys-use-eth0-as-cpu-port.patch
+diff --git a/target/linux/mvebu/patches-5.10/310-linksys-use-eth0-as-cpu-port.patch b/target/linux/mvebu/patches-5.10/310-linksys-use-eth0-as-cpu-port.patch
 new file mode 100644
 index 0000000000..84d49a004b
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/241-linksys-use-eth0-as-cpu-port.patch
++++ b/target/linux/mvebu/patches-5.10/310-linksys-use-eth0-as-cpu-port.patch
 @@ -0,0 +1,25 @@
 +--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
 ++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
@@ -1919,11 +1950,11 @@ index 0000000000..84d49a004b
 + 
 + 				fixed-link {
 + 					speed = <1000>;
-diff --git a/target/linux/mvebu/patches-5.10/250-adjust-compatible-for-linksys.patch b/target/linux/mvebu/patches-5.10/250-adjust-compatible-for-linksys.patch
+diff --git a/target/linux/mvebu/patches-5.10/311-adjust-compatible-for-linksys.patch b/target/linux/mvebu/patches-5.10/311-adjust-compatible-for-linksys.patch
 new file mode 100644
 index 0000000000..a5d3e63810
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/250-adjust-compatible-for-linksys.patch
++++ b/target/linux/mvebu/patches-5.10/311-adjust-compatible-for-linksys.patch
 @@ -0,0 +1,68 @@
 +--- a/arch/arm/boot/dts/armada-385-linksys-rango.dts
 ++++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
@@ -1993,587 +2024,11 @@ index 0000000000..a5d3e63810
 + 		     "marvell,armada380";
 + };
 + 
-diff --git a/target/linux/mvebu/patches-5.10/300-mvneta-tx-queue-workaround.patch b/target/linux/mvebu/patches-5.10/300-mvneta-tx-queue-workaround.patch
-new file mode 100644
-index 0000000000..3c2ea5ecf7
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/300-mvneta-tx-queue-workaround.patch
-@@ -0,0 +1,26 @@
-+The hardware queue scheduling is apparently configured with fixed
-+priorities, which creates a nasty fairness issue where traffic from one
-+CPU can starve traffic from all other CPUs.
-+
-+Work around this issue by forcing all tx packets to go through one CPU,
-+until this issue is fixed properly.
-+
-+Signed-off-by: Felix Fietkau <nbd@nbd.name>
-+---
-+--- a/drivers/net/ethernet/marvell/mvneta.c
-++++ b/drivers/net/ethernet/marvell/mvneta.c
-+@@ -4684,6 +4684,14 @@ static int mvneta_ethtool_set_eee(struct
-+ 	return phylink_ethtool_set_eee(pp->phylink, eee);
-+ }
-+ 
-++static u16 mvneta_select_queue(struct net_device *dev, struct sk_buff *skb,
-++			       struct net_device *sb_dev)
-++{
-++	/* XXX: hardware queue scheduling is broken,
-++	 * use only one queue until it is fixed */
-++	return 0;
-++}
-++
-+ static const struct net_device_ops mvneta_netdev_ops = {
-+ 	.ndo_open            = mvneta_open,
-+ 	.ndo_stop            = mvneta_stop,
-diff --git a/target/linux/mvebu/patches-5.10/400-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch b/target/linux/mvebu/patches-5.10/400-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
-new file mode 100644
-index 0000000000..29f36be460
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/400-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
-@@ -0,0 +1,40 @@
-+From c28b2d367da8a471482e6a4aa8337ab6369a80c2 Mon Sep 17 00:00:00 2001
-+From: Russell King <rmk+kernel@arm.linux.org.uk>
-+Date: Sat, 3 Oct 2015 09:13:05 +0100
-+Subject: cpuidle: mvebu: indicate failure to enter deeper sleep states
-+
-+The cpuidle ->enter method expects the return value to be the sleep
-+state we entered.  Returning negative numbers or other codes is not
-+permissible since coupled CPU idle was merged.
-+
-+At least some of the mvebu_v7_cpu_suspend() implementations return the
-+value from cpu_suspend(), which returns zero if the CPU vectors back
-+into the kernel via cpu_resume() (the success case), or the non-zero
-+return value of the suspend actor, or one (failure cases).
-+
-+We do not want to be returning the failure case value back to CPU idle
-+as that indicates that we successfully entered one of the deeper idle
-+states.  Always return zero instead, indicating that we slept for the
-+shortest amount of time.
-+
-+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-+---
-+ drivers/cpuidle/cpuidle-mvebu-v7.c | 6 +++++-
-+ 1 file changed, 5 insertions(+), 1 deletion(-)
-+
-+--- a/drivers/cpuidle/cpuidle-mvebu-v7.c
-++++ b/drivers/cpuidle/cpuidle-mvebu-v7.c
-+@@ -39,8 +39,12 @@ static int mvebu_v7_enter_idle(struct cp
-+ 	ret = mvebu_v7_cpu_suspend(deepidle);
-+ 	cpu_pm_exit();
-+ 
-++	/*
-++	 * If we failed to enter the desired state, indicate that we
-++	 * slept lightly.
-++	 */
-+ 	if (ret)
-+-		return ret;
-++		return 0;
-+ 
-+ 	return index;
-+ }
-diff --git a/target/linux/mvebu/patches-5.10/401-pci-mvebu-time-out-reset-on-link-up.patch b/target/linux/mvebu/patches-5.10/401-pci-mvebu-time-out-reset-on-link-up.patch
-new file mode 100644
-index 0000000000..4058dc8ed5
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/401-pci-mvebu-time-out-reset-on-link-up.patch
-@@ -0,0 +1,60 @@
-+From 287b9df160b6159f8d385424904f8bac501280c1 Mon Sep 17 00:00:00 2001
-+From: Russell King <rmk+kernel@armlinux.org.uk>
-+Date: Sat, 9 Jul 2016 10:58:16 +0100
-+Subject: pci: mvebu: time out reset on link up
-+
-+If the port reports that the link is up while we are resetting, there's
-+little point in waiting for the full duration.
-+
-+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-+---
-+ drivers/pci/controller/pci-mvebu.c | 20 ++++++++++++++------
-+ 1 file changed, 14 insertions(+), 6 deletions(-)
-+
-+--- a/drivers/pci/controller/pci-mvebu.c
-++++ b/drivers/pci/controller/pci-mvebu.c
-+@@ -928,6 +928,7 @@ static int mvebu_pcie_powerup(struct mve
-+ 
-+ 	if (port->reset_gpio) {
-+ 		u32 reset_udelay = PCI_PM_D3COLD_WAIT * 1000;
-++		unsigned int i;
-+ 
-+ 		of_property_read_u32(port->dn, "reset-delay-us",
-+ 				     &reset_udelay);
-+@@ -935,7 +936,13 @@ static int mvebu_pcie_powerup(struct mve
-+ 		udelay(100);
-+ 
-+ 		gpiod_set_value_cansleep(port->reset_gpio, 0);
-+-		msleep(reset_udelay / 1000);
-++		for (i = 0; i < reset_udelay; i += 1000) {
-++			if (mvebu_pcie_link_up(port))
-++				break;
-++			msleep(1);
-++		}
-++
-++		printk("%s: reset completed in %dus\n", port->name, i);
-+ 	}
-+ 
-+ 	return 0;
-+@@ -1099,15 +1106,16 @@ static int mvebu_pcie_probe(struct platf
-+ 		if (!child)
-+ 			continue;
-+ 
-+-		ret = mvebu_pcie_powerup(port);
-+-		if (ret < 0)
-+-			continue;
-+-
-+ 		port->base = mvebu_pcie_map_registers(pdev, child, port);
-+ 		if (IS_ERR(port->base)) {
-+ 			dev_err(dev, "%s: cannot map registers\n", port->name);
-+ 			port->base = NULL;
-+-			mvebu_pcie_powerdown(port);
-++			continue;
-++		}
-++
-++		ret = mvebu_pcie_powerup(port);
-++		if (ret < 0) {
-++			port->base = NULL;
-+ 			continue;
-+ 		}
-+ 
-diff --git a/target/linux/mvebu/patches-5.10/405-PCI-aardvark-Improve-link-training.patch b/target/linux/mvebu/patches-5.10/405-PCI-aardvark-Improve-link-training.patch
-new file mode 100644
-index 0000000000..64d6e0323b
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/405-PCI-aardvark-Improve-link-training.patch
-@@ -0,0 +1,135 @@
-+From 43fc679ced18006b12d918d7a8a4af392b7fbfe7 Mon Sep 17 00:00:00 2001
-+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-+Date: Thu, 30 Apr 2020 10:06:17 +0200
-+Subject: [PATCH] PCI: aardvark: Improve link training
-+MIME-Version: 1.0
-+Content-Type: text/plain; charset=UTF-8
-+Content-Transfer-Encoding: 8bit
-+
-+Currently the aardvark driver trains link in PCIe gen2 mode. This may
-+cause some buggy gen1 cards (such as Compex WLE900VX) to be unstable or
-+even not detected. Moreover when ASPM code tries to retrain link second
-+time, these cards may stop responding and link goes down. If gen1 is
-+used this does not happen.
-+
-+Unconditionally forcing gen1 is not a good solution since it may have
-+performance impact on gen2 cards.
-+
-+To overcome this, read 'max-link-speed' property (as defined in PCI
-+device tree bindings) and use this as max gen mode. Then iteratively try
-+link training at this mode or lower until successful. After successful
-+link training choose final controller gen based on Negotiated Link Speed
-+from Link Status register, which should match card speed.
-+
-+Link: https://lore.kernel.org/r/20200430080625.26070-5-pali@kernel.org
-+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-+Signed-off-by: Pali Rohár <pali@kernel.org>
-+Signed-off-by: Marek Behún <marek.behun@nic.cz>
-+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+Reviewed-by: Rob Herring <robh@kernel.org>
-+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-+---
-+ drivers/pci/controller/pci-aardvark.c | 114 ++++++++++++++++++++------
-+ 1 file changed, 89 insertions(+), 25 deletions(-)
-+
-+--- a/drivers/pci/controller/pci-aardvark.c
-++++ b/drivers/pci/controller/pci-aardvark.c
-+@@ -253,6 +251,85 @@ static void advk_pcie_wait_for_retrain(s
-+ 	}
-+ }
-+ 
-++static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
-++{
-++	int ret, neg_gen;
-++	u32 reg;
-++
-++	/* Setup link speed */
-++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-++	reg &= ~PCIE_GEN_SEL_MSK;
-++	if (gen == 3)
-++		reg |= SPEED_GEN_3;
-++	else if (gen == 2)
-++		reg |= SPEED_GEN_2;
-++	else
-++		reg |= SPEED_GEN_1;
-++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-++
-++	/*
-++	 * Enable link training. This is not needed in every call to this
-++	 * function, just once suffices, but it does not break anything either.
-++	 */
-++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-++	reg |= LINK_TRAINING_EN;
-++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-++
-++	/*
-++	 * Start link training immediately after enabling it.
-++	 * This solves problems for some buggy cards.
-++	 */
-++	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-++	reg |= PCIE_CORE_LINK_TRAINING;
-++	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-++
-++	ret = advk_pcie_wait_for_link(pcie);
-++	if (ret)
-++		return ret;
-++
-++	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-++	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
-++
-++	return neg_gen;
-++}
-++
-++static void advk_pcie_train_link(struct advk_pcie *pcie)
-++{
-++	struct device *dev = &pcie->pdev->dev;
-++	int neg_gen = -1, gen;
-++
-++	/*
-++	 * Try link training at link gen specified by device tree property
-++	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
-++	 */
-++	for (gen = pcie->link_gen; gen > 0; --gen) {
-++		neg_gen = advk_pcie_train_at_gen(pcie, gen);
-++		if (neg_gen > 0)
-++			break;
-++	}
-++
-++	if (neg_gen < 0)
-++		goto err;
-++
-++	/*
-++	 * After successful training if negotiated gen is lower than requested,
-++	 * train again on negotiated gen. This solves some stability issues for
-++	 * some buggy gen1 cards.
-++	 */
-++	if (neg_gen < gen) {
-++		gen = neg_gen;
-++		neg_gen = advk_pcie_train_at_gen(pcie, gen);
-++	}
-++
-++	if (neg_gen == gen) {
-++		dev_info(dev, "link up at gen %i\n", gen);
-++		return;
-++	}
-++
-++err:
-++	dev_err(dev, "link never came up\n");
-++}
-++
-+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-+ {
-+ 	u32 reg;
-+@@ -1036,6 +1094,12 @@ static int advk_pcie_probe(struct platfo
-+ 		return ret;
-+ 	}
-+ 
-++	ret = of_pci_get_max_link_speed(dev->of_node);
-++	if (ret <= 0 || ret > 3)
-++		pcie->link_gen = 3;
-++	else
-++		pcie->link_gen = ret;
-++
-+ 	advk_pcie_setup_hw(pcie);
-+ 
-+ 	advk_sw_pci_bridge_init(pcie);
-diff --git a/target/linux/mvebu/patches-5.10/406-PCI-aardvark-Issue-PERST-via-GPIO.patch b/target/linux/mvebu/patches-5.10/406-PCI-aardvark-Issue-PERST-via-GPIO.patch
-new file mode 100644
-index 0000000000..0e92c21b93
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/406-PCI-aardvark-Issue-PERST-via-GPIO.patch
-@@ -0,0 +1,57 @@
-+From 5169a9851daaa2782a7bd2bb83d5b1bd224b2879 Mon Sep 17 00:00:00 2001
-+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-+Date: Thu, 30 Apr 2020 10:06:18 +0200
-+Subject: [PATCH] PCI: aardvark: Issue PERST via GPIO
-+MIME-Version: 1.0
-+Content-Type: text/plain; charset=UTF-8
-+Content-Transfer-Encoding: 8bit
-+
-+Add support for issuing PERST via GPIO specified in 'reset-gpios'
-+property (as described in PCI device tree bindings).
-+
-+Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
-+after reboot when PERST is not issued during driver initialization.
-+
-+If bootloader already enabled link training then issuing PERST has no
-+effect for some buggy cards (e.g. Compex WLE900VX) and these cards are
-+not detected. We therefore clear the LINK_TRAINING_EN register before.
-+
-+It was observed that Compex WLE900VX card needs to be in PERST reset
-+for at least 10ms if bootloader enabled link training.
-+
-+Tested on Turris MOX.
-+
-+Link: https://lore.kernel.org/r/20200430080625.26070-6-pali@kernel.org
-+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-+Signed-off-by: Pali Rohár <pali@kernel.org>
-+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-+---
-+ drivers/pci/controller/pci-aardvark.c | 43 ++++++++++++++++++++++++++-
-+ 1 file changed, 42 insertions(+), 1 deletion(-)
-+
-+--- a/drivers/pci/controller/pci-aardvark.c
-++++ b/drivers/pci/controller/pci-aardvark.c
-+@@ -1094,6 +1119,22 @@ static int advk_pcie_probe(struct platfo
-+ 		return ret;
-+ 	}
-+ 
-++	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
-++						       "reset-gpios", 0,
-++						       GPIOD_OUT_LOW,
-++						       "pcie1-reset");
-++	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
-++	if (ret) {
-++		if (ret == -ENOENT) {
-++			pcie->reset_gpio = NULL;
-++		} else {
-++			if (ret != -EPROBE_DEFER)
-++				dev_err(dev, "Failed to get reset-gpio: %i\n",
-++					ret);
-++			return ret;
-++		}
-++	}
-++
-+ 	ret = of_pci_get_max_link_speed(dev->of_node);
-+ 	if (ret <= 0 || ret > 3)
-+ 		pcie->link_gen = 3;
-diff --git a/target/linux/mvebu/patches-5.10/407-PCI-aardvark-Add-PHY-support.patch b/target/linux/mvebu/patches-5.10/407-PCI-aardvark-Add-PHY-support.patch
-new file mode 100644
-index 0000000000..a7702b8327
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/407-PCI-aardvark-Add-PHY-support.patch
-@@ -0,0 +1,116 @@
-+From 366697018c9a2aa67d457bfdc495115cface6ae8 Mon Sep 17 00:00:00 2001
-+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-+Date: Thu, 30 Apr 2020 10:06:20 +0200
-+Subject: [PATCH] PCI: aardvark: Add PHY support
-+MIME-Version: 1.0
-+Content-Type: text/plain; charset=UTF-8
-+Content-Transfer-Encoding: 8bit
-+
-+With recent proposed changes for U-Boot it is possible that bootloader
-+won't initialize the PHY for this controller (currently the PHY is
-+initialized regardless whether PCI is used in U-Boot, but with these
-+proposed changes the PHY is initialized only on request).
-+
-+Since the mvebu-a3700-comphy driver by Miquèl Raynal supports enabling
-+PCIe PHY, and since Linux' functionality should be independent on what
-+bootloader did, add code for enabling generic PHY if found in device OF
-+node.
-+
-+The mvebu-a3700-comphy driver does PHY powering via SMC calls to ARM
-+Trusted Firmware. The corresponding code in ARM Trusted Firmware skips
-+one register write which U-Boot does not: step 7 ("Enable TX"), see [1].
-+Instead ARM Trusted Firmware expects PCIe driver to do this step,
-+probably because the register is in PCIe controller address space,
-+instead of PHY address space. We therefore add this step into the
-+advk_pcie_setup_hw function.
-+
-+[1] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/drivers/marvell/comphy/phy-comphy-3700.c?h=v2.3-rc2#n836
-+
-+Link: https://lore.kernel.org/r/20200430080625.26070-8-pali@kernel.org
-+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-+Signed-off-by: Marek Behún <marek.behun@nic.cz>
-+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+Reviewed-by: Rob Herring <robh@kernel.org>
-+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-+Cc: Miquèl Raynal <miquel.raynal@bootlin.com>
-+---
-+ drivers/pci/controller/pci-aardvark.c | 69 +++++++++++++++++++++++++++
-+ 1 file changed, 69 insertions(+)
-+
-+--- a/drivers/pci/controller/pci-aardvark.c
-++++ b/drivers/pci/controller/pci-aardvark.c
-+@@ -358,6 +362,11 @@ static void advk_pcie_setup_hw(struct ad
-+ 
-+ 	advk_pcie_issue_perst(pcie);
-+ 
-++	/* Enable TX */
-++	reg = advk_readl(pcie, PCIE_CORE_REF_CLK_REG);
-++	reg |= PCIE_CORE_REF_CLK_TX_ENABLE;
-++	advk_writel(pcie, reg, PCIE_CORE_REF_CLK_REG);
-++
-+ 	/* Set to Direct mode */
-+ 	reg = advk_readl(pcie, CTRL_CONFIG_REG);
-+ 	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
-+@@ -1084,6 +1093,62 @@ out_release_res:
-+ 	return err;
-+ }
-+ 
-++static void __maybe_unused advk_pcie_disable_phy(struct advk_pcie *pcie)
-++{
-++	phy_power_off(pcie->phy);
-++	phy_exit(pcie->phy);
-++}
-++
-++static int advk_pcie_enable_phy(struct advk_pcie *pcie)
-++{
-++	int ret;
-++
-++	if (!pcie->phy)
-++		return 0;
-++
-++	ret = phy_init(pcie->phy);
-++	if (ret)
-++		return ret;
-++
-++	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
-++	if (ret) {
-++		phy_exit(pcie->phy);
-++		return ret;
-++	}
-++
-++	ret = phy_power_on(pcie->phy);
-++	if (ret) {
-++		phy_exit(pcie->phy);
-++		return ret;
-++	}
-++
-++	return 0;
-++}
-++
-++static int advk_pcie_setup_phy(struct advk_pcie *pcie)
-++{
-++	struct device *dev = &pcie->pdev->dev;
-++	struct device_node *node = dev->of_node;
-++	int ret = 0;
-++
-++	pcie->phy = devm_of_phy_get(dev, node, NULL);
-++	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) == -EPROBE_DEFER))
-++		return PTR_ERR(pcie->phy);
-++
-++	/* Old bindings miss the PHY handle */
-++	if (IS_ERR(pcie->phy)) {
-++		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
-++		pcie->phy = NULL;
-++		return 0;
-++	}
-++
-++	ret = advk_pcie_enable_phy(pcie);
-++	if (ret)
-++		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
-++
-++	return ret;
-++}
-++
-+ static int advk_pcie_probe(struct platform_device *pdev)
-+ {
-+ 	struct device *dev = &pdev->dev;
-diff --git a/target/linux/mvebu/patches-5.10/408-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch b/target/linux/mvebu/patches-5.10/408-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
-new file mode 100644
-index 0000000000..9bff37b27a
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/408-PCI-aardvark-Don-t-touch-PCIe-registers-if-no-card-c.patch
-@@ -0,0 +1,50 @@
-+From 70e380250c3621c55ff218cbaf2272830d9dbb1d Mon Sep 17 00:00:00 2001
-+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-+Date: Thu, 2 Jul 2020 10:30:36 +0200
-+Subject: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
-+ connected
-+MIME-Version: 1.0
-+Content-Type: text/plain; charset=UTF-8
-+Content-Transfer-Encoding: 8bit
-+
-+When there is no PCIe card connected and advk_pcie_rd_conf() or
-+advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-+root bridge, the aardvark driver throws the following error message:
-+
-+  advk-pcie d0070000.pcie: config read/write timed out
-+
-+Obviously accessing PCIe registers of disconnected card is not possible.
-+
-+Extend check in advk_pcie_valid_device() function for validating
-+availability of PCIe bus. If PCIe link is down, then the device is marked
-+as Not Found and the driver does not try to access these registers.
-+
-+This is just an optimization to prevent accessing PCIe registers when card
-+is disconnected. Trying to access PCIe registers of disconnected card does
-+not cause any crash, kernel just needs to wait for a timeout. So if card
-+disappear immediately after checking for PCIe link (before accessing PCIe
-+registers), it does not cause any problems.
-+
-+Link: https://lore.kernel.org/r/20200702083036.12230-1-pali@kernel.org
-+Signed-off-by: Pali Rohár <pali@kernel.org>
-+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+---
-+ drivers/pci/controller/pci-aardvark.c | 7 +++++++
-+ 1 file changed, 7 insertions(+)
-+
-+--- a/drivers/pci/controller/pci-aardvark.c
-++++ b/drivers/pci/controller/pci-aardvark.c
-+@@ -640,6 +640,13 @@ static bool advk_pcie_valid_device(struc
-+ 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-+ 		return false;
-+ 
-++	/*
-++	 * If the link goes down after we check for link-up, nothing bad
-++	 * happens but the config access times out.
-++	 */
-++	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-++		return false;
-++
-+ 	return true;
-+ }
-+ 
-diff --git a/target/linux/mvebu/patches-5.10/410-PCI-aardvark-Fix-initialization-with-old-Marvell-s-A.patch b/target/linux/mvebu/patches-5.10/410-PCI-aardvark-Fix-initialization-with-old-Marvell-s-A.patch
-new file mode 100644
-index 0000000000..510b7458a5
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/410-PCI-aardvark-Fix-initialization-with-old-Marvell-s-A.patch
-@@ -0,0 +1,44 @@
-+From b0c6ae0f8948a2be6bf4e8b4bbab9ca1343289b6 Mon Sep 17 00:00:00 2001
-+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-+Date: Wed, 2 Sep 2020 16:43:44 +0200
-+Subject: [PATCH] PCI: aardvark: Fix initialization with old Marvell's Arm
-+ Trusted Firmware
-+MIME-Version: 1.0
-+Content-Type: text/plain; charset=UTF-8
-+Content-Transfer-Encoding: 8bit
-+
-+Old ATF automatically power on pcie phy and does not provide SMC call for
-+phy power on functionality which leads to aardvark initialization failure:
-+
-+[    0.330134] mvebu-a3700-comphy d0018300.phy: unsupported SMC call, try updating your firmware
-+[    0.338846] phy phy-d0018300.phy.1: phy poweron failed --> -95
-+[    0.344753] advk-pcie d0070000.pcie: Failed to initialize PHY (-95)
-+[    0.351160] advk-pcie: probe of d0070000.pcie failed with error -95
-+
-+This patch fixes above failure by ignoring 'not supported' error in
-+aardvark driver. In this case it is expected that phy is already power on.
-+
-+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-+Link: https://lore.kernel.org/r/20200902144344.16684-3-pali@kernel.org
-+Fixes: 366697018c9a ("PCI: aardvark: Add PHY support")
-+Signed-off-by: Pali Rohár <pali@kernel.org>
-+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+Reviewed-by: Rob Herring <robh@kernel.org>
-+Cc: <stable@vger.kernel.org> # 5.8+: ea17a0f153af: phy: marvell: comphy: Convert internal SMCC firmware return codes to errno
-+---
-+ drivers/pci/controller/pci-aardvark.c | 4 +++-
-+ 1 file changed, 3 insertions(+), 1 deletion(-)
-+
-+--- a/drivers/pci/controller/pci-aardvark.c
-++++ b/drivers/pci/controller/pci-aardvark.c
-+@@ -1124,7 +1124,9 @@ static int advk_pcie_enable_phy(struct a
-+ 	}
-+ 
-+ 	ret = phy_power_on(pcie->phy);
-+-	if (ret) {
-++	if (ret == -EOPNOTSUPP) {
-++		dev_warn(&pcie->pdev->dev, "PHY unsupported by firmware\n");
-++	} else if (ret) {
-+ 		phy_exit(pcie->phy);
-+ 		return ret;
-+ 	}
-diff --git a/target/linux/mvebu/patches-5.10/412-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch b/target/linux/mvebu/patches-5.10/412-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
+diff --git a/target/linux/mvebu/patches-5.10/312-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch b/target/linux/mvebu/patches-5.10/312-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
 new file mode 100644
 index 0000000000..dd2bef7f63
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/412-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
++++ b/target/linux/mvebu/patches-5.10/312-ARM-dts-armada388-clearfog-emmc-on-clearfog-base.patch
 @@ -0,0 +1,87 @@
 +From 8137da20701c776ad3481115305a5e8e410871ba Mon Sep 17 00:00:00 2001
 +From: Russell King <rmk+kernel@armlinux.org.uk>
@@ -2662,63 +2117,11 @@ index 0000000000..dd2bef7f63
 ++		};
 ++	};
 ++};
-diff --git a/target/linux/mvebu/patches-5.10/520-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch b/target/linux/mvebu/patches-5.10/520-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
-new file mode 100644
-index 0000000000..e989f59d5c
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/520-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
-@@ -0,0 +1,20 @@
-+From be893f672e340b56ca60f2f6c32fdd713a5852f5 Mon Sep 17 00:00:00 2001
-+From: Kevin Mihelich <kevin@archlinuxarm.org>
-+Date: Tue, 4 Jul 2017 19:25:28 -0600
-+Subject: arm64: dts: marvell: armada37xx: Add eth0 alias
-+
-+Signed-off-by: Kevin Mihelich <kevin@archlinuxarm.org>
-+---
-+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 1 +
-+ 1 file changed, 1 insertion(+)
-+
-+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+@@ -18,6 +18,7 @@
-+ 	#size-cells = <2>;
-+ 
-+ 	aliases {
-++		ethernet0 = &eth0;
-+ 		serial0 = &uart0;
-+ 		serial1 = &uart1;
-+ 	};
-diff --git a/target/linux/mvebu/patches-5.10/550-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch b/target/linux/mvebu/patches-5.10/550-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
-new file mode 100644
-index 0000000000..82715312d8
---- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/550-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
-@@ -0,0 +1,20 @@
-+--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+@@ -144,7 +144,7 @@
-+ };
-+ 
-+ &eth0 {
-+-	phy-mode = "sgmii";
-++	phy-mode = "2500base-x";
-+ 	status = "okay";
-+ 	managed = "in-band-status";
-+ 	phys = <&comphy1 0>;
-+@@ -152,7 +152,7 @@
-+ };
-+ 
-+ &eth1 {
-+-	phy-mode = "sgmii";
-++	phy-mode = "2500base-x";
-+ 	status = "okay";
-+ 	managed = "in-band-status";
-+ 	phys = <&comphy0 1>;
-diff --git a/target/linux/mvebu/patches-5.10/560-helios4-dts-status-led-alias.patch b/target/linux/mvebu/patches-5.10/560-helios4-dts-status-led-alias.patch
+diff --git a/target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch b/target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch
 new file mode 100644
 index 0000000000..4c4fbec764
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/560-helios4-dts-status-led-alias.patch
++++ b/target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch
 @@ -0,0 +1,28 @@
 +--- a/arch/arm/boot/dts/armada-388-helios4.dts
 ++++ b/arch/arm/boot/dts/armada-388-helios4.dts
@@ -2748,22 +2151,292 @@ index 0000000000..4c4fbec764
 + 			default-state = "on";
 + 		};
 + 
-diff --git a/target/linux/mvebu/patches-5.10/561-mvebu-armada-38x-enable-libata-leds.patch b/target/linux/mvebu/patches-5.10/561-mvebu-armada-38x-enable-libata-leds.patch
+diff --git a/target/linux/mvebu/patches-5.10/314-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch b/target/linux/mvebu/patches-5.10/314-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
 new file mode 100644
-index 0000000000..b8ab700c97
+index 0000000000..e989f59d5c
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/561-mvebu-armada-38x-enable-libata-leds.patch
-@@ -0,0 +1,10 @@
-+--- a/arch/arm/mach-mvebu/Kconfig
-++++ b/arch/arm/mach-mvebu/Kconfig
-+@@ -69,6 +69,7 @@ config MACH_ARMADA_38X
-+ 	select HAVE_SMP
-+ 	select MACH_MVEBU_V7
-+ 	select PINCTRL_ARMADA_38X
-++	select ARCH_WANT_LIBATA_LEDS
-+ 	help
-+ 	  Say 'Y' here if you want your kernel to support boards based
-+ 	  on the Marvell Armada 380/385 SoC with device tree.
++++ b/target/linux/mvebu/patches-5.10/314-arm64-dts-marvell-armada37xx-Add-eth0-alias.patch
+@@ -0,0 +1,20 @@
++From be893f672e340b56ca60f2f6c32fdd713a5852f5 Mon Sep 17 00:00:00 2001
++From: Kevin Mihelich <kevin@archlinuxarm.org>
++Date: Tue, 4 Jul 2017 19:25:28 -0600
++Subject: arm64: dts: marvell: armada37xx: Add eth0 alias
++
++Signed-off-by: Kevin Mihelich <kevin@archlinuxarm.org>
++---
++ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 1 +
++ 1 file changed, 1 insertion(+)
++
++--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++@@ -18,6 +18,7 @@
++ 	#size-cells = <2>;
++ 
++ 	aliases {
+++		ethernet0 = &eth0;
++ 		serial0 = &uart0;
++ 		serial1 = &uart1;
++ 	};
+diff --git a/target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch b/target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+new file mode 100644
+index 0000000000..2240d0b39e
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+@@ -0,0 +1,34 @@
++Certain SFP modules (most notably Nokia GPON ones) first check
++connectivity on 1000base-x, and switch to 2500base-x afterwards. This
++is considered a quirk so the phylink switches the interface to
++2500base-x as well.
++
++However, after power-cycling the uDPU device, network interface/SFP module
++will not work correctly until the module is re-seated. This patch
++resolves this issue by forcing the interface to be brought up in
++2500base-x mode by default.
++
++Signed-off-by: Jakov Petrina <jakov.petrina@sartura.hr>
++Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
++Cc: Luka Perkov <luka.perkov@sartura.hr>
++
++--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
++@@ -162,7 +162,7 @@
++ };
++ 
++ &eth0 {
++-	phy-mode = "sgmii";
+++	phy-mode = "2500base-x";
++ 	status = "okay";
++ 	managed = "in-band-status";
++ 	phys = <&comphy1 0>;
++@@ -170,7 +170,7 @@
++ };
++ 
++ &eth1 {
++-	phy-mode = "sgmii";
+++	phy-mode = "2500base-x";
++ 	status = "okay";
++ 	managed = "in-band-status";
++ 	phys = <&comphy0 1>;
+diff --git a/target/linux/mvebu/patches-5.10/400-find_active_root.patch b/target/linux/mvebu/patches-5.10/400-find_active_root.patch
+new file mode 100644
+index 0000000000..854031b0d5
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/400-find_active_root.patch
+@@ -0,0 +1,60 @@
++The WRT1900AC among other Linksys routers uses a dual-firmware layout.
++Dynamically rename the active partition to "ubi".
++
++Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
++
++--- a/drivers/mtd/parsers/ofpart.c
+++++ b/drivers/mtd/parsers/ofpart.c
++@@ -21,6 +21,8 @@ static bool node_has_compatible(struct d
++ 	return of_get_property(pp, "compatible", NULL);
++ }
++ 
+++static int mangled_rootblock;
+++
++ static int parse_fixed_partitions(struct mtd_info *master,
++ 				  const struct mtd_partition **pparts,
++ 				  struct mtd_part_parser_data *data)
++@@ -29,6 +31,7 @@ static int parse_fixed_partitions(struct
++ 	struct device_node *mtd_node;
++ 	struct device_node *ofpart_node;
++ 	const char *partname;
+++	const char *owrtpart = "ubi";
++ 	struct device_node *pp;
++ 	int nr_parts, i, ret = 0;
++ 	bool dedicated = true;
++@@ -106,9 +109,13 @@ static int parse_fixed_partitions(struct
++ 		parts[i].size = of_read_number(reg + a_cells, s_cells);
++ 		parts[i].of_node = pp;
++ 
++-		partname = of_get_property(pp, "label", &len);
++-		if (!partname)
++-			partname = of_get_property(pp, "name", &len);
+++		if (mangled_rootblock && (i == mangled_rootblock)) {
+++			partname = owrtpart;
+++		} else {
+++			partname = of_get_property(pp, "label", &len);
+++			if (!partname)
+++				partname = of_get_property(pp, "name", &len);
+++		}
++ 		parts[i].name = partname;
++ 
++ 		if (of_get_property(pp, "read-only", &len))
++@@ -215,6 +222,18 @@ static int __init ofpart_parser_init(voi
++ 	return 0;
++ }
++ 
+++static int __init active_root(char *str)
+++{
+++	get_option(&str, &mangled_rootblock);
+++
+++	if (!mangled_rootblock)
+++		return 1;
+++
+++	return 1;
+++}
+++
+++__setup("mangled_rootblock=", active_root);
+++
++ static void __exit ofpart_parser_exit(void)
++ {
++ 	deregister_mtd_parser(&ofpart_parser);
+diff --git a/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch b/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
+new file mode 100644
+index 0000000000..2606bfd3d0
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
+@@ -0,0 +1,36 @@
++The hardware queue scheduling is apparently configured with fixed
++priorities, which creates a nasty fairness issue where traffic from one
++CPU can starve traffic from all other CPUs.
++
++Work around this issue by forcing all tx packets to go through one CPU,
++until this issue is fixed properly.
++
++Signed-off-by: Felix Fietkau <nbd@nbd.name>
++---
++Index: linux-5.10.16/drivers/net/ethernet/marvell/mvneta.c
++===================================================================
++--- linux-5.10.16.orig/drivers/net/ethernet/marvell/mvneta.c
+++++ linux-5.10.16/drivers/net/ethernet/marvell/mvneta.c
++@@ -4896,6 +4896,14 @@ static int mvneta_ethtool_set_eee(struct
++ 	return phylink_ethtool_set_eee(pp->phylink, eee);
++ }
++ 
+++static u16 mvneta_select_queue(struct net_device *dev, struct sk_buff *skb,
+++			       struct net_device *sb_dev)
+++{
+++	/* XXX: hardware queue scheduling is broken,
+++	 * use only one queue until it is fixed */
+++	return 0;
+++}
+++
++ static const struct net_device_ops mvneta_netdev_ops = {
++ 	.ndo_open            = mvneta_open,
++ 	.ndo_stop            = mvneta_stop,
++@@ -4906,6 +4914,7 @@ static const struct net_device_ops mvnet
++ 	.ndo_fix_features    = mvneta_fix_features,
++ 	.ndo_get_stats64     = mvneta_get_stats64,
++ 	.ndo_do_ioctl        = mvneta_ioctl,
+++	.ndo_select_queue    = mvneta_select_queue,
++ 	.ndo_bpf	     = mvneta_xdp,
++ 	.ndo_xdp_xmit        = mvneta_xdp_xmit,
++ };
+diff --git a/target/linux/mvebu/patches-5.10/800-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch b/target/linux/mvebu/patches-5.10/800-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
+new file mode 100644
+index 0000000000..29f36be460
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/800-cpuidle-mvebu-indicate-failure-to-enter-deeper-sleep.patch
+@@ -0,0 +1,40 @@
++From c28b2d367da8a471482e6a4aa8337ab6369a80c2 Mon Sep 17 00:00:00 2001
++From: Russell King <rmk+kernel@arm.linux.org.uk>
++Date: Sat, 3 Oct 2015 09:13:05 +0100
++Subject: cpuidle: mvebu: indicate failure to enter deeper sleep states
++
++The cpuidle ->enter method expects the return value to be the sleep
++state we entered.  Returning negative numbers or other codes is not
++permissible since coupled CPU idle was merged.
++
++At least some of the mvebu_v7_cpu_suspend() implementations return the
++value from cpu_suspend(), which returns zero if the CPU vectors back
++into the kernel via cpu_resume() (the success case), or the non-zero
++return value of the suspend actor, or one (failure cases).
++
++We do not want to be returning the failure case value back to CPU idle
++as that indicates that we successfully entered one of the deeper idle
++states.  Always return zero instead, indicating that we slept for the
++shortest amount of time.
++
++Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
++---
++ drivers/cpuidle/cpuidle-mvebu-v7.c | 6 +++++-
++ 1 file changed, 5 insertions(+), 1 deletion(-)
++
++--- a/drivers/cpuidle/cpuidle-mvebu-v7.c
+++++ b/drivers/cpuidle/cpuidle-mvebu-v7.c
++@@ -39,8 +39,12 @@ static int mvebu_v7_enter_idle(struct cp
++ 	ret = mvebu_v7_cpu_suspend(deepidle);
++ 	cpu_pm_exit();
++ 
+++	/*
+++	 * If we failed to enter the desired state, indicate that we
+++	 * slept lightly.
+++	 */
++ 	if (ret)
++-		return ret;
+++		return 0;
++ 
++ 	return index;
++ }
+diff --git a/target/linux/mvebu/patches-5.10/801-pci-mvebu-time-out-reset-on-link-up.patch b/target/linux/mvebu/patches-5.10/801-pci-mvebu-time-out-reset-on-link-up.patch
+new file mode 100644
+index 0000000000..4058dc8ed5
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/801-pci-mvebu-time-out-reset-on-link-up.patch
+@@ -0,0 +1,60 @@
++From 287b9df160b6159f8d385424904f8bac501280c1 Mon Sep 17 00:00:00 2001
++From: Russell King <rmk+kernel@armlinux.org.uk>
++Date: Sat, 9 Jul 2016 10:58:16 +0100
++Subject: pci: mvebu: time out reset on link up
++
++If the port reports that the link is up while we are resetting, there's
++little point in waiting for the full duration.
++
++Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
++---
++ drivers/pci/controller/pci-mvebu.c | 20 ++++++++++++++------
++ 1 file changed, 14 insertions(+), 6 deletions(-)
++
++--- a/drivers/pci/controller/pci-mvebu.c
+++++ b/drivers/pci/controller/pci-mvebu.c
++@@ -928,6 +928,7 @@ static int mvebu_pcie_powerup(struct mve
++ 
++ 	if (port->reset_gpio) {
++ 		u32 reset_udelay = PCI_PM_D3COLD_WAIT * 1000;
+++		unsigned int i;
++ 
++ 		of_property_read_u32(port->dn, "reset-delay-us",
++ 				     &reset_udelay);
++@@ -935,7 +936,13 @@ static int mvebu_pcie_powerup(struct mve
++ 		udelay(100);
++ 
++ 		gpiod_set_value_cansleep(port->reset_gpio, 0);
++-		msleep(reset_udelay / 1000);
+++		for (i = 0; i < reset_udelay; i += 1000) {
+++			if (mvebu_pcie_link_up(port))
+++				break;
+++			msleep(1);
+++		}
+++
+++		printk("%s: reset completed in %dus\n", port->name, i);
++ 	}
++ 
++ 	return 0;
++@@ -1099,15 +1106,16 @@ static int mvebu_pcie_probe(struct platf
++ 		if (!child)
++ 			continue;
++ 
++-		ret = mvebu_pcie_powerup(port);
++-		if (ret < 0)
++-			continue;
++-
++ 		port->base = mvebu_pcie_map_registers(pdev, child, port);
++ 		if (IS_ERR(port->base)) {
++ 			dev_err(dev, "%s: cannot map registers\n", port->name);
++ 			port->base = NULL;
++-			mvebu_pcie_powerdown(port);
+++			continue;
+++		}
+++
+++		ret = mvebu_pcie_powerup(port);
+++		if (ret < 0) {
+++			port->base = NULL;
++ 			continue;
++ 		}
++ 
 -- 
 2.29.2
 

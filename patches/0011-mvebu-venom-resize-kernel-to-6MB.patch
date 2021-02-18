@@ -1,4 +1,4 @@
-From 7b1a9177f1c8f5aef6caa88b484a5f099e0775b8 Mon Sep 17 00:00:00 2001
+From e8542250affd0fd4308c0f147b72bbe4e799aa03 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:42:47 -0500
 Subject: [PATCH] mvebu: venom resize kernel to 6MB

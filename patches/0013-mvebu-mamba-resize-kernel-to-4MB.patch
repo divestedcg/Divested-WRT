@@ -1,4 +1,4 @@
-From 93a8897a3367415ac1a461781dd1b0410c841779 Mon Sep 17 00:00:00 2001
+From 1746475196dece0ba23d9e09b5759fdea98052ae Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Wed, 17 Feb 2021 12:58:52 -0500
 Subject: [PATCH] mvebu: mamba resize kernel to 4MB
@@ -7,13 +7,13 @@ Signed-off-by: Tad <tad@spotco.us>
 ---
  ...rmada-xp-linksys-mamba-resize-kernel.patch | 42 +++++++++++++++++++
  1 file changed, 42 insertions(+)
- create mode 100644 target/linux/mvebu/patches-5.10/301-armada-xp-linksys-mamba-resize-kernel.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/317-armada-xp-linksys-mamba-resize-kernel.patch
 
-diff --git a/target/linux/mvebu/patches-5.10/301-armada-xp-linksys-mamba-resize-kernel.patch b/target/linux/mvebu/patches-5.10/301-armada-xp-linksys-mamba-resize-kernel.patch
+diff --git a/target/linux/mvebu/patches-5.10/317-armada-xp-linksys-mamba-resize-kernel.patch b/target/linux/mvebu/patches-5.10/317-armada-xp-linksys-mamba-resize-kernel.patch
 new file mode 100644
 index 0000000000..43934caeb6
 --- /dev/null
-+++ b/target/linux/mvebu/patches-5.10/301-armada-xp-linksys-mamba-resize-kernel.patch
++++ b/target/linux/mvebu/patches-5.10/317-armada-xp-linksys-mamba-resize-kernel.patch
 @@ -0,0 +1,42 @@
 +From 258233f00bcd013050efee00c5d9128ef8cd62dd Mon Sep 17 00:00:00 2001
 +From: Tad <tad@spotco.us>

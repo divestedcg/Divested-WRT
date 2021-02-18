@@ -1,3 +1,10 @@
+20210218-00-RESIZED-5.10 (testing)
+- update to d2d32dcd5f4bb2d028452419fb2e014b7b31a37a
+- Using revised 5.10 patches from https://github.com/openwrt/openwrt/pull/3886
+- Does not include the DSA/FDB fixes!
+- Does not include WireGuard
+- Resized! Use with caution on mamba and venom!
+
 20210217-01-RESIZED-5.10 (testing)
 - update to f323dec4f866d9ea75eae11c6762d0144d100628
 - Linux 5.10 for testing thanks to Sebastian Careba (nitroshift)
