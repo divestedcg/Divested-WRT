@@ -1,3 +1,8 @@
+20210221-00-RESIZED
+- update to 4b37e3bc2b2a079c996b6d97b8d3dbbd4ba6eb62
+- [upstream] update to kernel 5.4.99 (security and bug fixes)
+- Resized! Use with caution on mamba and venom!
+
 20210218-00-RESIZED-5.10 (testing)
 - update to d2d32dcd5f4bb2d028452419fb2e014b7b31a37a
 - Using revised 5.10 patches from https://github.com/openwrt/openwrt/pull/3886

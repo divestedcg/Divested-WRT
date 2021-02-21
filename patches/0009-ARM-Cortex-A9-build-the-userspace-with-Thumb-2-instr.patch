@@ -1,4 +1,4 @@
-From 917315c4432b3a0e2cd8a61354b811186241e372 Mon Sep 17 00:00:00 2001
+From ddb1cb521795dc11d307c2763b99c85297478592 Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
 Subject: [PATCH] ARM Cortex-A9: build the userspace with Thumb-2 instructions
