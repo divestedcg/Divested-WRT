@@ -1,0 +1,205 @@
+From 1c6e1af523cf4b01fde54bf41e4705bfbd6562ba Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Mon, 22 Feb 2021 08:59:36 +0000
+Subject: [PATCH] mvebu: fix the Turris Omnia device tree
+
+Enable and fix hardware buffer management. Also fix the IRQ storm caused by a
+misconfiguration of the PCA9538 interrupt pin.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Tested-by: Tad <tad@spotco.us>
+---
+ ...is-omnia-enable-HW-buffer-management.patch | 74 +++++++++++++++++++
+ ...omnia-fix-hardware-buffer-management.patch | 27 +++++++
+ ...ure-LED-2--INTn-pin-as-interrupt-pin.patch | 64 ++++++++++++++++
+ 3 files changed, 165 insertions(+)
+ create mode 100644 target/linux/mvebu/patches-5.10/002-ARM-dts-turris-omnia-enable-HW-buffer-management.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/100-ARM-dts-turris-omnia-fix-hardware-buffer-management.patch
+ create mode 100644 target/linux/mvebu/patches-5.10/101-ARM-dts-turris-omnia-configure-LED-2--INTn-pin-as-interrupt-pin.patch
+
+diff --git a/target/linux/mvebu/patches-5.10/002-ARM-dts-turris-omnia-enable-HW-buffer-management.patch b/target/linux/mvebu/patches-5.10/002-ARM-dts-turris-omnia-enable-HW-buffer-management.patch
+new file mode 100644
+index 0000000000..7a4b511998
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/002-ARM-dts-turris-omnia-enable-HW-buffer-management.patch
+@@ -0,0 +1,74 @@
++From 018b88eee1a2efda26ed2f09aab33ccdc40ef18f Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
++Date: Sun, 15 Nov 2020 14:59:17 +0100
++Subject: ARM: dts: turris-omnia: enable HW buffer management
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++The buffer manager is available on Turris Omnia but needs to be
++described in device-tree to be used.
++
++Signed-off-by: Marek Behún <kabel@kernel.org>
++Fixes: 26ca8b52d6e1 ("ARM: dts: add support for Turris Omnia")
++Cc: linux-arm-kernel@lists.infradead.org
++Cc: Uwe Kleine-König <uwe@kleine-koenig.org>
++Cc: Jason Cooper <jason@lakedaemon.net>
++Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
++Cc: Andreas Färber <afaerber@suse.de>
++Cc: Andrew Lunn <andrew@lunn.ch>
++Cc: Rob Herring <robh+dt@kernel.org>
++Cc: devicetree@vger.kernel.org
++Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
++---
++ arch/arm/boot/dts/armada-385-turris-omnia.dts | 17 +++++++++++++++++
++ 1 file changed, 17 insertions(+)
++
++(limited to 'arch/arm/boot/dts/armada-385-turris-omnia.dts')
++
++--- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
+++++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
++@@ -84,12 +84,23 @@
++ 	};
++ };
++ 
+++&bm {
+++	status = "okay";
+++};
+++
+++&bm_bppi {
+++	status = "okay";
+++};
+++
++ /* Connected to 88E6176 switch, port 6 */
++ &eth0 {
++ 	pinctrl-names = "default";
++ 	pinctrl-0 = <&ge0_rgmii_pins>;
++ 	status = "okay";
++ 	phy-mode = "rgmii";
+++	buffer-manager = <&bm>;
+++	bm,pool-long = <0>;
+++	bm,pool-short = <3>;
++ 
++ 	fixed-link {
++ 		speed = <1000>;
++@@ -103,6 +114,9 @@
++ 	pinctrl-0 = <&ge1_rgmii_pins>;
++ 	status = "okay";
++ 	phy-mode = "rgmii";
+++	buffer-manager = <&bm>;
+++	bm,pool-long = <1>;
+++	bm,pool-short = <3>;
++ 
++ 	fixed-link {
++ 		speed = <1000>;
++@@ -115,6 +129,9 @@
++ 	status = "okay";
++ 	phy-mode = "sgmii";
++ 	phy = <&phy1>;
+++	buffer-manager = <&bm>;
+++	bm,pool-long = <2>;
+++	bm,pool-short = <3>;
++ };
++ 
++ &i2c0 {
+diff --git a/target/linux/mvebu/patches-5.10/100-ARM-dts-turris-omnia-fix-hardware-buffer-management.patch b/target/linux/mvebu/patches-5.10/100-ARM-dts-turris-omnia-fix-hardware-buffer-management.patch
+new file mode 100644
+index 0000000000..2ebdc06f61
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/100-ARM-dts-turris-omnia-fix-hardware-buffer-management.patch
+@@ -0,0 +1,27 @@
++From 9704292ed3230ee19dc4dd64f7484301b728ffb7 Mon Sep 17 00:00:00 2001
++From: Rui Salvaterra <rsalvaterra@gmail.com>
++Date: Wed, 17 Feb 2021 15:19:30 +0000
++Subject: [PATCH] ARM: dts: turris-omnia: fix hardware buffer management
++
++Hardware buffer management has never worked on the Turris Omnia, as the
++required MBus window hadn't been reserved. Fix thusly.
++
++Fixes: 018b88eee1a2 ("ARM: dts: turris-omnia: enable HW buffer management")
++
++Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
++---
++ arch/arm/boot/dts/armada-385-turris-omnia.dts | 3 ++-
++ 1 file changed, 2 insertions(+), 1 deletion(-)
++
++--- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
+++++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
++@@ -32,7 +32,8 @@
++ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++ 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
++ 			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
++-			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
+++			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
+++			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
++ 
++ 		internal-regs {
++ 
+diff --git a/target/linux/mvebu/patches-5.10/101-ARM-dts-turris-omnia-configure-LED-2--INTn-pin-as-interrupt-pin.patch b/target/linux/mvebu/patches-5.10/101-ARM-dts-turris-omnia-configure-LED-2--INTn-pin-as-interrupt-pin.patch
+new file mode 100644
+index 0000000000..c7509950e0
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/101-ARM-dts-turris-omnia-configure-LED-2--INTn-pin-as-interrupt-pin.patch
+@@ -0,0 +1,64 @@
++From: "Marek Behún" <kabel@kernel.org>
++To: Gregory CLEMENT <gregory.clement@bootlin.com>
++Cc: "Marek Behún" <kabel@kernel.org>, Rui Salvaterra <rsalvaterra@gmail.com>, "Uwe Kleine-König" <uwe@kleine-koenig.org>, linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, stable@vger.kernel.org
++Subject: [PATCH mvebu-dt] ARM: dts: turris-omnia: configure LED[2]/INTn pin as interrupt pin
++Date: Sun, 21 Feb 2021 00:11:44 +0100
++Message-Id: <20210220231144.32325-1-kabel@kernel.org>
++X-Mailer: git-send-email 2.26.2
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++Use the `marvell,reg-init` DT property to configure the LED[2]/INTn pin
++of the Marvell 88E1514 ethernet PHY on Turris Omnia into interrupt mode.
++
++Without this the pin is by default in LED[2] mode, and the Marvell PHY
++driver configures LED[2] into "On - Link, Blink - Activity" mode.
++
++This fixes the issue where the pca9538 GPIO/interrupt controller (which
++can't mask interrupts in HW) received too many interrupts and after a
++time started ignoring the interrupt with error message:
++  IRQ 71: nobody cared
++
++There is a work in progress to have the Marvell PHY driver support
++parsing PHY LED nodes from OF and registering the LEDs as Linux LED
++class devices. Once this is done the PHY driver can also automatically
++set the pin into INTn mode if it does not find LED[2] in OF.
++
++Until then, though, we fix this via `marvell,reg-init` DT property.
++
++Signed-off-by: Marek Behún <kabel@kernel.org>
++Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
++Fixes: 26ca8b52d6e1 ("ARM: dts: add support for Turris Omnia")
++Cc: Uwe Kleine-König <uwe@kleine-koenig.org>
++Cc: linux-arm-kernel@lists.infradead.org
++Cc: Andrew Lunn <andrew@lunn.ch>
++Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
++Cc: <stable@vger.kernel.org>
++
++---
++
++This patch fixes bug introduced with the commit that added Turris
++Omnia's DTS (26ca8b52d6e1), but will not apply cleanly because there is
++commit 8ee4a5f4f40d which changed node name and node compatible
++property and this commit did not go into stable.
++
++So either commit 8ee4a5f4f40d has also to go into stable before this, or
++this patch has to be fixed a little in order to apply to 4.14+.
++
++Please let me know how should I handle this.
++
++---
++ arch/arm/boot/dts/armada-385-turris-omnia.dts | 1 +
++ 1 file changed, 1 insertion(+)
++
++--- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
+++++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
++@@ -390,6 +390,7 @@
++ 	phy1: ethernet-phy@1 {
++ 		compatible = "ethernet-phy-ieee802.3-c22";
++ 		reg = <1>;
+++		marvell,reg-init = <3 18 0 0x4985>;
++ 
++ 		/* irq is connected to &pcawan pin 7 */
++ 	};
+-- 
+2.29.2
+

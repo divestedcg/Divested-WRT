@@ -1,0 +1,70 @@
+From c05e345d014b7af93da8fe0340f1c1d88e976633 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Mon, 22 Feb 2021 08:59:30 +0000
+Subject: [PATCH] mvebu: add generic kconfig symbols
+
+This will make the specific kconfig smaller.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Tested-by: Tad <tad@spotco.us>
+---
+ target/linux/generic/config-5.10 | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/target/linux/generic/config-5.10 b/target/linux/generic/config-5.10
+index 670ba5b186..28d3117b23 100644
+--- a/target/linux/generic/config-5.10
++++ b/target/linux/generic/config-5.10
+@@ -232,6 +232,7 @@ CONFIG_ARCH_MMAP_RND_BITS_MIN=8
+ CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX=16
+ CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MIN=8
+ # CONFIG_ARCH_MMP is not set
++# CONFIG_ARCH_MSTARV7 is not set
+ # CONFIG_ARCH_MULTIPLATFORM is not set
+ # CONFIG_ARCH_MULTI_V6 is not set
+ # CONFIG_ARCH_MULTI_V7 is not set
+@@ -1040,6 +1041,7 @@ CONFIG_CRYPTO_ALGAPI2=y
+ # CONFIG_CRYPTO_CTR is not set
+ # CONFIG_CRYPTO_CTS is not set
+ # CONFIG_CRYPTO_CURVE25519 is not set
++# CONFIG_CRYPTO_CURVE25519_NEON is not set
+ # CONFIG_CRYPTO_DEFLATE is not set
+ # CONFIG_CRYPTO_DES is not set
+ # CONFIG_CRYPTO_DEV_AMLOGIC_GXL is not set
+@@ -1264,7 +1266,9 @@ CONFIG_DEBUG_KERNEL=y
+ # CONFIG_DEBUG_TEST_DRIVER_REMOVE is not set
+ # CONFIG_DEBUG_TIMEKEEPING is not set
+ # CONFIG_DEBUG_UART_8250_PALMCHIP is not set
++# CONFIG_DEBUG_UART_8250_WORD is not set
+ # CONFIG_DEBUG_UART_BCM63XX is not set
++# CONFIG_DEBUG_UART_FLOW_CONTROL is not set
+ # CONFIG_DEBUG_USER is not set
+ # CONFIG_DEBUG_VIRTUAL is not set
+ # CONFIG_DEBUG_VM is not set
+@@ -2906,6 +2910,7 @@ CONFIG_LEDS_TRIGGER_NETDEV=y
+ # CONFIG_LEDS_TRIGGER_PATTERN is not set
+ CONFIG_LEDS_TRIGGER_TIMER=y
+ # CONFIG_LEDS_TRIGGER_TRANSIENT is not set
++# CONFIG_LEDS_TURRIS_OMNIA is not set
+ # CONFIG_LEDS_USER is not set
+ # CONFIG_LED_TRIGGER_PHY is not set
+ # CONFIG_LEGACY_PTYS is not set
+@@ -4741,6 +4746,7 @@ CONFIG_RTC_DRV_CMOS=y
+ # CONFIG_RTC_DRV_RTC7301 is not set
+ # CONFIG_RTC_DRV_RV3028 is not set
+ # CONFIG_RTC_DRV_RV3029C2 is not set
++# CONFIG_RTC_DRV_RV3032 is not set
+ # CONFIG_RTC_DRV_RV8803 is not set
+ # CONFIG_RTC_DRV_RX4581 is not set
+ # CONFIG_RTC_DRV_RX6110 is not set
+@@ -4986,6 +4992,7 @@ CONFIG_SELECT_MEMORY_MODEL=y
+ # CONFIG_SENSORS_CORSAIR_CPRO is not set
+ # CONFIG_SENSORS_DELL_SMM is not set
+ # CONFIG_SENSORS_DME1737 is not set
++# CONFIG_SENSORS_DRIVETEMP is not set
+ # CONFIG_SENSORS_DS1621 is not set
+ # CONFIG_SENSORS_DS620 is not set
+ # CONFIG_SENSORS_EMC1403 is not set
+-- 
+2.29.2
+

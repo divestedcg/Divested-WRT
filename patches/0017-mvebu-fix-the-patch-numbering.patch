@@ -1,0 +1,33 @@
+From 10736f1321cb3477ec6e4bb244b66a0c750cc0da Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Mon, 22 Feb 2021 08:59:35 +0000
+Subject: [PATCH] mvebu: fix the patch numbering
+
+Make each logical patch group numbering contiguous.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Tested-by: Tad <tad@spotco.us>
+---
+ ...tch => 001-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch} | 0
+ ...tus-led-alias.patch => 313-helios4-dts-status-led-alias.patch} | 0
+ ...15-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch} | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+ rename target/linux/mvebu/patches-5.10/{028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch => 001-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch} (100%)
+ rename target/linux/mvebu/patches-5.10/{312-helios4-dts-status-led-alias.patch => 313-helios4-dts-status-led-alias.patch} (100%)
+ rename target/linux/mvebu/patches-5.10/{316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch => 315-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch} (100%)
+
+diff --git a/target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch b/target/linux/mvebu/patches-5.10/001-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+similarity index 100%
+rename from target/linux/mvebu/patches-5.10/028-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+rename to target/linux/mvebu/patches-5.10/001-arm64-dts-mcbin-singleshot-add-heartbeat-LED.patch
+diff --git a/target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch b/target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch
+similarity index 100%
+rename from target/linux/mvebu/patches-5.10/312-helios4-dts-status-led-alias.patch
+rename to target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch
+diff --git a/target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch b/target/linux/mvebu/patches-5.10/315-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+similarity index 100%
+rename from target/linux/mvebu/patches-5.10/316-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+rename to target/linux/mvebu/patches-5.10/315-arm64-dts-uDPU-switch-PHY-operation-mode-to-2500base.patch
+-- 
+2.29.2
+
