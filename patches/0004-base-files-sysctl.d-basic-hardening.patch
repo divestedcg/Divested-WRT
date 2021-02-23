@@ -1,4 +1,4 @@
-From 4e65f4b07f2e8a959a61060fd2d6ab6f79e5bdca Mon Sep 17 00:00:00 2001
+From 26e6cd110ea8f7504bcf9ac64a342e45e67303a5 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:49:59 -0500
 Subject: [PATCH] base-files: sysctl.d: basic hardening

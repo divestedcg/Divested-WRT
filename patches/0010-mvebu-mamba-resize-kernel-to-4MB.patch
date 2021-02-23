@@ -1,4 +1,4 @@
-From 1c9f01a3b69e0671ac7eea842b42cf54a509c934 Mon Sep 17 00:00:00 2001
+From da67584cea07bb1a2c88861b03747aae4934ee06 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:38:03 -0500
 Subject: [PATCH] mvebu: mamba resize kernel to 4MB
@@ -23,7 +23,9 @@ Signed-off-by: Tad Davanzo <tad@spotco.us>
 ---
  target/linux/mvebu/image/cortexa9.mk          |  2 +-
  ...rmada-xp-linksys-mamba-resize-kernel.patch | 42 +++++++++++++++++++
- 2 files changed, 43 insertions(+), 1 deletion(-)
+ ...rmada-xp-linksys-mamba-resize-kernel.patch | 42 +++++++++++++++++++
+ 3 files changed, 85 insertions(+), 1 deletion(-)
+ create mode 100644 target/linux/mvebu/patches-5.10/316-armada-xp-linksys-mamba-resize-kernel.patch
  create mode 100644 target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
 
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
@@ -39,6 +41,54 @@ index 61f4d17813..ad3b8ee6d4 100644
    SUPPORTED_DEVICES += armada-xp-linksys-mamba linksys,mamba
    DEFAULT := n
  endef
+diff --git a/target/linux/mvebu/patches-5.10/316-armada-xp-linksys-mamba-resize-kernel.patch b/target/linux/mvebu/patches-5.10/316-armada-xp-linksys-mamba-resize-kernel.patch
+new file mode 100644
+index 0000000000..43934caeb6
+--- /dev/null
++++ b/target/linux/mvebu/patches-5.10/316-armada-xp-linksys-mamba-resize-kernel.patch
+@@ -0,0 +1,42 @@
++From 258233f00bcd013050efee00c5d9128ef8cd62dd Mon Sep 17 00:00:00 2001
++From: Tad <tad@spotco.us>
++Date: Fri, 5 Feb 2021 22:32:11 -0500
++Subject: [PATCH] ARM: dts: armada-xp-linksys-mamba: Increase kernel
++ partition to 4MB
++
++Signed-off-by: Tad Davanzo <tad@spotco.us>
++---
++ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 8 ++++----
++ 1 file changed, 4 insertions(+), 4 deletions(-)
++
++diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++index d7bc27ae6..20e859021 100644
++--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++@@ -456,9 +456,9 @@
++ 				reg = <0xa00000 0x2800000>;  /* 40MB */
++ 			};
++ 
++-			partition@d00000 {
+++			partition@e00000 {
++ 				label = "rootfs1";
++-				reg = <0xd00000 0x2500000>;  /* 37MB */
+++				reg = <0xe00000 0x2400000>;  /* 36MB */
++ 			};
++ 
++ 			/* kernel2 overlaps with rootfs2 by design */
++@@ -467,9 +467,9 @@
++ 				reg = <0x3200000 0x2800000>; /* 40MB */
++ 			};
++ 
++-			partition@3500000 {
+++			partition@3600000 {
++ 				label = "rootfs2";
++-				reg = <0x3500000 0x2500000>; /* 37MB */
+++				reg = <0x3600000 0x2400000>; /* 36MB */
++ 			};
++ 
++ 			/*
++-- 
++2.29.2
++
 diff --git a/target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch b/target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
 new file mode 100644
 index 0000000000..43934caeb6

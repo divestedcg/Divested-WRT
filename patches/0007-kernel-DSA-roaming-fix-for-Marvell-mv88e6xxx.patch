@@ -1,4 +1,4 @@
-From 13be97ed088b86419cc06545a8c965a7f6ffdf15 Mon Sep 17 00:00:00 2001
+From 5774c831017cf9213325b5ed5aa131a720ffce8e Mon Sep 17 00:00:00 2001
 From: DENG Qingfang <dqfext@gmail.com>
 Date: Mon, 22 Feb 2021 13:38:11 +0800
 Subject: [PATCH] kernel: DSA roaming fix for Marvell mv88e6xxx

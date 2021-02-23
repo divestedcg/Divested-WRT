@@ -1,4 +1,4 @@
-From 055987cfd3ef5ec3d899e29cfa13ba364919ea70 Mon Sep 17 00:00:00 2001
+From 9f46e01cb12ef36780331424ed3f352419c1f602 Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
 Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
