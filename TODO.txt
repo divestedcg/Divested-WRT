@@ -2,3 +2,4 @@
 - neon? (missing the fp16 compat mode?)
 - CONFIG_IRQ_TIME_ACCOUNTING=n
 - INCLUDE_CONFIG=y
+- Restore WireGuard and bmon

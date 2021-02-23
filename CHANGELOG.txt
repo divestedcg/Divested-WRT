@@ -1,4 +1,10 @@
-20210222-00-RESIZED-5.10 (testing)
+20210223-00-RESIZED (5.10)
+- update to 55ed4bf6d7bf80b705d015c3b73f772db485ba9c
+- Does not include WireGuard
+- [upstream] mvebu 5.10 patches have been merged!
+- Resized! Use with caution on mamba and venom!
+
+20210222-00-RESIZED-5.10
 - update to 36e35b8d813c259e08974e758fe3509921f1d767
 - Using revised mvebu 5.10 patches from Rui Salvaterra
   https://patchwork.ozlabs.org/project/openwrt/list/?series=230421
@@ -12,14 +18,14 @@
 - [upstream] update to kernel 5.4.99 (security and bug fixes)
 - Resized! Use with caution on mamba and venom!
 
-20210218-00-RESIZED-5.10 (testing)
+20210218-00-RESIZED-5.10
 - update to d2d32dcd5f4bb2d028452419fb2e014b7b31a37a
 - Using revised mvebu 5.10 patches from https://github.com/openwrt/openwrt/pull/3886
 - Does not include the DSA/FDB fixes!
 - Does not include WireGuard
 - Resized! Use with caution on mamba and venom!
 
-20210217-01-RESIZED-5.10 (testing)
+20210217-01-RESIZED-5.10
 - update to f323dec4f866d9ea75eae11c6762d0144d100628
 - Linux 5.10 for testing thanks to Sebastian Careba (nitroshift)
 - Does not include the DSA/FDB fixes!
