@@ -1,3 +1,9 @@
+20210223-01-RESIZED (5.10)
+- update to ce8b535ed3aea743f58d8445dfaa1c2ced375f94
+- Does not include WireGuard
+- [upstream] DSA/FDB patches have been merged!
+- Resized! Use with caution on mamba and venom!
+
 20210223-00-RESIZED (5.10)
 - update to 55ed4bf6d7bf80b705d015c3b73f772db485ba9c
 - Does not include WireGuard
