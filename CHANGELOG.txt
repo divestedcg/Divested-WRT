@@ -1,3 +1,9 @@
+20210224-00-RESIZED (5.10)
+- update to 512229ce4967814a09ce202855e6b632d2e97a3c
+- Does not include WireGuard
+- [upstream] update to kernel 5.10.18 (security and bug fixes)
+- Resized! Use with caution on mamba and venom!
+
 20210223-01-RESIZED (5.10)
 - update to ce8b535ed3aea743f58d8445dfaa1c2ced375f94
 - Does not include WireGuard
