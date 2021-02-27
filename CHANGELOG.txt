@@ -1,3 +1,8 @@
+20210227-00-RESIZED (5.10)
+- update to a1735fe73ce72e15fc26ca3cbd4a4fb3caba933a
+- [upstream] WireGuard has been fixed
+- Resized! Use with caution on mamba and venom!
+
 20210224-00-RESIZED (5.10)
 - update to 512229ce4967814a09ce202855e6b632d2e97a3c
 - Does not include WireGuard
