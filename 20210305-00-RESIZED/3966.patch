@@ -1,0 +1,1695 @@
+From 4c9e4127b9ccc1a7b685491c7bc9ae5ba4023d5b Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Thu, 4 Mar 2021 19:51:39 +0000
+Subject: [PATCH] kernel: bump 5.10 to 5.10.20
+
+Also add a new kconfig symbol (CONFIG_KCMP) to the generic config, disabling the
+SYS_kcmp syscall (it was split from CONFIG_CHECKPOINT_RESTORE, which is disabled
+by default, so the previous behaviour is kept).
+
+Removed (upstreamed) patches:
+  070-net-icmp-pass-zeroed-opts-from-icmp-v6-_ndo_send-bef.patch
+  081-wireguard-device-do-not-generate-ICMP-for-non-IP-pac.patch
+  082-wireguard-queueing-get-rid-of-per-peer-ring-buffers.patch
+  083-wireguard-kconfig-use-arm-chacha-even-with-no-neon.patch
+  830-v5.12-0002-usb-serial-option-update-interface-mapping-for-ZTE-P685M.patch
+
+Manually rebased patches:
+  313-helios4-dts-status-led-alias.patch
+  104-powerpc-mpc85xx-change-P2020RDB-dts-file-for-OpenWRT.patch
+
+Run tested:
+  ath79 (TL-WDR3600)
+  mvebu (Turris Omnia)
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                     |   4 +-
+ .../401-bcm963xx_real_rootfs_length.patch     |   2 +-
+ ...roed-opts-from-icmp-v6-_ndo_send-bef.patch | 337 -----------
+ ...ut-frequently-used-members-above-cac.patch |   2 +-
+ ...-do-not-generate-ICMP-for-non-IP-pac.patch |  47 --
+ ...ing-get-rid-of-per-peer-ring-buffers.patch | 560 ------------------
+ ...fig-use-arm-chacha-even-with-no-neon.patch |  30 -
+ ...date-interface-mapping-for-ZTE-P685M.patch |  73 ---
+ target/linux/generic/config-5.10              |   1 +
+ .../generic/hack-5.10/204-module_strip.patch  |   6 +-
+ .../hack-5.10/221-module_exports.patch        |   2 +-
+ .../203-kallsyms_uncompressed.patch           |   2 +-
+ .../pending-5.10/308-mips32r2_tune.patch      |   2 +-
+ ...ort-limiting-4K-sectors-support-base.patch |   4 +-
+ .../479-mtd-spi-nor-add-xtx-xt25f128b.patch   |   2 +-
+ ...or-rework-broken-flash-reset-support.patch |  22 +-
+ ...detach-callback-to-struct-phy_driver.patch |   2 +-
+ .../pending-5.10/920-mangle_bootargs.patch    |   2 +-
+ ...apalis-ixora-add-status-LEDs-aliases.patch |   8 +-
+ ...alis-ixora-make-switch3-reset-button.patch |  12 +-
+ ...ek-Split-PCIe-node-for-MT2712-MT7622.patch |   4 +-
+ ..._eth_soc-add-support-for-coherent-DM.patch |   2 +-
+ ...ediatek-add-support-for-coherent-DMA.patch |  10 +-
+ ...change-P2020RDB-dts-file-for-OpenWRT.patch |  16 +-
+ .../313-helios4-dts-status-led-alias.patch    |   6 +-
+ .../700-mvneta-tx-queue-workaround.patch      |   4 +-
+ ...usb3-controller-node-for-RK3328-SoCs.patch |   2 +-
+ 27 files changed, 59 insertions(+), 1105 deletions(-)
+ delete mode 100644 target/linux/generic/backport-5.10/070-net-icmp-pass-zeroed-opts-from-icmp-v6-_ndo_send-bef.patch
+ delete mode 100644 target/linux/generic/backport-5.10/081-wireguard-device-do-not-generate-ICMP-for-non-IP-pac.patch
+ delete mode 100644 target/linux/generic/backport-5.10/082-wireguard-queueing-get-rid-of-per-peer-ring-buffers.patch
+ delete mode 100644 target/linux/generic/backport-5.10/083-wireguard-kconfig-use-arm-chacha-even-with-no-neon.patch
+ delete mode 100644 target/linux/generic/backport-5.10/830-v5.12-0002-usb-serial-option-update-interface-mapping-for-ZTE-P685M.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 9fbd8614406e..33fe6b2d0eeb 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .102
+-LINUX_VERSION-5.10 = .18
++LINUX_VERSION-5.10 = .20
+ 
+ LINUX_KERNEL_HASH-5.4.102 = fd697ce1c3f6024d4ae77d4eb5a1552199407b60cb8e90bc621e23cbce639aed
+-LINUX_KERNEL_HASH-5.10.18 = 3bc1ee2b1bf73b5ba936721953f3f9599fd165cef906cd5163c68d23cb9bb611
++LINUX_KERNEL_HASH-5.10.20 = 9be37146feba42be05137cf900a7d9012990b5a1d5e59bc0c8da1f86952930a3
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm63xx/patches-5.10/401-bcm963xx_real_rootfs_length.patch b/target/linux/bcm63xx/patches-5.10/401-bcm963xx_real_rootfs_length.patch
+index e92ec2d94c1e..eccdf0d7c5d5 100644
+--- a/target/linux/bcm63xx/patches-5.10/401-bcm963xx_real_rootfs_length.patch
++++ b/target/linux/bcm63xx/patches-5.10/401-bcm963xx_real_rootfs_length.patch
+@@ -15,7 +15,7 @@
+  	/* 240-255: Unused at present */
+ --- a/drivers/mtd/parsers/parser_imagetag.c
+ +++ b/drivers/mtd/parsers/parser_imagetag.c
+-@@ -132,7 +132,8 @@ static int bcm963xx_parse_imagetag_parti
++@@ -136,7 +136,8 @@ static int bcm963xx_parse_imagetag_parti
+  		} else {
+  			/* OpenWrt layout */
+  			rootfsaddr = kerneladdr + kernellen;
+diff --git a/target/linux/generic/backport-5.10/070-net-icmp-pass-zeroed-opts-from-icmp-v6-_ndo_send-bef.patch b/target/linux/generic/backport-5.10/070-net-icmp-pass-zeroed-opts-from-icmp-v6-_ndo_send-bef.patch
+deleted file mode 100644
+index d2c084424f36..000000000000
+--- a/target/linux/generic/backport-5.10/070-net-icmp-pass-zeroed-opts-from-icmp-v6-_ndo_send-bef.patch
++++ /dev/null
+@@ -1,337 +0,0 @@
+-From 4a25324891a32d080589a6e3a4dec2be2d9e3d60 Mon Sep 17 00:00:00 2001
+-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+-Date: Tue, 23 Feb 2021 14:18:58 +0100
+-Subject: [PATCH] net: icmp: pass zeroed opts from icmp{,v6}_ndo_send before
+- sending
+-
+-commit ee576c47db60432c37e54b1e2b43a8ca6d3a8dca upstream.
+-
+-The icmp{,v6}_send functions make all sorts of use of skb->cb, casting
+-it with IPCB or IP6CB, assuming the skb to have come directly from the
+-inet layer. But when the packet comes from the ndo layer, especially
+-when forwarded, there's no telling what might be in skb->cb at that
+-point. As a result, the icmp sending code risks reading bogus memory
+-contents, which can result in nasty stack overflows such as this one
+-reported by a user:
+-
+-    panic+0x108/0x2ea
+-    __stack_chk_fail+0x14/0x20
+-    __icmp_send+0x5bd/0x5c0
+-    icmp_ndo_send+0x148/0x160
+-
+-In icmp_send, skb->cb is cast with IPCB and an ip_options struct is read
+-from it. The optlen parameter there is of particular note, as it can
+-induce writes beyond bounds. There are quite a few ways that can happen
+-in __ip_options_echo. For example:
+-
+-    // sptr/skb are attacker-controlled skb bytes
+-    sptr = skb_network_header(skb);
+-    // dptr/dopt points to stack memory allocated by __icmp_send
+-    dptr = dopt->__data;
+-    // sopt is the corrupt skb->cb in question
+-    if (sopt->rr) {
+-        optlen  = sptr[sopt->rr+1]; // corrupt skb->cb + skb->data
+-        soffset = sptr[sopt->rr+2]; // corrupt skb->cb + skb->data
+-	// this now writes potentially attacker-controlled data, over
+-	// flowing the stack:
+-        memcpy(dptr, sptr+sopt->rr, optlen);
+-    }
+-
+-In the icmpv6_send case, the story is similar, but not as dire, as only
+-IP6CB(skb)->iif and IP6CB(skb)->dsthao are used. The dsthao case is
+-worse than the iif case, but it is passed to ipv6_find_tlv, which does
+-a bit of bounds checking on the value.
+-
+-This is easy to simulate by doing a `memset(skb->cb, 0x41,
+-sizeof(skb->cb));` before calling icmp{,v6}_ndo_send, and it's only by
+-good fortune and the rarity of icmp sending from that context that we've
+-avoided reports like this until now. For example, in KASAN:
+-
+-    BUG: KASAN: stack-out-of-bounds in __ip_options_echo+0xa0e/0x12b0
+-    Write of size 38 at addr ffff888006f1f80e by task ping/89
+-    CPU: 2 PID: 89 Comm: ping Not tainted 5.10.0-rc7-debug+ #5
+-    Call Trace:
+-     dump_stack+0x9a/0xcc
+-     print_address_description.constprop.0+0x1a/0x160
+-     __kasan_report.cold+0x20/0x38
+-     kasan_report+0x32/0x40
+-     check_memory_region+0x145/0x1a0
+-     memcpy+0x39/0x60
+-     __ip_options_echo+0xa0e/0x12b0
+-     __icmp_send+0x744/0x1700
+-
+-Actually, out of the 4 drivers that do this, only gtp zeroed the cb for
+-the v4 case, while the rest did not. So this commit actually removes the
+-gtp-specific zeroing, while putting the code where it belongs in the
+-shared infrastructure of icmp{,v6}_ndo_send.
+-
+-This commit fixes the issue by passing an empty IPCB or IP6CB along to
+-the functions that actually do the work. For the icmp_send, this was
+-already trivial, thanks to __icmp_send providing the plumbing function.
+-For icmpv6_send, this required a tiny bit of refactoring to make it
+-behave like the v4 case, after which it was straight forward.
+-
+-Fixes: a2b78e9b2cac ("sunvnet: generate ICMP PTMUD messages for smaller port MTUs")
+-Reported-by: SinYu <liuxyon@gmail.com>
+-Reviewed-by: Willem de Bruijn <willemb@google.com>
+-Link: https://lore.kernel.org/netdev/CAF=yD-LOF116aHub6RMe8vB8ZpnrrnoTdqhobEx+bvoA8AsP0w@mail.gmail.com/T/
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+-Link: https://lore.kernel.org/r/20210223131858.72082-1-Jason@zx2c4.com
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+-[Jason: backported to 5.10]
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+----
+- include/linux/icmpv6.h | 17 ++++++++++++++---
+- include/linux/ipv6.h   |  1 -
+- include/net/icmp.h     |  6 +++++-
+- net/ipv4/icmp.c        |  5 +++--
+- net/ipv6/icmp.c        | 16 ++++++++--------
+- net/ipv6/ip6_icmp.c    | 12 +++++++-----
+- 6 files changed, 37 insertions(+), 20 deletions(-)
+-
+---- a/drivers/net/gtp.c
+-+++ b/drivers/net/gtp.c
+-@@ -539,7 +539,6 @@ static int gtp_build_skb_ip4(struct sk_b
+- 	if (!skb_is_gso(skb) && (iph->frag_off & htons(IP_DF)) &&
+- 	    mtu < ntohs(iph->tot_len)) {
+- 		netdev_dbg(dev, "packet too big, fragmentation needed\n");
+--		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+- 		icmp_ndo_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
+- 			      htonl(mtu));
+- 		goto err_rt;
+---- a/include/linux/icmpv6.h
+-+++ b/include/linux/icmpv6.h
+-@@ -3,6 +3,7 @@
+- #define _LINUX_ICMPV6_H
+- 
+- #include <linux/skbuff.h>
+-+#include <linux/ipv6.h>
+- #include <uapi/linux/icmpv6.h>
+- 
+- static inline struct icmp6hdr *icmp6_hdr(const struct sk_buff *skb)
+-@@ -15,13 +16,16 @@ static inline struct icmp6hdr *icmp6_hdr
+- #if IS_ENABLED(CONFIG_IPV6)
+- 
+- typedef void ip6_icmp_send_t(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+--			     const struct in6_addr *force_saddr);
+-+			     const struct in6_addr *force_saddr,
+-+			     const struct inet6_skb_parm *parm);
+- #if IS_BUILTIN(CONFIG_IPV6)
+- void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+--		const struct in6_addr *force_saddr);
+--static inline void icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info)
+-+		const struct in6_addr *force_saddr,
+-+		const struct inet6_skb_parm *parm);
+-+static inline void __icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+-+				 const struct inet6_skb_parm *parm)
+- {
+--	icmp6_send(skb, type, code, info, NULL);
+-+	icmp6_send(skb, type, code, info, NULL, parm);
+- }
+- static inline int inet6_register_icmp_sender(ip6_icmp_send_t *fn)
+- {
+-@@ -34,18 +38,28 @@ static inline int inet6_unregister_icmp_
+- 	return 0;
+- }
+- #else
+--extern void icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info);
+-+extern void __icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+-+			  const struct inet6_skb_parm *parm);
+- extern int inet6_register_icmp_sender(ip6_icmp_send_t *fn);
+- extern int inet6_unregister_icmp_sender(ip6_icmp_send_t *fn);
+- #endif
+- 
+-+static inline void icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info)
+-+{
+-+	__icmpv6_send(skb, type, code, info, IP6CB(skb));
+-+}
+-+
+- int ip6_err_gen_icmpv6_unreach(struct sk_buff *skb, int nhs, int type,
+- 			       unsigned int data_len);
+- 
+- #if IS_ENABLED(CONFIG_NF_NAT)
+- void icmpv6_ndo_send(struct sk_buff *skb_in, u8 type, u8 code, __u32 info);
+- #else
+--#define icmpv6_ndo_send icmpv6_send
+-+static inline void icmpv6_ndo_send(struct sk_buff *skb_in, u8 type, u8 code, __u32 info)
+-+{
+-+	struct inet6_skb_parm parm = { 0 };
+-+	__icmpv6_send(skb_in, type, code, info, &parm);
+-+}
+- #endif
+- 
+- #else
+---- a/include/linux/ipv6.h
+-+++ b/include/linux/ipv6.h
+-@@ -84,7 +84,6 @@ struct ipv6_params {
+- 	__s32 autoconf;
+- };
+- extern struct ipv6_params ipv6_defaults;
+--#include <linux/icmpv6.h>
+- #include <linux/tcp.h>
+- #include <linux/udp.h>
+- 
+---- a/include/net/icmp.h
+-+++ b/include/net/icmp.h
+-@@ -46,7 +46,11 @@ static inline void icmp_send(struct sk_b
+- #if IS_ENABLED(CONFIG_NF_NAT)
+- void icmp_ndo_send(struct sk_buff *skb_in, int type, int code, __be32 info);
+- #else
+--#define icmp_ndo_send icmp_send
+-+static inline void icmp_ndo_send(struct sk_buff *skb_in, int type, int code, __be32 info)
+-+{
+-+	struct ip_options opts = { 0 };
+-+	__icmp_send(skb_in, type, code, info, &opts);
+-+}
+- #endif
+- 
+- int icmp_rcv(struct sk_buff *skb);
+---- a/net/ipv4/icmp.c
+-+++ b/net/ipv4/icmp.c
+-@@ -775,13 +775,14 @@ EXPORT_SYMBOL(__icmp_send);
+- void icmp_ndo_send(struct sk_buff *skb_in, int type, int code, __be32 info)
+- {
+- 	struct sk_buff *cloned_skb = NULL;
+-+	struct ip_options opts = { 0 };
+- 	enum ip_conntrack_info ctinfo;
+- 	struct nf_conn *ct;
+- 	__be32 orig_ip;
+- 
+- 	ct = nf_ct_get(skb_in, &ctinfo);
+- 	if (!ct || !(ct->status & IPS_SRC_NAT)) {
+--		icmp_send(skb_in, type, code, info);
+-+		__icmp_send(skb_in, type, code, info, &opts);
+- 		return;
+- 	}
+- 
+-@@ -796,7 +797,7 @@ void icmp_ndo_send(struct sk_buff *skb_i
+- 
+- 	orig_ip = ip_hdr(skb_in)->saddr;
+- 	ip_hdr(skb_in)->saddr = ct->tuplehash[0].tuple.src.u3.ip;
+--	icmp_send(skb_in, type, code, info);
+-+	__icmp_send(skb_in, type, code, info, &opts);
+- 	ip_hdr(skb_in)->saddr = orig_ip;
+- out:
+- 	consume_skb(cloned_skb);
+---- a/net/ipv6/icmp.c
+-+++ b/net/ipv6/icmp.c
+-@@ -331,10 +331,9 @@ static int icmpv6_getfrag(void *from, ch
+- }
+- 
+- #if IS_ENABLED(CONFIG_IPV6_MIP6)
+--static void mip6_addr_swap(struct sk_buff *skb)
+-+static void mip6_addr_swap(struct sk_buff *skb, const struct inet6_skb_parm *opt)
+- {
+- 	struct ipv6hdr *iph = ipv6_hdr(skb);
+--	struct inet6_skb_parm *opt = IP6CB(skb);
+- 	struct ipv6_destopt_hao *hao;
+- 	struct in6_addr tmp;
+- 	int off;
+-@@ -351,7 +350,7 @@ static void mip6_addr_swap(struct sk_buf
+- 	}
+- }
+- #else
+--static inline void mip6_addr_swap(struct sk_buff *skb) {}
+-+static inline void mip6_addr_swap(struct sk_buff *skb, const struct inet6_skb_parm *opt) {}
+- #endif
+- 
+- static struct dst_entry *icmpv6_route_lookup(struct net *net,
+-@@ -446,7 +445,8 @@ static int icmp6_iif(const struct sk_buf
+-  *	Send an ICMP message in response to a packet in error
+-  */
+- void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+--		const struct in6_addr *force_saddr)
+-+		const struct in6_addr *force_saddr,
+-+		const struct inet6_skb_parm *parm)
+- {
+- 	struct inet6_dev *idev = NULL;
+- 	struct ipv6hdr *hdr = ipv6_hdr(skb);
+-@@ -542,7 +542,7 @@ void icmp6_send(struct sk_buff *skb, u8
+- 	if (!(skb->dev->flags & IFF_LOOPBACK) && !icmpv6_global_allow(net, type))
+- 		goto out_bh_enable;
+- 
+--	mip6_addr_swap(skb);
+-+	mip6_addr_swap(skb, parm);
+- 
+- 	sk = icmpv6_xmit_lock(net);
+- 	if (!sk)
+-@@ -559,7 +559,7 @@ void icmp6_send(struct sk_buff *skb, u8
+- 		/* select a more meaningful saddr from input if */
+- 		struct net_device *in_netdev;
+- 
+--		in_netdev = dev_get_by_index(net, IP6CB(skb)->iif);
+-+		in_netdev = dev_get_by_index(net, parm->iif);
+- 		if (in_netdev) {
+- 			ipv6_dev_get_saddr(net, in_netdev, &fl6.daddr,
+- 					   inet6_sk(sk)->srcprefs,
+-@@ -640,7 +640,7 @@ EXPORT_SYMBOL(icmp6_send);
+-  */
+- void icmpv6_param_prob(struct sk_buff *skb, u8 code, int pos)
+- {
+--	icmp6_send(skb, ICMPV6_PARAMPROB, code, pos, NULL);
+-+	icmp6_send(skb, ICMPV6_PARAMPROB, code, pos, NULL, IP6CB(skb));
+- 	kfree_skb(skb);
+- }
+- 
+-@@ -697,10 +697,10 @@ int ip6_err_gen_icmpv6_unreach(struct sk
+- 	}
+- 	if (type == ICMP_TIME_EXCEEDED)
+- 		icmp6_send(skb2, ICMPV6_TIME_EXCEED, ICMPV6_EXC_HOPLIMIT,
+--			   info, &temp_saddr);
+-+			   info, &temp_saddr, IP6CB(skb2));
+- 	else
+- 		icmp6_send(skb2, ICMPV6_DEST_UNREACH, ICMPV6_ADDR_UNREACH,
+--			   info, &temp_saddr);
+-+			   info, &temp_saddr, IP6CB(skb2));
+- 	if (rt)
+- 		ip6_rt_put(rt);
+- 
+---- a/net/ipv6/ip6_icmp.c
+-+++ b/net/ipv6/ip6_icmp.c
+-@@ -33,23 +33,25 @@ int inet6_unregister_icmp_sender(ip6_icm
+- }
+- EXPORT_SYMBOL(inet6_unregister_icmp_sender);
+- 
+--void icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info)
+-+void __icmpv6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+-+		   const struct inet6_skb_parm *parm)
+- {
+- 	ip6_icmp_send_t *send;
+- 
+- 	rcu_read_lock();
+- 	send = rcu_dereference(ip6_icmp_send);
+- 	if (send)
+--		send(skb, type, code, info, NULL);
+-+		send(skb, type, code, info, NULL, parm);
+- 	rcu_read_unlock();
+- }
+--EXPORT_SYMBOL(icmpv6_send);
+-+EXPORT_SYMBOL(__icmpv6_send);
+- #endif
+- 
+- #if IS_ENABLED(CONFIG_NF_NAT)
+- #include <net/netfilter/nf_conntrack.h>
+- void icmpv6_ndo_send(struct sk_buff *skb_in, u8 type, u8 code, __u32 info)
+- {
+-+	struct inet6_skb_parm parm = { 0 };
+- 	struct sk_buff *cloned_skb = NULL;
+- 	enum ip_conntrack_info ctinfo;
+- 	struct in6_addr orig_ip;
+-@@ -57,7 +59,7 @@ void icmpv6_ndo_send(struct sk_buff *skb
+- 
+- 	ct = nf_ct_get(skb_in, &ctinfo);
+- 	if (!ct || !(ct->status & IPS_SRC_NAT)) {
+--		icmpv6_send(skb_in, type, code, info);
+-+		__icmpv6_send(skb_in, type, code, info, &parm);
+- 		return;
+- 	}
+- 
+-@@ -72,7 +74,7 @@ void icmpv6_ndo_send(struct sk_buff *skb
+- 
+- 	orig_ip = ipv6_hdr(skb_in)->saddr;
+- 	ipv6_hdr(skb_in)->saddr = ct->tuplehash[0].tuple.src.u3.in6;
+--	icmpv6_send(skb_in, type, code, info);
+-+	__icmpv6_send(skb_in, type, code, info, &parm);
+- 	ipv6_hdr(skb_in)->saddr = orig_ip;
+- out:
+- 	consume_skb(cloned_skb);
+diff --git a/target/linux/generic/backport-5.10/080-wireguard-peer-put-frequently-used-members-above-cac.patch b/target/linux/generic/backport-5.10/080-wireguard-peer-put-frequently-used-members-above-cac.patch
+index 1e0115d98226..444fd677b465 100644
+--- a/target/linux/generic/backport-5.10/080-wireguard-peer-put-frequently-used-members-above-cac.patch
++++ b/target/linux/generic/backport-5.10/080-wireguard-peer-put-frequently-used-members-above-cac.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+ --- a/drivers/net/wireguard/peer.h
+ +++ b/drivers/net/wireguard/peer.h
+ @@ -39,6 +39,7 @@ struct wg_peer {
+- 	struct crypt_queue tx_queue, rx_queue;
++ 	struct prev_queue tx_queue, rx_queue;
+  	struct sk_buff_head staged_packet_queue;
+  	int serial_work_cpu;
+ +	bool is_dead;
+diff --git a/target/linux/generic/backport-5.10/081-wireguard-device-do-not-generate-ICMP-for-non-IP-pac.patch b/target/linux/generic/backport-5.10/081-wireguard-device-do-not-generate-ICMP-for-non-IP-pac.patch
+deleted file mode 100644
+index 9b1fee7290fb..000000000000
+--- a/target/linux/generic/backport-5.10/081-wireguard-device-do-not-generate-ICMP-for-non-IP-pac.patch
++++ /dev/null
+@@ -1,47 +0,0 @@
+-From 49da2a610d63cef849f0095e601821ad6edfbef7 Mon Sep 17 00:00:00 2001
+-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+-Date: Mon, 22 Feb 2021 17:25:47 +0100
+-Subject: [PATCH] wireguard: device: do not generate ICMP for non-IP packets
+-
+-commit 99fff5264e7ab06f45b0ad60243475be0a8d0559 upstream.
+-
+-If skb->protocol doesn't match the actual skb->data header, it's
+-probably not a good idea to pass it off to icmp{,v6}_ndo_send, which is
+-expecting to reply to a valid IP packet. So this commit has that early
+-mismatch case jump to a later error label.
+-
+-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+----
+- drivers/net/wireguard/device.c | 7 ++++---
+- 1 file changed, 4 insertions(+), 3 deletions(-)
+-
+---- a/drivers/net/wireguard/device.c
+-+++ b/drivers/net/wireguard/device.c
+-@@ -138,7 +138,7 @@ static netdev_tx_t wg_xmit(struct sk_buf
+- 		else if (skb->protocol == htons(ETH_P_IPV6))
+- 			net_dbg_ratelimited("%s: No peer has allowed IPs matching %pI6\n",
+- 					    dev->name, &ipv6_hdr(skb)->daddr);
+--		goto err;
+-+		goto err_icmp;
+- 	}
+- 
+- 	family = READ_ONCE(peer->endpoint.addr.sa_family);
+-@@ -201,12 +201,13 @@ static netdev_tx_t wg_xmit(struct sk_buf
+- 
+- err_peer:
+- 	wg_peer_put(peer);
+--err:
+--	++dev->stats.tx_errors;
+-+err_icmp:
+- 	if (skb->protocol == htons(ETH_P_IP))
+- 		icmp_ndo_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0);
+- 	else if (skb->protocol == htons(ETH_P_IPV6))
+- 		icmpv6_ndo_send(skb, ICMPV6_DEST_UNREACH, ICMPV6_ADDR_UNREACH, 0);
+-+err:
+-+	++dev->stats.tx_errors;
+- 	kfree_skb(skb);
+- 	return ret;
+- }
+diff --git a/target/linux/generic/backport-5.10/082-wireguard-queueing-get-rid-of-per-peer-ring-buffers.patch b/target/linux/generic/backport-5.10/082-wireguard-queueing-get-rid-of-per-peer-ring-buffers.patch
+deleted file mode 100644
+index 1e7c5e881fd3..000000000000
+--- a/target/linux/generic/backport-5.10/082-wireguard-queueing-get-rid-of-per-peer-ring-buffers.patch
++++ /dev/null
+@@ -1,560 +0,0 @@
+-From 1771bbcc5bc99f569dd82ec9e1b7c397a2fb50ac Mon Sep 17 00:00:00 2001
+-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+-Date: Mon, 22 Feb 2021 17:25:48 +0100
+-Subject: [PATCH] wireguard: queueing: get rid of per-peer ring buffers
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-commit 8b5553ace83cced775eefd0f3f18b5c6214ccf7a upstream.
+-
+-Having two ring buffers per-peer means that every peer results in two
+-massive ring allocations. On an 8-core x86_64 machine, this commit
+-reduces the per-peer allocation from 18,688 bytes to 1,856 bytes, which
+-is an 90% reduction. Ninety percent! With some single-machine
+-deployments approaching 500,000 peers, we're talking about a reduction
+-from 7 gigs of memory down to 700 megs of memory.
+-
+-In order to get rid of these per-peer allocations, this commit switches
+-to using a list-based queueing approach. Currently GSO fragments are
+-chained together using the skb->next pointer (the skb_list_* singly
+-linked list approach), so we form the per-peer queue around the unused
+-skb->prev pointer (which sort of makes sense because the links are
+-pointing backwards). Use of skb_queue_* is not possible here, because
+-that is based on doubly linked lists and spinlocks. Multiple cores can
+-write into the queue at any given time, because its writes occur in the
+-start_xmit path or in the udp_recv path. But reads happen in a single
+-workqueue item per-peer, amounting to a multi-producer, single-consumer
+-paradigm.
+-
+-The MPSC queue is implemented locklessly and never blocks. However, it
+-is not linearizable (though it is serializable), with a very tight and
+-unlikely race on writes, which, when hit (some tiny fraction of the
+-0.15% of partial adds on a fully loaded 16-core x86_64 system), causes
+-the queue reader to terminate early. However, because every packet sent
+-queues up the same workqueue item after it is fully added, the worker
+-resumes again, and stopping early isn't actually a problem, since at
+-that point the packet wouldn't have yet been added to the encryption
+-queue. These properties allow us to avoid disabling interrupts or
+-spinning. The design is based on Dmitry Vyukov's algorithm [1].
+-
+-Performance-wise, ordinarily list-based queues aren't preferable to
+-ringbuffers, because of cache misses when following pointers around.
+-However, we *already* have to follow the adjacent pointers when working
+-through fragments, so there shouldn't actually be any change there. A
+-potential downside is that dequeueing is a bit more complicated, but the
+-ptr_ring structure used prior had a spinlock when dequeueing, so all and
+-all the difference appears to be a wash.
+-
+-Actually, from profiling, the biggest performance hit, by far, of this
+-commit winds up being atomic_add_unless(count, 1, max) and atomic_
+-dec(count), which account for the majority of CPU time, according to
+-perf. In that sense, the previous ring buffer was superior in that it
+-could check if it was full by head==tail, which the list-based approach
+-cannot do.
+-
+-But all and all, this enables us to get massive memory savings, allowing
+-WireGuard to scale for real world deployments, without taking much of a
+-performance hit.
+-
+-[1] http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
+-
+-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+-Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+----
+- drivers/net/wireguard/device.c   | 12 ++---
+- drivers/net/wireguard/device.h   | 15 +++---
+- drivers/net/wireguard/peer.c     | 28 ++++-------
+- drivers/net/wireguard/peer.h     |  4 +-
+- drivers/net/wireguard/queueing.c | 86 +++++++++++++++++++++++++-------
+- drivers/net/wireguard/queueing.h | 45 ++++++++++++-----
+- drivers/net/wireguard/receive.c  | 16 +++---
+- drivers/net/wireguard/send.c     | 31 ++++--------
+- 8 files changed, 144 insertions(+), 93 deletions(-)
+-
+---- a/drivers/net/wireguard/device.c
+-+++ b/drivers/net/wireguard/device.c
+-@@ -235,8 +235,8 @@ static void wg_destruct(struct net_devic
+- 	destroy_workqueue(wg->handshake_receive_wq);
+- 	destroy_workqueue(wg->handshake_send_wq);
+- 	destroy_workqueue(wg->packet_crypt_wq);
+--	wg_packet_queue_free(&wg->decrypt_queue, true);
+--	wg_packet_queue_free(&wg->encrypt_queue, true);
+-+	wg_packet_queue_free(&wg->decrypt_queue);
+-+	wg_packet_queue_free(&wg->encrypt_queue);
+- 	rcu_barrier(); /* Wait for all the peers to be actually freed. */
+- 	wg_ratelimiter_uninit();
+- 	memzero_explicit(&wg->static_identity, sizeof(wg->static_identity));
+-@@ -338,12 +338,12 @@ static int wg_newlink(struct net *src_ne
+- 		goto err_destroy_handshake_send;
+- 
+- 	ret = wg_packet_queue_init(&wg->encrypt_queue, wg_packet_encrypt_worker,
+--				   true, MAX_QUEUED_PACKETS);
+-+				   MAX_QUEUED_PACKETS);
+- 	if (ret < 0)
+- 		goto err_destroy_packet_crypt;
+- 
+- 	ret = wg_packet_queue_init(&wg->decrypt_queue, wg_packet_decrypt_worker,
+--				   true, MAX_QUEUED_PACKETS);
+-+				   MAX_QUEUED_PACKETS);
+- 	if (ret < 0)
+- 		goto err_free_encrypt_queue;
+- 
+-@@ -368,9 +368,9 @@ static int wg_newlink(struct net *src_ne
+- err_uninit_ratelimiter:
+- 	wg_ratelimiter_uninit();
+- err_free_decrypt_queue:
+--	wg_packet_queue_free(&wg->decrypt_queue, true);
+-+	wg_packet_queue_free(&wg->decrypt_queue);
+- err_free_encrypt_queue:
+--	wg_packet_queue_free(&wg->encrypt_queue, true);
+-+	wg_packet_queue_free(&wg->encrypt_queue);
+- err_destroy_packet_crypt:
+- 	destroy_workqueue(wg->packet_crypt_wq);
+- err_destroy_handshake_send:
+---- a/drivers/net/wireguard/device.h
+-+++ b/drivers/net/wireguard/device.h
+-@@ -27,13 +27,14 @@ struct multicore_worker {
+- 
+- struct crypt_queue {
+- 	struct ptr_ring ring;
+--	union {
+--		struct {
+--			struct multicore_worker __percpu *worker;
+--			int last_cpu;
+--		};
+--		struct work_struct work;
+--	};
+-+	struct multicore_worker __percpu *worker;
+-+	int last_cpu;
+-+};
+-+
+-+struct prev_queue {
+-+	struct sk_buff *head, *tail, *peeked;
+-+	struct { struct sk_buff *next, *prev; } empty; // Match first 2 members of struct sk_buff.
+-+	atomic_t count;
+- };
+- 
+- struct wg_device {
+---- a/drivers/net/wireguard/peer.c
+-+++ b/drivers/net/wireguard/peer.c
+-@@ -32,27 +32,22 @@ struct wg_peer *wg_peer_create(struct wg
+- 	peer = kzalloc(sizeof(*peer), GFP_KERNEL);
+- 	if (unlikely(!peer))
+- 		return ERR_PTR(ret);
+--	peer->device = wg;
+-+	if (dst_cache_init(&peer->endpoint_cache, GFP_KERNEL))
+-+		goto err;
+- 
+-+	peer->device = wg;
+- 	wg_noise_handshake_init(&peer->handshake, &wg->static_identity,
+- 				public_key, preshared_key, peer);
+--	if (dst_cache_init(&peer->endpoint_cache, GFP_KERNEL))
+--		goto err_1;
+--	if (wg_packet_queue_init(&peer->tx_queue, wg_packet_tx_worker, false,
+--				 MAX_QUEUED_PACKETS))
+--		goto err_2;
+--	if (wg_packet_queue_init(&peer->rx_queue, NULL, false,
+--				 MAX_QUEUED_PACKETS))
+--		goto err_3;
+--
+- 	peer->internal_id = atomic64_inc_return(&peer_counter);
+- 	peer->serial_work_cpu = nr_cpumask_bits;
+- 	wg_cookie_init(&peer->latest_cookie);
+- 	wg_timers_init(peer);
+- 	wg_cookie_checker_precompute_peer_keys(peer);
+- 	spin_lock_init(&peer->keypairs.keypair_update_lock);
+--	INIT_WORK(&peer->transmit_handshake_work,
+--		  wg_packet_handshake_send_worker);
+-+	INIT_WORK(&peer->transmit_handshake_work, wg_packet_handshake_send_worker);
+-+	INIT_WORK(&peer->transmit_packet_work, wg_packet_tx_worker);
+-+	wg_prev_queue_init(&peer->tx_queue);
+-+	wg_prev_queue_init(&peer->rx_queue);
+- 	rwlock_init(&peer->endpoint_lock);
+- 	kref_init(&peer->refcount);
+- 	skb_queue_head_init(&peer->staged_packet_queue);
+-@@ -68,11 +63,7 @@ struct wg_peer *wg_peer_create(struct wg
+- 	pr_debug("%s: Peer %llu created\n", wg->dev->name, peer->internal_id);
+- 	return peer;
+- 
+--err_3:
+--	wg_packet_queue_free(&peer->tx_queue, false);
+--err_2:
+--	dst_cache_destroy(&peer->endpoint_cache);
+--err_1:
+-+err:
+- 	kfree(peer);
+- 	return ERR_PTR(ret);
+- }
+-@@ -197,8 +188,7 @@ static void rcu_release(struct rcu_head
+- 	struct wg_peer *peer = container_of(rcu, struct wg_peer, rcu);
+- 
+- 	dst_cache_destroy(&peer->endpoint_cache);
+--	wg_packet_queue_free(&peer->rx_queue, false);
+--	wg_packet_queue_free(&peer->tx_queue, false);
+-+	WARN_ON(wg_prev_queue_peek(&peer->tx_queue) || wg_prev_queue_peek(&peer->rx_queue));
+- 
+- 	/* The final zeroing takes care of clearing any remaining handshake key
+- 	 * material and other potentially sensitive information.
+---- a/drivers/net/wireguard/peer.h
+-+++ b/drivers/net/wireguard/peer.h
+-@@ -36,7 +36,7 @@ struct endpoint {
+- 
+- struct wg_peer {
+- 	struct wg_device *device;
+--	struct crypt_queue tx_queue, rx_queue;
+-+	struct prev_queue tx_queue, rx_queue;
+- 	struct sk_buff_head staged_packet_queue;
+- 	int serial_work_cpu;
+- 	bool is_dead;
+-@@ -46,7 +46,7 @@ struct wg_peer {
+- 	rwlock_t endpoint_lock;
+- 	struct noise_handshake handshake;
+- 	atomic64_t last_sent_handshake;
+--	struct work_struct transmit_handshake_work, clear_peer_work;
+-+	struct work_struct transmit_handshake_work, clear_peer_work, transmit_packet_work;
+- 	struct cookie latest_cookie;
+- 	struct hlist_node pubkey_hash;
+- 	u64 rx_bytes, tx_bytes;
+---- a/drivers/net/wireguard/queueing.c
+-+++ b/drivers/net/wireguard/queueing.c
+-@@ -9,8 +9,7 @@ struct multicore_worker __percpu *
+- wg_packet_percpu_multicore_worker_alloc(work_func_t function, void *ptr)
+- {
+- 	int cpu;
+--	struct multicore_worker __percpu *worker =
+--		alloc_percpu(struct multicore_worker);
+-+	struct multicore_worker __percpu *worker = alloc_percpu(struct multicore_worker);
+- 
+- 	if (!worker)
+- 		return NULL;
+-@@ -23,7 +22,7 @@ wg_packet_percpu_multicore_worker_alloc(
+- }
+- 
+- int wg_packet_queue_init(struct crypt_queue *queue, work_func_t function,
+--			 bool multicore, unsigned int len)
+-+			 unsigned int len)
+- {
+- 	int ret;
+- 
+-@@ -31,25 +30,78 @@ int wg_packet_queue_init(struct crypt_qu
+- 	ret = ptr_ring_init(&queue->ring, len, GFP_KERNEL);
+- 	if (ret)
+- 		return ret;
+--	if (function) {
+--		if (multicore) {
+--			queue->worker = wg_packet_percpu_multicore_worker_alloc(
+--				function, queue);
+--			if (!queue->worker) {
+--				ptr_ring_cleanup(&queue->ring, NULL);
+--				return -ENOMEM;
+--			}
+--		} else {
+--			INIT_WORK(&queue->work, function);
+--		}
+-+	queue->worker = wg_packet_percpu_multicore_worker_alloc(function, queue);
+-+	if (!queue->worker) {
+-+		ptr_ring_cleanup(&queue->ring, NULL);
+-+		return -ENOMEM;
+- 	}
+- 	return 0;
+- }
+- 
+--void wg_packet_queue_free(struct crypt_queue *queue, bool multicore)
+-+void wg_packet_queue_free(struct crypt_queue *queue)
+- {
+--	if (multicore)
+--		free_percpu(queue->worker);
+-+	free_percpu(queue->worker);
+- 	WARN_ON(!__ptr_ring_empty(&queue->ring));
+- 	ptr_ring_cleanup(&queue->ring, NULL);
+- }
+-+
+-+#define NEXT(skb) ((skb)->prev)
+-+#define STUB(queue) ((struct sk_buff *)&queue->empty)
+-+
+-+void wg_prev_queue_init(struct prev_queue *queue)
+-+{
+-+	NEXT(STUB(queue)) = NULL;
+-+	queue->head = queue->tail = STUB(queue);
+-+	queue->peeked = NULL;
+-+	atomic_set(&queue->count, 0);
+-+	BUILD_BUG_ON(
+-+		offsetof(struct sk_buff, next) != offsetof(struct prev_queue, empty.next) -
+-+							offsetof(struct prev_queue, empty) ||
+-+		offsetof(struct sk_buff, prev) != offsetof(struct prev_queue, empty.prev) -
+-+							 offsetof(struct prev_queue, empty));
+-+}
+-+
+-+static void __wg_prev_queue_enqueue(struct prev_queue *queue, struct sk_buff *skb)
+-+{
+-+	WRITE_ONCE(NEXT(skb), NULL);
+-+	WRITE_ONCE(NEXT(xchg_release(&queue->head, skb)), skb);
+-+}
+-+
+-+bool wg_prev_queue_enqueue(struct prev_queue *queue, struct sk_buff *skb)
+-+{
+-+	if (!atomic_add_unless(&queue->count, 1, MAX_QUEUED_PACKETS))
+-+		return false;
+-+	__wg_prev_queue_enqueue(queue, skb);
+-+	return true;
+-+}
+-+
+-+struct sk_buff *wg_prev_queue_dequeue(struct prev_queue *queue)
+-+{
+-+	struct sk_buff *tail = queue->tail, *next = smp_load_acquire(&NEXT(tail));
+-+
+-+	if (tail == STUB(queue)) {
+-+		if (!next)
+-+			return NULL;
+-+		queue->tail = next;
+-+		tail = next;
+-+		next = smp_load_acquire(&NEXT(next));
+-+	}
+-+	if (next) {
+-+		queue->tail = next;
+-+		atomic_dec(&queue->count);
+-+		return tail;
+-+	}
+-+	if (tail != READ_ONCE(queue->head))
+-+		return NULL;
+-+	__wg_prev_queue_enqueue(queue, STUB(queue));
+-+	next = smp_load_acquire(&NEXT(tail));
+-+	if (next) {
+-+		queue->tail = next;
+-+		atomic_dec(&queue->count);
+-+		return tail;
+-+	}
+-+	return NULL;
+-+}
+-+
+-+#undef NEXT
+-+#undef STUB
+---- a/drivers/net/wireguard/queueing.h
+-+++ b/drivers/net/wireguard/queueing.h
+-@@ -17,12 +17,13 @@ struct wg_device;
+- struct wg_peer;
+- struct multicore_worker;
+- struct crypt_queue;
+-+struct prev_queue;
+- struct sk_buff;
+- 
+- /* queueing.c APIs: */
+- int wg_packet_queue_init(struct crypt_queue *queue, work_func_t function,
+--			 bool multicore, unsigned int len);
+--void wg_packet_queue_free(struct crypt_queue *queue, bool multicore);
+-+			 unsigned int len);
+-+void wg_packet_queue_free(struct crypt_queue *queue);
+- struct multicore_worker __percpu *
+- wg_packet_percpu_multicore_worker_alloc(work_func_t function, void *ptr);
+- 
+-@@ -135,8 +136,31 @@ static inline int wg_cpumask_next_online
+- 	return cpu;
+- }
+- 
+-+void wg_prev_queue_init(struct prev_queue *queue);
+-+
+-+/* Multi producer */
+-+bool wg_prev_queue_enqueue(struct prev_queue *queue, struct sk_buff *skb);
+-+
+-+/* Single consumer */
+-+struct sk_buff *wg_prev_queue_dequeue(struct prev_queue *queue);
+-+
+-+/* Single consumer */
+-+static inline struct sk_buff *wg_prev_queue_peek(struct prev_queue *queue)
+-+{
+-+	if (queue->peeked)
+-+		return queue->peeked;
+-+	queue->peeked = wg_prev_queue_dequeue(queue);
+-+	return queue->peeked;
+-+}
+-+
+-+/* Single consumer */
+-+static inline void wg_prev_queue_drop_peeked(struct prev_queue *queue)
+-+{
+-+	queue->peeked = NULL;
+-+}
+-+
+- static inline int wg_queue_enqueue_per_device_and_peer(
+--	struct crypt_queue *device_queue, struct crypt_queue *peer_queue,
+-+	struct crypt_queue *device_queue, struct prev_queue *peer_queue,
+- 	struct sk_buff *skb, struct workqueue_struct *wq, int *next_cpu)
+- {
+- 	int cpu;
+-@@ -145,8 +169,9 @@ static inline int wg_queue_enqueue_per_d
+- 	/* We first queue this up for the peer ingestion, but the consumer
+- 	 * will wait for the state to change to CRYPTED or DEAD before.
+- 	 */
+--	if (unlikely(ptr_ring_produce_bh(&peer_queue->ring, skb)))
+-+	if (unlikely(!wg_prev_queue_enqueue(peer_queue, skb)))
+- 		return -ENOSPC;
+-+
+- 	/* Then we queue it up in the device queue, which consumes the
+- 	 * packet as soon as it can.
+- 	 */
+-@@ -157,9 +182,7 @@ static inline int wg_queue_enqueue_per_d
+- 	return 0;
+- }
+- 
+--static inline void wg_queue_enqueue_per_peer(struct crypt_queue *queue,
+--					     struct sk_buff *skb,
+--					     enum packet_state state)
+-+static inline void wg_queue_enqueue_per_peer_tx(struct sk_buff *skb, enum packet_state state)
+- {
+- 	/* We take a reference, because as soon as we call atomic_set, the
+- 	 * peer can be freed from below us.
+-@@ -167,14 +190,12 @@ static inline void wg_queue_enqueue_per_
+- 	struct wg_peer *peer = wg_peer_get(PACKET_PEER(skb));
+- 
+- 	atomic_set_release(&PACKET_CB(skb)->state, state);
+--	queue_work_on(wg_cpumask_choose_online(&peer->serial_work_cpu,
+--					       peer->internal_id),
+--		      peer->device->packet_crypt_wq, &queue->work);
+-+	queue_work_on(wg_cpumask_choose_online(&peer->serial_work_cpu, peer->internal_id),
+-+		      peer->device->packet_crypt_wq, &peer->transmit_packet_work);
+- 	wg_peer_put(peer);
+- }
+- 
+--static inline void wg_queue_enqueue_per_peer_napi(struct sk_buff *skb,
+--						  enum packet_state state)
+-+static inline void wg_queue_enqueue_per_peer_rx(struct sk_buff *skb, enum packet_state state)
+- {
+- 	/* We take a reference, because as soon as we call atomic_set, the
+- 	 * peer can be freed from below us.
+---- a/drivers/net/wireguard/receive.c
+-+++ b/drivers/net/wireguard/receive.c
+-@@ -444,7 +444,6 @@ packet_processed:
+- int wg_packet_rx_poll(struct napi_struct *napi, int budget)
+- {
+- 	struct wg_peer *peer = container_of(napi, struct wg_peer, napi);
+--	struct crypt_queue *queue = &peer->rx_queue;
+- 	struct noise_keypair *keypair;
+- 	struct endpoint endpoint;
+- 	enum packet_state state;
+-@@ -455,11 +454,10 @@ int wg_packet_rx_poll(struct napi_struct
+- 	if (unlikely(budget <= 0))
+- 		return 0;
+- 
+--	while ((skb = __ptr_ring_peek(&queue->ring)) != NULL &&
+-+	while ((skb = wg_prev_queue_peek(&peer->rx_queue)) != NULL &&
+- 	       (state = atomic_read_acquire(&PACKET_CB(skb)->state)) !=
+- 		       PACKET_STATE_UNCRYPTED) {
+--		__ptr_ring_discard_one(&queue->ring);
+--		peer = PACKET_PEER(skb);
+-+		wg_prev_queue_drop_peeked(&peer->rx_queue);
+- 		keypair = PACKET_CB(skb)->keypair;
+- 		free = true;
+- 
+-@@ -508,7 +506,7 @@ void wg_packet_decrypt_worker(struct wor
+- 		enum packet_state state =
+- 			likely(decrypt_packet(skb, PACKET_CB(skb)->keypair)) ?
+- 				PACKET_STATE_CRYPTED : PACKET_STATE_DEAD;
+--		wg_queue_enqueue_per_peer_napi(skb, state);
+-+		wg_queue_enqueue_per_peer_rx(skb, state);
+- 		if (need_resched())
+- 			cond_resched();
+- 	}
+-@@ -531,12 +529,10 @@ static void wg_packet_consume_data(struc
+- 	if (unlikely(READ_ONCE(peer->is_dead)))
+- 		goto err;
+- 
+--	ret = wg_queue_enqueue_per_device_and_peer(&wg->decrypt_queue,
+--						   &peer->rx_queue, skb,
+--						   wg->packet_crypt_wq,
+--						   &wg->decrypt_queue.last_cpu);
+-+	ret = wg_queue_enqueue_per_device_and_peer(&wg->decrypt_queue, &peer->rx_queue, skb,
+-+						   wg->packet_crypt_wq, &wg->decrypt_queue.last_cpu);
+- 	if (unlikely(ret == -EPIPE))
+--		wg_queue_enqueue_per_peer_napi(skb, PACKET_STATE_DEAD);
+-+		wg_queue_enqueue_per_peer_rx(skb, PACKET_STATE_DEAD);
+- 	if (likely(!ret || ret == -EPIPE)) {
+- 		rcu_read_unlock_bh();
+- 		return;
+---- a/drivers/net/wireguard/send.c
+-+++ b/drivers/net/wireguard/send.c
+-@@ -239,8 +239,7 @@ void wg_packet_send_keepalive(struct wg_
+- 	wg_packet_send_staged_packets(peer);
+- }
+- 
+--static void wg_packet_create_data_done(struct sk_buff *first,
+--				       struct wg_peer *peer)
+-+static void wg_packet_create_data_done(struct wg_peer *peer, struct sk_buff *first)
+- {
+- 	struct sk_buff *skb, *next;
+- 	bool is_keepalive, data_sent = false;
+-@@ -262,22 +261,19 @@ static void wg_packet_create_data_done(s
+- 
+- void wg_packet_tx_worker(struct work_struct *work)
+- {
+--	struct crypt_queue *queue = container_of(work, struct crypt_queue,
+--						 work);
+-+	struct wg_peer *peer = container_of(work, struct wg_peer, transmit_packet_work);
+- 	struct noise_keypair *keypair;
+- 	enum packet_state state;
+- 	struct sk_buff *first;
+--	struct wg_peer *peer;
+- 
+--	while ((first = __ptr_ring_peek(&queue->ring)) != NULL &&
+-+	while ((first = wg_prev_queue_peek(&peer->tx_queue)) != NULL &&
+- 	       (state = atomic_read_acquire(&PACKET_CB(first)->state)) !=
+- 		       PACKET_STATE_UNCRYPTED) {
+--		__ptr_ring_discard_one(&queue->ring);
+--		peer = PACKET_PEER(first);
+-+		wg_prev_queue_drop_peeked(&peer->tx_queue);
+- 		keypair = PACKET_CB(first)->keypair;
+- 
+- 		if (likely(state == PACKET_STATE_CRYPTED))
+--			wg_packet_create_data_done(first, peer);
+-+			wg_packet_create_data_done(peer, first);
+- 		else
+- 			kfree_skb_list(first);
+- 
+-@@ -306,16 +302,14 @@ void wg_packet_encrypt_worker(struct wor
+- 				break;
+- 			}
+- 		}
+--		wg_queue_enqueue_per_peer(&PACKET_PEER(first)->tx_queue, first,
+--					  state);
+-+		wg_queue_enqueue_per_peer_tx(first, state);
+- 		if (need_resched())
+- 			cond_resched();
+- 	}
+- }
+- 
+--static void wg_packet_create_data(struct sk_buff *first)
+-+static void wg_packet_create_data(struct wg_peer *peer, struct sk_buff *first)
+- {
+--	struct wg_peer *peer = PACKET_PEER(first);
+- 	struct wg_device *wg = peer->device;
+- 	int ret = -EINVAL;
+- 
+-@@ -323,13 +317,10 @@ static void wg_packet_create_data(struct
+- 	if (unlikely(READ_ONCE(peer->is_dead)))
+- 		goto err;
+- 
+--	ret = wg_queue_enqueue_per_device_and_peer(&wg->encrypt_queue,
+--						   &peer->tx_queue, first,
+--						   wg->packet_crypt_wq,
+--						   &wg->encrypt_queue.last_cpu);
+-+	ret = wg_queue_enqueue_per_device_and_peer(&wg->encrypt_queue, &peer->tx_queue, first,
+-+						   wg->packet_crypt_wq, &wg->encrypt_queue.last_cpu);
+- 	if (unlikely(ret == -EPIPE))
+--		wg_queue_enqueue_per_peer(&peer->tx_queue, first,
+--					  PACKET_STATE_DEAD);
+-+		wg_queue_enqueue_per_peer_tx(first, PACKET_STATE_DEAD);
+- err:
+- 	rcu_read_unlock_bh();
+- 	if (likely(!ret || ret == -EPIPE))
+-@@ -393,7 +384,7 @@ void wg_packet_send_staged_packets(struc
+- 	packets.prev->next = NULL;
+- 	wg_peer_get(keypair->entry.peer);
+- 	PACKET_CB(packets.next)->keypair = keypair;
+--	wg_packet_create_data(packets.next);
+-+	wg_packet_create_data(peer, packets.next);
+- 	return;
+- 
+- out_invalid:
+diff --git a/target/linux/generic/backport-5.10/083-wireguard-kconfig-use-arm-chacha-even-with-no-neon.patch b/target/linux/generic/backport-5.10/083-wireguard-kconfig-use-arm-chacha-even-with-no-neon.patch
+deleted file mode 100644
+index 8a8c04e1a82d..000000000000
+--- a/target/linux/generic/backport-5.10/083-wireguard-kconfig-use-arm-chacha-even-with-no-neon.patch
++++ /dev/null
+@@ -1,30 +0,0 @@
+-From 514091206bc055a159348ae8575276dc925aea24 Mon Sep 17 00:00:00 2001
+-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+-Date: Mon, 22 Feb 2021 17:25:49 +0100
+-Subject: [PATCH] wireguard: kconfig: use arm chacha even with no neon
+-
+-commit bce2473927af8de12ad131a743f55d69d358c0b9 upstream.
+-
+-The condition here was incorrect: a non-neon fallback implementation is
+-available on arm32 when NEON is not supported.
+-
+-Reported-by: Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>
+-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+----
+- drivers/net/Kconfig | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+---- a/drivers/net/Kconfig
+-+++ b/drivers/net/Kconfig
+-@@ -87,7 +87,7 @@ config WIREGUARD
+- 	select CRYPTO_CURVE25519_X86 if X86 && 64BIT
+- 	select ARM_CRYPTO if ARM
+- 	select ARM64_CRYPTO if ARM64
+--	select CRYPTO_CHACHA20_NEON if (ARM || ARM64) && KERNEL_MODE_NEON
+-+	select CRYPTO_CHACHA20_NEON if ARM || (ARM64 && KERNEL_MODE_NEON)
+- 	select CRYPTO_POLY1305_NEON if ARM64 && KERNEL_MODE_NEON
+- 	select CRYPTO_POLY1305_ARM if ARM
+- 	select CRYPTO_CURVE25519_NEON if ARM && KERNEL_MODE_NEON
+diff --git a/target/linux/generic/backport-5.10/830-v5.12-0002-usb-serial-option-update-interface-mapping-for-ZTE-P685M.patch b/target/linux/generic/backport-5.10/830-v5.12-0002-usb-serial-option-update-interface-mapping-for-ZTE-P685M.patch
+deleted file mode 100644
+index 87eed649ec37..000000000000
+--- a/target/linux/generic/backport-5.10/830-v5.12-0002-usb-serial-option-update-interface-mapping-for-ZTE-P685M.patch
++++ /dev/null
+@@ -1,73 +0,0 @@
+-From 6420a569504e212d618d4a4736e2c59ed80a8478 Mon Sep 17 00:00:00 2001
+-From: Lech Perczak <lech.perczak@gmail.com>
+-Date: Sun, 7 Feb 2021 01:54:43 +0100
+-Subject: USB: serial: option: update interface mapping for ZTE P685M
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-This patch prepares for qmi_wwan driver support for the device.
+-Previously "option" driver mapped itself to interfaces 0 and 3 (matching
+-ff/ff/ff), while interface 3 is in fact a QMI port.
+-Interfaces 1 and 2 (matching ff/00/00) expose AT commands,
+-and weren't supported previously at all.
+-Without this patch, a possible conflict would exist if device ID was
+-added to qmi_wwan driver for interface 3.
+-
+-Update and simplify device ID to match interfaces 0-2 directly,
+-to expose QCDM (0), PCUI (1), and modem (2) ports and avoid conflict
+-with QMI (3), and ADB (4).
+-
+-The modem is used inside ZTE MF283+ router and carriers identify it as
+-such.
+-Interface mapping is:
+-0: QCDM, 1: AT (PCUI), 2: AT (Modem), 3: QMI, 4: ADB
+-
+-T:  Bus=02 Lev=02 Prnt=02 Port=05 Cnt=01 Dev#=  3 Spd=480  MxCh= 0
+-D:  Ver= 2.01 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+-P:  Vendor=19d2 ProdID=1275 Rev=f0.00
+-S:  Manufacturer=ZTE,Incorporated
+-S:  Product=ZTE Technologies MSM
+-S:  SerialNumber=P685M510ZTED0000CP&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&0
+-C:* #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+-E:  Ad=87(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-I:* If#= 4 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+-
+-Cc: Johan Hovold <johan@kernel.org>
+-Cc: Bjørn Mork <bjorn@mork.no>
+-Signed-off-by: Lech Perczak <lech.perczak@gmail.com>
+-Link: https://lore.kernel.org/r/20210207005443.12936-1-lech.perczak@gmail.com
+-Cc: stable@vger.kernel.org
+-Signed-off-by: Johan Hovold <johan@kernel.org>
+----
+- drivers/usb/serial/option.c | 3 ++-
+- 1 file changed, 2 insertions(+), 1 deletion(-)
+-
+---- a/drivers/usb/serial/option.c
+-+++ b/drivers/usb/serial/option.c
+-@@ -1569,7 +1569,8 @@ static const struct usb_device_id option
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1272, 0xff, 0xff, 0xff) },
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1273, 0xff, 0xff, 0xff) },
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1274, 0xff, 0xff, 0xff) },
+--	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1275, 0xff, 0xff, 0xff) },
+-+	{ USB_DEVICE(ZTE_VENDOR_ID, 0x1275),	/* ZTE P685M */
+-+	  .driver_info = RSVD(3) | RSVD(4) },
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1276, 0xff, 0xff, 0xff) },
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1277, 0xff, 0xff, 0xff) },
+- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1278, 0xff, 0xff, 0xff) },
+diff --git a/target/linux/generic/config-5.10 b/target/linux/generic/config-5.10
+index e5b8ef9e89aa..040d62a51d1e 100644
+--- a/target/linux/generic/config-5.10
++++ b/target/linux/generic/config-5.10
+@@ -2779,6 +2779,7 @@ CONFIG_KALLSYMS_BASE_RELATIVE=y
+ # CONFIG_KARMA_PARTITION is not set
+ # CONFIG_KASAN is not set
+ CONFIG_KASAN_STACK=1
++# CONFIG_KCMP is not set
+ # CONFIG_KCOV is not set
+ # CONFIG_KERNEL_BZIP2 is not set
+ # CONFIG_KERNEL_CAT is not set
+diff --git a/target/linux/generic/hack-5.10/204-module_strip.patch b/target/linux/generic/hack-5.10/204-module_strip.patch
+index 79fc1057aba5..2a162600fc02 100644
+--- a/target/linux/generic/hack-5.10/204-module_strip.patch
++++ b/target/linux/generic/hack-5.10/204-module_strip.patch
+@@ -88,7 +88,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -2327,6 +2327,13 @@ config UNUSED_KSYMS_WHITELIST
++@@ -2338,6 +2338,13 @@ config UNUSED_KSYMS_WHITELIST
+  	  one per line. The path can be absolute, or relative to the kernel
+  	  source tree.
+  
+@@ -104,7 +104,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  config MODULES_TREE_LOOKUP
+ --- a/kernel/module.c
+ +++ b/kernel/module.c
+-@@ -3144,9 +3144,11 @@ static int setup_load_info(struct load_i
++@@ -3161,9 +3161,11 @@ static int setup_load_info(struct load_i
+  
+  static int check_modinfo(struct module *mod, struct load_info *info, int flags)
+  {
+@@ -117,7 +117,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (flags & MODULE_INIT_IGNORE_VERMAGIC)
+  		modmagic = NULL;
+  
+-@@ -3167,6 +3169,7 @@ static int check_modinfo(struct module *
++@@ -3184,6 +3186,7 @@ static int check_modinfo(struct module *
+  				mod->name);
+  		add_taint_module(mod, TAINT_OOT_MODULE, LOCKDEP_STILL_OK);
+  	}
+diff --git a/target/linux/generic/hack-5.10/221-module_exports.patch b/target/linux/generic/hack-5.10/221-module_exports.patch
+index 9dd57ba93343..655cc6156086 100644
+--- a/target/linux/generic/hack-5.10/221-module_exports.patch
++++ b/target/linux/generic/hack-5.10/221-module_exports.patch
+@@ -56,7 +56,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	}								\
+  									\
+  	/* __*init sections */						\
+-@@ -1008,6 +1018,8 @@
++@@ -1014,6 +1024,8 @@
+  
+  #define COMMON_DISCARDS							\
+  	SANITIZER_DISCARDS						\
+diff --git a/target/linux/generic/pending-5.10/203-kallsyms_uncompressed.patch b/target/linux/generic/pending-5.10/203-kallsyms_uncompressed.patch
+index 348a5afa3d1e..9f2014c8ec48 100644
+--- a/target/linux/generic/pending-5.10/203-kallsyms_uncompressed.patch
++++ b/target/linux/generic/pending-5.10/203-kallsyms_uncompressed.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1384,6 +1384,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
++@@ -1385,6 +1385,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
+  	  the unaligned access emulation.
+  	  see arch/parisc/kernel/unaligned.c for reference
+  
+diff --git a/target/linux/generic/pending-5.10/308-mips32r2_tune.patch b/target/linux/generic/pending-5.10/308-mips32r2_tune.patch
+index 54c0e0102385..bbea9473824b 100644
+--- a/target/linux/generic/pending-5.10/308-mips32r2_tune.patch
++++ b/target/linux/generic/pending-5.10/308-mips32r2_tune.patch
+@@ -11,7 +11,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/arch/mips/Makefile
+ +++ b/arch/mips/Makefile
+-@@ -155,7 +155,7 @@ cflags-$(CONFIG_CPU_VR41XX)	+= -march=r4
++@@ -174,7 +174,7 @@ cflags-$(CONFIG_CPU_VR41XX)	+= -march=r4
+  cflags-$(CONFIG_CPU_R4X00)	+= -march=r4600 -Wa,--trap
+  cflags-$(CONFIG_CPU_TX49XX)	+= -march=r4600 -Wa,--trap
+  cflags-$(CONFIG_CPU_MIPS32_R1)	+= -march=mips32 -Wa,--trap
+diff --git a/target/linux/generic/pending-5.10/470-mtd-spi-nor-support-limiting-4K-sectors-support-base.patch b/target/linux/generic/pending-5.10/470-mtd-spi-nor-support-limiting-4K-sectors-support-base.patch
+index bbdab181029e..d000094e1dc4 100644
+--- a/target/linux/generic/pending-5.10/470-mtd-spi-nor-support-limiting-4K-sectors-support-base.patch
++++ b/target/linux/generic/pending-5.10/470-mtd-spi-nor-support-limiting-4K-sectors-support-base.patch
+@@ -39,7 +39,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  endif # MTD_SPI_NOR
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -2784,6 +2784,21 @@ static void spi_nor_info_init_params(str
++@@ -2786,6 +2786,21 @@ static void spi_nor_info_init_params(str
+  	 */
+  	erase_mask = 0;
+  	i = 0;
+@@ -61,7 +61,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (info->flags & SECT_4K_PMC) {
+  		erase_mask |= BIT(i);
+  		spi_nor_set_erase_type(&map->erase_type[i], 4096u,
+-@@ -2795,6 +2810,7 @@ static void spi_nor_info_init_params(str
++@@ -2797,6 +2812,7 @@ static void spi_nor_info_init_params(str
+  				       SPINOR_OP_BE_4K);
+  		i++;
+  	}
+diff --git a/target/linux/generic/pending-5.10/479-mtd-spi-nor-add-xtx-xt25f128b.patch b/target/linux/generic/pending-5.10/479-mtd-spi-nor-add-xtx-xt25f128b.patch
+index 3e7cd036794b..9ff6ffae5894 100644
+--- a/target/linux/generic/pending-5.10/479-mtd-spi-nor-add-xtx-xt25f128b.patch
++++ b/target/linux/generic/pending-5.10/479-mtd-spi-nor-add-xtx-xt25f128b.patch
+@@ -59,7 +59,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +};
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -2024,6 +2024,7 @@ static const struct spi_nor_manufacturer
++@@ -2026,6 +2026,7 @@ static const struct spi_nor_manufacturer
+  	&spi_nor_winbond,
+  	&spi_nor_xilinx,
+  	&spi_nor_xmc,
+diff --git a/target/linux/generic/pending-5.10/481-mtd-spi-nor-rework-broken-flash-reset-support.patch b/target/linux/generic/pending-5.10/481-mtd-spi-nor-rework-broken-flash-reset-support.patch
+index e8e737ffca95..5cb85172fb85 100644
+--- a/target/linux/generic/pending-5.10/481-mtd-spi-nor-rework-broken-flash-reset-support.patch
++++ b/target/linux/generic/pending-5.10/481-mtd-spi-nor-rework-broken-flash-reset-support.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+ 
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -1445,6 +1445,23 @@ destroy_erase_cmd_list:
++@@ -1447,6 +1447,23 @@ destroy_erase_cmd_list:
+  	return ret;
+  }
+  
+@@ -43,7 +43,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  /*
+   * Erase an address range on the nor chip.  The address range may extend
+   * one or more erase sectors.  Return an error is there is a problem erasing.
+-@@ -1472,6 +1489,10 @@ static int spi_nor_erase(struct mtd_info
++@@ -1474,6 +1491,10 @@ static int spi_nor_erase(struct mtd_info
+  	if (ret)
+  		return ret;
+  
+@@ -54,7 +54,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	/* whole-chip erase? */
+  	if (len == mtd->size && !(nor->flags & SNOR_F_NO_OP_CHIP_ERASE)) {
+  		unsigned long timeout;
+-@@ -1531,6 +1552,7 @@ static int spi_nor_erase(struct mtd_info
++@@ -1533,6 +1554,7 @@ static int spi_nor_erase(struct mtd_info
+  	ret = spi_nor_write_disable(nor);
+  
+  erase_err:
+@@ -62,7 +62,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	spi_nor_unlock_and_unprep(nor);
+  
+  	return ret;
+-@@ -1870,7 +1892,9 @@ static int spi_nor_lock(struct mtd_info
++@@ -1872,7 +1894,9 @@ static int spi_nor_lock(struct mtd_info
+  	if (ret)
+  		return ret;
+  
+@@ -72,7 +72,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  
+  	spi_nor_unlock_and_unprep(nor);
+  	return ret;
+-@@ -1885,7 +1909,9 @@ static int spi_nor_unlock(struct mtd_inf
++@@ -1887,7 +1911,9 @@ static int spi_nor_unlock(struct mtd_inf
+  	if (ret)
+  		return ret;
+  
+@@ -82,7 +82,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  
+  	spi_nor_unlock_and_unprep(nor);
+  	return ret;
+-@@ -1900,7 +1926,9 @@ static int spi_nor_is_locked(struct mtd_
++@@ -1902,7 +1928,9 @@ static int spi_nor_is_locked(struct mtd_
+  	if (ret)
+  		return ret;
+  
+@@ -92,7 +92,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  
+  	spi_nor_unlock_and_unprep(nor);
+  	return ret;
+-@@ -2093,6 +2121,10 @@ static int spi_nor_read(struct mtd_info
++@@ -2095,6 +2123,10 @@ static int spi_nor_read(struct mtd_info
+  	if (ret)
+  		return ret;
+  
+@@ -103,7 +103,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	while (len) {
+  		loff_t addr = from;
+  
+-@@ -2116,6 +2148,7 @@ static int spi_nor_read(struct mtd_info
++@@ -2118,6 +2150,7 @@ static int spi_nor_read(struct mtd_info
+  	ret = 0;
+  
+  read_err:
+@@ -111,7 +111,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	spi_nor_unlock_and_unprep(nor);
+  	return ret;
+  }
+-@@ -2138,6 +2171,10 @@ static int spi_nor_write(struct mtd_info
++@@ -2140,6 +2173,10 @@ static int spi_nor_write(struct mtd_info
+  	if (ret)
+  		return ret;
+  
+@@ -122,7 +122,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	for (i = 0; i < len; ) {
+  		ssize_t written;
+  		loff_t addr = to + i;
+-@@ -2180,6 +2217,7 @@ static int spi_nor_write(struct mtd_info
++@@ -2182,6 +2219,7 @@ static int spi_nor_write(struct mtd_info
+  	}
+  
+  write_err:
+@@ -130,7 +130,7 @@ Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+  	spi_nor_unlock_and_unprep(nor);
+  	return ret;
+  }
+-@@ -2975,9 +3013,13 @@ static int spi_nor_init(struct spi_nor *
++@@ -2977,9 +3015,13 @@ static int spi_nor_init(struct spi_nor *
+  		 * reboots (e.g., crashes). Warn the user (or hopefully, system
+  		 * designer) that this is bad.
+  		 */
+diff --git a/target/linux/generic/pending-5.10/703-phy-add-detach-callback-to-struct-phy_driver.patch b/target/linux/generic/pending-5.10/703-phy-add-detach-callback-to-struct-phy_driver.patch
+index 371cffc58b68..ec77d59cf0e6 100644
+--- a/target/linux/generic/pending-5.10/703-phy-add-detach-callback-to-struct-phy_driver.patch
++++ b/target/linux/generic/pending-5.10/703-phy-add-detach-callback-to-struct-phy_driver.patch
+@@ -11,7 +11,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+ 
+ --- a/drivers/net/phy/phy_device.c
+ +++ b/drivers/net/phy/phy_device.c
+-@@ -1663,6 +1663,9 @@ void phy_detach(struct phy_device *phyde
++@@ -1644,6 +1644,9 @@ void phy_detach(struct phy_device *phyde
+  	struct module *ndev_owner = NULL;
+  	struct mii_bus *bus;
+  
+diff --git a/target/linux/generic/pending-5.10/920-mangle_bootargs.patch b/target/linux/generic/pending-5.10/920-mangle_bootargs.patch
+index 14fdef31fdcd..9008a88e2e24 100644
+--- a/target/linux/generic/pending-5.10/920-mangle_bootargs.patch
++++ b/target/linux/generic/pending-5.10/920-mangle_bootargs.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1780,6 +1780,15 @@ config EMBEDDED
++@@ -1791,6 +1791,15 @@ config EMBEDDED
+  	  an embedded system so certain expert options are available
+  	  for configuration.
+  
+diff --git a/target/linux/imx6/patches-5.10/300-ARM-dts-imx6q-apalis-ixora-add-status-LEDs-aliases.patch b/target/linux/imx6/patches-5.10/300-ARM-dts-imx6q-apalis-ixora-add-status-LEDs-aliases.patch
+index 0a27e7854db2..e14dc484b08a 100644
+--- a/target/linux/imx6/patches-5.10/300-ARM-dts-imx6q-apalis-ixora-add-status-LEDs-aliases.patch
++++ b/target/linux/imx6/patches-5.10/300-ARM-dts-imx6q-apalis-ixora-add-status-LEDs-aliases.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+ 
+ --- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+ +++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+-@@ -61,6 +61,10 @@
++@@ -25,6 +25,10 @@
+  		i2c2 = &i2c2;
+  		rtc0 = &rtc_i2c;
+  		rtc1 = &snvs_rtc;
+@@ -25,7 +25,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  	};
+  
+  	chosen {
+-@@ -128,22 +132,22 @@
++@@ -92,22 +96,22 @@
+  		pinctrl-names = "default";
+  		pinctrl-0 = <&pinctrl_leds_ixora>;
+  
+@@ -56,7 +56,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  		};
+ --- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+ +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+-@@ -60,6 +60,10 @@
++@@ -24,6 +24,10 @@
+  		i2c2 = &i2c2;
+  		rtc0 = &rtc_i2c;
+  		rtc1 = &snvs_rtc;
+@@ -67,7 +67,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  	};
+  
+  	chosen {
+-@@ -127,22 +131,22 @@
++@@ -91,22 +95,22 @@
+  		pinctrl-names = "default";
+  		pinctrl-0 = <&pinctrl_leds_ixora>;
+  
+diff --git a/target/linux/imx6/patches-5.10/301-ARM-dts-imx6q-apalis-ixora-make-switch3-reset-button.patch b/target/linux/imx6/patches-5.10/301-ARM-dts-imx6q-apalis-ixora-make-switch3-reset-button.patch
+index 2bb1a164681e..8f07f0b1a511 100644
+--- a/target/linux/imx6/patches-5.10/301-ARM-dts-imx6q-apalis-ixora-make-switch3-reset-button.patch
++++ b/target/linux/imx6/patches-5.10/301-ARM-dts-imx6q-apalis-ixora-make-switch3-reset-button.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+ 
+ --- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+ +++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+-@@ -74,7 +74,7 @@
++@@ -38,7 +38,7 @@
+  	gpio-keys {
+  		compatible = "gpio-keys";
+  		pinctrl-names = "default";
+@@ -23,7 +23,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  
+  		wakeup {
+  			label = "Wake-Up";
+-@@ -83,6 +83,13 @@
++@@ -47,6 +47,13 @@
+  			debounce-interval = <10>;
+  			wakeup-source;
+  		};
+@@ -37,7 +37,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  	};
+  
+  	lcd_display: disp0 {
+-@@ -298,4 +305,10 @@
++@@ -275,4 +282,10 @@
+  			MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0x1b0b0
+  		>;
+  	};
+@@ -50,7 +50,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  };
+ --- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+ +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+-@@ -73,7 +73,7 @@
++@@ -37,7 +37,7 @@
+  	gpio-keys {
+  		compatible = "gpio-keys";
+  		pinctrl-names = "default";
+@@ -59,7 +59,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  
+  		wakeup {
+  			label = "Wake-Up";
+-@@ -82,6 +82,13 @@
++@@ -46,6 +46,13 @@
+  			debounce-interval = <10>;
+  			wakeup-source;
+  		};
+@@ -73,7 +73,7 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
+  	};
+  
+  	lcd_display: disp0 {
+-@@ -299,4 +306,10 @@
++@@ -276,4 +283,10 @@
+  			MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0x1b0b0
+  		>;
+  	};
+diff --git a/target/linux/mediatek/patches-5.10/602-arm64-dts-mediatek-Split-PCIe-node-for-MT2712-MT7622.patch b/target/linux/mediatek/patches-5.10/602-arm64-dts-mediatek-Split-PCIe-node-for-MT2712-MT7622.patch
+index a680cf01492a..19468ae037f0 100644
+--- a/target/linux/mediatek/patches-5.10/602-arm64-dts-mediatek-Split-PCIe-node-for-MT2712-MT7622.patch
++++ b/target/linux/mediatek/patches-5.10/602-arm64-dts-mediatek-Split-PCIe-node-for-MT2712-MT7622.patch
+@@ -281,7 +281,7 @@ Signed-off-by: chuanjia.liu <Chuanjia.Liu@mediatek.com>
+  &pio {
+ --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+ +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+-@@ -792,45 +792,41 @@
++@@ -794,45 +794,41 @@
+  		#reset-cells = <1>;
+  	};
+  
+@@ -344,7 +344,7 @@ Signed-off-by: chuanjia.liu <Chuanjia.Liu@mediatek.com>
+  			interrupt-map-mask = <0 0 0 7>;
+  			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+  					<0 0 0 2 &pcie_intc0 1>,
+-@@ -842,15 +838,39 @@
++@@ -844,15 +840,39 @@
+  				#interrupt-cells = <1>;
+  			};
+  		};
+diff --git a/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch b/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
+index 8c9194e5f281..873317eb0052 100644
+--- a/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
++++ b/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			interface-type = "ace";
+  			reg = <0x5000 0x1000>;
+  		};
+-@@ -967,6 +967,8 @@
++@@ -969,6 +969,8 @@
+  		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
+  		mediatek,ethsys = <&ethsys>;
+  		mediatek,sgmiisys = <&sgmiisys>;
+diff --git a/target/linux/mediatek/patches-5.10/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch b/target/linux/mediatek/patches-5.10/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+index 503cc8937dca..0156d89bbaa7 100644
+--- a/target/linux/mediatek/patches-5.10/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
++++ b/target/linux/mediatek/patches-5.10/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+ +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+-@@ -803,6 +803,8 @@
++@@ -805,6 +805,8 @@
+  		reg = <0 0x1a143000 0 0x1000>;
+  		reg-names = "port0";
+  		mediatek,pcie-cfg = <&pciecfg>;
+@@ -19,7 +19,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		#address-cells = <3>;
+  		#size-cells = <2>;
+  		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
+-@@ -820,6 +822,7 @@
++@@ -822,6 +824,7 @@
+  		bus-range = <0x00 0xff>;
+  		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x8000000>;
+  		status = "disabled";
+@@ -27,7 +27,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  		slot0: pcie@0,0 {
+  			reg = <0x0000 0 0 0 0>;
+-@@ -846,6 +849,8 @@
++@@ -848,6 +851,8 @@
+  		reg = <0 0x1a145000 0 0x1000>;
+  		reg-names = "port1";
+  		mediatek,pcie-cfg = <&pciecfg>;
+@@ -36,7 +36,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		#address-cells = <3>;
+  		#size-cells = <2>;
+  		interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
+-@@ -864,6 +869,7 @@
++@@ -866,6 +871,7 @@
+  		bus-range = <0x00 0xff>;
+  		ranges = <0x82000000 0 0x28000000  0x0 0x28000000  0 0x8000000>;
+  		status = "disabled";
+@@ -44,7 +44,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  		slot1: pcie@1,0 {
+  			reg = <0x0800 0 0 0 0>;
+-@@ -923,6 +929,11 @@
++@@ -925,6 +931,11 @@
+  		};
+  	};
+  
+diff --git a/target/linux/mpc85xx/patches-5.10/104-powerpc-mpc85xx-change-P2020RDB-dts-file-for-OpenWRT.patch b/target/linux/mpc85xx/patches-5.10/104-powerpc-mpc85xx-change-P2020RDB-dts-file-for-OpenWRT.patch
+index d96b1d6c3054..94ed26c3df0f 100644
+--- a/target/linux/mpc85xx/patches-5.10/104-powerpc-mpc85xx-change-P2020RDB-dts-file-for-OpenWRT.patch
++++ b/target/linux/mpc85xx/patches-5.10/104-powerpc-mpc85xx-change-P2020RDB-dts-file-for-OpenWRT.patch
+@@ -104,13 +104,13 @@ Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+  		};
+  
+ @@ -85,6 +80,7 @@
+-                        compatible = "fsl,p2020-fcm-nand",
+-                                     "fsl,elbc-fcm-nand";
+-                        reg = <0x1 0x0 0x40000>;
+-+                       nand-ecc-mode = "none";
+-
+-                        partition@0 {
+-                                /* This location must not be altered  */
++ 			compatible = "fsl,p2020-fcm-nand",
++ 				     "fsl,elbc-fcm-nand";
++ 			reg = <0x1 0x0 0x40000>;
+++			nand-ecc-mode = "none";
++ 
++ 			partition@0 {
++ 				/* This location must not be altered  */
+ @@ -140,13 +136,43 @@
+  	soc: soc@ffe00000 {
+  		ranges = <0x0 0x0 0xffe00000 0x100000>;
+@@ -155,7 +155,7 @@ Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+  		spi@7000 {
+  			flash@0 {
+  				#address-cells = <1>;
+-@@ -200,10 +225,12 @@
++@@ -200,10 +226,12 @@
+  			phy0: ethernet-phy@0 {
+  				interrupts = <3 1 0 0>;
+  				reg = <0x0>;
+diff --git a/target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch b/target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch
+index 4c4fbec76400..607f43629712 100644
+--- a/target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch
++++ b/target/linux/mvebu/patches-5.10/313-helios4-dts-status-led-alias.patch
+@@ -14,10 +14,10 @@
+  
+  	memory {
+  		device_type = "memory";
+-@@ -70,10 +77,9 @@
++@@ -73,10 +80,9 @@
++ 		pinctrl-names = "default";
++ 		pinctrl-0 = <&helios_system_led_pins>;
+  
+- 	system-leds {
+- 		compatible = "gpio-leds";
+ -		status-led {
+ +		led_status: status-led {
+  			label = "helios4:green:status";
+diff --git a/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch b/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
+index 2e840fd7877f..da4705d90d70 100644
+--- a/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
++++ b/target/linux/mvebu/patches-5.10/700-mvneta-tx-queue-workaround.patch
+@@ -9,7 +9,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ ---
+ --- a/drivers/net/ethernet/marvell/mvneta.c
+ +++ b/drivers/net/ethernet/marvell/mvneta.c
+-@@ -4896,6 +4896,14 @@ static int mvneta_ethtool_set_eee(struct
++@@ -4903,6 +4903,14 @@ static int mvneta_ethtool_set_eee(struct
+  	return phylink_ethtool_set_eee(pp->phylink, eee);
+  }
+  
+@@ -24,7 +24,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  static const struct net_device_ops mvneta_netdev_ops = {
+  	.ndo_open            = mvneta_open,
+  	.ndo_stop            = mvneta_stop,
+-@@ -4906,6 +4914,7 @@ static const struct net_device_ops mvnet
++@@ -4913,6 +4921,7 @@ static const struct net_device_ops mvnet
+  	.ndo_fix_features    = mvneta_fix_features,
+  	.ndo_get_stats64     = mvneta_get_stats64,
+  	.ndo_do_ioctl        = mvneta_ioctl,
+diff --git a/target/linux/rockchip/patches-5.10/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch b/target/linux/rockchip/patches-5.10/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
+index eb2c9b9d83b6..e8123ee02594 100644
+--- a/target/linux/rockchip/patches-5.10/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
++++ b/target/linux/rockchip/patches-5.10/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
+@@ -26,7 +26,7 @@ use-case. You've been warned.
+ 
+ --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+ +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+-@@ -983,6 +983,33 @@
++@@ -984,6 +984,33 @@
+  		status = "disabled";
+  	};
+  
