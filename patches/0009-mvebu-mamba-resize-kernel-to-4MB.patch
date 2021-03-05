@@ -1,4 +1,4 @@
-From 4731c1aa8d31d82bf6b5ab168df16c40d3b8cb44 Mon Sep 17 00:00:00 2001
+From dc63dded0a118850a50d3ec5016daabfc665af0a Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:38:03 -0500
 Subject: [PATCH] mvebu: mamba resize kernel to 4MB
@@ -29,7 +29,7 @@ Signed-off-by: Tad Davanzo <tad@spotco.us>
  create mode 100644 target/linux/mvebu/patches-5.4/318-armada-xp-linksys-mamba-resize-kernel.patch
 
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
-index 61f4d17813..ad3b8ee6d4 100644
+index a7ebc30a71..c07b064125 100644
 --- a/target/linux/mvebu/image/cortexa9.mk
 +++ b/target/linux/mvebu/image/cortexa9.mk
 @@ -115,7 +115,7 @@ define Device/linksys_wrt1900ac-v1

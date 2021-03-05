@@ -1,4 +1,4 @@
-From 359d2e58f7a90a87c4b4866723fca0c0e26d56cc Mon Sep 17 00:00:00 2001
+From a75db33cb47a588d291e2bb7b229b64662b21c6f Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 5 Feb 2021 22:42:47 -0500
 Subject: [PATCH] mvebu: venom resize kernel to 6MB
@@ -54,7 +54,7 @@ index de81600a80..a2ca3158cf 100644
  
  		/* last MB is for the BBT, not writable */
 diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
-index ad3b8ee6d4..ad6b7a19a7 100644
+index c07b064125..81728bf4a1 100644
 --- a/target/linux/mvebu/image/cortexa9.mk
 +++ b/target/linux/mvebu/image/cortexa9.mk
 @@ -154,7 +154,7 @@ define Device/linksys_wrt32x
