@@ -1,6 +1,10 @@
+20210311-00-RESIZED
+- update to dfc2b3ca4dff28259576e21bc3ade910ff52a05
+- [cherrypick] #3985: kernel: bump 5.10 to 5.10.23 (security and bug fixes)
+- Resized! Use with caution on mamba and venom!
+
 20210305-00-RESIZED
 - update to dc416983bb45f040700612891a9c46ca92e027ff
-- [upstream] many updates
 - [upstream] WireGuard tweaks (performance)
 - [upstream] update hostapd (security fix) (CVE-2021-27803)
 - [cherrypick] #3966: kernel: bump 5.10 to 5.10.20 (security and bug fixes)
