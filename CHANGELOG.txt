@@ -1,3 +1,7 @@
+20210313-00-RESIZED
+- update to 1cd098784eeb0e3ba0d05cd3e71ebf1a106138e9
+- Resized! Use with caution on mamba and venom!
+
 20210311-01-RESIZED
 - reinitialized workspace (sanity)
 - Resized! Use with caution on mamba and venom!
