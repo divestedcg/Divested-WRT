@@ -1,3 +1,10 @@
+20210319-00
+- update to 047b7621bb3ac266d193cf110a468e42f844be4f
+- mamba and venom resize patches have been upstreamed!
+- If you are currently running a resized build please change 'compat_version'
+  in /etc/config/system to '2.0' before flashing.
+- Builds from here on for mamba and venom will be resized, unless otherwise noted!
+
 20210313-00-RESIZED
 - update to 1cd098784eeb0e3ba0d05cd3e71ebf1a106138e9
 - Resized! Use with caution on mamba and venom!

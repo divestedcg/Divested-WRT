@@ -1,4 +1,4 @@
-From b658b864b116327486cbdd73fa82f13cd15fe3b5 Mon Sep 17 00:00:00 2001
+From 3a9a0dc1f6aac2fe1d054d439592689bad1ecb10 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 1 Dec 2020 03:57:45 -0500
 Subject: [PATCH] mwlwifi: Disable tx_amsdu
@@ -32,5 +32,5 @@ index 0000000000..a83dc32dd6
 +echo "0" >> /sys/kernel/debug/ieee80211/phy1/mwlwifi/tx_amsdu
 +logger "AMSDU Disabled"
 -- 
-2.29.2
+2.30.2
 
