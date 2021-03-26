@@ -1,3 +1,9 @@
+20210326-00
+- update to d71424a085e1d5dcc57c5d64dd2a651433944432
+- [upstream] glibc update (security fixes)
+- [upstream] update to OpenSSL 1.1.1k (security fixes)
+- [upstream] update to kernel 5.10.26 (security and bug fixes)
+
 20210319-00
 - update to 047b7621bb3ac266d193cf110a468e42f844be4f
 - mamba and venom resize patches have been upstreamed!
