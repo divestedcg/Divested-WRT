@@ -6,6 +6,7 @@
 	- kmods: usb-storage, usb-storage-uas
 	- btrfs-progs, e2fsprogs, fstrim, ncdu, tune2fs
 	- bmon
+- drop old builds (out of date and therefore insecure)
 
 20210326-00
 - update to d71424a085e1d5dcc57c5d64dd2a651433944432
