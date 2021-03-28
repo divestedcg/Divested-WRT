@@ -1,3 +1,12 @@
+20210328-02
+- update to 571aedbc6cbb7a9bfc96bcad543a39d158925cbc
+- Enables (functionality):
+	- kmods: ata-marvell-sata, fs-btrfs, fs-ext4, fuse, tun
+	- kmods: usb-net-cdc-ether, usb-net-ipheth, usb-net-rndis
+	- kmods: usb-storage, usb-storage-uas
+	- btrfs-progs, e2fsprogs, fstrim, ncdu, tune2fs
+	- bmon
+
 20210326-00
 - update to d71424a085e1d5dcc57c5d64dd2a651433944432
 - [upstream] glibc update (security fixes)
