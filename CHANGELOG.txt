@@ -1,3 +1,7 @@
+20210403-00
+- update to438e88e672559e349d05540db8763a890a931ad7
+- [upstream] update to kernel 5.10.27 (security and bug fixes)
+
 20210328-02
 - update to 571aedbc6cbb7a9bfc96bcad543a39d158925cbc
 - Enables (functionality):
