@@ -1,5 +1,11 @@
+20210414-00
+- update to 05a4273058303c8cfb5ff9c087739b924df056b3
+- switch to GCC 10 and binutils 2.35
+- [cherrypick] #3004: toolchain/musl: update to 1.2.2 (security and bug fixes)
+- [upstream] update to kernel 5.10.28 (security and bug fixes)
+
 20210403-00
-- update to438e88e672559e349d05540db8763a890a931ad7
+- update to 438e88e672559e349d05540db8763a890a931ad7
 - [upstream] update to kernel 5.10.27 (security and bug fixes)
 
 20210328-02
