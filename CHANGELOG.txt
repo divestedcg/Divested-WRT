@@ -1,3 +1,7 @@
+20210420-00
+- update to b832ebb886e71982675b8b889b81a91a18d57bf7
+- [upstream] update to kernel 5.10.31 (security and bug fixes)
+
 20210414-00
 - update to 05a4273058303c8cfb5ff9c087739b924df056b3
 - switch to GCC 10 and binutils 2.35
