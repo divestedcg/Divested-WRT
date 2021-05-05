@@ -1,3 +1,8 @@
+20210505-01
+- update to b607e7df34031738b18582aaa1f4f93505d06734
+- various security fixes (dnsmasq, busybox)
+- switch to binutils 2.36.1
+
 20210429-00
 - update to 62a0a8607f2f94f937c17bb7d7f4bff5fbaf15a2
 - [upstream] update to kernel 5.10.33 (security and bug fixes)
