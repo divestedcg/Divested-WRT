@@ -1,4 +1,4 @@
-From 8235998dd2ea813b83d56f8f7e12876782584476 Mon Sep 17 00:00:00 2001
+From 67d346bacadf614fd2d81f5a82389c086c98c0a4 Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
 Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
@@ -34,5 +34,5 @@ index 7526224972..b92cd7e467 100644
      ifneq ($(findstring mips64,$(ARCH)),)
        CPU_TYPE ?= mips64
 -- 
-2.30.2
+2.31.1
 

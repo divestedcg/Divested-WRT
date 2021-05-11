@@ -1,4 +1,4 @@
-From a0b27fde2cdecd5a619795dfe1e8894854cbfc58 Mon Sep 17 00:00:00 2001
+From 2086a7eb7876aca25c463a205429cb63f05bc03c Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
 Subject: [PATCH] ARM Cortex-A9: build the userspace with Thumb-2 instructions
@@ -32,5 +32,5 @@ index b92cd7e467..8fbe3fedcb 100644
      CPU_TYPE ?= generic
      CPU_CFLAGS_generic = -mcpu=generic
 -- 
-2.30.2
+2.31.1
 
