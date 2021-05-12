@@ -1,3 +1,7 @@
+20210512-00
+- update to 6713fe030fca32fc3d5ad9761f3b2f96501aedd6
+- [upstream] mitigations for https://www.fragattacks.com
+
 20210511-02
 - initial mitigations for https://www.fragattacks.com
 
