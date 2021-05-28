@@ -1,3 +1,7 @@
+20210528-00
+- update to e002179a6d2eea8640e262160030336bea54ec26
+- [upstream] update to kernel 5.10.40 (security and bug fixes)
+
 20210524-00
 - update to efee640716ed4f3273ea3e24e0b0b0d9b792433a
 - [upstream] update to kernel 5.10.39 (security and bug fixes)
