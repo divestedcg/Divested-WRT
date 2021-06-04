@@ -1,3 +1,7 @@
+20210604-00
+- update to 4fd4e9997a116d7bfc6a21bb5b8eadaa30a3a9e7
+- [cherrypick] #4225: update to kernel 5.10.42 (security and bug fixes)
+
 20210528-00
 - update to e002179a6d2eea8640e262160030336bea54ec26
 - [upstream] update to kernel 5.10.40 (security and bug fixes)
