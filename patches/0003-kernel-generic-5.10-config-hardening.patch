@@ -1,4 +1,4 @@
-From e521dc84aebf3eade13c053fac9797f7ee959d20 Mon Sep 17 00:00:00 2001
+From dacc2f7686dfa481a55a9f234330d9da5c49bc72 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Wed, 17 Feb 2021 12:49:10 -0500
 Subject: [PATCH] kernel: generic 5.10: config hardening
@@ -12,10 +12,10 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 123 insertions(+)
 
 diff --git a/target/linux/generic/config-5.10 b/target/linux/generic/config-5.10
-index 31141f207b..9a87ba2b72 100644
+index 9b64ee14f9..6a22ce0a7c 100644
 --- a/target/linux/generic/config-5.10
 +++ b/target/linux/generic/config-5.10
-@@ -7076,3 +7076,126 @@ CONFIG_ZONE_DMA=y
+@@ -7077,3 +7077,126 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
