@@ -1,3 +1,8 @@
+20210623-00
+- update to e6b3e77e6ef635688b810a9bba528d477998270e
+- 5.10.45 has reported issues and is delayed
+- re-enable DEBUG_VIRTUAL and INIT_ON_FREE_DEFAULT_ON (security)
+
 20210618-00
 - update to 165a0263643af6831edcef28d2863babb660d24b
 - [cherrypick] #4281: update to kernel 5.10.44 (security and bug fixes)

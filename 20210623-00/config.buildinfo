@@ -25,6 +25,7 @@ CONFIG_GCC_VERSION_10=y
 # CONFIG_GDB is not set
 CONFIG_IMAGEOPT=y
 CONFIG_IPK_FILES_CHECKSUMS=y
+# CONFIG_JSON_OVERVIEW_IMAGE_INFO is not set
 CONFIG_KERNEL_BUILD_DOMAIN="dcg.v1"
 CONFIG_KERNEL_BUILD_USER="emy"
 # CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR is not set
@@ -111,26 +112,17 @@ CONFIG_PACKAGE_kmod-ata-marvell-sata=y
 CONFIG_PACKAGE_kmod-crypto-acompress=y
 CONFIG_PACKAGE_kmod-crypto-authenc=y
 CONFIG_PACKAGE_kmod-crypto-cbc=m
-CONFIG_PACKAGE_kmod-crypto-ccm=m
 CONFIG_PACKAGE_kmod-crypto-crc32c=y
-CONFIG_PACKAGE_kmod-crypto-ctr=m
 CONFIG_PACKAGE_kmod-crypto-cts=m
 CONFIG_PACKAGE_kmod-crypto-deflate=m
 CONFIG_PACKAGE_kmod-crypto-des=m
-CONFIG_PACKAGE_kmod-crypto-gcm=m
-CONFIG_PACKAGE_kmod-crypto-gf128=m
-CONFIG_PACKAGE_kmod-crypto-ghash=m
-CONFIG_PACKAGE_kmod-crypto-hmac=m
 CONFIG_PACKAGE_kmod-crypto-lib-blake2s=y
 CONFIG_PACKAGE_kmod-crypto-lib-chacha20=y
 CONFIG_PACKAGE_kmod-crypto-lib-chacha20poly1305=y
 CONFIG_PACKAGE_kmod-crypto-lib-curve25519=y
 CONFIG_PACKAGE_kmod-crypto-lib-poly1305=y
 CONFIG_PACKAGE_kmod-crypto-md5=m
-CONFIG_PACKAGE_kmod-crypto-rng=m
-CONFIG_PACKAGE_kmod-crypto-seqiv=m
 CONFIG_PACKAGE_kmod-crypto-sha1=m
-CONFIG_PACKAGE_kmod-crypto-sha256=m
 CONFIG_PACKAGE_kmod-crypto-sha512=m
 CONFIG_PACKAGE_kmod-crypto-xts=m
 CONFIG_PACKAGE_kmod-cryptodev=y

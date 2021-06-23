@@ -1,4 +1,4 @@
-From 6479204f102da5dbe650e98d7fa63ba3d42679a1 Mon Sep 17 00:00:00 2001
+From db6a09bc8e7b8dad3946c8b95496d8a59bf81408 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
 Subject: [PATCH] kernel: generic 5.4: config hardening
@@ -8,14 +8,14 @@ Disables various high-risk bits.
 
 Signed-off-by: Tad <tad@spotco.us>
 ---
- target/linux/generic/config-5.4 | 123 ++++++++++++++++++++++++++++++++
- 1 file changed, 123 insertions(+)
+ target/linux/generic/config-5.4 | 125 ++++++++++++++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
 
 diff --git a/target/linux/generic/config-5.4 b/target/linux/generic/config-5.4
-index d0906b52ae..0ef01c3db2 100644
+index f5e976a691..4221b24752 100644
 --- a/target/linux/generic/config-5.4
 +++ b/target/linux/generic/config-5.4
-@@ -6551,3 +6551,126 @@ CONFIG_ZONE_DMA=y
+@@ -6552,3 +6552,128 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
@@ -33,12 +33,14 @@ index d0906b52ae..0ef01c3db2 100644
 +CONFIG_DEBUG_RODATA=y
 +CONFIG_DEBUG_SET_MODULE_RONX=y
 +CONFIG_DEBUG_SG=y
++CONFIG_DEBUG_VIRTUAL=y
 +CONFIG_DEBUG_WX=y
 +CONFIG_FORTIFY_SOURCE=y
 +CONFIG_HARDEN_BRANCH_PREDICTOR=y
 +CONFIG_HARDENED_USERCOPY=y
 +CONFIG_HARDEN_EL2_VECTORS=y
 +CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
++CONFIG_INIT_ON_FREE_DEFAULT_ON=y
 +CONFIG_INIT_STACK_ALL=y
 +CONFIG_INIT_STACK_ALL_ZERO=y
 +CONFIG_IO_STRICT_DEVMEM=y
