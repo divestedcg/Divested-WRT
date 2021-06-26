@@ -1,3 +1,8 @@
+20210625-00
+- update to 8569bc5e0d1bdc4b252bf3f4e7c893ea2e17c98f
+- [cherrypick] #4281: update to kernel 5.10.46 (security and bug fixes)
+- enable kmod-nf-conntrack-netlink for upnp support
+
 20210623-00
 - update to e6b3e77e6ef635688b810a9bba528d477998270e
 - 5.10.45 has reported issues and is delayed
