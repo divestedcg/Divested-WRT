@@ -1,0 +1,22 @@
+From f77dab85a8ba450e70d1a5831df48cabfc0f5c91 Mon Sep 17 00:00:00 2001
+From: Tad <tad@spotco.us>
+Date: Fri, 2 Jul 2021 13:03:00 -0400
+Subject: [PATCH] build: hardening: misc added flags
+
+Signed-off-by: Tad <tad@spotco.us>
+---
+ include/hardening.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/hardening.mk b/include/hardening.mk
+index 6acd862f5c..83d30eaed9 100644
+--- a/include/hardening.mk
++++ b/include/hardening.mk
+@@ -59,3 +59,4 @@ ifdef CONFIG_PKG_RELRO_FULL
+   endif
+ endif
+ 
++TARGET_CFLAGS += -fstack-clash-protection -fwrapv
+-- 
+2.31.1
+

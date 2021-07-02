@@ -1,3 +1,11 @@
+20210702-01
+- update to 5a1065758b88b568a04a50189400321601904bdf
+- enable some additional compile time hardening
+
+20210627-00
+- update to 8307da3dbdaff13d5ce99f8aefa32f5b7a2e18e6
+- [cherrypick] #4328: update to kernel 5.10.47 (security and bug fixes)
+
 20210627-00
 - update to f033d5ad1c28e07eb6de2ce3ea8650dc7080d6d0
 - [upstream] glibc update (security fixes)
