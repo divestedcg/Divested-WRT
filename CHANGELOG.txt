@@ -1,3 +1,7 @@
+20210707-00
+- update to 0fac6f5562acca15f62f6484317ba4aca2de34be
+- [cherrypick] #4328: update to kernel 5.10.48 (security and bug fixes)
+
 20210702-01
 - update to 5a1065758b88b568a04a50189400321601904bdf
 - enable some additional compile time hardening
