@@ -1,0 +1,435 @@
+From ebdb65c0166dccc3270660df600e5bdf4d237abe Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 30 Jun 2021 15:24:18 +0100
+Subject: [PATCH 1/4] kernel: bump 5.10 to 5.10.47
+
+No deleted or manually refreshed patches.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                   | 4 ++--
+ target/linux/generic/hack-5.10/204-module_strip.patch       | 4 ++--
+ .../linux/generic/pending-5.10/630-packet_socket_type.patch | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index daa1a5efa835..d1c9b2ede96f 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .128
+-LINUX_VERSION-5.10 = .46
++LINUX_VERSION-5.10 = .47
+ 
+ LINUX_KERNEL_HASH-5.4.128 = 3b54aebb816b9e628cb9ba3055a6aca58ce0ddeec49366c0da86ced9a7be39ab
+-LINUX_KERNEL_HASH-5.10.46 = 569122a39c6b325befb9ac1c07da0c53e6363b3baacd82081d131b06c1dc1415
++LINUX_KERNEL_HASH-5.10.47 = 30b52a2fe6d1e0c1e1dc651d5df9a37eb54b35ea1f7f51b9f23d8903c29ae1c5
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/generic/hack-5.10/204-module_strip.patch b/target/linux/generic/hack-5.10/204-module_strip.patch
+index 3379c5f3d6ea..0a0606042f5b 100644
+--- a/target/linux/generic/hack-5.10/204-module_strip.patch
++++ b/target/linux/generic/hack-5.10/204-module_strip.patch
+@@ -104,7 +104,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  config MODULES_TREE_LOOKUP
+ --- a/kernel/module.c
+ +++ b/kernel/module.c
+-@@ -3243,9 +3243,11 @@ static int setup_load_info(struct load_i
++@@ -3247,9 +3247,11 @@ static int setup_load_info(struct load_i
+  
+  static int check_modinfo(struct module *mod, struct load_info *info, int flags)
+  {
+@@ -117,7 +117,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (flags & MODULE_INIT_IGNORE_VERMAGIC)
+  		modmagic = NULL;
+  
+-@@ -3266,6 +3268,7 @@ static int check_modinfo(struct module *
++@@ -3270,6 +3272,7 @@ static int check_modinfo(struct module *
+  				mod->name);
+  		add_taint_module(mod, TAINT_OOT_MODULE, LOCKDEP_STILL_OK);
+  	}
+diff --git a/target/linux/generic/pending-5.10/630-packet_socket_type.patch b/target/linux/generic/pending-5.10/630-packet_socket_type.patch
+index 6a6e2fdc2a68..9e415d803d63 100644
+--- a/target/linux/generic/pending-5.10/630-packet_socket_type.patch
++++ b/target/linux/generic/pending-5.10/630-packet_socket_type.patch
+@@ -87,7 +87,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (!net_eq(dev_net(dev), sock_net(sk)))
+  		goto drop;
+  
+-@@ -3315,6 +3317,7 @@ static int packet_create(struct net *net
++@@ -3318,6 +3320,7 @@ static int packet_create(struct net *net
+  	mutex_init(&po->pg_vec_lock);
+  	po->rollover = NULL;
+  	po->prot_hook.func = packet_rcv;
+@@ -95,7 +95,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  	if (sock->type == SOCK_PACKET)
+  		po->prot_hook.func = packet_rcv_spkt;
+-@@ -3949,6 +3952,16 @@ packet_setsockopt(struct socket *sock, i
++@@ -3954,6 +3957,16 @@ packet_setsockopt(struct socket *sock, i
+  		po->xmit = val ? packet_direct_xmit : dev_queue_xmit;
+  		return 0;
+  	}
+@@ -112,7 +112,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	default:
+  		return -ENOPROTOOPT;
+  	}
+-@@ -4005,6 +4018,13 @@ static int packet_getsockopt(struct sock
++@@ -4010,6 +4023,13 @@ static int packet_getsockopt(struct sock
+  	case PACKET_VNET_HDR:
+  		val = po->has_vnet_hdr;
+  		break;
+
+From 2d040e009b5b37168a51efc424bc33a0bdbb0a82 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 7 Jul 2021 15:36:06 +0100
+Subject: [PATCH 2/4] kernel: bump 5.10 to 5.10.48
+
+No deleted or manually refreshed patches.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                | 4 ++--
+ target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index d1c9b2ede96f..a325c8138005 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .128
+-LINUX_VERSION-5.10 = .47
++LINUX_VERSION-5.10 = .48
+ 
+ LINUX_KERNEL_HASH-5.4.128 = 3b54aebb816b9e628cb9ba3055a6aca58ce0ddeec49366c0da86ced9a7be39ab
+-LINUX_KERNEL_HASH-5.10.47 = 30b52a2fe6d1e0c1e1dc651d5df9a37eb54b35ea1f7f51b9f23d8903c29ae1c5
++LINUX_KERNEL_HASH-5.10.48 = dbd1193480e1b85928d8dcdd7507365381aafe09810ce3d28677d6f4e722c25e
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch b/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
+index 25ea1abe5689..01d623ab87e3 100644
+--- a/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
++++ b/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
+@@ -27,7 +27,7 @@
+  obj-$(CONFIG_MFD_INTEL_M10_BMC)   += intel-m10-bmc.o
+ --- a/drivers/gpio/Kconfig
+ +++ b/drivers/gpio/Kconfig
+-@@ -1518,6 +1518,12 @@ config GPIO_SODAVILLE
++@@ -1520,6 +1520,12 @@ config GPIO_SODAVILLE
+  	help
+  	  Say Y here to support Intel Sodaville GPIO.
+  
+
+From c6ef3ee8b1a15ffccf29156a7acca6b14876b71a Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Sun, 11 Jul 2021 20:03:08 +0100
+Subject: [PATCH 3/4] kernel: bump 5.10 to 5.10.49
+
+No deleted or manually refreshed patches.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                     | 4 ++--
+ .../patches-5.10/810-uvc-add-iPassion-iP2970-support.patch    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index a325c8138005..0dc746639a39 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .128
+-LINUX_VERSION-5.10 = .48
++LINUX_VERSION-5.10 = .49
+ 
+ LINUX_KERNEL_HASH-5.4.128 = 3b54aebb816b9e628cb9ba3055a6aca58ce0ddeec49366c0da86ced9a7be39ab
+-LINUX_KERNEL_HASH-5.10.48 = dbd1193480e1b85928d8dcdd7507365381aafe09810ce3d28677d6f4e722c25e
++LINUX_KERNEL_HASH-5.10.49 = b0d16de7e79c272b01996ad8ff8bdf3a6a011bc0c94049baccf69f05dde3025e
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/ramips/patches-5.10/810-uvc-add-iPassion-iP2970-support.patch b/target/linux/ramips/patches-5.10/810-uvc-add-iPassion-iP2970-support.patch
+index e0703db1bc98..204dc41b01df 100644
+--- a/target/linux/ramips/patches-5.10/810-uvc-add-iPassion-iP2970-support.patch
++++ b/target/linux/ramips/patches-5.10/810-uvc-add-iPassion-iP2970-support.patch
+@@ -13,7 +13,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+ 
+ --- a/drivers/media/usb/uvc/uvc_driver.c
+ +++ b/drivers/media/usb/uvc/uvc_driver.c
+-@@ -2972,6 +2972,18 @@ static const struct usb_device_id uvc_id
++@@ -3004,6 +3004,18 @@ static const struct usb_device_id uvc_id
+  	  .bInterfaceSubClass	= 1,
+  	  .bInterfaceProtocol	= 0,
+  	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+
+From 3482ed9459a8ea551609c8de705995526f9d2f08 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 14 Jul 2021 17:42:28 +0100
+Subject: [PATCH 4/4] kernel: bump 5.10 to 5.10.50
+
+No deleted or manually refreshed patches.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                   | 4 ++--
+ .../0003-leds-add-reset-controller-based-driver.patch       | 2 +-
+ .../ath79/patches-5.10/408-mtd-redboot_partition_scan.patch | 6 +++---
+ .../ath79/patches-5.10/910-unaligned_access_hacks.patch     | 2 +-
+ target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch    | 2 +-
+ .../linux/bcm63xx/patches-5.10/400-bcm963xx_flashmap.patch  | 6 +++---
+ target/linux/generic/hack-5.10/221-module_exports.patch     | 2 +-
+ .../generic/hack-5.10/661-use_fq_codel_by_default.patch     | 2 +-
+ .../generic/pending-5.10/205-backtrace_module_info.patch    | 4 ++--
+ ...419-mtd-redboot-add-of_match_table-with-DT-binding.patch | 2 +-
+ .../linux/generic/pending-5.10/420-mtd-redboot_space.patch  | 2 +-
+ .../666-Add-support-for-MAP-E-FMRs-mesh-mode.patch          | 4 ++--
+ .../linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch | 2 +-
+ .../mediatek/patches-5.10/800-ubnt-ledbar-driver.patch      | 2 +-
+ 14 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 0dc746639a39..f0f81139f565 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .128
+-LINUX_VERSION-5.10 = .49
++LINUX_VERSION-5.10 = .50
+ 
+ LINUX_KERNEL_HASH-5.4.128 = 3b54aebb816b9e628cb9ba3055a6aca58ce0ddeec49366c0da86ced9a7be39ab
+-LINUX_KERNEL_HASH-5.10.49 = b0d16de7e79c272b01996ad8ff8bdf3a6a011bc0c94049baccf69f05dde3025e
++LINUX_KERNEL_HASH-5.10.50 = 8bda327a7d95acfff8f87fb6ef4223e3194fa22195f5551249a9aa3393bfb436
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/ath79/patches-5.10/0003-leds-add-reset-controller-based-driver.patch b/target/linux/ath79/patches-5.10/0003-leds-add-reset-controller-based-driver.patch
+index a023d4c6447e..68b831036576 100644
+--- a/target/linux/ath79/patches-5.10/0003-leds-add-reset-controller-based-driver.patch
++++ b/target/linux/ath79/patches-5.10/0003-leds-add-reset-controller-based-driver.patch
+@@ -13,7 +13,7 @@ Signed-off-by: John Crispin <john@phrozen.org>
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -928,6 +928,17 @@ config LEDS_ACER_A500
++@@ -929,6 +929,17 @@ config LEDS_ACER_A500
+  	  This option enables support for the Power Button LED of
+  	  Acer Iconia Tab A500.
+  
+diff --git a/target/linux/ath79/patches-5.10/408-mtd-redboot_partition_scan.patch b/target/linux/ath79/patches-5.10/408-mtd-redboot_partition_scan.patch
+index 8f3ee32f5776..e5b06e14a568 100644
+--- a/target/linux/ath79/patches-5.10/408-mtd-redboot_partition_scan.patch
++++ b/target/linux/ath79/patches-5.10/408-mtd-redboot_partition_scan.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/mtd/parsers/redboot.c
+ +++ b/drivers/mtd/parsers/redboot.c
+-@@ -85,12 +85,18 @@ static int parse_redboot_partitions(stru
++@@ -90,12 +90,18 @@ static int parse_redboot_partitions(stru
+  
+  	parse_redboot_of(master);
+  
+@@ -19,7 +19,7 @@
+  				return -EIO;
+  			}
+  			offset -= master->erasesize;
+-@@ -103,10 +109,6 @@ static int parse_redboot_partitions(stru
++@@ -108,10 +114,6 @@ static int parse_redboot_partitions(stru
+  				goto nogood;
+  		}
+  	}
+@@ -30,7 +30,7 @@
+  
+  	printk(KERN_NOTICE "Searching for RedBoot partition table in %s at offset 0x%lx\n",
+  	       master->name, offset);
+-@@ -179,6 +181,11 @@ static int parse_redboot_partitions(stru
++@@ -184,6 +186,11 @@ static int parse_redboot_partitions(stru
+  	}
+  	if (i == numslots) {
+  		/* Didn't find it */
+diff --git a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+index c1cb0dae6681..b9290dee1c91 100644
+--- a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+@@ -267,7 +267,7 @@
+  		case IPV6_2292HOPOPTS:
+ --- a/net/ipv6/exthdrs.c
+ +++ b/net/ipv6/exthdrs.c
+-@@ -949,7 +949,7 @@ static bool ipv6_hop_jumbo(struct sk_buf
++@@ -948,7 +948,7 @@ static bool ipv6_hop_jumbo(struct sk_buf
+  		goto drop;
+  	}
+  
+diff --git a/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch b/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
+index 01d623ab87e3..7c3c91817f45 100644
+--- a/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
++++ b/target/linux/ath79/patches-5.10/920-mikrotik-rb4xx.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/mfd/Kconfig
+ +++ b/drivers/mfd/Kconfig
+-@@ -2141,6 +2141,14 @@ config RAVE_SP_CORE
++@@ -2142,6 +2142,14 @@ config RAVE_SP_CORE
+  	  Select this to get support for the Supervisory Processor
+  	  device found on several devices in RAVE line of hardware.
+  
+diff --git a/target/linux/bcm63xx/patches-5.10/400-bcm963xx_flashmap.patch b/target/linux/bcm63xx/patches-5.10/400-bcm963xx_flashmap.patch
+index f57950b44a65..5a9532c32148 100644
+--- a/target/linux/bcm63xx/patches-5.10/400-bcm963xx_flashmap.patch
++++ b/target/linux/bcm63xx/patches-5.10/400-bcm963xx_flashmap.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Axel Gembe <ago@bastart.eu.org>
+  	.width			= 2,
+ --- a/drivers/mtd/parsers/redboot.c
+ +++ b/drivers/mtd/parsers/redboot.c
+-@@ -79,6 +79,7 @@ static int parse_redboot_partitions(stru
++@@ -84,6 +84,7 @@ static int parse_redboot_partitions(stru
+  	int nulllen = 0;
+  	int numslots;
+  	unsigned long offset;
+@@ -31,7 +31,7 @@ Signed-off-by: Axel Gembe <ago@bastart.eu.org>
+  #ifdef CONFIG_MTD_REDBOOT_PARTS_UNALLOCATED
+  	static char nullstring[] = "unallocated";
+  #endif
+-@@ -185,6 +186,16 @@ static int parse_redboot_partitions(stru
++@@ -190,6 +191,16 @@ static int parse_redboot_partitions(stru
+  		goto out;
+  	}
+  
+@@ -48,7 +48,7 @@ Signed-off-by: Axel Gembe <ago@bastart.eu.org>
+  	for (i = 0; i < numslots; i++) {
+  		struct fis_list *new_fl, **prev;
+  
+-@@ -205,10 +216,10 @@ static int parse_redboot_partitions(stru
++@@ -210,10 +221,10 @@ static int parse_redboot_partitions(stru
+  			goto out;
+  		}
+  		new_fl->img = &buf[i];
+diff --git a/target/linux/generic/hack-5.10/221-module_exports.patch b/target/linux/generic/hack-5.10/221-module_exports.patch
+index e6854138e796..2fcb2d9809a1 100644
+--- a/target/linux/generic/hack-5.10/221-module_exports.patch
++++ b/target/linux/generic/hack-5.10/221-module_exports.patch
+@@ -91,7 +91,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	    "__kstrtabns_" #sym ":					\n"	\
+ --- a/scripts/Makefile.build
+ +++ b/scripts/Makefile.build
+-@@ -366,7 +366,7 @@ targets += $(lib-y) $(always-y) $(MAKECM
++@@ -367,7 +367,7 @@ targets += $(lib-y) $(always-y) $(MAKECM
+  # Linker scripts preprocessor (.lds.S -> .lds)
+  # ---------------------------------------------------------------------------
+  quiet_cmd_cpp_lds_S = LDS     $@
+diff --git a/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch b/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
+index 863738e2ef33..33c8c55ab66f 100644
+--- a/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
++++ b/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/include/net/sch_generic.h
+ +++ b/include/net/sch_generic.h
+-@@ -611,12 +611,13 @@ extern struct Qdisc_ops noop_qdisc_ops;
++@@ -623,12 +623,13 @@ extern struct Qdisc_ops noop_qdisc_ops;
+  extern struct Qdisc_ops pfifo_fast_ops;
+  extern struct Qdisc_ops mq_qdisc_ops;
+  extern struct Qdisc_ops noqueue_qdisc_ops;
+diff --git a/target/linux/generic/pending-5.10/205-backtrace_module_info.patch b/target/linux/generic/pending-5.10/205-backtrace_module_info.patch
+index 595321475749..f46877f254dd 100644
+--- a/target/linux/generic/pending-5.10/205-backtrace_module_info.patch
++++ b/target/linux/generic/pending-5.10/205-backtrace_module_info.patch
+@@ -11,7 +11,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/lib/vsprintf.c
+ +++ b/lib/vsprintf.c
+-@@ -957,8 +957,10 @@ char *symbol_string(char *buf, char *end
++@@ -983,8 +983,10 @@ char *symbol_string(char *buf, char *end
+  		    struct printf_spec spec, const char *fmt)
+  {
+  	unsigned long value;
+@@ -23,7 +23,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  #endif
+  
+  	if (fmt[1] == 'R')
+-@@ -975,8 +977,14 @@ char *symbol_string(char *buf, char *end
++@@ -1001,8 +1003,14 @@ char *symbol_string(char *buf, char *end
+  
+  	return string_nocheck(buf, end, sym, spec);
+  #else
+diff --git a/target/linux/generic/pending-5.10/419-mtd-redboot-add-of_match_table-with-DT-binding.patch b/target/linux/generic/pending-5.10/419-mtd-redboot-add-of_match_table-with-DT-binding.patch
+index 8358a307cd8e..7692f484ae0c 100644
+--- a/target/linux/generic/pending-5.10/419-mtd-redboot-add-of_match_table-with-DT-binding.patch
++++ b/target/linux/generic/pending-5.10/419-mtd-redboot-add-of_match_table-with-DT-binding.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+ 
+ --- a/drivers/mtd/parsers/redboot.c
+ +++ b/drivers/mtd/parsers/redboot.c
+-@@ -300,6 +300,7 @@ static int parse_redboot_partitions(stru
++@@ -305,6 +305,7 @@ static int parse_redboot_partitions(stru
+  
+  static const struct of_device_id mtd_parser_redboot_of_match_table[] = {
+  	{ .compatible = "redboot-fis" },
+diff --git a/target/linux/generic/pending-5.10/420-mtd-redboot_space.patch b/target/linux/generic/pending-5.10/420-mtd-redboot_space.patch
+index a2cf8389898d..a3cd4ecf1f9b 100644
+--- a/target/linux/generic/pending-5.10/420-mtd-redboot_space.patch
++++ b/target/linux/generic/pending-5.10/420-mtd-redboot_space.patch
+@@ -11,7 +11,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/drivers/mtd/parsers/redboot.c
+ +++ b/drivers/mtd/parsers/redboot.c
+-@@ -274,14 +274,21 @@ static int parse_redboot_partitions(stru
++@@ -279,14 +279,21 @@ static int parse_redboot_partitions(stru
+  #endif
+  		names += strlen(names)+1;
+  
+diff --git a/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch b/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+index ddb94fbe558f..89eb7d61b3b7 100644
+--- a/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
++++ b/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+@@ -311,7 +311,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  /**
+   * ip6_tnl_addr_conflict - compare packet addresses to tunnel's own
+   *   @t: the outgoing tunnel device
+-@@ -1306,6 +1454,7 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
++@@ -1304,6 +1452,7 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
+  		u8 protocol)
+  {
+  	struct ip6_tnl *t = netdev_priv(dev);
+@@ -319,7 +319,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	struct ipv6hdr *ipv6h;
+  	const struct iphdr  *iph;
+  	int encap_limit = -1;
+-@@ -1405,6 +1554,18 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
++@@ -1403,6 +1552,18 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
+  	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
+  	dsfield = INET_ECN_encapsulate(dsfield, orig_dsfield);
+  
+diff --git a/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch b/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
+index 8dc680d18073..381eaab5e2b8 100644
+--- a/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
++++ b/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
+@@ -19,7 +19,7 @@
+  	},
+  	[PORT_NPCM] = {
+  		.name		= "Nuvoton 16550",
+-@@ -2699,6 +2699,11 @@ serial8250_do_set_termios(struct uart_po
++@@ -2712,6 +2712,11 @@ serial8250_do_set_termios(struct uart_po
+  	unsigned long flags;
+  	unsigned int baud, quot, frac = 0;
+  
+diff --git a/target/linux/mediatek/patches-5.10/800-ubnt-ledbar-driver.patch b/target/linux/mediatek/patches-5.10/800-ubnt-ledbar-driver.patch
+index 013391e1d9fc..92264eedf9cc 100644
+--- a/target/linux/mediatek/patches-5.10/800-ubnt-ledbar-driver.patch
++++ b/target/linux/mediatek/patches-5.10/800-ubnt-ledbar-driver.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -928,6 +928,16 @@ config LEDS_ACER_A500
++@@ -929,6 +929,16 @@ config LEDS_ACER_A500
+  	  This option enables support for the Power Button LED of
+  	  Acer Iconia Tab A500.
+  

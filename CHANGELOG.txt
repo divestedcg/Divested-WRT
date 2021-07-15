@@ -1,3 +1,9 @@
+20210715-00
+- update to 9ec5f5f230851ef9c980e99a43c3ddffca50a7fc
+- [cherrypick] #4328: update to kernel 5.10.50 (security and bug fixes)
+- [upstream] glibc update (security fixes)
+- [upstream] various security fixes (hostapd, rpcd)
+
 20210712-00
 - update to 349e2b7e658290f967a4aab4fd9d754572f9b0b2
 - [cherrypick] #4328: update to kernel 5.10.49 (security and bug fixes)
@@ -68,7 +74,7 @@
 
 20210505-01
 - update to b607e7df34031738b18582aaa1f4f93505d06734
-- various security fixes (dnsmasq, busybox)
+- [upstream] various security fixes (dnsmasq, busybox)
 - switch to binutils 2.36.1
 
 20210429-00
