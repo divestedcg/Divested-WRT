@@ -1,0 +1,179 @@
+From a80ea8825e2272ec7e7d895a14016500ebfd8087 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Sun, 25 Jul 2021 21:00:58 +0100
+Subject: [PATCH] kernel: bump 5.10 to 5.10.53
+
+No deleted or manually refreshed patches.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                  | 4 ++--
+ .../ath79/patches-5.10/910-unaligned_access_hacks.patch    | 2 +-
+ ...Fix-alloc_node_mem_map-with-ARCH_PFN_OFFSET-calcu.patch | 2 +-
+ .../generic/pending-5.10/201-extra_optimization.patch      | 2 +-
+ ...a-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch | 2 +-
+ target/linux/mediatek/patches-5.10/000-spi-fix-fifo.patch  | 7 +------
+ .../linux/mediatek/patches-5.10/330-mtk-bmt-support.patch  | 4 ++--
+ .../510-net-mediatek-add-flow-offload-for-mt7623.patch     | 2 +-
+ ...-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch | 2 +-
+ .../700-net-ethernet-mediatek-support-net-labels.patch     | 6 +++---
+ 10 files changed, 14 insertions(+), 19 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 0ab7ce31cedf..c2fb813c927c 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .134
+-LINUX_VERSION-5.10 = .52
++LINUX_VERSION-5.10 = .53
+ 
+ LINUX_KERNEL_HASH-5.4.134 = c9fb861642161c256e10c97c35ccce18831e688d87ead53c18e3226778e05841
+-LINUX_KERNEL_HASH-5.10.52 = 769e57a0fa218589fa2f8460b8682eb784a72718c7a3d95295f382a77902ae79
++LINUX_KERNEL_HASH-5.10.53 = f0058d902933986dbaf03b2a0304d2babe5fe1c8e3f41f156ffd3c3f210106dc
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+index c77de17db018..e0bcb8d34ef7 100644
+--- a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+@@ -214,7 +214,7 @@
+  #include <linux/uaccess.h>
+  #include <linux/ipv6.h>
+  #include <linux/icmpv6.h>
+-@@ -909,10 +910,10 @@ static void tcp_v6_send_response(const s
++@@ -924,10 +925,10 @@ static void tcp_v6_send_response(const s
+  	topt = (__be32 *)(t1 + 1);
+  
+  	if (tsecr) {
+diff --git a/target/linux/generic/pending-5.10/120-Fix-alloc_node_mem_map-with-ARCH_PFN_OFFSET-calcu.patch b/target/linux/generic/pending-5.10/120-Fix-alloc_node_mem_map-with-ARCH_PFN_OFFSET-calcu.patch
+index 4375e727cf60..cf3bbd1f0f8c 100644
+--- a/target/linux/generic/pending-5.10/120-Fix-alloc_node_mem_map-with-ARCH_PFN_OFFSET-calcu.patch
++++ b/target/linux/generic/pending-5.10/120-Fix-alloc_node_mem_map-with-ARCH_PFN_OFFSET-calcu.patch
+@@ -71,7 +71,7 @@ Signed-off-by: Tobias Wolf <dev-NTEO@vplace.de>
+ 
+ --- a/mm/page_alloc.c
+ +++ b/mm/page_alloc.c
+-@@ -7027,7 +7027,7 @@ static void __ref alloc_node_mem_map(str
++@@ -7053,7 +7053,7 @@ static void __ref alloc_node_mem_map(str
+  	if (pgdat == NODE_DATA(0)) {
+  		mem_map = NODE_DATA(0)->node_mem_map;
+  		if (page_to_pfn(mem_map) != pgdat->node_start_pfn)
+diff --git a/target/linux/generic/pending-5.10/201-extra_optimization.patch b/target/linux/generic/pending-5.10/201-extra_optimization.patch
+index df973258ab6d..cb1de8076410 100644
+--- a/target/linux/generic/pending-5.10/201-extra_optimization.patch
++++ b/target/linux/generic/pending-5.10/201-extra_optimization.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/Makefile
+ +++ b/Makefile
+-@@ -734,11 +734,11 @@ KBUILD_CFLAGS	+= $(call cc-disable-warni
++@@ -735,11 +735,11 @@ KBUILD_CFLAGS	+= $(call cc-disable-warni
+  KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
+  
+  ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+diff --git a/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch b/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
+index 315a1a0bdbec..add1be7bd04d 100644
+--- a/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
++++ b/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
+ 
+ --- a/drivers/net/dsa/mv88e6xxx/chip.c
+ +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+-@@ -5401,6 +5401,7 @@ static int mv88e6xxx_register_switch(str
++@@ -5409,6 +5409,7 @@ static int mv88e6xxx_register_switch(str
+  	ds->ops = &mv88e6xxx_switch_ops;
+  	ds->ageing_time_min = chip->info->age_time_coeff;
+  	ds->ageing_time_max = chip->info->age_time_coeff * U8_MAX;
+diff --git a/target/linux/mediatek/patches-5.10/000-spi-fix-fifo.patch b/target/linux/mediatek/patches-5.10/000-spi-fix-fifo.patch
+index a7ac93a20847..7a1462fc92eb 100644
+--- a/target/linux/mediatek/patches-5.10/000-spi-fix-fifo.patch
++++ b/target/linux/mediatek/patches-5.10/000-spi-fix-fifo.patch
+@@ -18,11 +18,9 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+  drivers/spi/spi-mt65xx.c | 16 +++++++++++++---
+  1 file changed, 13 insertions(+), 3 deletions(-)
+ 
+-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+-index 976f73b9e2998..8d5fa7f1e5069 100644
+ --- a/drivers/spi/spi-mt65xx.c
+ +++ b/drivers/spi/spi-mt65xx.c
+-@@ -427,13 +427,23 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
++@@ -434,13 +434,23 @@ static int mtk_spi_fifo_transfer(struct
+  	mtk_spi_setup_packet(master);
+  
+  	cnt = xfer->len / 4;
+@@ -49,6 +47,3 @@ index 976f73b9e2998..8d5fa7f1e5069 100644
+  	}
+  
+  	mtk_spi_enable_transfer(master);
+--- 
+-cgit 1.2.3-1.el7
+-
+diff --git a/target/linux/mediatek/patches-5.10/330-mtk-bmt-support.patch b/target/linux/mediatek/patches-5.10/330-mtk-bmt-support.patch
+index 504c602c50d9..699870fbd66a 100644
+--- a/target/linux/mediatek/patches-5.10/330-mtk-bmt-support.patch
++++ b/target/linux/mediatek/patches-5.10/330-mtk-bmt-support.patch
+@@ -815,7 +815,7 @@
+  
+  static int spinand_read_reg_op(struct spinand_device *spinand, u8 reg, u8 *val)
+  {
+-@@ -1139,6 +1140,8 @@ static int spinand_probe(struct spi_mem
++@@ -1140,6 +1141,8 @@ static int spinand_probe(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+@@ -824,7 +824,7 @@
+  	ret = mtd_device_register(mtd, NULL, 0);
+  	if (ret)
+  		goto err_spinand_cleanup;
+-@@ -1164,6 +1167,7 @@ static int spinand_remove(struct spi_mem
++@@ -1165,6 +1168,7 @@ static int spinand_remove(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+diff --git a/target/linux/mediatek/patches-5.10/510-net-mediatek-add-flow-offload-for-mt7623.patch b/target/linux/mediatek/patches-5.10/510-net-mediatek-add-flow-offload-for-mt7623.patch
+index 27bc1a60b2e2..7585d6cf188b 100644
+--- a/target/linux/mediatek/patches-5.10/510-net-mediatek-add-flow-offload-for-mt7623.patch
++++ b/target/linux/mediatek/patches-5.10/510-net-mediatek-add-flow-offload-for-mt7623.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+ 
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -3272,6 +3272,7 @@ static const struct mtk_soc_data mt7623_
++@@ -3274,6 +3274,7 @@ static const struct mtk_soc_data mt7623_
+  	.hw_features = MTK_HW_FEATURES,
+  	.required_clks = MT7623_CLKS_BITMAP,
+  	.required_pctl = true,
+diff --git a/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch b/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
+index e131bfdf17ae..529a252d3b15 100644
+--- a/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
++++ b/target/linux/mediatek/patches-5.10/700-net-ethernet-mtk_eth_soc-add-support-for-coherent-DM.patch
+@@ -51,7 +51,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628)) {
+  		ret = device_reset(eth->dev);
+  		if (ret) {
+-@@ -3074,6 +3082,16 @@ static int mtk_probe(struct platform_dev
++@@ -3076,6 +3084,16 @@ static int mtk_probe(struct platform_dev
+  		}
+  	}
+  
+diff --git a/target/linux/ramips/patches-5.10/700-net-ethernet-mediatek-support-net-labels.patch b/target/linux/ramips/patches-5.10/700-net-ethernet-mediatek-support-net-labels.patch
+index c32c16a90876..8f4a2d98481a 100644
+--- a/target/linux/ramips/patches-5.10/700-net-ethernet-mediatek-support-net-labels.patch
++++ b/target/linux/ramips/patches-5.10/700-net-ethernet-mediatek-support-net-labels.patch
+@@ -22,9 +22,9 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	const __be32 *_id = of_get_property(np, "reg", NULL);
+  	phy_interface_t phy_mode;
+  	struct phylink *phylink;
+-@@ -3006,6 +3007,9 @@ static int mtk_add_mac(struct mtk_eth *e
+- 
+- 	eth->netdev[id]->max_mtu = MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
++@@ -3008,6 +3009,9 @@ static int mtk_add_mac(struct mtk_eth *e
++ 	
++ 	of_platform_device_create(np, NULL, NULL);
+  
+ +	if (name)
+ +		strlcpy(eth->netdev[id]->name, name, IFNAMSIZ);
