@@ -1,4 +1,4 @@
-From db6a09bc8e7b8dad3946c8b95496d8a59bf81408 Mon Sep 17 00:00:00 2001
+From de40edbe6695de373ac77a2fdc2baf448c3813db Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
 Subject: [PATCH] kernel: generic 5.4: config hardening
@@ -12,10 +12,10 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 125 insertions(+)
 
 diff --git a/target/linux/generic/config-5.4 b/target/linux/generic/config-5.4
-index f5e976a691..4221b24752 100644
+index d61c2a155e..dba3dfd1b0 100644
 --- a/target/linux/generic/config-5.4
 +++ b/target/linux/generic/config-5.4
-@@ -6552,3 +6552,128 @@ CONFIG_ZONE_DMA=y
+@@ -6569,3 +6569,128 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
@@ -34,6 +34,7 @@ index f5e976a691..4221b24752 100644
 +CONFIG_DEBUG_SET_MODULE_RONX=y
 +CONFIG_DEBUG_SG=y
 +CONFIG_DEBUG_VIRTUAL=y
++CONFIG_TEST_DEBUG_VIRTUAL=n
 +CONFIG_DEBUG_WX=y
 +CONFIG_FORTIFY_SOURCE=y
 +CONFIG_HARDEN_BRANCH_PREDICTOR=y
@@ -74,7 +75,6 @@ index f5e976a691..4221b24752 100644
 +CONFIG_SLUB_HARDENED=y
 +CONFIG_STACKPROTECTOR_PER_TASK=y
 +CONFIG_STACKPROTECTOR_STRONG=y
-+CONFIG_STATIC_USERMODEHELPER=y
 +CONFIG_STRICT_DEVMEM=y
 +CONFIG_STRICT_KERNEL_RWX=y
 +CONFIG_STRICT_MEMORY_RWX=y

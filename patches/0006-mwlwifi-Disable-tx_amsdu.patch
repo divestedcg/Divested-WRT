@@ -1,4 +1,4 @@
-From 0011ddf426474630849c8628d28e690fcbcdb7da Mon Sep 17 00:00:00 2001
+From 119fff7297377b3f55597fa0feb43112d25063de Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 1 Dec 2020 03:57:45 -0500
 Subject: [PATCH] mwlwifi: Disable tx_amsdu
