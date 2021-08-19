@@ -1,3 +1,7 @@
+20210819-00
+- update to c5616a8ae1649ef55d362462a39aa133b65dc1e3
+- [cherrypick] #4461: update to kernel 5.10.60 (security and bug fixes)
+
 20210815-00
 - update to 45d2d4e65ae52d0957df1e408925762e0a867d20
 - [upstream] update to kernel 5.10.58 (security and bug fixes)
