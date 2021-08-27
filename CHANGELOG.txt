@@ -1,3 +1,7 @@
+20210827-00
+- update to 97e32e9702be7c7fab97d024ee336886e9faa0c7
+- [upstream] update to OpenSSL 1.1.1l (security fixes)
+
 20210825-00
 - update to 4ab0b5fabd2e98264fbefb48da19fcc7b56a854a
 - various small security fixes
