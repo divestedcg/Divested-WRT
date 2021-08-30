@@ -1,3 +1,7 @@
+20210830-00
+- update to a7aa237c288c5d429a8915f0e5a7be40b047e519
+- [upstream] update to kernel 5.10.61 (security and bug fixes)
+
 20210827-00
 - update to 97e32e9702be7c7fab97d024ee336886e9faa0c7
 - [upstream] update to OpenSSL 1.1.1l (security fixes)
