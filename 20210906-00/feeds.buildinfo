@@ -1,4 +1,0 @@
-src-git packages https://git.openwrt.org/feed/packages.git^df494a20b
-src-git luci https://git.openwrt.org/project/luci.git^add3fe239
-src-git routing https://git.openwrt.org/feed/routing.git^fffa9cb
-src-git telephony https://git.openwrt.org/feed/telephony.git^7b3a4c5
