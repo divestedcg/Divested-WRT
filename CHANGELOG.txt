@@ -1,3 +1,12 @@
+20210923-00
+- update to 67cd648fa233c1063b55c216e2b26386bfada8ab
+- [cherrypick] #4553: update to kernel 5.10.68 (security and bug fixes)
+- [upstream] many updates:
+  gcc 10 -> 11
+  binutils 2.36.1 -> 2.37
+  musl 1.1.24 -> 1.22
+  mac80211 5.10.42 -> 5.10.68
+
 20210920-00
 - update to 309c8b490241fa4fcef61d2380225be6fde00766
 - [cherrypick] #4553: update to kernel 5.10.67 (security and bug fixes)
