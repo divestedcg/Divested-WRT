@@ -1,3 +1,7 @@
+20210929-00
+- update to e1c03ca18519f9683f6bfce1795e58d99575d895
+- [cherrypick] #4553: update to kernel 5.10.69 (security and bug fixes)
+
 20210923-00
 - update to 67cd648fa233c1063b55c216e2b26386bfada8ab
 - [cherrypick] #4553: update to kernel 5.10.68 (security and bug fixes)
