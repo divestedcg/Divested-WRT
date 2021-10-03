@@ -1,4 +1,4 @@
-From f7518d0e1ffbb34e9d1ca8c5a9a867cc96326e94 Mon Sep 17 00:00:00 2001
+From 9ee8476d7e99af34c84a8e79194476459d4a96f8 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 2 Jul 2021 13:03:00 -0400
 Subject: [PATCH] build: hardening: misc added flags
