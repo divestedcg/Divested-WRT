@@ -1,4 +1,4 @@
-From 040e1d3d71700d96139e3cd30bba234721c481d1 Mon Sep 17 00:00:00 2001
+From 25eeb3599f4069ac5141db79c01581b2d6869dda Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Wed, 17 Feb 2021 12:49:10 -0500
 Subject: [PATCH] kernel: generic 5.10: config hardening
@@ -8,17 +8,21 @@ Disables various high-risk bits.
 
 Signed-off-by: Tad <tad@spotco.us>
 ---
- target/linux/generic/config-5.10 | 125 +++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ target/linux/generic/config-5.10 | 133 +++++++++++++++++++++++++++++++
+ 1 file changed, 133 insertions(+)
 
 diff --git a/target/linux/generic/config-5.10 b/target/linux/generic/config-5.10
-index bfbadb8d15..0723005559 100644
+index 9809e09b24..849fa2f6f8 100644
 --- a/target/linux/generic/config-5.10
 +++ b/target/linux/generic/config-5.10
-@@ -7116,3 +7116,128 @@ CONFIG_ZONE_DMA=y
+@@ -7120,3 +7120,136 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
++CONFIG_ARM64_BTI_KERNEL=y
++CONFIG_ARM64_EPAN=y
++CONFIG_ARM64_MTE=y
++CONFIG_ARM64_PAN=y
 +CONFIG_ARM64_PTR_AUTH=y
 +CONFIG_ARM64_SW_TTBR0_PAN=y
 +CONFIG_ARM64_UAO=y
@@ -56,6 +60,7 @@ index bfbadb8d15..0723005559 100644
 +CONFIG_PAGE_TABLE_ISOLATION=y
 +CONFIG_PANIC_ON_OOPS=y
 +CONFIG_RANDOMIZE_BASE=y
++CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
 +CONFIG_RANDOMIZE_MEMORY=y
 +CONFIG_REFCOUNT_FULL=y
 +CONFIG_RETPOLINE=y
@@ -88,6 +93,7 @@ index bfbadb8d15..0723005559 100644
 +CONFIG_ACPI_TABLE_UPGRADE=n
 +CONFIG_BINFMT_AOUT=n
 +CONFIG_BINFMT_MISC=n
++CONFIG_BLK_DEV_FD=n
 +CONFIG_BT_HS=n
 +CONFIG_CHECKPOINT_RESTORE=n
 +CONFIG_COMPAT_BRK=n
@@ -102,8 +108,9 @@ index bfbadb8d15..0723005559 100644
 +CONFIG_HIBERNATION=n
 +CONFIG_HWPOISON_INJECT=n
 +CONFIG_IA32_EMULATION=n
-+CONFIG_IOMMU_NON_SECURE=n
 +CONFIG_INPUT_EVBUG=n
++CONFIG_IOMMU_NON_SECURE=n
++CONFIG_IO_URING=n
 +CONFIG_IP_DCCP=n
 +CONFIG_IP_SCTP=n
 +CONFIG_KEXEC=n
@@ -122,7 +129,6 @@ index bfbadb8d15..0723005559 100644
 +CONFIG_OABI_COMPAT=n
 +CONFIG_PAGE_OWNER=n
 +CONFIG_PROC_KCORE=n
-+CONFIG_PROC_PAGE_MONITOR=n
 +CONFIG_PROC_VMCORE=n
 +CONFIG_RDS=n
 +CONFIG_RDS_TCP=n
@@ -144,6 +150,8 @@ index bfbadb8d15..0723005559 100644
 +CONFIG_X86_PTDUMP=n
 +CONFIG_X86_VSYSCALL_EMULATION=n
 +CONFIG_ZSMALLOC_STAT=n
++CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
++CONFIG_LSM_MMAP_MIN_ADDR=32768
 -- 
 2.31.1
 
