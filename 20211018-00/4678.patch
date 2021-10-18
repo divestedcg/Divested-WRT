@@ -1,0 +1,369 @@
+From f42899e4bfcabc2cd80d1e0c0fbc2f625dd8fe7b Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 13 Oct 2021 11:02:37 +0100
+Subject: [PATCH 1/2] kernel: bump 5.10 to 5.10.73
+
+Patches automatically refreshed.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                       |  4 ++--
+ ...pc_ich-Enable-GPIO-driver-for-DH89xxCC.patch |  6 +-----
+ ...m-x86-add-meraki-mx100-platform-driver.patch | 17 ++++-------------
+ 3 files changed, 7 insertions(+), 20 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 734dbeda9210..acbdaeeb39a9 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .152
+-LINUX_VERSION-5.10 = .72
++LINUX_VERSION-5.10 = .73
+ 
+ LINUX_KERNEL_HASH-5.4.152 = 8044c7134c5eed21af9662f1c5399a5d8781b5bc2d8979e9ad06b4435a0a5ed5
+-LINUX_KERNEL_HASH-5.10.72 = b4d635afe7646ac6a6617c738e747ba0a6006675cd9735d18f672f8b1fba4c7c
++LINUX_KERNEL_HASH-5.10.73 = edb228032b23efa14077a68d968bc5b0d4026c1d1ef8bb958547a87ccb030e76
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/x86/patches-5.10/101-v5.15-mfd-lpc_ich-Enable-GPIO-driver-for-DH89xxCC.patch b/target/linux/x86/patches-5.10/101-v5.15-mfd-lpc_ich-Enable-GPIO-driver-for-DH89xxCC.patch
+index 0f0a3958da7a..b4881bf1d3ac 100644
+--- a/target/linux/x86/patches-5.10/101-v5.15-mfd-lpc_ich-Enable-GPIO-driver-for-DH89xxCC.patch
++++ b/target/linux/x86/patches-5.10/101-v5.15-mfd-lpc_ich-Enable-GPIO-driver-for-DH89xxCC.patch
+@@ -16,11 +16,9 @@ Signed-off-by: Lee Jones <lee.jones@linaro.org>
+  drivers/mfd/lpc_ich.c | 1 +
+  1 file changed, 1 insertion(+)
+ 
+-diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
+-index 3bbb29a7e7a57..f10e53187f67a 100644
+ --- a/drivers/mfd/lpc_ich.c
+ +++ b/drivers/mfd/lpc_ich.c
+-@@ -489,6 +489,7 @@ static struct lpc_ich_info lpc_chipset_info[] = {
++@@ -489,6 +489,7 @@ static struct lpc_ich_info lpc_chipset_i
+  	[LPC_DH89XXCC] = {
+  		.name = "DH89xxCC",
+  		.iTCO_version = 2,
+@@ -28,5 +26,3 @@ index 3bbb29a7e7a57..f10e53187f67a 100644
+  	},
+  	[LPC_PPT] = {
+  		.name = "Panther Point",
+--- 
+-cgit 1.2.3-1.el7
+diff --git a/target/linux/x86/patches-5.10/102-v5.15-platform-x86-add-meraki-mx100-platform-driver.patch b/target/linux/x86/patches-5.10/102-v5.15-platform-x86-add-meraki-mx100-platform-driver.patch
+index c05b61a9945a..0babc73b06fa 100644
+--- a/target/linux/x86/patches-5.10/102-v5.15-platform-x86-add-meraki-mx100-platform-driver.patch
++++ b/target/linux/x86/patches-5.10/102-v5.15-platform-x86-add-meraki-mx100-platform-driver.patch
+@@ -22,11 +22,9 @@ Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+  3 files changed, 246 insertions(+)
+  create mode 100644 drivers/platform/x86/meraki-mx100.c
+ 
+-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+-index 6ad35158ae4ef..432d72170b003 100644
+ --- a/drivers/platform/x86/Kconfig
+ +++ b/drivers/platform/x86/Kconfig
+-@@ -302,6 +302,19 @@ config ASUS_NB_WMI
++@@ -267,6 +267,19 @@ config ASUS_NB_WMI
+  	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+  	  here.
+  
+@@ -46,11 +44,9 @@ index 6ad35158ae4ef..432d72170b003 100644
+  config EEEPC_LAPTOP
+  	tristate "Eee PC Hotkey Driver"
+  	depends on ACPI
+-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+-index 5edfdc2ea7f29..9bb3c3f773864 100644
+ --- a/drivers/platform/x86/Makefile
+ +++ b/drivers/platform/x86/Makefile
+-@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
++@@ -33,6 +33,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi
+  obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+  obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+  
+@@ -58,11 +54,8 @@ index 5edfdc2ea7f29..9bb3c3f773864 100644
+ +obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
+ +
+  # Dell
+- obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+- 
+-diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+-new file mode 100644
+-index 0000000000000..3751ed36a980a
++ obj-$(CONFIG_DCDBAS)			+= dcdbas.o
++ obj-$(CONFIG_DELL_SMBIOS)		+= dell-smbios.o
+ --- /dev/null
+ +++ b/drivers/platform/x86/meraki-mx100.c
+ @@ -0,0 +1,230 @@
+@@ -296,5 +289,3 @@ index 0000000000000..3751ed36a980a
+ +MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
+ +MODULE_LICENSE("GPL");
+ +MODULE_ALIAS("platform:meraki-mx100");
+--- 
+-cgit 1.2.3-1.el7
+
+From 557e5e1c16267b34d76c76e07539589e63497809 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Sun, 17 Oct 2021 18:31:09 +0100
+Subject: [PATCH 2/2] kernel: bump 5.10 to 5.10.74
+
+Patches automatically refreshed.
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                                     | 4 ++--
+ .../ath79/patches-5.10/0032-MIPS-ath79-sanitize-symbols.patch | 2 +-
+ ...0110-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch | 2 +-
+ ...media-dt-bindings-media-Add-binding-for-the-Raspberr.patch | 2 +-
+ ...media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch | 2 +-
+ ...media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch | 2 +-
+ ...950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch | 2 +-
+ ...staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch | 2 +-
+ ...Documentation-devicetree-Add-documentation-for-imx37.patch | 2 +-
+ .../950-0709-drm-Add-GUD-USB-Display-driver.patch             | 2 +-
+ .../patches-5.10/322-MIPS-BCM63XX-switch-to-IRQ_DOMAIN.patch  | 2 +-
+ ...01-v5.11-mips-bmips-select-ARCH_HAS_RESET_CONTROLLER.patch | 2 +-
+ ...202-mips-bmips-disable-ARCH_HAS_SYNC_DMA_FOR_CPU_ALL.patch | 2 +-
+ .../bmips/patches-5.10/600-mips-bmips-add-pci-support.patch   | 2 +-
+ .../linux/generic/hack-5.10/661-use_fq_codel_by_default.patch | 2 +-
+ target/linux/lantiq/patches-5.10/0152-lantiq-VPE.patch        | 2 +-
+ .../patches-5.10/910-dts-mt7622-bpi-r64-wifi-eeprom.patch     | 2 +-
+ .../realtek/patches-5.10/300-mips-add-rtl838x-platform.patch  | 2 +-
+ 18 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index acbdaeeb39a9..9b9609c54101 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .152
+-LINUX_VERSION-5.10 = .73
++LINUX_VERSION-5.10 = .74
+ 
+ LINUX_KERNEL_HASH-5.4.152 = 8044c7134c5eed21af9662f1c5399a5d8781b5bc2d8979e9ad06b4435a0a5ed5
+-LINUX_KERNEL_HASH-5.10.73 = edb228032b23efa14077a68d968bc5b0d4026c1d1ef8bb958547a87ccb030e76
++LINUX_KERNEL_HASH-5.10.74 = 5755a6487018399812238205aba73a2693b0f9f3cd73d7cf1ce4d5436c3de1b0
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/ath79/patches-5.10/0032-MIPS-ath79-sanitize-symbols.patch b/target/linux/ath79/patches-5.10/0032-MIPS-ath79-sanitize-symbols.patch
+index 01cd31ba3a71..40cd1689a04b 100644
+--- a/target/linux/ath79/patches-5.10/0032-MIPS-ath79-sanitize-symbols.patch
++++ b/target/linux/ath79/patches-5.10/0032-MIPS-ath79-sanitize-symbols.patch
+@@ -15,7 +15,7 @@ Signed-off-by: John Crispin <john@phrozen.org>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -243,6 +243,8 @@ config ATH79
++@@ -245,6 +245,8 @@ config ATH79
+  	select SYS_SUPPORTS_BIG_ENDIAN
+  	select SYS_SUPPORTS_MIPS16
+  	select SYS_SUPPORTS_ZBOOT_UART_PROM
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0110-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch b/target/linux/bcm27xx/patches-5.10/950-0110-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
+index 0a0999cc2f59..0f6b4dee0b69 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0110-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0110-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3417,6 +3417,13 @@ N:	bcm113*
++@@ -3418,6 +3418,13 @@ N:	bcm113*
+  N:	bcm216*
+  N:	kona
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0199-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch b/target/linux/bcm27xx/patches-5.10/950-0199-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
+index c7bd718cfc36..4e59a54f626b 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0199-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0199-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
+@@ -90,7 +90,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3417,6 +3417,13 @@ N:	bcm113*
++@@ -3418,6 +3418,13 @@ N:	bcm113*
+  N:	bcm216*
+  N:	kona
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0209-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch b/target/linux/bcm27xx/patches-5.10/950-0209-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+index 8e573e6e842f..82e1aad0b6bd 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0209-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0209-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+@@ -28,7 +28,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3425,7 +3425,7 @@ F:	Documentation/devicetree/bindings/med
++@@ -3426,7 +3426,7 @@ F:	Documentation/devicetree/bindings/med
+  F:	drivers/staging/media/rpivid
+  
+  BROADCOM BCM2835 CAMERA DRIVER
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0264-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch b/target/linux/bcm27xx/patches-5.10/950-0264-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+index 67e4cdadaeef..78c7ea33fffa 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0264-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0264-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+@@ -31,7 +31,7 @@ Reported-by: kbuild test robot <lkp@intel.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3429,7 +3429,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -3430,7 +3430,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  F:	drivers/media/platform/bcm2835/
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+index bbfecb7ad62f..d24d8f51e5d2 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -16346,6 +16346,14 @@ S:	Maintained
++@@ -16347,6 +16347,14 @@ S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+  F:	drivers/media/i2c/imx355.c
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0345-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch b/target/linux/bcm27xx/patches-5.10/950-0345-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
+index 80a94c499912..8bab7ef0cf43 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0345-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0345-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
+@@ -35,7 +35,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3431,6 +3431,15 @@ S:	Maintained
++@@ -3432,6 +3432,15 @@ S:	Maintained
+  F:	drivers/media/platform/bcm2835/
+  F:	Documentation/devicetree/bindings/media/brcm,bcm2835-unicam.yaml
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch b/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
+index cd2c028d5e15..4116fa11c46e 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
+@@ -132,7 +132,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -16360,6 +16360,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -16361,6 +16361,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0709-drm-Add-GUD-USB-Display-driver.patch b/target/linux/bcm27xx/patches-5.10/950-0709-drm-Add-GUD-USB-Display-driver.patch
+index cb05ed3e3eeb..aa10a18ec57e 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0709-drm-Add-GUD-USB-Display-driver.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0709-drm-Add-GUD-USB-Display-driver.patch
+@@ -161,7 +161,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -5525,6 +5525,14 @@ S:	Maintained
++@@ -5526,6 +5526,14 @@ S:	Maintained
+  F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+  F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+  
+diff --git a/target/linux/bcm63xx/patches-5.10/322-MIPS-BCM63XX-switch-to-IRQ_DOMAIN.patch b/target/linux/bcm63xx/patches-5.10/322-MIPS-BCM63XX-switch-to-IRQ_DOMAIN.patch
+index b76f06d92dd8..b70f28e5a675 100644
+--- a/target/linux/bcm63xx/patches-5.10/322-MIPS-BCM63XX-switch-to-IRQ_DOMAIN.patch
++++ b/target/linux/bcm63xx/patches-5.10/322-MIPS-BCM63XX-switch-to-IRQ_DOMAIN.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -317,6 +317,9 @@ config BCM63XX
++@@ -319,6 +319,9 @@ config BCM63XX
+  	select SYNC_R4K
+  	select DMA_NONCOHERENT
+  	select IRQ_MIPS_CPU
+diff --git a/target/linux/bmips/patches-5.10/001-v5.11-mips-bmips-select-ARCH_HAS_RESET_CONTROLLER.patch b/target/linux/bmips/patches-5.10/001-v5.11-mips-bmips-select-ARCH_HAS_RESET_CONTROLLER.patch
+index a2e92bcafd23..43ba9ab5b22f 100644
+--- a/target/linux/bmips/patches-5.10/001-v5.11-mips-bmips-select-ARCH_HAS_RESET_CONTROLLER.patch
++++ b/target/linux/bmips/patches-5.10/001-v5.11-mips-bmips-select-ARCH_HAS_RESET_CONTROLLER.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -250,6 +250,7 @@ config ATH79
++@@ -252,6 +252,7 @@ config ATH79
+  
+  config BMIPS_GENERIC
+  	bool "Broadcom Generic BMIPS kernel"
+diff --git a/target/linux/bmips/patches-5.10/202-mips-bmips-disable-ARCH_HAS_SYNC_DMA_FOR_CPU_ALL.patch b/target/linux/bmips/patches-5.10/202-mips-bmips-disable-ARCH_HAS_SYNC_DMA_FOR_CPU_ALL.patch
+index 9b4674dbed3b..ba7cf5c6c45c 100644
+--- a/target/linux/bmips/patches-5.10/202-mips-bmips-disable-ARCH_HAS_SYNC_DMA_FOR_CPU_ALL.patch
++++ b/target/linux/bmips/patches-5.10/202-mips-bmips-disable-ARCH_HAS_SYNC_DMA_FOR_CPU_ALL.patch
+@@ -52,7 +52,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -251,7 +251,6 @@ config ATH79
++@@ -253,7 +253,6 @@ config ATH79
+  config BMIPS_GENERIC
+  	bool "Broadcom Generic BMIPS kernel"
+  	select ARCH_HAS_RESET_CONTROLLER
+diff --git a/target/linux/bmips/patches-5.10/600-mips-bmips-add-pci-support.patch b/target/linux/bmips/patches-5.10/600-mips-bmips-add-pci-support.patch
+index 961e95e52aa8..f74a14f25688 100644
+--- a/target/linux/bmips/patches-5.10/600-mips-bmips-add-pci-support.patch
++++ b/target/linux/bmips/patches-5.10/600-mips-bmips-add-pci-support.patch
+@@ -1,6 +1,6 @@
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -263,6 +263,7 @@ config BMIPS_GENERIC
++@@ -265,6 +265,7 @@ config BMIPS_GENERIC
+  	select BCM7038_L1_IRQ
+  	select BCM7120_L2_IRQ
+  	select BRCMSTB_L2_IRQ
+diff --git a/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch b/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
+index 103148d0d6e2..460fb8654236 100644
+--- a/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
++++ b/target/linux/generic/hack-5.10/661-use_fq_codel_by_default.patch
+@@ -44,7 +44,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	  device, it has to decide which ones to send first, which ones to
+ --- a/net/sched/sch_api.c
+ +++ b/net/sched/sch_api.c
+-@@ -2282,7 +2282,7 @@ static int __init pktsched_init(void)
++@@ -2288,7 +2288,7 @@ static int __init pktsched_init(void)
+  		return err;
+  	}
+  
+diff --git a/target/linux/lantiq/patches-5.10/0152-lantiq-VPE.patch b/target/linux/lantiq/patches-5.10/0152-lantiq-VPE.patch
+index 5f070ffb9be6..2444f12df8fb 100644
+--- a/target/linux/lantiq/patches-5.10/0152-lantiq-VPE.patch
++++ b/target/linux/lantiq/patches-5.10/0152-lantiq-VPE.patch
+@@ -1,6 +1,6 @@
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -2428,6 +2428,12 @@ config MIPS_VPE_LOADER
++@@ -2430,6 +2430,12 @@ config MIPS_VPE_LOADER
+  	  Includes a loader for loading an elf relocatable object
+  	  onto another VPE and running it.
+  
+diff --git a/target/linux/mediatek/patches-5.10/910-dts-mt7622-bpi-r64-wifi-eeprom.patch b/target/linux/mediatek/patches-5.10/910-dts-mt7622-bpi-r64-wifi-eeprom.patch
+index 190096de2fdd..b2d1538da0da 100644
+--- a/target/linux/mediatek/patches-5.10/910-dts-mt7622-bpi-r64-wifi-eeprom.patch
++++ b/target/linux/mediatek/patches-5.10/910-dts-mt7622-bpi-r64-wifi-eeprom.patch
+@@ -1,6 +1,6 @@
+ --- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+ +++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+-@@ -636,5 +636,28 @@
++@@ -628,5 +628,28 @@
+  };
+  
+  &wmac {
+diff --git a/target/linux/realtek/patches-5.10/300-mips-add-rtl838x-platform.patch b/target/linux/realtek/patches-5.10/300-mips-add-rtl838x-platform.patch
+index 6217d80d3fc0..d37b32a274ce 100644
+--- a/target/linux/realtek/patches-5.10/300-mips-add-rtl838x-platform.patch
++++ b/target/linux/realtek/patches-5.10/300-mips-add-rtl838x-platform.patch
+@@ -10,7 +10,7 @@
+  platform-$(CONFIG_SGI_IP28)		+= sgi-ip22/
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -627,6 +627,26 @@ config RALINK
++@@ -629,6 +629,26 @@ config RALINK
+  	select ARCH_HAS_RESET_CONTROLLER
+  	select RESET_CONTROLLER
+  
