@@ -1,3 +1,7 @@
+20211020-00
+- update to e9672b1a8fa4714cbc35d5964caf704b2e571f35
+- [upstream] update to kernel 5.10.75 (security and bug fixes)
+
 20211018-00
 - update to 287257d676b1120f388120f1dc259e4eefd3b163
 - [cherrypick] #4678: update to kernel 5.10.74 (security and bug fixes)
@@ -191,7 +195,6 @@
 	- kmods: usb-storage, usb-storage-uas
 	- btrfs-progs, e2fsprogs, fstrim, ncdu, tune2fs
 	- bmon
-- drop old builds (out of date and therefore insecure)
 
 20210326-00
 - update to d71424a085e1d5dcc57c5d64dd2a651433944432
@@ -321,7 +324,6 @@
 
 20210204-03
 - include irqbalance (performance)
-- drop old builds (out of date and therefore insecure)
 - [upstream] updated to banIP 0.7.0
 
 20210204-02
@@ -368,7 +370,6 @@
 20210114-00
 - update to f841855f10535529e9cba99469fbbe7f4d73cbda
 - branding
-- drop old builds (out of date and therefore insecure)
 - [upstream] hostapd and wpa_supplicant drop privs (security hardening)
 
 20210110-00
