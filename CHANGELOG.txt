@@ -1,3 +1,12 @@
+20211024-01
+- add multi-cpu dsa patches for testing only:
+  https://github.com/openwrt/openwrt/pull/4717/commits/60c56e787ee7d67ab4e5da379d754958cf089a24
+  https://github.com/openwrt/openwrt/pull/4717/commits/93de6ec422c0206faf2c7cfd261e3437885cc6ee
+  320, 321, 322: https://drive.google.com/drive/folders/1yAxaYSZgPVz7UmmFAUDzIvDXjZAlxXew
+
+20211024-00
+- update to 0a274d67b8bd422b32cc5fd81451babbc7da2aab
+
 20211020-00
 - update to e9672b1a8fa4714cbc35d5964caf704b2e571f35
 - [upstream] update to kernel 5.10.75 (security and bug fixes)

@@ -1,0 +1,58 @@
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -116,7 +116,7 @@
+ };
+ 
+ &eth2 {
+-	status = "disabled";
++	status = "okay";
+ 	phy-mode = "sgmii";
+ 	buffer-manager = <&bm>;
+ 	bm,pool-long = <2>;
+@@ -178,29 +178,45 @@
+ 			port@0 {
+ 				reg = <0>;
+ 				label = "lan4";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@1 {
+ 				reg = <1>;
+ 				label = "lan3";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@2 {
+ 				reg = <2>;
+ 				label = "lan2";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@3 {
+ 				reg = <3>;
+ 				label = "lan1";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@4 {
+ 				reg = <4>;
+ 				label = "wan";
++				default-cpu = <&dsa_cpu1>;
++			};
++
++			dsa_cpu1: port@5 {
++				reg = <5>;
++				label = "cpu";
++				ethernet = <&eth2>;
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
+ 			};
+ 
+-			port@6 {
++			dsa_cpu0: port@6 {
+ 				reg = <6>;
+ 				label = "cpu";
+ 				ethernet = <&eth0>;

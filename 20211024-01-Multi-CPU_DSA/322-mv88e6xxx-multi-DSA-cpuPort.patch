@@ -1,0 +1,23 @@
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1196,6 +1196,7 @@ static u16 mv88e6xxx_port_vlan(struct mv
+ 	struct net_device *br;
+ 	struct dsa_port *dp;
+ 	bool found = false;
++	u8 upstream;
+ 	u16 pvlan;
+ 
+ 	list_for_each_entry(dp, &dst->ports, list) {
+@@ -1219,9 +1220,11 @@ static u16 mv88e6xxx_port_vlan(struct mv
+ 	/* Frames from user ports can egress any local DSA links and CPU ports,
+ 	 * as well as any local member of their bridge group.
+ 	 */
++	upstream = dsa_upstream_port(chip->ds, port);
+ 	list_for_each_entry(dp, &dst->ports, list)
+ 		if (dp->ds == ds &&
+-		    (dp->type == DSA_PORT_TYPE_CPU ||
++		    ((dp->type == DSA_PORT_TYPE_CPU &&
++		             dp->index == upstream) ||
+ 		     dp->type == DSA_PORT_TYPE_DSA ||
+ 		     (br && dp->bridge_dev == br)))
+ 			pvlan |= BIT(dp->index);

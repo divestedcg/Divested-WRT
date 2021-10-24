@@ -1,0 +1,54 @@
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -376,35 +376,50 @@
+ 			port@0 {
+ 				reg = <0>;
+ 				label = "lan4";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@1 {
+ 				reg = <1>;
+ 				label = "lan3";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@2 {
+ 				reg = <2>;
+ 				label = "lan2";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@3 {
+ 				reg = <3>;
+ 				label = "lan1";
++				default-cpu = <&dsa_cpu0>;
+ 			};
+ 
+ 			port@4 {
+ 				reg = <4>;
+ 				label = "wan";
++				default-cpu = <&dsa_cpu1>;
+ 			};
+ 
+-			port@5 {
++			dsa_cpu0: port@5 {
+ 				reg = <5>;
+ 				label = "cpu";
+ 				ethernet = <&eth0>;
+ 				fixed-link {
+ 					speed = <1000>;
+ 					full-duplex;
++				};
++			};
++
++			dsa_cpu1: port@6 {
++				reg = <6>;
++				label = "cpu";
++				ethernet = <&eth1>;
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
+ 				};
+ 			};
+ 		};
