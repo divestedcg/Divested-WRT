@@ -1,3 +1,7 @@
+20211027-00
+- update to 70c12d26ca6eb01a938feb38f89720d78df0ca6d
+- [cherrypick] #4724: update to kernel 5.10.76 (security and bug fixes)
+
 20211024-01
 - add multi-cpu dsa patches for testing only:
   https://github.com/openwrt/openwrt/pull/4717/commits/60c56e787ee7d67ab4e5da379d754958cf089a24

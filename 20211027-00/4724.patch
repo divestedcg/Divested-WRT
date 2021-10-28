@@ -1,0 +1,596 @@
+From 663673fa4b0908522f6dca480d069bada0758dc9 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 27 Oct 2021 11:10:45 +0100
+Subject: [PATCH] kernel: bump 5.10 to 5.10.76
+
+Deleted (upstreamed):
+bcm27xx/patches-5.10/950-0145-xhci-add-quirk-for-host-controllers-that-don-t-updat.patch [1]
+
+Manually rebased:
+bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+
+Note: although automatically rebaseable, the last patch has been edited to avoid
+conflicting bit definitions.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.10.y&id=b6f32897af190d4716412e156ee0abcc16e4f1e5
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                     |  4 +-
+ .../802-usb-xhci-force-msi-renesas-xhci.patch |  2 +-
+ ...425-at803x-allow-sgmii-aneg-override.patch |  2 +-
+ ...or-host-controllers-that-don-t-updat.patch | 90 -------------------
+ ...-quirks-add-link-TRB-quirk-for-VL805.patch |  4 +-
+ ...support-for-performing-fake-doorbell.patch |  6 +-
+ ...ve-forwarding-path-for-VLAN-tag-acti.patch |  4 +-
+ ...ter-flowtable-bridge-and-vlan-suppor.patch |  2 +-
+ ...-mt7530-MT7530-optional-GPIO-support.patch |  4 +-
+ ...-mt7530-Add-support-for-EEE-features.patch |  6 +-
+ ...the-dst-buffer-to-of_get_mac_address.patch |  2 +-
+ .../hack-5.10/220-arm-gc_sections.patch       |  2 +-
+ ...hdev-Send-FDB-notifications-for-host.patch |  4 +-
+ ...arch-arm-force-ZRELADDR-on-arch-qcom.patch |  2 +-
+ ...Mangle-bootloader-s-kernel-arguments.patch |  2 +-
+ .../900-arm-add-cmdline-override.patch        |  2 +-
+ .../500-gsw-rtl8367s-mt7622-support.patch     |  2 +-
+ ...Mangle-bootloader-s-kernel-arguments.patch |  2 +-
+ ...Mangle-bootloader-s-kernel-arguments.patch |  2 +-
+ .../ramips/patches-5.10/710-at803x.patch      | 20 ++---
+ ...y-simplify-phy_link_change-arguments.patch |  2 +-
+ .../721-NET-no-auto-carrier-off-support.patch |  2 +-
+ ...nclude-linux-add-phy-ops-for-rtl838x.patch |  2 +-
+ ...04-include-linux-add-phy-hsgmii-mode.patch |  6 +-
+ .../patches-5.10/705-add-rtl-phy.patch        |  2 +-
+ ...rease-phy-address-number-for-rtl839x.patch |  2 +-
+ 26 files changed, 45 insertions(+), 135 deletions(-)
+ delete mode 100644 target/linux/bcm27xx/patches-5.10/950-0145-xhci-add-quirk-for-host-controllers-that-don-t-updat.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index cb4f72716fd3..531a76028181 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .155
+-LINUX_VERSION-5.10 = .75
++LINUX_VERSION-5.10 = .76
+ 
+ LINUX_KERNEL_HASH-5.4.155 = cc0c0f902748d251cb22d0e69e3b8d260c447eb0072ef853da15da6cce775038
+-LINUX_KERNEL_HASH-5.10.75 = 0a2b2f5fefb90773190aaef4726ac363e03992aedc424b0a57eca092d084304b
++LINUX_KERNEL_HASH-5.10.76 = 480a09ba1962862ff18df9453fa0df6ba11cbe19eefedeab81bf2c84f49e1890
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch b/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
+index 52198e41f44b..3b17a27e79b7 100644
+--- a/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
++++ b/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
+@@ -43,7 +43,7 @@ produce a noisy warning.
+  		hcd->msi_enabled = 1;
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1891,6 +1891,7 @@ struct xhci_hcd {
++@@ -1892,6 +1892,7 @@ struct xhci_hcd {
+  	struct xhci_hub		usb2_rhub;
+  	struct xhci_hub		usb3_rhub;
+  	/* support xHCI 1.0 spec USB2 hardware LPM */
+diff --git a/target/linux/ath79/patches-5.10/425-at803x-allow-sgmii-aneg-override.patch b/target/linux/ath79/patches-5.10/425-at803x-allow-sgmii-aneg-override.patch
+index db3427683f3f..bf224b5f47ae 100644
+--- a/target/linux/ath79/patches-5.10/425-at803x-allow-sgmii-aneg-override.patch
++++ b/target/linux/ath79/patches-5.10/425-at803x-allow-sgmii-aneg-override.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/net/phy/at803x.c
+ +++ b/drivers/net/phy/at803x.c
+-@@ -733,6 +733,13 @@ static int at803x_aneg_done(struct phy_d
++@@ -830,6 +830,13 @@ static int at803x_aneg_done(struct phy_d
+  	if (!(phy_read(phydev, AT803X_PSSR) & AT803X_PSSR_MR_AN_COMPLETE)) {
+  		phydev_warn(phydev, "803x_aneg_done: SGMII link is not ok\n");
+  		aneg_done = 0;
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0145-xhci-add-quirk-for-host-controllers-that-don-t-updat.patch b/target/linux/bcm27xx/patches-5.10/950-0145-xhci-add-quirk-for-host-controllers-that-don-t-updat.patch
+deleted file mode 100644
+index 0fcb3f672d8b..000000000000
+--- a/target/linux/bcm27xx/patches-5.10/950-0145-xhci-add-quirk-for-host-controllers-that-don-t-updat.patch
++++ /dev/null
+@@ -1,90 +0,0 @@
+-From e47ad4978bde4920c1e1eb381531a6904025c852 Mon Sep 17 00:00:00 2001
+-From: Jonathan Bell <jonathan@raspberrypi.org>
+-Date: Thu, 11 Jul 2019 17:55:43 +0100
+-Subject: [PATCH] xhci: add quirk for host controllers that don't
+- update endpoint DCS
+-
+-Seen on a VLI VL805 PCIe to USB controller. For non-stream endpoints
+-at least, if the xHC halts on a particular TRB due to an error then
+-the DCS field in the Out Endpoint Context maintained by the hardware
+-is not updated with the current cycle state.
+-
+-Using the quirk XHCI_EP_CTX_BROKEN_DCS and instead fetch the DCS bit
+-from the TRB that the xHC stopped on.
+-
+-See: https://github.com/raspberrypi/linux/issues/3060
+-
+-Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+----
+- drivers/usb/host/xhci-pci.c  |  4 +++-
+- drivers/usb/host/xhci-ring.c | 26 +++++++++++++++++++++++++-
+- drivers/usb/host/xhci.h      |  1 +
+- 3 files changed, 29 insertions(+), 2 deletions(-)
+-
+---- a/drivers/usb/host/xhci-pci.c
+-+++ b/drivers/usb/host/xhci-pci.c
+-@@ -276,8 +276,10 @@ static void xhci_pci_quirks(struct devic
+- 			pdev->device == 0x3432)
+- 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+- 
+--	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483)
+-+	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
+- 		xhci->quirks |= XHCI_LPM_SUPPORT;
+-+		xhci->quirks |= XHCI_EP_CTX_BROKEN_DCS;
+-+	}
+- 
+- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+- 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
+---- a/drivers/usb/host/xhci-ring.c
+-+++ b/drivers/usb/host/xhci-ring.c
+-@@ -562,7 +562,10 @@ void xhci_find_new_dequeue_state(struct
+- 	struct xhci_virt_ep *ep = &dev->eps[ep_index];
+- 	struct xhci_ring *ep_ring;
+- 	struct xhci_segment *new_seg;
+-+	struct xhci_segment *halted_seg = NULL;
+- 	union xhci_trb *new_deq;
+-+	union xhci_trb *halted_trb;
+-+	int index = 0;
+- 	dma_addr_t addr;
+- 	u64 hw_dequeue;
+- 	bool cycle_found = false;
+-@@ -600,7 +603,28 @@ void xhci_find_new_dequeue_state(struct
+- 	hw_dequeue = xhci_get_hw_deq(xhci, dev, ep_index, stream_id);
+- 	new_seg = ep_ring->deq_seg;
+- 	new_deq = ep_ring->dequeue;
+--	state->new_cycle_state = hw_dequeue & 0x1;
+-+
+-+	/*
+-+	 * Quirk: xHC write-back of the DCS field in the hardware dequeue
+-+	 * pointer is wrong - use the cycle state of the TRB pointed to by
+-+	 * the dequeue pointer.
+-+	 */
+-+	if (xhci->quirks & XHCI_EP_CTX_BROKEN_DCS &&
+-+	    !(ep->ep_state & EP_HAS_STREAMS))
+-+		halted_seg = trb_in_td(xhci, cur_td->start_seg,
+-+				       cur_td->first_trb, cur_td->last_trb,
+-+				       hw_dequeue & ~0xf, false);
+-+	if (halted_seg) {
+-+		index = ((dma_addr_t)(hw_dequeue & ~0xf) - halted_seg->dma) /
+-+			 sizeof(*halted_trb);
+-+		halted_trb = &halted_seg->trbs[index];
+-+		state->new_cycle_state = halted_trb->generic.field[3] & 0x1;
+-+		xhci_dbg(xhci, "Endpoint DCS = %d TRB index = %d cycle = %d\n",
+-+			 (u8)(hw_dequeue & 0x1), index,
+-+			 state->new_cycle_state);
+-+	} else {
+-+		state->new_cycle_state = hw_dequeue & 0x1;
+-+	}
+- 	state->stream_id = stream_id;
+- 
+- 	/*
+---- a/drivers/usb/host/xhci.h
+-+++ b/drivers/usb/host/xhci.h
+-@@ -1884,6 +1884,7 @@ struct xhci_hcd {
+- #define XHCI_DISABLE_SPARSE	BIT_ULL(38)
+- #define XHCI_SG_TRB_CACHE_SIZE_QUIRK	BIT_ULL(39)
+- #define XHCI_NO_SOFT_RETRY	BIT_ULL(40)
+-+#define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(41)
+- 
+- 	unsigned int		num_active_eps;
+- 	unsigned int		limit_active_eps;
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch b/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+index f63da53b8fbd..825b5969df4e 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+@@ -54,8 +54,8 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ @@ -1885,6 +1885,7 @@ struct xhci_hcd {
+  #define XHCI_SG_TRB_CACHE_SIZE_QUIRK	BIT_ULL(39)
+  #define XHCI_NO_SOFT_RETRY	BIT_ULL(40)
+- #define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(41)
+-+#define XHCI_AVOID_DQ_ON_LINK	BIT_ULL(42)
++ #define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(42)
+++#define XHCI_AVOID_DQ_ON_LINK	BIT_ULL(43)
+  
+  	unsigned int		num_active_eps;
+  	unsigned int		limit_active_eps;
+diff --git a/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch b/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+index 36fc3945c7c7..c497db727f8a 100644
+--- a/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
++++ b/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+@@ -127,11 +127,11 @@ it on BCM4708 family.
+  /*
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1884,6 +1884,7 @@ struct xhci_hcd {
+- #define XHCI_DISABLE_SPARSE	BIT_ULL(38)
++@@ -1885,6 +1885,7 @@ struct xhci_hcd {
+  #define XHCI_SG_TRB_CACHE_SIZE_QUIRK	BIT_ULL(39)
+  #define XHCI_NO_SOFT_RETRY	BIT_ULL(40)
+-+#define XHCI_FAKE_DOORBELL	BIT_ULL(41)
++ #define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(42)
+++#define XHCI_FAKE_DOORBELL	BIT_ULL(44)
+  
+  	unsigned int		num_active_eps;
+  	unsigned int		limit_active_eps;
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch b/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
+index 2c1d935d9e59..9abc6e6778d5 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
+@@ -109,7 +109,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  
+ --- a/net/bridge/br_private.h
+ +++ b/net/bridge/br_private.h
+-@@ -1095,6 +1095,13 @@ void br_vlan_notify(const struct net_bri
++@@ -1093,6 +1093,13 @@ void br_vlan_notify(const struct net_bri
+  bool br_vlan_can_enter_range(const struct net_bridge_vlan *v_curr,
+  			     const struct net_bridge_vlan *range_end);
+  
+@@ -123,7 +123,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  static inline struct net_bridge_vlan_group *br_vlan_group(
+  					const struct net_bridge *br)
+  {
+-@@ -1252,6 +1259,19 @@ static inline int nbp_get_num_vlan_infos
++@@ -1250,6 +1257,19 @@ static inline int nbp_get_num_vlan_infos
+  {
+  	return 0;
+  }
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-24-selftests-netfilter-flowtable-bridge-and-vlan-suppor.patch b/target/linux/generic/backport-5.10/610-v5.13-24-selftests-netfilter-flowtable-bridge-and-vlan-suppor.patch
+index 4924fda494a6..3f332c70d367 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-24-selftests-netfilter-flowtable-bridge-and-vlan-suppor.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-24-selftests-netfilter-flowtable-bridge-and-vlan-suppor.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+ 
+ --- a/tools/testing/selftests/netfilter/nft_flowtable.sh
+ +++ b/tools/testing/selftests/netfilter/nft_flowtable.sh
+-@@ -371,6 +371,88 @@ else
++@@ -370,6 +370,88 @@ else
+  	ip netns exec nsr1 nft list ruleset
+  fi
+  
+diff --git a/target/linux/generic/backport-5.10/781-v5.12-net-dsa-mt7530-MT7530-optional-GPIO-support.patch b/target/linux/generic/backport-5.10/781-v5.12-net-dsa-mt7530-MT7530-optional-GPIO-support.patch
+index 6931500c447a..9e5047a16bec 100644
+--- a/target/linux/generic/backport-5.10/781-v5.12-net-dsa-mt7530-MT7530-optional-GPIO-support.patch
++++ b/target/linux/generic/backport-5.10/781-v5.12-net-dsa-mt7530-MT7530-optional-GPIO-support.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  #include <net/dsa.h>
+  
+  #include "mt7530.h"
+-@@ -1540,6 +1541,109 @@ mtk_get_tag_protocol(struct dsa_switch *
++@@ -1534,6 +1535,109 @@ mtk_get_tag_protocol(struct dsa_switch *
+  	}
+  }
+  
+@@ -137,7 +137,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static int
+  mt7530_setup(struct dsa_switch *ds)
+  {
+-@@ -1681,6 +1785,12 @@ mt7530_setup(struct dsa_switch *ds)
++@@ -1675,6 +1779,12 @@ mt7530_setup(struct dsa_switch *ds)
+  		}
+  	}
+  
+diff --git a/target/linux/generic/backport-5.10/781-v5.13-net-dsa-mt7530-Add-support-for-EEE-features.patch b/target/linux/generic/backport-5.10/781-v5.13-net-dsa-mt7530-Add-support-for-EEE-features.patch
+index 4952abdb1edd..38dd8a7296c1 100644
+--- a/target/linux/generic/backport-5.10/781-v5.13-net-dsa-mt7530-Add-support-for-EEE-features.patch
++++ b/target/linux/generic/backport-5.10/781-v5.13-net-dsa-mt7530-Add-support-for-EEE-features.patch
+@@ -17,7 +17,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/dsa/mt7530.c
+ +++ b/drivers/net/dsa/mt7530.c
+-@@ -2377,6 +2377,17 @@ static void mt753x_phylink_mac_link_up(s
++@@ -2371,6 +2371,17 @@ static void mt753x_phylink_mac_link_up(s
+  			mcr |= PMCR_RX_FC_EN;
+  	}
+  
+@@ -35,7 +35,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	mt7530_set(priv, MT7530_PMCR_P(port), mcr);
+  }
+  
+-@@ -2607,6 +2618,36 @@ mt753x_phy_write(struct dsa_switch *ds,
++@@ -2601,6 +2612,36 @@ mt753x_phy_write(struct dsa_switch *ds,
+  	return priv->info->phy_write(ds, port, regnum, val);
+  }
+  
+@@ -72,7 +72,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static const struct dsa_switch_ops mt7530_switch_ops = {
+  	.get_tag_protocol	= mtk_get_tag_protocol,
+  	.setup			= mt753x_setup,
+-@@ -2635,6 +2676,8 @@ static const struct dsa_switch_ops mt753
++@@ -2629,6 +2670,8 @@ static const struct dsa_switch_ops mt753
+  	.phylink_mac_an_restart	= mt753x_phylink_mac_an_restart,
+  	.phylink_mac_link_down	= mt753x_phylink_mac_link_down,
+  	.phylink_mac_link_up	= mt753x_phylink_mac_link_up,
+diff --git a/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index a2e31fab827f..4d721c4f56f2 100644
+--- a/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -1398,7 +1398,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	phy_mode = device_get_phy_mode(&pdev->dev);
+-@@ -635,7 +635,7 @@ void stmmac_remove_config_dt(struct plat
++@@ -643,7 +643,7 @@ void stmmac_remove_config_dt(struct plat
+  }
+  #else
+  struct plat_stmmacenet_data *
+diff --git a/target/linux/generic/hack-5.10/220-arm-gc_sections.patch b/target/linux/generic/hack-5.10/220-arm-gc_sections.patch
+index 5c3ebcc81033..d4f4efc5059f 100644
+--- a/target/linux/generic/hack-5.10/220-arm-gc_sections.patch
++++ b/target/linux/generic/hack-5.10/220-arm-gc_sections.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+ ---
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -113,6 +113,7 @@ config ARM
++@@ -114,6 +114,7 @@ config ARM
+  	select HAVE_UID16
+  	select HAVE_VIRT_CPU_ACCOUNTING_GEN
+  	select IRQ_FORCED_THREADING
+diff --git a/target/linux/generic/pending-5.10/764-net-bridge-switchdev-Send-FDB-notifications-for-host.patch b/target/linux/generic/pending-5.10/764-net-bridge-switchdev-Send-FDB-notifications-for-host.patch
+index 0e773888df1b..630e03bbfd78 100644
+--- a/target/linux/generic/pending-5.10/764-net-bridge-switchdev-Send-FDB-notifications-for-host.patch
++++ b/target/linux/generic/pending-5.10/764-net-bridge-switchdev-Send-FDB-notifications-for-host.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
+  	if (skb == NULL)
+ --- a/net/bridge/br_private.h
+ +++ b/net/bridge/br_private.h
+-@@ -1527,8 +1527,8 @@ bool nbp_switchdev_allowed_egress(const
++@@ -1525,8 +1525,8 @@ bool nbp_switchdev_allowed_egress(const
+  int br_switchdev_set_port_flag(struct net_bridge_port *p,
+  			       unsigned long flags,
+  			       unsigned long mask);
+@@ -48,7 +48,7 @@ Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
+  int br_switchdev_port_vlan_add(struct net_device *dev, u16 vid, u16 flags,
+  			       struct netlink_ext_ack *extack);
+  int br_switchdev_port_vlan_del(struct net_device *dev, u16 vid);
+-@@ -1574,7 +1574,8 @@ static inline int br_switchdev_port_vlan
++@@ -1572,7 +1572,8 @@ static inline int br_switchdev_port_vlan
+  }
+  
+  static inline void
+diff --git a/target/linux/ipq806x/patches-5.10/0060-HACK-arch-arm-force-ZRELADDR-on-arch-qcom.patch b/target/linux/ipq806x/patches-5.10/0060-HACK-arch-arm-force-ZRELADDR-on-arch-qcom.patch
+index b56480deaa1b..b73218e71bb0 100644
+--- a/target/linux/ipq806x/patches-5.10/0060-HACK-arch-arm-force-ZRELADDR-on-arch-qcom.patch
++++ b/target/linux/ipq806x/patches-5.10/0060-HACK-arch-arm-force-ZRELADDR-on-arch-qcom.patch
+@@ -33,7 +33,7 @@ Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+ 
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -321,7 +321,7 @@ config ARCH_MULTIPLATFORM
++@@ -322,7 +322,7 @@ config ARCH_MULTIPLATFORM
+  	select ARCH_SELECT_MEMORY_MODEL
+  	select ARM_HAS_SG_CHAIN
+  	select ARM_PATCH_PHYS_VIRT
+diff --git a/target/linux/ipq806x/patches-5.10/0067-generic-Mangle-bootloader-s-kernel-arguments.patch b/target/linux/ipq806x/patches-5.10/0067-generic-Mangle-bootloader-s-kernel-arguments.patch
+index c38e0a466907..25c58bee4968 100644
+--- a/target/linux/ipq806x/patches-5.10/0067-generic-Mangle-bootloader-s-kernel-arguments.patch
++++ b/target/linux/ipq806x/patches-5.10/0067-generic-Mangle-bootloader-s-kernel-arguments.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Adrian Panella <ianchi74@outlook.com>
+ 
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -1780,6 +1780,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
++@@ -1781,6 +1781,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
+  	  The command-line arguments provided by the boot loader will be
+  	  appended to the the device tree bootargs property.
+  
+diff --git a/target/linux/ipq806x/patches-5.10/900-arm-add-cmdline-override.patch b/target/linux/ipq806x/patches-5.10/900-arm-add-cmdline-override.patch
+index 2459e6a2f00d..830a14924c97 100644
+--- a/target/linux/ipq806x/patches-5.10/900-arm-add-cmdline-override.patch
++++ b/target/linux/ipq806x/patches-5.10/900-arm-add-cmdline-override.patch
+@@ -1,6 +1,6 @@
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -1793,6 +1793,14 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_MANGL
++@@ -1794,6 +1794,14 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_MANGL
+  
+  endchoice
+  
+diff --git a/target/linux/mediatek/patches-5.10/500-gsw-rtl8367s-mt7622-support.patch b/target/linux/mediatek/patches-5.10/500-gsw-rtl8367s-mt7622-support.patch
+index bdd482def3f1..4ff9fb6bc9f6 100644
+--- a/target/linux/mediatek/patches-5.10/500-gsw-rtl8367s-mt7622-support.patch
++++ b/target/linux/mediatek/patches-5.10/500-gsw-rtl8367s-mt7622-support.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/net/phy/Kconfig
+ +++ b/drivers/net/phy/Kconfig
+-@@ -334,6 +334,12 @@ config ROCKCHIP_PHY
++@@ -335,6 +335,12 @@ config ROCKCHIP_PHY
+  	help
+  	  Currently supports the integrated Ethernet PHY.
+  
+diff --git a/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch b/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
+index f2a0478693b9..15128828e993 100644
+--- a/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
++++ b/target/linux/mvebu/patches-5.10/300-mvebu-Mangle-bootloader-s-kernel-arguments.patch
+@@ -28,7 +28,7 @@ Signed-off-by: Michael Gray <michael.gray@lantisproject.com>
+ 
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -1780,6 +1780,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
++@@ -1781,6 +1781,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
+  	  The command-line arguments provided by the boot loader will be
+  	  appended to the the device tree bootargs property.
+  
+diff --git a/target/linux/oxnas/patches-5.10/996-generic-Mangle-bootloader-s-kernel-arguments.patch b/target/linux/oxnas/patches-5.10/996-generic-Mangle-bootloader-s-kernel-arguments.patch
+index 07abd0c64877..4b89260660c8 100644
+--- a/target/linux/oxnas/patches-5.10/996-generic-Mangle-bootloader-s-kernel-arguments.patch
++++ b/target/linux/oxnas/patches-5.10/996-generic-Mangle-bootloader-s-kernel-arguments.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Adrian Panella <ianchi74@outlook.com>
+ 
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -1780,6 +1780,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
++@@ -1781,6 +1781,17 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEN
+  	  The command-line arguments provided by the boot loader will be
+  	  appended to the the device tree bootargs property.
+  
+diff --git a/target/linux/ramips/patches-5.10/710-at803x.patch b/target/linux/ramips/patches-5.10/710-at803x.patch
+index ec8f3ba55ffc..1b59f70cea22 100644
+--- a/target/linux/ramips/patches-5.10/710-at803x.patch
++++ b/target/linux/ramips/patches-5.10/710-at803x.patch
+@@ -40,9 +40,9 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+ +#define	 PSSR_SPEED_1000		BIT(15)
+ +#define	 PSSR_SPEED_100			BIT(14)
+  
+- #define AT803X_DEBUG_REG_0			0x00
+- #define AT803X_DEBUG_RX_CLK_DLY_EN		BIT(15)
+-@@ -532,12 +543,75 @@ static int at803x_parse_dt(struct phy_de
++ #define AT803X_DEBUG_ANALOG_TEST_CTRL		0x00
++ #define QCA8327_DEBUG_MANU_CTRL_EN		BIT(2)
++@@ -629,12 +640,75 @@ static int at803x_parse_dt(struct phy_de
+  	return 0;
+  }
+  
+@@ -118,7 +118,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+  	if (!priv)
+  		return -ENOMEM;
+-@@ -554,6 +628,7 @@ static int at803x_probe(struct phy_devic
++@@ -651,6 +725,7 @@ static int at803x_probe(struct phy_devic
+  			return ret;
+  	}
+  
+@@ -126,7 +126,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	/* Some bootloaders leave the fiber page selected.
+  	 * Switch to the copper page, as otherwise we read
+  	 * the PHY capabilities from the fiber side.
+-@@ -565,6 +640,7 @@ static int at803x_probe(struct phy_devic
++@@ -662,6 +737,7 @@ static int at803x_probe(struct phy_devic
+  		if (ret)
+  			goto err;
+  	}
+@@ -134,7 +134,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  
+  	return 0;
+  
+-@@ -744,6 +820,10 @@ static int at803x_read_status(struct phy
++@@ -841,6 +917,10 @@ static int at803x_read_status(struct phy
+  {
+  	int ss, err, old_link = phydev->link;
+  
+@@ -145,7 +145,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	/* Update the link, but return if there was an error */
+  	err = genphy_update_link(phydev);
+  	if (err)
+-@@ -844,6 +924,12 @@ static int at803x_config_aneg(struct phy
++@@ -941,6 +1021,12 @@ static int at803x_config_aneg(struct phy
+  {
+  	int ret;
+  
+@@ -158,7 +158,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	ret = at803x_config_mdix(phydev, phydev->mdix_ctrl);
+  	if (ret < 0)
+  		return ret;
+-@@ -943,6 +1029,7 @@ static int at803x_get_features(struct ph
++@@ -1040,6 +1126,7 @@ static int at803x_get_features(struct ph
+  	if (err)
+  		return err;
+  
+@@ -166,7 +166,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	if (!at803x_match_phy_id(phydev, ATH8031_PHY_ID))
+  		return 0;
+  
+-@@ -960,6 +1047,7 @@ static int at803x_get_features(struct ph
++@@ -1057,6 +1144,7 @@ static int at803x_get_features(struct ph
+  	 */
+  	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
+  			   phydev->supported);
+@@ -174,7 +174,7 @@ Signed-off-by: René van Dorst <opensource@vdorst.com>
+  	return 0;
+  }
+  
+-@@ -1173,6 +1261,7 @@ static struct phy_driver at803x_driver[]
++@@ -1381,6 +1469,7 @@ static struct phy_driver at803x_driver[]
+  	/* Qualcomm Atheros AR8031/AR8033 */
+  	PHY_ID_MATCH_EXACT(ATH8031_PHY_ID),
+  	.name			= "Qualcomm Atheros AR8031/AR8033",
+diff --git a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+index a4398f9f8a25..a2ace6057f5e 100644
+--- a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
++++ b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+@@ -107,7 +107,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  	bool tx_pause, rx_pause;
+ --- a/include/linux/phy.h
+ +++ b/include/linux/phy.h
+-@@ -638,7 +638,7 @@ struct phy_device {
++@@ -642,7 +642,7 @@ struct phy_device {
+  	u8 mdix;
+  	u8 mdix_ctrl;
+  
+diff --git a/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch b/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
+index c9cbef742951..02bcb1735449 100644
+--- a/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
++++ b/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
+@@ -37,7 +37,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  		break;
+ --- a/include/linux/phy.h
+ +++ b/include/linux/phy.h
+-@@ -557,6 +557,7 @@ struct phy_device {
++@@ -561,6 +561,7 @@ struct phy_device {
+  	unsigned sysfs_links:1;
+  	unsigned loopback_enabled:1;
+  	unsigned downshifted_rate:1;
+diff --git a/target/linux/realtek/patches-5.10/703-include-linux-add-phy-ops-for-rtl838x.patch b/target/linux/realtek/patches-5.10/703-include-linux-add-phy-ops-for-rtl838x.patch
+index 0a771b64f0b0..0841b85fd864 100644
+--- a/target/linux/realtek/patches-5.10/703-include-linux-add-phy-ops-for-rtl838x.patch
++++ b/target/linux/realtek/patches-5.10/703-include-linux-add-phy-ops-for-rtl838x.patch
+@@ -1,6 +1,6 @@
+ --- a/include/linux/phy.h
+ +++ b/include/linux/phy.h
+-@@ -881,6 +881,10 @@ struct phy_driver {
++@@ -885,6 +885,10 @@ struct phy_driver {
+  	int (*get_sqi)(struct phy_device *dev);
+  	/** @get_sqi_max: Get the maximum signal quality indication */
+  	int (*get_sqi_max)(struct phy_device *dev);
+diff --git a/target/linux/realtek/patches-5.10/704-include-linux-add-phy-hsgmii-mode.patch b/target/linux/realtek/patches-5.10/704-include-linux-add-phy-hsgmii-mode.patch
+index d47e7bad504a..58f4fef456b2 100644
+--- a/target/linux/realtek/patches-5.10/704-include-linux-add-phy-hsgmii-mode.patch
++++ b/target/linux/realtek/patches-5.10/704-include-linux-add-phy-hsgmii-mode.patch
+@@ -1,14 +1,14 @@
+ --- a/include/linux/phy.h
+ +++ b/include/linux/phy.h
+-@@ -133,6 +133,7 @@ typedef enum {
++@@ -134,6 +134,7 @@ typedef enum {
+  	PHY_INTERFACE_MODE_XGMII,
+  	PHY_INTERFACE_MODE_XLGMII,
+  	PHY_INTERFACE_MODE_MOCA,
+ +	PHY_INTERFACE_MODE_HSGMII,
+  	PHY_INTERFACE_MODE_QSGMII,
+  	PHY_INTERFACE_MODE_TRGMII,
+- 	PHY_INTERFACE_MODE_1000BASEX,
+-@@ -199,6 +200,8 @@ static inline const char *phy_modes(phy_
++ 	PHY_INTERFACE_MODE_100BASEX,
++@@ -201,6 +202,8 @@ static inline const char *phy_modes(phy_
+  		return "xlgmii";
+  	case PHY_INTERFACE_MODE_MOCA:
+  		return "moca";
+diff --git a/target/linux/realtek/patches-5.10/705-add-rtl-phy.patch b/target/linux/realtek/patches-5.10/705-add-rtl-phy.patch
+index dbd936b44694..3046a6aed51a 100644
+--- a/target/linux/realtek/patches-5.10/705-add-rtl-phy.patch
++++ b/target/linux/realtek/patches-5.10/705-add-rtl-phy.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/net/phy/Kconfig
+ +++ b/drivers/net/phy/Kconfig
+-@@ -324,6 +324,12 @@ config REALTEK_PHY
++@@ -325,6 +325,12 @@ config REALTEK_PHY
+  	help
+  	  Supports the Realtek 821x PHY.
+  
+diff --git a/target/linux/realtek/patches-5.10/705-include-linux-phy-increase-phy-address-number-for-rtl839x.patch b/target/linux/realtek/patches-5.10/705-include-linux-phy-increase-phy-address-number-for-rtl839x.patch
+index 64e6b5d3094a..ab3ea8e689c1 100644
+--- a/target/linux/realtek/patches-5.10/705-include-linux-phy-increase-phy-address-number-for-rtl839x.patch
++++ b/target/linux/realtek/patches-5.10/705-include-linux-phy-increase-phy-address-number-for-rtl839x.patch
+@@ -1,6 +1,6 @@
+ --- a/include/linux/phy.h
+ +++ b/include/linux/phy.h
+-@@ -229,7 +229,7 @@ static inline const char *phy_modes(phy_
++@@ -233,7 +233,7 @@ static inline const char *phy_modes(phy_
+  #define PHY_INIT_TIMEOUT	100000
+  #define PHY_FORCE_TIMEOUT	10
+  
