@@ -1,0 +1,2015 @@
+From 133561e7a32326cb69b3c11b285c0cdf55910202 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Tue, 2 Nov 2021 21:05:27 +0000
+Subject: [PATCH] kernel: bump 5.10 to 5.10.77
+
+Deleted (upstreamed):
+bcm53xx/patches-5.10/081-v5.15-Revert-pinctrl-bcm-ns-support-updated-DT-binding-as-.patch
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.10.y&id=01c2881bb0e0a71b87ca425e1b763ac13855aa7e
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                     |   4 +-
+ ...o_user-and-__copy_from_user-performa.patch |   2 +-
+ ...-0201-mmc-sdhci-Silence-MMC-warnings.patch |   4 +-
+ ...ovide-missing-documentation-for-some.patch |  10 +-
+ ...x-a-couple-of-spelling-errors-in-fw_.patch |   2 +-
+ ...153_ecm-support-ECM-mode-for-RTL8153.patch |  10 +-
+ ...45-net-usb-r8152-use-new-tasklet-API.patch |   4 +-
+ ...veral-functions-about-phy-patch-requ.patch |  16 +-
+ ...t-the-flow-of-power-cut-for-RTL8153B.patch |  10 +-
+ ...152-enable-U1-U2-for-USB_SPEED_SUPER.patch |   6 +-
+ ...f-the-pointer-of-the-function-exists.patch |   6 +-
+ ...r8152-replace-netif_err-with-dev_err.patch |   4 +-
+ ...rtl_set_eee_plus-and-r8153b_green_en.patch |   6 +-
+ ...ter-fram-gap-time-depending-on-speed.patch |   6 +-
+ ...just-rtl8152_check_firmware-function.patch |  10 +-
+ ...8152-add-help-function-to-change-mtu.patch |  22 +--
+ .../950-0555-r8152-support-new-chips.patch    | 156 +++++++++---------
+ ...port-PHY-firmware-for-RTL8156-series.patch |  26 +--
+ ...rch-the-configuration-of-vendor-mode.patch |   6 +-
+ ...oup-Disable-cgroup-memory-by-default.patch |   8 +-
+ ...CM5301X-Fix-I2C-controller-interrupt.patch |   7 +-
+ ...cm-ns-support-updated-DT-binding-as-.patch | 106 ------------
+ .../332-Meraki-MR32-use-hw-i2c.patch          |   2 +-
+ ...pi-poll-functionality-to-__napi_poll.patch |   8 +-
+ ...threaded-able-napi-poll-loop-support.patch |  10 +-
+ ...tribute-to-control-napi-threaded-mod.patch |   4 +-
+ ...ween-napi-kthread-mode-and-busy-poll.patch |   6 +-
+ ...up-on-napi_disable-for-threaded-napi.patch |   4 +-
+ ...the-dst-buffer-to-of_get_mac_address.patch |   6 +-
+ ...T-skip-GRO-for-foreign-MAC-addresses.patch |  10 +-
+ .../105-ipq40xx-fix-sleep-clock.patch         |   2 +-
+ ...y-simplify-phy_link_change-arguments.patch |   8 +-
+ .../721-NET-no-auto-carrier-off-support.patch |   4 +-
+ 33 files changed, 192 insertions(+), 303 deletions(-)
+ delete mode 100644 target/linux/bcm53xx/patches-5.10/081-v5.15-Revert-pinctrl-bcm-ns-support-updated-DT-binding-as-.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 531a76028181..17cb009f3c54 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .155
+-LINUX_VERSION-5.10 = .76
++LINUX_VERSION-5.10 = .77
+ 
+ LINUX_KERNEL_HASH-5.4.155 = cc0c0f902748d251cb22d0e69e3b8d260c447eb0072ef853da15da6cce775038
+-LINUX_KERNEL_HASH-5.10.76 = 480a09ba1962862ff18df9453fa0df6ba11cbe19eefedeab81bf2c84f49e1890
++LINUX_KERNEL_HASH-5.10.77 = d3b64edfc1dd7212e62ed733aeeb73d64ffd6d9658d322d44cddf1b41d5b8fc3
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0057-Improve-__copy_to_user-and-__copy_from_user-performa.patch b/target/linux/bcm27xx/patches-5.10/950-0057-Improve-__copy_to_user-and-__copy_from_user-performa.patch
+index 7fff55b50c25..e549ce963d89 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0057-Improve-__copy_to_user-and-__copy_from_user-performa.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0057-Improve-__copy_to_user-and-__copy_from_user-performa.patch
+@@ -76,7 +76,7 @@ Signed-off-by: Christopher Blake <chrisrblake93@gmail.com>
+  #endif
+ --- a/arch/arm/include/asm/uaccess.h
+ +++ b/arch/arm/include/asm/uaccess.h
+-@@ -516,6 +516,9 @@ do {									\
++@@ -518,6 +518,9 @@ do {									\
+  extern unsigned long __must_check
+  arm_copy_from_user(void *to, const void __user *from, unsigned long n);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch b/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
+index e015cc81c63f..ae6eba1cb46d 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  
+  #define MAX_TUNING_LOOP 40
+  
+-@@ -3127,7 +3127,7 @@ static void sdhci_timeout_timer(struct t
++@@ -3133,7 +3133,7 @@ static void sdhci_timeout_timer(struct t
+  	spin_lock_irqsave(&host->lock, flags);
+  
+  	if (host->cmd && !sdhci_data_line_cmd(host->cmd)) {
+@@ -31,7 +31,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  		       mmc_hostname(host->mmc));
+  		sdhci_dumpregs(host);
+  
+-@@ -3149,7 +3149,7 @@ static void sdhci_timeout_data_timer(str
++@@ -3155,7 +3155,7 @@ static void sdhci_timeout_data_timer(str
+  
+  	if (host->data || host->data_cmd ||
+  	    (host->cmd && sdhci_data_line_cmd(host->cmd))) {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0542-net-usb-r8152-Provide-missing-documentation-for-some.patch b/target/linux/bcm27xx/patches-5.10/950-0542-net-usb-r8152-Provide-missing-documentation-for-some.patch
+index e69144fcd82e..bec2867a48a2 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0542-net-usb-r8152-Provide-missing-documentation-for-some.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0542-net-usb-r8152-Provide-missing-documentation-for-some.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -898,6 +898,7 @@ struct fw_header {
++@@ -899,6 +899,7 @@ struct fw_header {
+   * struct fw_mac - a firmware block used by RTL_FW_PLA and RTL_FW_USB.
+   *	The layout of the firmware block is:
+   *	<struct fw_mac> + <info> + <firmware data>.
+@@ -35,7 +35,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+   * @fw_offset: offset of the firmware binary data. The start address of
+   *	the data would be the address of struct fw_mac + @fw_offset.
+   * @fw_reg: the register to load the firmware. Depends on chip.
+-@@ -911,6 +912,7 @@ struct fw_header {
++@@ -912,6 +913,7 @@ struct fw_header {
+   * @bp_num: the break point number which needs to be set for this firmware.
+   *	Depends on the firmware.
+   * @bp: break points. Depends on firmware.
+@@ -43,7 +43,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+   * @fw_ver_reg: the register to store the fw version.
+   * @fw_ver_data: the firmware version of the current type.
+   * @info: additional information for debugging, and is followed by the
+-@@ -936,8 +938,10 @@ struct fw_mac {
++@@ -937,8 +939,10 @@ struct fw_mac {
+  /**
+   * struct fw_phy_patch_key - a firmware block used by RTL_FW_PHY_START.
+   *	This is used to set patch key when loading the firmware of PHY.
+@@ -54,7 +54,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+   */
+  struct fw_phy_patch_key {
+  	struct fw_block blk_hdr;
+-@@ -950,6 +954,7 @@ struct fw_phy_patch_key {
++@@ -951,6 +955,7 @@ struct fw_phy_patch_key {
+   * struct fw_phy_nc - a firmware block used by RTL_FW_PHY_NC.
+   *	The layout of the firmware block is:
+   *	<struct fw_phy_nc> + <info> + <firmware data>.
+@@ -62,7 +62,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+   * @fw_offset: offset of the firmware binary data. The start address of
+   *	the data would be the address of struct fw_phy_nc + @fw_offset.
+   * @fw_reg: the register to load the firmware. Depends on chip.
+-@@ -960,6 +965,7 @@ struct fw_phy_patch_key {
++@@ -961,6 +966,7 @@ struct fw_phy_patch_key {
+   * @mode_reg: the regitster of switching the mode.
+   * @mod_pre: the mode needing to be set before loading the firmware.
+   * @mod_post: the mode to be set when finishing to load the firmware.
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0543-net-usb-r8152-Fix-a-couple-of-spelling-errors-in-fw_.patch b/target/linux/bcm27xx/patches-5.10/950-0543-net-usb-r8152-Fix-a-couple-of-spelling-errors-in-fw_.patch
+index 96a9a3363de9..aa2763e7dec8 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0543-net-usb-r8152-Fix-a-couple-of-spelling-errors-in-fw_.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0543-net-usb-r8152-Fix-a-couple-of-spelling-errors-in-fw_.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -963,8 +963,8 @@ struct fw_phy_patch_key {
++@@ -964,8 +964,8 @@ struct fw_phy_patch_key {
+   * @patch_en_addr: the register of enabling patch mode. Depends on chip.
+   * @patch_en_value: patch mode enabled mask. Depends on the firmware.
+   * @mode_reg: the regitster of switching the mode.
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0544-net-usb-r8153_ecm-support-ECM-mode-for-RTL8153.patch b/target/linux/bcm27xx/patches-5.10/950-0544-net-usb-r8153_ecm-support-ECM-mode-for-RTL8153.patch
+index b3eb58831ca9..789de8e6fd33 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0544-net-usb-r8153_ecm-support-ECM-mode-for-RTL8153.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0544-net-usb-r8153_ecm-support-ECM-mode-for-RTL8153.patch
+@@ -40,7 +40,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  obj-$(CONFIG_USB_NET_SR9700)	+= sr9700.o
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -26,6 +26,7 @@
++@@ -27,6 +27,7 @@
+  #include <linux/acpi.h>
+  #include <linux/firmware.h>
+  #include <crypto/hash.h>
+@@ -48,7 +48,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  /* Information for net-next */
+  #define NETNEXT_VERSION		"11"
+-@@ -653,18 +654,6 @@ enum rtl_register_content {
++@@ -654,18 +655,6 @@ enum rtl_register_content {
+  
+  #define INTR_LINK		0x0004
+  
+@@ -67,7 +67,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  #define RTL8153_MAX_PACKET	9216 /* 9K */
+  #define RTL8153_MAX_MTU		(RTL8153_MAX_PACKET - VLAN_ETH_HLEN - \
+  				 ETH_FCS_LEN)
+-@@ -689,21 +678,9 @@ enum rtl8152_flags {
++@@ -690,21 +679,9 @@ enum rtl8152_flags {
+  	LENOVO_MACPASSTHRU,
+  };
+  
+@@ -89,7 +89,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  struct tally_counter {
+  	__le64	tx_packets;
+  	__le64	rx_packets;
+-@@ -6602,7 +6579,7 @@ static int rtl_fw_init(struct r8152 *tp)
++@@ -6625,7 +6602,7 @@ static int rtl_fw_init(struct r8152 *tp)
+  	return 0;
+  }
+  
+@@ -98,7 +98,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	struct usb_device *udev = interface_to_usbdev(intf);
+  	u32 ocp_data = 0;
+-@@ -6660,12 +6637,13 @@ static u8 rtl_get_version(struct usb_int
++@@ -6683,12 +6660,13 @@ static u8 rtl_get_version(struct usb_int
+  
+  	return version;
+  }
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0545-net-usb-r8152-use-new-tasklet-API.patch b/target/linux/bcm27xx/patches-5.10/950-0545-net-usb-r8152-use-new-tasklet-API.patch
+index eeb85d7951b2..b625d5ea9952 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0545-net-usb-r8152-use-new-tasklet-API.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0545-net-usb-r8152-use-new-tasklet-API.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -2393,11 +2393,9 @@ static void tx_bottom(struct r8152 *tp)
++@@ -2394,11 +2394,9 @@ static void tx_bottom(struct r8152 *tp)
+  	} while (res == 0);
+  }
+  
+@@ -30,7 +30,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (test_bit(RTL8152_UNPLUG, &tp->flags))
+  		return;
+-@@ -6695,7 +6693,7 @@ static int rtl8152_probe(struct usb_inte
++@@ -6718,7 +6716,7 @@ static int rtl8152_probe(struct usb_inte
+  	mutex_init(&tp->control);
+  	INIT_DELAYED_WORK(&tp->schedule, rtl_work_func_t);
+  	INIT_DELAYED_WORK(&tp->hw_phy_work, rtl_hw_phy_work_func_t);
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0546-r8152-replace-several-functions-about-phy-patch-requ.patch b/target/linux/bcm27xx/patches-5.10/950-0546-r8152-replace-several-functions-about-phy-patch-requ.patch
+index faaa8275c58e..bbb2b5c0c9f7 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0546-r8152-replace-several-functions-about-phy-patch-requ.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0546-r8152-replace-several-functions-about-phy-patch-requ.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -3443,59 +3443,76 @@ static void rtl_clear_bp(struct r8152 *t
++@@ -3444,59 +3444,76 @@ static void rtl_clear_bp(struct r8152 *t
+  	ocp_write_word(tp, type, PLA_BP_BA, 0);
+  }
+  
+@@ -127,7 +127,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	ocp_write_word(tp, MCU_TYPE_PLA, PLA_OCP_GPHY_BASE, tp->ocp_base);
+  
+-@@ -3980,7 +3997,7 @@ static void rtl8152_fw_mac_apply(struct
++@@ -3981,7 +3998,7 @@ static void rtl8152_fw_mac_apply(struct
+  	dev_dbg(&tp->intf->dev, "successfully applied %s\n", mac->info);
+  }
+  
+@@ -136,7 +136,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	struct rtl_fw *rtl_fw = &tp->rtl_fw;
+  	const struct firmware *fw;
+-@@ -4011,12 +4028,11 @@ static void rtl8152_apply_firmware(struc
++@@ -4012,12 +4029,11 @@ static void rtl8152_apply_firmware(struc
+  		case RTL_FW_PHY_START:
+  			key = (struct fw_phy_patch_key *)block;
+  			key_addr = __le16_to_cpu(key->key_reg);
+@@ -151,7 +151,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  			break;
+  		case RTL_FW_PHY_NC:
+  			rtl8152_fw_phy_nc_apply(tp, (struct fw_phy_nc *)block);
+-@@ -4221,7 +4237,7 @@ static void rtl8152_disable(struct r8152
++@@ -4222,7 +4238,7 @@ static void rtl8152_disable(struct r8152
+  
+  static void r8152b_hw_phy_cfg(struct r8152 *tp)
+  {
+@@ -160,7 +160,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	rtl_eee_enable(tp, tp->eee_en);
+  	r8152_aldps_en(tp, true);
+  	r8152b_enable_fc(tp);
+-@@ -4503,7 +4519,7 @@ static void r8153_hw_phy_cfg(struct r815
++@@ -4504,7 +4520,7 @@ static void r8153_hw_phy_cfg(struct r815
+  	/* disable EEE before updating the PHY parameters */
+  	rtl_eee_enable(tp, false);
+  
+@@ -169,7 +169,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (tp->version == RTL_VER_03) {
+  		data = ocp_reg_read(tp, OCP_EEE_CFG);
+-@@ -4577,7 +4593,7 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4578,7 +4594,7 @@ static void r8153b_hw_phy_cfg(struct r81
+  	/* disable EEE before updating the PHY parameters */
+  	rtl_eee_enable(tp, false);
+  
+@@ -178,7 +178,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	r8153b_green_en(tp, test_bit(GREEN_ETHERNET, &tp->flags));
+  
+-@@ -4618,7 +4634,7 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4619,7 +4635,7 @@ static void r8153b_hw_phy_cfg(struct r81
+  	ocp_write_word(tp, MCU_TYPE_PLA, PLA_PHY_PWR, ocp_data);
+  
+  	/* Advnace EEE */
+@@ -187,7 +187,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		data = ocp_reg_read(tp, OCP_POWER_CFG);
+  		data |= EEE_CLKDIV_EN;
+  		ocp_reg_write(tp, OCP_POWER_CFG, data);
+-@@ -4635,7 +4651,7 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4636,7 +4652,7 @@ static void r8153b_hw_phy_cfg(struct r81
+  		ocp_reg_write(tp, OCP_SYSCLK_CFG, clk_div_expo(5));
+  		tp->ups_info._250m_ckdiv = true;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0547-r8152-adjust-the-flow-of-power-cut-for-RTL8153B.patch b/target/linux/bcm27xx/patches-5.10/950-0547-r8152-adjust-the-flow-of-power-cut-for-RTL8153B.patch
+index 9d12cb97616b..b28e89a43fed 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0547-r8152-adjust-the-flow-of-power-cut-for-RTL8153B.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0547-r8152-adjust-the-flow-of-power-cut-for-RTL8153B.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -1371,6 +1371,10 @@ void write_mii_word(struct net_device *n
++@@ -1372,6 +1372,10 @@ void write_mii_word(struct net_device *n
+  static int
+  r8152_submit_rx(struct r8152 *tp, struct rx_agg *agg, gfp_t mem_flags);
+  
+@@ -31,7 +31,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static int rtl8152_set_mac_address(struct net_device *netdev, void *p)
+  {
+  	struct r8152 *tp = netdev_priv(netdev);
+-@@ -3182,8 +3186,6 @@ static void r8153b_ups_en(struct r8152 *
++@@ -3183,8 +3187,6 @@ static void r8153b_ups_en(struct r8152 *
+  		ocp_data |= BIT(0);
+  		ocp_write_byte(tp, MCU_TYPE_USB, 0xcfff, ocp_data);
+  	} else {
+@@ -40,7 +40,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		ocp_data &= ~(UPS_EN | USP_PREWAKE);
+  		ocp_write_byte(tp, MCU_TYPE_USB, USB_POWER_CUT, ocp_data);
+  
+-@@ -3191,31 +3193,20 @@ static void r8153b_ups_en(struct r8152 *
++@@ -3192,31 +3194,20 @@ static void r8153b_ups_en(struct r8152 *
+  		ocp_data &= ~BIT(0);
+  		ocp_write_byte(tp, MCU_TYPE_USB, 0xcfff, ocp_data);
+  
+@@ -83,7 +83,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		}
+  	}
+  }
+-@@ -4587,13 +4578,37 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4588,13 +4579,37 @@ static void r8153b_hw_phy_cfg(struct r81
+  	u32 ocp_data;
+  	u16 data;
+  
+@@ -122,7 +122,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	r8153b_green_en(tp, test_bit(GREEN_ETHERNET, &tp->flags));
+  
+-@@ -5522,9 +5537,6 @@ static void r8153b_init(struct r8152 *tp
++@@ -5543,9 +5558,6 @@ static void r8153b_init(struct r8152 *tp
+  	/* MSC timer = 0xfff * 8ms = 32760 ms */
+  	ocp_write_word(tp, MCU_TYPE_USB, USB_MSC_TIMER, 0x0fff);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0548-r8152-enable-U1-U2-for-USB_SPEED_SUPER.patch b/target/linux/bcm27xx/patches-5.10/950-0548-r8152-enable-U1-U2-for-USB_SPEED_SUPER.patch
+index f97deaa7d207..8cf91c38933b 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0548-r8152-enable-U1-U2-for-USB_SPEED_SUPER.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0548-r8152-enable-U1-U2-for-USB_SPEED_SUPER.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -3335,7 +3335,7 @@ static void rtl8153b_runtime_enable(stru
++@@ -3336,7 +3336,7 @@ static void rtl8153b_runtime_enable(stru
+  		r8153b_ups_en(tp, false);
+  		r8153_queue_wake(tp, false);
+  		rtl_runtime_suspend_enable(tp, false);
+@@ -25,7 +25,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  			r8153b_u1u2en(tp, true);
+  	}
+  }
+-@@ -5028,7 +5028,7 @@ static void rtl8153b_up(struct r8152 *tp
++@@ -5029,7 +5029,7 @@ static void rtl8153b_up(struct r8152 *tp
+  
+  	r8153_aldps_en(tp, true);
+  
+@@ -34,7 +34,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		r8153b_u1u2en(tp, true);
+  }
+  
+-@@ -5550,8 +5550,9 @@ static void r8153b_init(struct r8152 *tp
++@@ -5571,8 +5571,9 @@ static void r8153b_init(struct r8152 *tp
+  	ocp_data |= POLL_LINK_CHG;
+  	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0549-r8152-check-if-the-pointer-of-the-function-exists.patch b/target/linux/bcm27xx/patches-5.10/950-0549-r8152-check-if-the-pointer-of-the-function-exists.patch
+index 4f754bc69e0f..5bc4e2b0a1eb 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0549-r8152-check-if-the-pointer-of-the-function-exists.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0549-r8152-check-if-the-pointer-of-the-function-exists.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -5735,6 +5735,9 @@ static int rtl8152_runtime_suspend(struc
++@@ -5758,6 +5758,9 @@ static int rtl8152_runtime_suspend(struc
+  	struct net_device *netdev = tp->netdev;
+  	int ret = 0;
+  
+@@ -25,7 +25,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	set_bit(SELECTIVE_SUSPEND, &tp->flags);
+  	smp_mb__after_atomic();
+  
+-@@ -6134,6 +6137,11 @@ rtl_ethtool_get_eee(struct net_device *n
++@@ -6157,6 +6160,11 @@ rtl_ethtool_get_eee(struct net_device *n
+  	struct r8152 *tp = netdev_priv(net);
+  	int ret;
+  
+@@ -37,7 +37,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	ret = usb_autopm_get_interface(tp->intf);
+  	if (ret < 0)
+  		goto out;
+-@@ -6156,6 +6164,11 @@ rtl_ethtool_set_eee(struct net_device *n
++@@ -6179,6 +6187,11 @@ rtl_ethtool_set_eee(struct net_device *n
+  	struct r8152 *tp = netdev_priv(net);
+  	int ret;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0550-r8152-replace-netif_err-with-dev_err.patch b/target/linux/bcm27xx/patches-5.10/950-0550-r8152-replace-netif_err-with-dev_err.patch
+index 9136611e0f81..967b4ccc16e8 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0550-r8152-replace-netif_err-with-dev_err.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0550-r8152-replace-netif_err-with-dev_err.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -6571,7 +6571,7 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -6594,7 +6594,7 @@ static int rtl_ops_init(struct r8152 *tp
+  
+  	default:
+  		ret = -ENODEV;
+@@ -25,7 +25,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		break;
+  	}
+  
+-@@ -6828,7 +6828,7 @@ static int rtl8152_probe(struct usb_inte
++@@ -6851,7 +6851,7 @@ static int rtl8152_probe(struct usb_inte
+  
+  	ret = register_netdev(netdev);
+  	if (ret != 0) {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0551-r8152-spilt-rtl_set_eee_plus-and-r8153b_green_en.patch b/target/linux/bcm27xx/patches-5.10/950-0551-r8152-spilt-rtl_set_eee_plus-and-r8153b_green_en.patch
+index 0467e06a3c16..c49a4ce5b626 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0551-r8152-spilt-rtl_set_eee_plus-and-r8153b_green_en.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0551-r8152-spilt-rtl_set_eee_plus-and-r8153b_green_en.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -2632,21 +2632,24 @@ static inline u8 rtl8152_get_speed(struc
++@@ -2633,21 +2633,24 @@ static inline u8 rtl8152_get_speed(struc
+  	return ocp_read_byte(tp, MCU_TYPE_PLA, PLA_PHYSTATUS);
+  }
+  
+@@ -50,7 +50,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  static void rxdy_gated_en(struct r8152 *tp, bool enable)
+-@@ -3127,10 +3130,22 @@ static void r8153b_ups_flags(struct r815
++@@ -3128,10 +3131,22 @@ static void r8153b_ups_flags(struct r815
+  	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ups_flags);
+  }
+  
+@@ -74,7 +74,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	if (enable) {
+  		sram_write(tp, 0x8045, 0);	/* 10M abiq&ldvbias */
+  		sram_write(tp, 0x804d, 0x1222);	/* 100M short abiq&ldvbias */
+-@@ -3141,11 +3156,7 @@ static void r8153b_green_en(struct r8152
++@@ -3142,11 +3157,7 @@ static void r8153b_green_en(struct r8152
+  		sram_write(tp, 0x805d, 0x2444);	/* 1000M short abiq&ldvbias */
+  	}
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0552-r8152-set-inter-fram-gap-time-depending-on-speed.patch b/target/linux/bcm27xx/patches-5.10/950-0552-r8152-set-inter-fram-gap-time-depending-on-speed.patch
+index 15ba2bf29c3c..f2593e8f00bd 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0552-r8152-set-inter-fram-gap-time-depending-on-speed.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0552-r8152-set-inter-fram-gap-time-depending-on-speed.patch
+@@ -24,7 +24,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -249,6 +249,9 @@
++@@ -250,6 +250,9 @@
+  
+  /* PLA_TCR1 */
+  #define VERSION_MASK		0x7cf0
+@@ -34,7 +34,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* PLA_MTPS */
+  #define MTPS_JUMBO		(12 * 1024 / 64)
+-@@ -2747,6 +2750,29 @@ static int rtl_stop_rx(struct r8152 *tp)
++@@ -2748,6 +2751,29 @@ static int rtl_stop_rx(struct r8152 *tp)
+  	return 0;
+  }
+  
+@@ -64,7 +64,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static inline void r8153b_rx_agg_chg_indicate(struct r8152 *tp)
+  {
+  	ocp_write_byte(tp, MCU_TYPE_USB, USB_UPT_RXDMA_OWN,
+-@@ -2850,6 +2876,8 @@ static int rtl8153_enable(struct r8152 *
++@@ -2851,6 +2877,8 @@ static int rtl8153_enable(struct r8152 *
+  	r8153_set_rx_early_timeout(tp);
+  	r8153_set_rx_early_size(tp);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0553-r8152-adjust-rtl8152_check_firmware-function.patch b/target/linux/bcm27xx/patches-5.10/950-0553-r8152-adjust-rtl8152_check_firmware-function.patch
+index f07c160c71e4..cddd39ea945c 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0553-r8152-adjust-rtl8152_check_firmware-function.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0553-r8152-adjust-rtl8152_check_firmware-function.patch
+@@ -15,7 +15,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -874,6 +874,14 @@ struct fw_header {
++@@ -875,6 +875,14 @@ struct fw_header {
+  	struct fw_block blocks[];
+  } __packed;
+  
+@@ -30,7 +30,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /**
+   * struct fw_mac - a firmware block used by RTL_FW_PLA and RTL_FW_USB.
+   *	The layout of the firmware block is:
+-@@ -3800,10 +3808,7 @@ static long rtl8152_check_firmware(struc
++@@ -3801,10 +3809,7 @@ static long rtl8152_check_firmware(struc
+  {
+  	const struct firmware *fw = rtl_fw->fw;
+  	struct fw_header *fw_hdr = (struct fw_header *)fw->data;
+@@ -42,7 +42,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	long ret = -EFAULT;
+  	int i;
+  
+-@@ -3832,50 +3837,52 @@ static long rtl8152_check_firmware(struc
++@@ -3833,50 +3838,52 @@ static long rtl8152_check_firmware(struc
+  				goto fail;
+  			goto fw_end;
+  		case RTL_FW_PLA:
+@@ -106,7 +106,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  				dev_err(&tp->intf->dev,
+  					"Check PHY_STOP fail\n");
+  				goto fail;
+-@@ -3886,28 +3893,28 @@ static long rtl8152_check_firmware(struc
++@@ -3887,28 +3894,28 @@ static long rtl8152_check_firmware(struc
+  					"Invalid length for PHY_STOP\n");
+  				goto fail;
+  			}
+@@ -141,7 +141,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  			break;
+  		default:
+-@@ -3921,7 +3928,7 @@ static long rtl8152_check_firmware(struc
++@@ -3922,7 +3929,7 @@ static long rtl8152_check_firmware(struc
+  	}
+  
+  fw_end:
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0554-r8152-add-help-function-to-change-mtu.patch b/target/linux/bcm27xx/patches-5.10/950-0554-r8152-add-help-function-to-change-mtu.patch
+index 63da9adfd3e6..3559e3b95a84 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0554-r8152-add-help-function-to-change-mtu.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0554-r8152-add-help-function-to-change-mtu.patch
+@@ -20,7 +20,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -657,15 +657,13 @@ enum rtl_register_content {
++@@ -658,15 +658,13 @@ enum rtl_register_content {
+  
+  #define INTR_LINK		0x0004
+  
+@@ -39,7 +39,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* rtl8152 flags */
+  enum rtl8152_flags {
+-@@ -795,6 +793,7 @@ struct r8152 {
++@@ -796,6 +794,7 @@ struct r8152 {
+  		bool (*in_nway)(struct r8152 *tp);
+  		void (*hw_phy_cfg)(struct r8152 *tp);
+  		void (*autosuspend_en)(struct r8152 *tp, bool enable);
+@@ -47,7 +47,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	} rtl_ops;
+  
+  	struct ups_info {
+-@@ -1021,8 +1020,7 @@ enum tx_csum_stat {
++@@ -1022,8 +1021,7 @@ enum tx_csum_stat {
+  static const int multicast_filter_limit = 32;
+  static unsigned int agg_buf_sz = 16384;
+  
+@@ -57,7 +57,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  static
+  int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
+-@@ -2632,10 +2630,7 @@ static void rtl8152_nic_reset(struct r81
++@@ -2633,10 +2631,7 @@ static void rtl8152_nic_reset(struct r81
+  
+  static void set_tx_qlen(struct r8152 *tp)
+  {
+@@ -69,7 +69,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  
+  static inline u8 rtl8152_get_speed(struct r8152 *tp)
+-@@ -4724,6 +4719,12 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4725,6 +4720,12 @@ static void r8153b_hw_phy_cfg(struct r81
+  	set_bit(PHY_RESET, &tp->flags);
+  }
+  
+@@ -82,7 +82,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_first_init(struct r8152 *tp)
+  {
+  	u32 ocp_data;
+-@@ -4756,9 +4757,7 @@ static void r8153_first_init(struct r815
++@@ -4757,9 +4758,7 @@ static void r8153_first_init(struct r815
+  
+  	rtl_rx_vlan_en(tp, tp->netdev->features & NETIF_F_HW_VLAN_CTAG_RX);
+  
+@@ -93,7 +93,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_TCR0);
+  	ocp_data |= TCR0_AUTO_FIFO;
+-@@ -4793,8 +4792,7 @@ static void r8153_enter_oob(struct r8152
++@@ -4794,8 +4793,7 @@ static void r8153_enter_oob(struct r8152
+  
+  	wait_oob_link_list_ready(tp);
+  
+@@ -103,7 +103,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	switch (tp->version) {
+  	case RTL_VER_03:
+-@@ -6495,12 +6493,21 @@ static int rtl8152_change_mtu(struct net
++@@ -6518,12 +6516,21 @@ static int rtl8152_change_mtu(struct net
+  	dev->mtu = new_mtu;
+  
+  	if (netif_running(dev)) {
+@@ -130,7 +130,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	mutex_unlock(&tp->control);
+-@@ -6589,6 +6596,7 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -6612,6 +6619,7 @@ static int rtl_ops_init(struct r8152 *tp
+  		ops->in_nway		= rtl8153_in_nway;
+  		ops->hw_phy_cfg		= r8153_hw_phy_cfg;
+  		ops->autosuspend_en	= rtl8153_runtime_enable;
+@@ -138,7 +138,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		if (tp->udev->speed < USB_SPEED_SUPER)
+  			tp->rx_buf_sz	= 16 * 1024;
+  		else
+-@@ -6610,6 +6618,7 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -6633,6 +6641,7 @@ static int rtl_ops_init(struct r8152 *tp
+  		ops->in_nway		= rtl8153_in_nway;
+  		ops->hw_phy_cfg		= r8153b_hw_phy_cfg;
+  		ops->autosuspend_en	= rtl8153b_runtime_enable;
+@@ -146,7 +146,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		tp->rx_buf_sz		= 32 * 1024;
+  		tp->eee_en		= true;
+  		tp->eee_adv		= MDIO_EEE_1000T | MDIO_EEE_100TX;
+-@@ -6830,7 +6839,7 @@ static int rtl8152_probe(struct usb_inte
++@@ -6853,7 +6862,7 @@ static int rtl8152_probe(struct usb_inte
+  		netdev->max_mtu = ETH_DATA_LEN;
+  		break;
+  	default:
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0555-r8152-support-new-chips.patch b/target/linux/bcm27xx/patches-5.10/950-0555-r8152-support-new-chips.patch
+index c53315a0df6c..06a141b45169 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0555-r8152-support-new-chips.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0555-r8152-support-new-chips.patch
+@@ -16,7 +16,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -43,10 +43,14 @@
++@@ -44,10 +44,14 @@
+  
+  #define PLA_IDR			0xc000
+  #define PLA_RCR			0xc010
+@@ -31,7 +31,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define PLA_DMY_REG0		0xc0b0
+  #define PLA_FMC			0xc0b4
+  #define PLA_CFG_WOL		0xc0b6
+-@@ -63,6 +67,8 @@
++@@ -64,6 +68,8 @@
+  #define PLA_MACDBG_PRE		0xd38c	/* RTL_VER_04 only */
+  #define PLA_MACDBG_POST		0xd38e	/* RTL_VER_04 only */
+  #define PLA_EXTRA_STATUS	0xd398
+@@ -40,7 +40,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define PLA_EFUSE_DATA		0xdd00
+  #define PLA_EFUSE_CMD		0xdd02
+  #define PLA_LEDSEL		0xdd90
+-@@ -72,6 +78,8 @@
++@@ -73,6 +79,8 @@
+  #define PLA_LWAKE_CTRL_REG	0xe007
+  #define PLA_GPHY_INTR_IMR	0xe022
+  #define PLA_EEE_CR		0xe040
+@@ -49,7 +49,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define PLA_EEEP_CR		0xe080
+  #define PLA_MAC_PWR_CTRL	0xe0c0
+  #define PLA_MAC_PWR_CTRL2	0xe0ca
+-@@ -82,6 +90,7 @@
++@@ -83,6 +91,7 @@
+  #define PLA_TCR1		0xe612
+  #define PLA_MTPS		0xe615
+  #define PLA_TXFIFO_CTRL		0xe618
+@@ -57,7 +57,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define PLA_RSTTALLY		0xe800
+  #define PLA_CR			0xe813
+  #define PLA_CRWECR		0xe81c
+-@@ -98,6 +107,7 @@
++@@ -99,6 +108,7 @@
+  #define PLA_SFF_STS_7		0xe8de
+  #define PLA_PHYSTATUS		0xe908
+  #define PLA_CONFIG6		0xe90a /* CONFIG6 */
+@@ -65,7 +65,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define PLA_BP_BA		0xfc26
+  #define PLA_BP_0		0xfc28
+  #define PLA_BP_1		0xfc2a
+-@@ -112,6 +122,7 @@
++@@ -113,6 +123,7 @@
+  #define USB_USB2PHY		0xb41e
+  #define USB_SSPHYLINK1		0xb426
+  #define USB_SSPHYLINK2		0xb428
+@@ -73,7 +73,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define USB_U2P3_CTRL		0xb460
+  #define USB_CSR_DUMMY1		0xb464
+  #define USB_CSR_DUMMY2		0xb466
+-@@ -122,7 +133,12 @@
++@@ -123,7 +134,12 @@
+  #define USB_FW_FIX_EN0		0xcfca
+  #define USB_FW_FIX_EN1		0xcfcc
+  #define USB_LPM_CONFIG		0xcfd8
+@@ -86,7 +86,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define USB_FW_CTRL		0xd334	/* RTL8153B */
+  #define USB_FC_TIMER		0xd340
+  #define USB_USB_CTRL		0xd406
+-@@ -136,16 +152,20 @@
++@@ -137,16 +153,20 @@
+  #define USB_RX_EXTRA_AGGR_TMR	0xd432	/* RTL8153B */
+  #define USB_TX_DMA		0xd434
+  #define USB_UPT_RXDMA_OWN	0xd437
+@@ -107,7 +107,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define USB_UPS_CFG		0xd842
+  #define USB_UPS_FLAGS		0xd848
+  #define USB_WDT1_CTRL		0xe404
+-@@ -188,6 +208,9 @@
++@@ -189,6 +209,9 @@
+  #define OCP_EEE_ABLE		0xa5c4
+  #define OCP_EEE_ADV		0xa5d0
+  #define OCP_EEE_LPABLE		0xa5d2
+@@ -117,7 +117,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define OCP_PHY_STATE		0xa708		/* nway state for 8153 */
+  #define OCP_PHY_PATCH_STAT	0xb800
+  #define OCP_PHY_PATCH_CMD	0xb820
+-@@ -199,6 +222,7 @@
++@@ -200,6 +223,7 @@
+  /* SRAM Register */
+  #define SRAM_GREEN_CFG		0x8011
+  #define SRAM_LPF_CFG		0x8012
+@@ -125,7 +125,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define SRAM_10M_AMP1		0x8080
+  #define SRAM_10M_AMP2		0x8082
+  #define SRAM_IMPEDANCE		0x8084
+-@@ -210,11 +234,19 @@
++@@ -211,11 +235,19 @@
+  #define RCR_AM			0x00000004
+  #define RCR_AB			0x00000008
+  #define RCR_ACPT_ALL		(RCR_AAP | RCR_APM | RCR_AM | RCR_AB)
+@@ -145,7 +145,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /* PLA_RXFIFO_CTRL1 */
+  #define RXFIFO_THR2_FULL	0x00000060
+  #define RXFIFO_THR2_HIGH	0x00000038
+-@@ -285,6 +317,7 @@
++@@ -286,6 +318,7 @@
+  #define MCU_BORW_EN		0x4000
+  
+  /* PLA_CPCR */
+@@ -153,7 +153,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define CPCR_RX_VLAN		0x0040
+  
+  /* PLA_CFG_WOL */
+-@@ -310,6 +343,10 @@
++@@ -311,6 +344,10 @@
+  /* PLA_CONFIG6 */
+  #define LANWAKE_CLR_EN		BIT(0)
+  
+@@ -164,7 +164,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /* PLA_CONFIG5 */
+  #define BWF_EN			0x0040
+  #define MWF_EN			0x0020
+-@@ -333,6 +370,7 @@
++@@ -334,6 +371,7 @@
+  /* PLA_MAC_PWR_CTRL2 */
+  #define EEE_SPDWN_RATIO		0x8007
+  #define MAC_CLK_SPDWN_EN	BIT(15)
+@@ -172,7 +172,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* PLA_MAC_PWR_CTRL3 */
+  #define PLA_MCU_SPDWN_EN	BIT(14)
+-@@ -345,6 +383,7 @@
++@@ -346,6 +384,7 @@
+  #define PWRSAVE_SPDWN_EN	0x1000
+  #define RXDV_SPDWN_EN		0x0800
+  #define TX10MIDLE_EN		0x0100
+@@ -180,7 +180,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define TP100_SPDWN_EN		0x0020
+  #define TP500_SPDWN_EN		0x0010
+  #define TP1000_SPDWN_EN		0x0008
+-@@ -385,6 +424,13 @@
++@@ -386,6 +425,13 @@
+  #define LINK_CHANGE_FLAG	BIT(8)
+  #define POLL_LINK_CHG		BIT(0)
+  
+@@ -194,7 +194,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /* USB_USB2PHY */
+  #define USB2PHY_SUSPEND		0x0001
+  #define USB2PHY_L1		0x0002
+-@@ -433,6 +479,9 @@
++@@ -434,6 +480,9 @@
+  #define BMU_RESET_EP_IN		0x01
+  #define BMU_RESET_EP_OUT	0x02
+  
+@@ -204,7 +204,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /* USB_UPT_RXDMA_OWN */
+  #define OWN_UPDATE		BIT(0)
+  #define OWN_CLEAR		BIT(1)
+-@@ -440,27 +489,52 @@
++@@ -441,27 +490,52 @@
+  /* USB_FW_TASK */
+  #define FC_PATCH_TASK		BIT(1)
+  
+@@ -257,7 +257,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* USB_POWER_CUT */
+  #define PWR_EN			0x0001
+-@@ -496,8 +570,12 @@
++@@ -497,8 +571,12 @@
+  #define SEN_VAL_NORMAL		0xa000
+  #define SEL_RXIDLE		0x0100
+  
+@@ -270,7 +270,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* USB_UPS_FLAGS */
+  #define UPS_FLAGS_R_TUNE		BIT(0)
+-@@ -505,6 +583,7 @@
++@@ -506,6 +584,7 @@
+  #define UPS_FLAGS_250M_CKDIV		BIT(2)
+  #define UPS_FLAGS_EN_ALDPS		BIT(3)
+  #define UPS_FLAGS_CTAP_SHORT_DIS	BIT(4)
+@@ -278,7 +278,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define ups_flags_speed(x)		((x) << 16)
+  #define UPS_FLAGS_EN_EEE		BIT(20)
+  #define UPS_FLAGS_EN_500M_EEE		BIT(21)
+-@@ -525,6 +604,8 @@ enum spd_duplex {
++@@ -526,6 +605,8 @@ enum spd_duplex {
+  	FORCE_10M_FULL,
+  	FORCE_100M_HALF,
+  	FORCE_100M_FULL,
+@@ -287,7 +287,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  };
+  
+  /* OCP_ALDPS_CONFIG */
+-@@ -589,6 +670,9 @@ enum spd_duplex {
++@@ -590,6 +671,9 @@ enum spd_duplex {
+  #define EN_10M_CLKDIV		BIT(11)
+  #define EN_10M_BGOFF		0x0080
+  
+@@ -297,7 +297,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /* OCP_PHY_STATE */
+  #define TXDIS_STATE		0x01
+  #define ABD_STATE		0x02
+-@@ -608,7 +692,8 @@ enum spd_duplex {
++@@ -609,7 +693,8 @@ enum spd_duplex {
+  #define EN_EMI_L		0x0040
+  
+  /* OCP_SYSCLK_CFG */
+@@ -307,7 +307,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* SRAM_GREEN_CFG */
+  #define GREEN_ETH_EN		BIT(15)
+-@@ -639,6 +724,11 @@ enum spd_duplex {
++@@ -640,6 +725,11 @@ enum spd_duplex {
+  #define BP4_SUPER_ONLY		0x1578	/* RTL_VER_04 only */
+  
+  enum rtl_register_content {
+@@ -319,7 +319,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	_1000bps	= 0x10,
+  	_100bps		= 0x08,
+  	_10bps		= 0x04,
+-@@ -646,6 +736,9 @@ enum rtl_register_content {
++@@ -647,6 +737,9 @@ enum rtl_register_content {
+  	FULL_DUP	= 0x01,
+  };
+  
+@@ -329,7 +329,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define RTL8152_MAX_TX		4
+  #define RTL8152_MAX_RX		10
+  #define INTBUFSIZE		2
+-@@ -660,7 +753,6 @@ enum rtl_register_content {
++@@ -661,7 +754,6 @@ enum rtl_register_content {
+  #define RTL8152_RMS		(VLAN_ETH_FRAME_LEN + ETH_FCS_LEN)
+  #define RTL8153_RMS		RTL8153_MAX_PACKET
+  #define RTL8152_TX_TIMEOUT	(5 * HZ)
+@@ -337,7 +337,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define mtu_to_size(m)		((m) + VLAN_ETH_HLEN + ETH_FCS_LEN)
+  #define size_to_mtu(s)		((s) - VLAN_ETH_HLEN - ETH_FCS_LEN)
+  #define rx_reserved_size(x)	(mtu_to_size(x) + sizeof(struct rx_desc) + RX_ALIGN)
+-@@ -797,6 +889,7 @@ struct r8152 {
++@@ -798,6 +890,7 @@ struct r8152 {
+  	} rtl_ops;
+  
+  	struct ups_info {
+@@ -345,7 +345,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		u32 _10m_ckdiv:1;
+  		u32 _250m_ckdiv:1;
+  		u32 aldps:1;
+-@@ -838,7 +931,9 @@ struct r8152 {
++@@ -839,7 +932,9 @@ struct r8152 {
+  	u32 rx_buf_sz;
+  	u32 rx_copybreak;
+  	u32 rx_pending;
+@@ -355,7 +355,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	u16 ocp_base;
+  	u16 speed;
+  	u16 eee_adv;
+-@@ -998,6 +1093,15 @@ enum rtl_version {
++@@ -999,6 +1094,15 @@ enum rtl_version {
+  	RTL_VER_07,
+  	RTL_VER_08,
+  	RTL_VER_09,
+@@ -371,7 +371,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	RTL_VER_MAX
+  };
+  
+-@@ -1013,6 +1117,7 @@ enum tx_csum_stat {
++@@ -1014,6 +1118,7 @@ enum tx_csum_stat {
+  #define RTL_ADVERTISED_100_FULL			BIT(3)
+  #define RTL_ADVERTISED_1000_HALF		BIT(4)
+  #define RTL_ADVERTISED_1000_FULL		BIT(5)
+@@ -379,7 +379,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* Maximum number of multicast addresses to filter (vs. Rx-all-multicast).
+   * The RTL chips use a 64 element hash table based on the Ethernet CRC.
+-@@ -2606,7 +2711,7 @@ static netdev_tx_t rtl8152_start_xmit(st
++@@ -2607,7 +2712,7 @@ static netdev_tx_t rtl8152_start_xmit(st
+  
+  static void r8152b_reset_packet_filter(struct r8152 *tp)
+  {
+@@ -388,7 +388,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_FMC);
+  	ocp_data &= ~FMC_FCR_MCU_EN;
+-@@ -2617,14 +2722,47 @@ static void r8152b_reset_packet_filter(s
++@@ -2618,14 +2723,47 @@ static void r8152b_reset_packet_filter(s
+  
+  static void rtl8152_nic_reset(struct r8152 *tp)
+  {
+@@ -442,7 +442,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  }
+  
+-@@ -2633,9 +2771,9 @@ static void set_tx_qlen(struct r8152 *tp
++@@ -2634,9 +2772,9 @@ static void set_tx_qlen(struct r8152 *tp
+  	tp->tx_qlen = agg_buf_sz / (mtu_to_size(tp->netdev->mtu) + sizeof(struct tx_desc));
+  }
+  
+@@ -454,7 +454,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  
+  static void rtl_eee_plus_en(struct r8152 *tp, bool enable)
+-@@ -2795,6 +2933,7 @@ static int rtl_enable(struct r8152 *tp)
++@@ -2796,6 +2934,7 @@ static int rtl_enable(struct r8152 *tp)
+  	switch (tp->version) {
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -462,7 +462,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		r8153b_rx_agg_chg_indicate(tp);
+  		break;
+  	default:
+-@@ -2832,6 +2971,7 @@ static void r8153_set_rx_early_timeout(s
++@@ -2833,6 +2972,7 @@ static void r8153_set_rx_early_timeout(s
+  
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -470,7 +470,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		/* The RTL8153B uses USB_RX_EXTRA_AGGR_TMR for rx timeout
+  		 * primarily. For USB_RX_EARLY_TIMEOUT, we fix it to 128ns.
+  		 */
+-@@ -2841,6 +2981,18 @@ static void r8153_set_rx_early_timeout(s
++@@ -2842,6 +2982,18 @@ static void r8153_set_rx_early_timeout(s
+  			       ocp_data);
+  		break;
+  
+@@ -489,7 +489,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		break;
+  	}
+-@@ -2860,8 +3012,19 @@ static void r8153_set_rx_early_size(stru
++@@ -2861,8 +3013,19 @@ static void r8153_set_rx_early_size(stru
+  		break;
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -509,7 +509,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		break;
+  	default:
+  		WARN_ON_ONCE(1);
+-@@ -2871,6 +3034,8 @@ static void r8153_set_rx_early_size(stru
++@@ -2872,6 +3035,8 @@ static void r8153_set_rx_early_size(stru
+  
+  static int rtl8153_enable(struct r8152 *tp)
+  {
+@@ -518,7 +518,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (test_bit(RTL8152_UNPLUG, &tp->flags))
+  		return -ENODEV;
+  
+-@@ -2881,15 +3046,18 @@ static int rtl8153_enable(struct r8152 *
++@@ -2882,15 +3047,18 @@ static int rtl8153_enable(struct r8152 *
+  
+  	rtl_set_ifg(tp, rtl8152_get_speed(tp));
+  
+@@ -540,7 +540,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	return rtl_enable(tp);
+-@@ -2954,12 +3122,40 @@ static void rtl_rx_vlan_en(struct r8152
++@@ -2955,12 +3123,40 @@ static void rtl_rx_vlan_en(struct r8152
+  {
+  	u32 ocp_data;
+  
+@@ -587,7 +587,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  
+  static int rtl8152_set_features(struct net_device *dev,
+-@@ -3052,6 +3248,40 @@ static void __rtl_set_wol(struct r8152 *
++@@ -3053,6 +3249,40 @@ static void __rtl_set_wol(struct r8152 *
+  		device_set_wakeup_enable(&tp->udev->dev, false);
+  }
+  
+@@ -628,7 +628,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_u1u2en(struct r8152 *tp, bool enable)
+  {
+  	u8 u1u2[8];
+-@@ -3111,6 +3341,9 @@ static void r8153b_ups_flags(struct r815
++@@ -3112,6 +3342,9 @@ static void r8153b_ups_flags(struct r815
+  	if (tp->ups_info.eee_cmod_lv)
+  		ups_flags |= UPS_FLAGS_EEE_CMOD_LV_EN;
+  
+@@ -638,7 +638,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (tp->ups_info._10m_ckdiv)
+  		ups_flags |= UPS_FLAGS_EN_10M_CKDIV;
+  
+-@@ -3161,6 +3394,88 @@ static void r8153b_ups_flags(struct r815
++@@ -3162,6 +3395,88 @@ static void r8153b_ups_flags(struct r815
+  	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ups_flags);
+  }
+  
+@@ -727,7 +727,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void rtl_green_en(struct r8152 *tp, bool enable)
+  {
+  	u16 data;
+-@@ -3224,16 +3539,16 @@ static void r8153b_ups_en(struct r8152 *
++@@ -3225,16 +3540,16 @@ static void r8153b_ups_en(struct r8152 *
+  		ocp_data |= UPS_EN | USP_PREWAKE | PHASE2_EN;
+  		ocp_write_byte(tp, MCU_TYPE_USB, USB_POWER_CUT, ocp_data);
+  
+@@ -750,7 +750,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  		if (ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0) & PCUT_STATUS) {
+  			int i;
+-@@ -3253,6 +3568,95 @@ static void r8153b_ups_en(struct r8152 *
++@@ -3254,6 +3569,95 @@ static void r8153b_ups_en(struct r8152 *
+  	}
+  }
+  
+@@ -846,7 +846,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_power_cut_en(struct r8152 *tp, bool enable)
+  {
+  	u32 ocp_data;
+-@@ -3382,6 +3786,38 @@ static void rtl8153b_runtime_enable(stru
++@@ -3383,6 +3787,38 @@ static void rtl8153b_runtime_enable(stru
+  	}
+  }
+  
+@@ -885,7 +885,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_teredo_off(struct r8152 *tp)
+  {
+  	u32 ocp_data;
+-@@ -3402,14 +3838,19 @@ static void r8153_teredo_off(struct r815
++@@ -3403,14 +3839,19 @@ static void r8153_teredo_off(struct r815
+  
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -908,7 +908,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	ocp_write_word(tp, MCU_TYPE_PLA, PLA_WDT6_CTRL, WDT6_SET_MODE);
+-@@ -3444,6 +3885,12 @@ static void rtl_clear_bp(struct r8152 *t
++@@ -3445,6 +3886,12 @@ static void rtl_clear_bp(struct r8152 *t
+  		break;
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -921,7 +921,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		if (type == MCU_TYPE_USB) {
+  			ocp_write_word(tp, MCU_TYPE_USB, USB_BP2_EN, 0);
+-@@ -3653,6 +4100,11 @@ static bool rtl8152_is_fw_mac_ok(struct
++@@ -3654,6 +4101,11 @@ static bool rtl8152_is_fw_mac_ok(struct
+  		case RTL_VER_06:
+  		case RTL_VER_08:
+  		case RTL_VER_09:
+@@ -933,7 +933,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  			fw_reg = 0xf800;
+  			bp_ba_addr = PLA_BP_BA;
+  			bp_en_addr = PLA_BP_EN;
+-@@ -3676,6 +4128,11 @@ static bool rtl8152_is_fw_mac_ok(struct
++@@ -3677,6 +4129,11 @@ static bool rtl8152_is_fw_mac_ok(struct
+  			break;
+  		case RTL_VER_08:
+  		case RTL_VER_09:
+@@ -945,7 +945,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  			fw_reg = 0xe600;
+  			bp_ba_addr = USB_BP_BA;
+  			bp_en_addr = USB_BP2_EN;
+-@@ -4215,6 +4672,22 @@ static void r8153_eee_en(struct r8152 *t
++@@ -4216,6 +4673,22 @@ static void r8153_eee_en(struct r8152 *t
+  	tp->ups_info.eee = enable;
+  }
+  
+@@ -968,7 +968,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void rtl_eee_enable(struct r8152 *tp, bool enable)
+  {
+  	switch (tp->version) {
+-@@ -4236,6 +4709,7 @@ static void rtl_eee_enable(struct r8152
++@@ -4237,6 +4710,7 @@ static void rtl_eee_enable(struct r8152
+  	case RTL_VER_06:
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -976,7 +976,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		if (enable) {
+  			r8153_eee_en(tp, true);
+  			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
+-@@ -4244,6 +4718,19 @@ static void rtl_eee_enable(struct r8152
++@@ -4245,6 +4719,19 @@ static void rtl_eee_enable(struct r8152
+  			ocp_reg_write(tp, OCP_EEE_ADV, 0);
+  		}
+  		break;
+@@ -996,7 +996,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		break;
+  	}
+-@@ -4290,6 +4777,20 @@ static void wait_oob_link_list_ready(str
++@@ -4291,6 +4778,20 @@ static void wait_oob_link_list_ready(str
+  	}
+  }
+  
+@@ -1017,7 +1017,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8152b_exit_oob(struct r8152 *tp)
+  {
+  	u32 ocp_data;
+-@@ -4340,7 +4841,7 @@ static void r8152b_exit_oob(struct r8152
++@@ -4341,7 +4842,7 @@ static void r8152b_exit_oob(struct r8152
+  	}
+  
+  	/* TX share fifo free credit full threshold */
+@@ -1026,7 +1026,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	ocp_write_byte(tp, MCU_TYPE_USB, USB_TX_AGG, TX_AGG_MAX_THRESHOLD);
+  	ocp_write_dword(tp, MCU_TYPE_USB, USB_RX_BUF_TH, RX_THR_HIGH);
+-@@ -4517,6 +5018,21 @@ static int r8153b_post_firmware_1(struct
++@@ -4518,6 +5019,21 @@ static int r8153b_post_firmware_1(struct
+  	return 0;
+  }
+  
+@@ -1048,7 +1048,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_aldps_en(struct r8152 *tp, bool enable)
+  {
+  	u16 data;
+-@@ -4719,6 +5235,13 @@ static void r8153b_hw_phy_cfg(struct r81
++@@ -4720,6 +5236,13 @@ static void r8153b_hw_phy_cfg(struct r81
+  	set_bit(PHY_RESET, &tp->flags);
+  }
+  
+@@ -1062,7 +1062,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void rtl8153_change_mtu(struct r8152 *tp)
+  {
+  	ocp_write_word(tp, MCU_TYPE_PLA, PLA_RMS, mtu_to_size(tp->netdev->mtu));
+-@@ -4806,6 +5329,7 @@ static void r8153_enter_oob(struct r8152
++@@ -4807,6 +5330,7 @@ static void r8153_enter_oob(struct r8152
+  
+  	case RTL_VER_08:
+  	case RTL_VER_09:
+@@ -1070,7 +1070,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		/* Clear teredo wake event. bit[15:8] is the teredo wakeup
+  		 * type. Set it to zero. bits[7:0] are the W1C bits about
+  		 * the events. Set them to all 1 to clear them.
+-@@ -4842,6 +5366,96 @@ static void rtl8153_disable(struct r8152
++@@ -4843,6 +5367,96 @@ static void rtl8153_disable(struct r8152
+  	r8153_aldps_en(tp, true);
+  }
+  
+@@ -1167,7 +1167,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+  			     u32 advertising)
+  {
+-@@ -4890,58 +5504,73 @@ static int rtl8152_set_speed(struct r815
++@@ -4891,58 +5505,73 @@ static int rtl8152_set_speed(struct r815
+  
+  		tp->mii.force_media = 1;
+  	} else {
+@@ -1259,7 +1259,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		}
+  
+  		bmcr = BMCR_ANENABLE | BMCR_ANRESTART;
+-@@ -5097,6 +5726,253 @@ static void rtl8153b_down(struct r8152 *
++@@ -5098,6 +5727,253 @@ static void rtl8153b_down(struct r8152 *
+  	r8153_aldps_en(tp, true);
+  }
+  
+@@ -1513,7 +1513,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static bool rtl8152_in_nway(struct r8152 *tp)
+  {
+  	u16 nway_state;
+-@@ -5127,7 +6003,7 @@ static void set_carrier(struct r8152 *tp
++@@ -5128,7 +6004,7 @@ static void set_carrier(struct r8152 *tp
+  {
+  	struct net_device *netdev = tp->netdev;
+  	struct napi_struct *napi = &tp->napi;
+@@ -1522,7 +1522,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	speed = rtl8152_get_speed(tp);
+  
+-@@ -5140,7 +6016,7 @@ static void set_carrier(struct r8152 *tp
++@@ -5141,7 +6017,7 @@ static void set_carrier(struct r8152 *tp
+  			rtl_start_rx(tp);
+  			clear_bit(RTL8152_SET_RX_MODE, &tp->flags);
+  			_rtl8152_set_rx_mode(netdev);
+@@ -1531,7 +1531,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  			netif_wake_queue(netdev);
+  			netif_info(tp, link, netdev, "carrier on\n");
+  		} else if (netif_queue_stopped(netdev) &&
+-@@ -5502,14 +6378,9 @@ static void r8153_init(struct r8152 *tp)
++@@ -5521,14 +6397,9 @@ static void r8153_init(struct r8152 *tp)
+  
+  	ocp_write_word(tp, MCU_TYPE_USB, USB_CONNECT_TIMER, 0x0001);
+  
+@@ -1547,7 +1547,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	r8153_u1u2en(tp, true);
+  	usb_enable_lpm(tp->udev);
+  
+-@@ -5600,9 +6471,7 @@ static void r8153b_init(struct r8152 *tp
++@@ -5621,9 +6492,7 @@ static void r8153b_init(struct r8152 *tp
+  	usb_enable_lpm(tp->udev);
+  
+  	/* MAC clock speed down */
+@@ -1558,8 +1558,8 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_MAC_PWR_CTRL3);
+  	ocp_data &= ~PLA_MCU_SPDWN_EN;
+-@@ -5629,6 +6498,1069 @@ static void r8153b_init(struct r8152 *tp
+- 	tp->coalesce = 15000;	/* 15 us */
++@@ -5652,6 +6521,1069 @@ static void r8153b_init(struct r8152 *tp
++ 	r8152_led_configuration(tp);
+  }
+  
+ +static void r8153c_init(struct r8152 *tp)
+@@ -2628,7 +2628,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static int rtl8152_pre_reset(struct usb_interface *intf)
+  {
+  	struct r8152 *tp = usb_get_intfdata(intf);
+-@@ -5992,6 +7924,22 @@ int rtl8152_get_link_ksettings(struct ne
++@@ -6015,6 +7947,22 @@ int rtl8152_get_link_ksettings(struct ne
+  
+  	mii_ethtool_get_link_ksettings(&tp->mii, cmd);
+  
+@@ -2651,7 +2651,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	mutex_unlock(&tp->control);
+  
+  	usb_autopm_put_interface(tp->intf);
+-@@ -6035,6 +7983,10 @@ static int rtl8152_set_link_ksettings(st
++@@ -6058,6 +8006,10 @@ static int rtl8152_set_link_ksettings(st
+  		     cmd->link_modes.advertising))
+  		advertising |= RTL_ADVERTISED_1000_FULL;
+  
+@@ -2662,7 +2662,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	mutex_lock(&tp->control);
+  
+  	ret = rtl8152_set_speed(tp, cmd->base.autoneg, cmd->base.speed,
+-@@ -6624,6 +8576,67 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -6647,6 +8599,67 @@ static int rtl_ops_init(struct r8152 *tp
+  		tp->eee_adv		= MDIO_EEE_1000T | MDIO_EEE_100TX;
+  		break;
+  
+@@ -2730,7 +2730,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		ret = -ENODEV;
+  		dev_err(&tp->intf->dev, "Unknown Device\n");
+-@@ -6637,11 +8650,13 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -6660,11 +8673,13 @@ static int rtl_ops_init(struct r8152 *tp
+  #define FIRMWARE_8153A_3	"rtl_nic/rtl8153a-3.fw"
+  #define FIRMWARE_8153A_4	"rtl_nic/rtl8153a-4.fw"
+  #define FIRMWARE_8153B_2	"rtl_nic/rtl8153b-2.fw"
+@@ -2744,7 +2744,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  static int rtl_fw_init(struct r8152 *tp)
+  {
+-@@ -6667,6 +8682,11 @@ static int rtl_fw_init(struct r8152 *tp)
++@@ -6690,6 +8705,11 @@ static int rtl_fw_init(struct r8152 *tp)
+  		rtl_fw->pre_fw		= r8153b_pre_firmware_1;
+  		rtl_fw->post_fw		= r8153b_post_firmware_1;
+  		break;
+@@ -2756,7 +2756,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		break;
+  	}
+-@@ -6722,6 +8742,27 @@ u8 rtl8152_get_version(struct usb_interf
++@@ -6745,6 +8765,27 @@ u8 rtl8152_get_version(struct usb_interf
+  	case 0x6010:
+  		version = RTL_VER_09;
+  		break;
+@@ -2784,7 +2784,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	default:
+  		version = RTL_VER_UNKNOWN;
+  		dev_info(&intf->dev, "Unknown version 0x%04x\n", ocp_data);
+-@@ -6834,12 +8875,29 @@ static int rtl8152_probe(struct usb_inte
++@@ -6857,12 +8898,29 @@ static int rtl8152_probe(struct usb_inte
+  	/* MTU range: 68 - 1500 or 9194 */
+  	netdev->min_mtu = ETH_MIN_MTU;
+  	switch (tp->version) {
+@@ -2817,7 +2817,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		break;
+  	}
+  
+-@@ -6855,7 +8913,13 @@ static int rtl8152_probe(struct usb_inte
++@@ -6878,7 +8936,13 @@ static int rtl8152_probe(struct usb_inte
+  	tp->advertising = RTL_ADVERTISED_10_HALF | RTL_ADVERTISED_10_FULL |
+  			  RTL_ADVERTISED_100_HALF | RTL_ADVERTISED_100_FULL;
+  	if (tp->mii.supports_gmii) {
+@@ -2832,7 +2832,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		tp->advertising |= RTL_ADVERTISED_1000_FULL;
+  	}
+  	tp->duplex = DUPLEX_FULL;
+-@@ -6879,7 +8943,11 @@ static int rtl8152_probe(struct usb_inte
++@@ -6902,7 +8966,11 @@ static int rtl8152_probe(struct usb_inte
+  	set_ethernet_addr(tp);
+  
+  	usb_set_intfdata(intf, tp);
+@@ -2845,7 +2845,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	ret = register_netdev(netdev);
+  	if (ret != 0) {
+-@@ -6915,7 +8983,8 @@ static void rtl8152_disconnect(struct us
++@@ -6938,7 +9006,8 @@ static void rtl8152_disconnect(struct us
+  		unregister_netdev(tp->netdev);
+  		tasklet_kill(&tp->tx_tl);
+  		cancel_delayed_work_sync(&tp->hw_phy_work);
+@@ -2855,7 +2855,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		rtl8152_release_firmware(tp);
+  		free_netdev(tp->netdev);
+  	}
+-@@ -6935,13 +9004,28 @@ static void rtl8152_disconnect(struct us
++@@ -6958,13 +9027,28 @@ static void rtl8152_disconnect(struct us
+  	.idProduct = (prod), \
+  	.bInterfaceClass = USB_CLASS_COMM, \
+  	.bInterfaceSubClass = USB_CDC_SUBCLASS_ETHERNET, \
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0556-r8152-support-PHY-firmware-for-RTL8156-series.patch b/target/linux/bcm27xx/patches-5.10/950-0556-r8152-support-PHY-firmware-for-RTL8156-series.patch
+index 351f83e2e417..943c821b8216 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0556-r8152-support-PHY-firmware-for-RTL8156-series.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0556-r8152-support-PHY-firmware-for-RTL8156-series.patch
+@@ -15,7 +15,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -974,8 +974,60 @@ enum rtl8152_fw_flags {
++@@ -975,8 +975,60 @@ enum rtl8152_fw_flags {
+  	FW_FLAGS_START,
+  	FW_FLAGS_STOP,
+  	FW_FLAGS_NC,
+@@ -76,7 +76,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  /**
+   * struct fw_mac - a firmware block used by RTL_FW_PLA and RTL_FW_USB.
+   *	The layout of the firmware block is:
+-@@ -1080,6 +1132,15 @@ enum rtl_fw_type {
++@@ -1081,6 +1133,15 @@ enum rtl_fw_type {
+  	RTL_FW_PHY_START,
+  	RTL_FW_PHY_STOP,
+  	RTL_FW_PHY_NC,
+@@ -92,7 +92,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  };
+  
+  enum rtl_version {
+-@@ -3999,6 +4060,162 @@ static int rtl_post_ram_code(struct r815
++@@ -4000,6 +4061,162 @@ static int rtl_post_ram_code(struct r815
+  	return 0;
+  }
+  
+@@ -255,7 +255,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static bool rtl8152_is_fw_phy_nc_ok(struct r8152 *tp, struct fw_phy_nc *phy)
+  {
+  	u32 length;
+-@@ -4319,6 +4536,10 @@ static long rtl8152_check_firmware(struc
++@@ -4320,6 +4537,10 @@ static long rtl8152_check_firmware(struc
+  		case RTL_FW_PHY_START:
+  			if (test_bit(FW_FLAGS_START, &fw_flags) ||
+  			    test_bit(FW_FLAGS_NC, &fw_flags) ||
+@@ -266,7 +266,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  			    test_bit(FW_FLAGS_STOP, &fw_flags)) {
+  				dev_err(&tp->intf->dev,
+  					"check PHY_START fail\n");
+-@@ -4367,7 +4588,153 @@ static long rtl8152_check_firmware(struc
++@@ -4368,7 +4589,153 @@ static long rtl8152_check_firmware(struc
+  				goto fail;
+  			}
+  			__set_bit(FW_FLAGS_NC, &fw_flags);
+@@ -420,7 +420,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  			break;
+  		default:
+  			dev_warn(&tp->intf->dev, "Unknown type %u is found\n",
+-@@ -4390,6 +4757,143 @@ fail:
++@@ -4391,6 +4758,143 @@ fail:
+  	return ret;
+  }
+  
+@@ -564,7 +564,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void rtl8152_fw_phy_nc_apply(struct r8152 *tp, struct fw_phy_nc *phy)
+  {
+  	u16 mode_reg, bp_index;
+-@@ -4443,6 +4947,12 @@ static void rtl8152_fw_mac_apply(struct
++@@ -4444,6 +4948,12 @@ static void rtl8152_fw_mac_apply(struct
+  		return;
+  	}
+  
+@@ -577,7 +577,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	rtl_clear_bp(tp, type);
+  
+  	/* Enable backup/restore of MACDBG. This is required after clearing PLA
+-@@ -4478,7 +4988,6 @@ static void rtl8152_fw_mac_apply(struct
++@@ -4479,7 +4989,6 @@ static void rtl8152_fw_mac_apply(struct
+  		ocp_write_word(tp, type, bp_en_addr,
+  			       __le16_to_cpu(mac->bp_en_value));
+  
+@@ -585,7 +585,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (fw_ver_reg)
+  		ocp_write_byte(tp, MCU_TYPE_USB, fw_ver_reg,
+  			       mac->fw_ver_data);
+-@@ -4493,7 +5002,7 @@ static void rtl8152_apply_firmware(struc
++@@ -4494,7 +5003,7 @@ static void rtl8152_apply_firmware(struc
+  	struct fw_header *fw_hdr;
+  	struct fw_phy_patch_key *key;
+  	u16 key_addr = 0;
+@@ -594,7 +594,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	if (IS_ERR_OR_NULL(rtl_fw->fw))
+  		return;
+-@@ -4515,17 +5024,40 @@ static void rtl8152_apply_firmware(struc
++@@ -4516,17 +5025,40 @@ static void rtl8152_apply_firmware(struc
+  			rtl8152_fw_mac_apply(tp, (struct fw_mac *)block);
+  			break;
+  		case RTL_FW_PHY_START:
+@@ -635,7 +635,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		default:
+  			break;
+  		}
+-@@ -5033,6 +5565,21 @@ static int r8153c_post_firmware_1(struct
++@@ -5034,6 +5566,21 @@ static int r8153c_post_firmware_1(struct
+  	return 0;
+  }
+  
+@@ -657,7 +657,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void r8153_aldps_en(struct r8152 *tp, bool enable)
+  {
+  	u16 data;
+-@@ -8651,12 +9198,16 @@ static int rtl_ops_init(struct r8152 *tp
++@@ -8674,12 +9221,16 @@ static int rtl_ops_init(struct r8152 *tp
+  #define FIRMWARE_8153A_4	"rtl_nic/rtl8153a-4.fw"
+  #define FIRMWARE_8153B_2	"rtl_nic/rtl8153b-2.fw"
+  #define FIRMWARE_8153C_1	"rtl_nic/rtl8153c-1.fw"
+@@ -674,7 +674,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  static int rtl_fw_init(struct r8152 *tp)
+  {
+-@@ -8682,6 +9233,14 @@ static int rtl_fw_init(struct r8152 *tp)
++@@ -8705,6 +9256,14 @@ static int rtl_fw_init(struct r8152 *tp)
+  		rtl_fw->pre_fw		= r8153b_pre_firmware_1;
+  		rtl_fw->post_fw		= r8153b_post_firmware_1;
+  		break;
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0557-r8152-search-the-configuration-of-vendor-mode.patch b/target/linux/bcm27xx/patches-5.10/950-0557-r8152-search-the-configuration-of-vendor-mode.patch
+index f5abb5d3c940..9ce0e778cf88 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0557-r8152-search-the-configuration-of-vendor-mode.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0557-r8152-search-the-configuration-of-vendor-mode.patch
+@@ -16,7 +16,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/r8152.c
+ +++ b/drivers/net/usb/r8152.c
+-@@ -29,7 +29,7 @@
++@@ -30,7 +30,7 @@
+  #include <linux/usb/r8152.h>
+  
+  /* Information for net-next */
+@@ -25,7 +25,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  /* Information for net */
+  #define NET_VERSION		"11"
+-@@ -8108,6 +8108,39 @@ static void r8156b_init(struct r8152 *tp
++@@ -8131,6 +8131,39 @@ static void r8156b_init(struct r8152 *tp
+  	tp->coalesce = 15000;	/* 15 us */
+  }
+  
+@@ -65,7 +65,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static int rtl8152_pre_reset(struct usb_interface *intf)
+  {
+  	struct r8152 *tp = usb_get_intfdata(intf);
+-@@ -9346,10 +9379,8 @@ static int rtl8152_probe(struct usb_inte
++@@ -9369,10 +9402,8 @@ static int rtl8152_probe(struct usb_inte
+  	if (version == RTL_VER_UNKNOWN)
+  		return -ENODEV;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch b/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
+index 9eddc3eb0ab2..bf7c09482c38 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/kernel/cgroup/cgroup.c
+ +++ b/kernel/cgroup/cgroup.c
+-@@ -5665,6 +5665,9 @@ int __init cgroup_init_early(void)
++@@ -5667,6 +5667,9 @@ int __init cgroup_init_early(void)
+  	return 0;
+  }
+  
+@@ -27,7 +27,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  /**
+   * cgroup_init - cgroup initialization
+   *
+-@@ -5703,6 +5706,12 @@ int __init cgroup_init(void)
++@@ -5705,6 +5708,12 @@ int __init cgroup_init(void)
+  
+  	mutex_unlock(&cgroup_mutex);
+  
+@@ -40,7 +40,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	for_each_subsys(ss, ssid) {
+  		if (ss->early_init) {
+  			struct cgroup_subsys_state *css =
+-@@ -6240,6 +6249,10 @@ static int __init cgroup_disable(char *s
++@@ -6242,6 +6251,10 @@ static int __init cgroup_disable(char *s
+  			    strcmp(token, ss->legacy_name))
+  				continue;
+  
+@@ -51,7 +51,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  			static_branch_disable(cgroup_subsys_enabled_key[i]);
+  			pr_info("Disabling %s control group subsystem\n",
+  				ss->name);
+-@@ -6249,6 +6262,31 @@ static int __init cgroup_disable(char *s
++@@ -6251,6 +6264,31 @@ static int __init cgroup_disable(char *s
+  }
+  __setup("cgroup_disable=", cgroup_disable);
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/040-v5.16-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch b/target/linux/bcm53xx/patches-5.10/040-v5.16-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
+index 628569eca9c4..39ce3259fbd4 100644
+--- a/target/linux/bcm53xx/patches-5.10/040-v5.16-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
++++ b/target/linux/bcm53xx/patches-5.10/040-v5.16-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
+@@ -14,11 +14,9 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  arch/arm/boot/dts/bcm5301x.dtsi | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
+ 
+-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+-index f92089290ccd..ec5de636796e 100644
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -408,7 +408,7 @@ uart2: serial@18008000 {
++@@ -408,7 +408,7 @@
+  	i2c0: i2c@18009000 {
+  		compatible = "brcm,iproc-i2c";
+  		reg = <0x18009000 0x50>;
+@@ -27,6 +25,3 @@ index f92089290ccd..ec5de636796e 100644
+  		#address-cells = <1>;
+  		#size-cells = <0>;
+  		clock-frequency = <100000>;
+--- 
+-2.25.1
+-
+diff --git a/target/linux/bcm53xx/patches-5.10/081-v5.15-Revert-pinctrl-bcm-ns-support-updated-DT-binding-as-.patch b/target/linux/bcm53xx/patches-5.10/081-v5.15-Revert-pinctrl-bcm-ns-support-updated-DT-binding-as-.patch
+deleted file mode 100644
+index 822716d8e6e2..000000000000
+--- a/target/linux/bcm53xx/patches-5.10/081-v5.15-Revert-pinctrl-bcm-ns-support-updated-DT-binding-as-.patch
++++ /dev/null
+@@ -1,106 +0,0 @@
+-From 6dba4bdfd7a30e77b848a45404b224588bf989e5 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Fri, 8 Oct 2021 22:59:38 +0200
+-Subject: [PATCH] Revert "pinctrl: bcm: ns: support updated DT binding as
+- syscon subnode"
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-This reverts commit a49d784d5a8272d0f63c448fe8dc69e589db006e.
+-
+-The updated binding was wrong / invalid and has been reverted. There
+-isn't any upstream kernel DTS using it and Broadcom isn't known to use
+-it neither. There is close to zero chance this will cause regression for
+-anyone.
+-
+-Actually in-kernel bcm5301x.dtsi still uses the old good binding and so
+-it's broken since the driver update. This revert fixes it.
+-
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Link: https://lore.kernel.org/r/20211008205938.29925-3-zajec5@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/bcm/pinctrl-ns.c | 29 ++++++++++-------------------
+- 1 file changed, 10 insertions(+), 19 deletions(-)
+-
+---- a/drivers/pinctrl/bcm/pinctrl-ns.c
+-+++ b/drivers/pinctrl/bcm/pinctrl-ns.c
+-@@ -5,7 +5,6 @@
+- 
+- #include <linux/err.h>
+- #include <linux/io.h>
+--#include <linux/mfd/syscon.h>
+- #include <linux/module.h>
+- #include <linux/of.h>
+- #include <linux/of_device.h>
+-@@ -13,7 +12,6 @@
+- #include <linux/pinctrl/pinctrl.h>
+- #include <linux/pinctrl/pinmux.h>
+- #include <linux/platform_device.h>
+--#include <linux/regmap.h>
+- #include <linux/slab.h>
+- 
+- #define FLAG_BCM4708		BIT(1)
+-@@ -24,8 +22,7 @@ struct ns_pinctrl {
+- 	struct device *dev;
+- 	unsigned int chipset_flag;
+- 	struct pinctrl_dev *pctldev;
+--	struct regmap *regmap;
+--	u32 offset;
+-+	void __iomem *base;
+- 
+- 	struct pinctrl_desc pctldesc;
+- 	struct ns_pinctrl_group *groups;
+-@@ -232,9 +229,9 @@ static int ns_pinctrl_set_mux(struct pin
+- 		unset |= BIT(pin_number);
+- 	}
+- 
+--	regmap_read(ns_pinctrl->regmap, ns_pinctrl->offset, &tmp);
+-+	tmp = readl(ns_pinctrl->base);
+- 	tmp &= ~unset;
+--	regmap_write(ns_pinctrl->regmap, ns_pinctrl->offset, tmp);
+-+	writel(tmp, ns_pinctrl->base);
+- 
+- 	return 0;
+- }
+-@@ -266,13 +263,13 @@ static const struct of_device_id ns_pinc
+- static int ns_pinctrl_probe(struct platform_device *pdev)
+- {
+- 	struct device *dev = &pdev->dev;
+--	struct device_node *np = dev->of_node;
+- 	const struct of_device_id *of_id;
+- 	struct ns_pinctrl *ns_pinctrl;
+- 	struct pinctrl_desc *pctldesc;
+- 	struct pinctrl_pin_desc *pin;
+- 	struct ns_pinctrl_group *group;
+- 	struct ns_pinctrl_function *function;
+-+	struct resource *res;
+- 	int i;
+- 
+- 	ns_pinctrl = devm_kzalloc(dev, sizeof(*ns_pinctrl), GFP_KERNEL);
+-@@ -290,18 +287,12 @@ static int ns_pinctrl_probe(struct platf
+- 		return -EINVAL;
+- 	ns_pinctrl->chipset_flag = (uintptr_t)of_id->data;
+- 
+--	ns_pinctrl->regmap = syscon_node_to_regmap(of_get_parent(np));
+--	if (IS_ERR(ns_pinctrl->regmap)) {
+--		int err = PTR_ERR(ns_pinctrl->regmap);
+--
+--		dev_err(dev, "Failed to map pinctrl regs: %d\n", err);
+--
+--		return err;
+--	}
+--
+--	if (of_property_read_u32(np, "offset", &ns_pinctrl->offset)) {
+--		dev_err(dev, "Failed to get register offset\n");
+--		return -ENOENT;
+-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-+					   "cru_gpio_control");
+-+	ns_pinctrl->base = devm_ioremap_resource(dev, res);
+-+	if (IS_ERR(ns_pinctrl->base)) {
+-+		dev_err(dev, "Failed to map pinctrl regs\n");
+-+		return PTR_ERR(ns_pinctrl->base);
+- 	}
+- 
+- 	memcpy(pctldesc, &ns_pinctrl_desc, sizeof(*pctldesc));
+diff --git a/target/linux/bcm53xx/patches-5.10/332-Meraki-MR32-use-hw-i2c.patch b/target/linux/bcm53xx/patches-5.10/332-Meraki-MR32-use-hw-i2c.patch
+index acd69edaab9d..9e2adfa1315b 100644
+--- a/target/linux/bcm53xx/patches-5.10/332-Meraki-MR32-use-hw-i2c.patch
++++ b/target/linux/bcm53xx/patches-5.10/332-Meraki-MR32-use-hw-i2c.patch
+@@ -51,7 +51,7 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+  };
+  
+  &uart0 {
+-@@ -196,3 +168,31 @@
++@@ -229,3 +195,31 @@
+  		};
+  	};
+  };
+diff --git a/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch b/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
+index b036b5852e75..58cfd5da9326 100644
+--- a/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
++++ b/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
+@@ -18,7 +18,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -6793,15 +6793,10 @@ void __netif_napi_del(struct napi_struct
++@@ -6799,15 +6799,10 @@ void __netif_napi_del(struct napi_struct
+  }
+  EXPORT_SYMBOL(__netif_napi_del);
+  
+@@ -35,7 +35,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	weight = n->weight;
+  
+  	/* This NAPI_STATE_SCHED test is for avoiding a race
+-@@ -6821,7 +6816,7 @@ static int napi_poll(struct napi_struct
++@@ -6827,7 +6822,7 @@ static int napi_poll(struct napi_struct
+  			    n->poll, work, weight);
+  
+  	if (likely(work < weight))
+@@ -44,7 +44,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	/* Drivers must not modify the NAPI state if they
+  	 * consume the entire weight.  In such cases this code
+-@@ -6830,7 +6825,7 @@ static int napi_poll(struct napi_struct
++@@ -6836,7 +6831,7 @@ static int napi_poll(struct napi_struct
+  	 */
+  	if (unlikely(napi_disable_pending(n))) {
+  		napi_complete(n);
+@@ -53,7 +53,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	if (n->gro_bitmask) {
+-@@ -6848,12 +6843,29 @@ static int napi_poll(struct napi_struct
++@@ -6854,12 +6849,29 @@ static int napi_poll(struct napi_struct
+  	if (unlikely(!list_empty(&n->poll_list))) {
+  		pr_warn_once("%s: Budget exhausted after napi rescheduled\n",
+  			     n->dev ? n->dev->name : "backlog");
+diff --git a/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch b/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
+index 05f89932e80d..4fde0bb7081e 100644
+--- a/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
++++ b/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
+@@ -131,7 +131,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static int __dev_open(struct net_device *dev, struct netlink_ext_ack *extack)
+  {
+  	const struct net_device_ops *ops = dev->netdev_ops;
+-@@ -4255,6 +4277,21 @@ int gro_normal_batch __read_mostly = 8;
++@@ -4261,6 +4283,21 @@ int gro_normal_batch __read_mostly = 8;
+  static inline void ____napi_schedule(struct softnet_data *sd,
+  				     struct napi_struct *napi)
+  {
+@@ -153,7 +153,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	list_add_tail(&napi->poll_list, &sd->poll_list);
+  	__raise_softirq_irqoff(NET_RX_SOFTIRQ);
+  }
+-@@ -6746,6 +6783,12 @@ void netif_napi_add(struct net_device *d
++@@ -6752,6 +6789,12 @@ void netif_napi_add(struct net_device *d
+  	set_bit(NAPI_STATE_NPSVC, &napi->state);
+  	list_add_rcu(&napi->dev_list, &dev->napi_list);
+  	napi_hash_add(napi);
+@@ -166,7 +166,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  EXPORT_SYMBOL(netif_napi_add);
+  
+-@@ -6762,9 +6805,28 @@ void napi_disable(struct napi_struct *n)
++@@ -6768,9 +6811,28 @@ void napi_disable(struct napi_struct *n)
+  	hrtimer_cancel(&n->timer);
+  
+  	clear_bit(NAPI_STATE_DISABLE, &n->state);
+@@ -195,7 +195,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void flush_gro_hash(struct napi_struct *napi)
+  {
+  	int i;
+-@@ -6790,6 +6852,11 @@ void __netif_napi_del(struct napi_struct
++@@ -6796,6 +6858,11 @@ void __netif_napi_del(struct napi_struct
+  
+  	flush_gro_hash(napi);
+  	napi->gro_bitmask = 0;
+@@ -207,7 +207,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  EXPORT_SYMBOL(__netif_napi_del);
+  
+-@@ -6871,6 +6938,51 @@ static int napi_poll(struct napi_struct
++@@ -6877,6 +6944,51 @@ static int napi_poll(struct napi_struct
+  	return work;
+  }
+  
+diff --git a/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch b/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
+index 1009d82046d3..dfe8b68d4a4a 100644
+--- a/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
++++ b/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
+@@ -57,7 +57,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+   *	@n: NAPI context
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -4281,8 +4281,9 @@ static inline void ____napi_schedule(str
++@@ -4287,8 +4287,9 @@ static inline void ____napi_schedule(str
+  
+  	if (test_bit(NAPI_STATE_THREADED, &napi->state)) {
+  		/* Paired with smp_mb__before_atomic() in
+@@ -69,7 +69,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		 * wake_up_process() when it's not NULL.
+  		 */
+  		thread = READ_ONCE(napi->thread);
+-@@ -6756,6 +6757,49 @@ static void init_gro_hash(struct napi_st
++@@ -6762,6 +6763,49 @@ static void init_gro_hash(struct napi_st
+  	napi->gro_bitmask = 0;
+  }
+  
+diff --git a/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch b/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
+index a7fe9b360fd4..6617ee172e49 100644
+--- a/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
++++ b/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
+@@ -45,7 +45,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  enum gro_result {
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -4288,6 +4288,8 @@ static inline void ____napi_schedule(str
++@@ -4294,6 +4294,8 @@ static inline void ____napi_schedule(str
+  		 */
+  		thread = READ_ONCE(napi->thread);
+  		if (thread) {
+@@ -54,7 +54,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  			wake_up_process(thread);
+  			return;
+  		}
+-@@ -6548,7 +6550,8 @@ bool napi_complete_done(struct napi_stru
++@@ -6554,7 +6556,8 @@ bool napi_complete_done(struct napi_stru
+  
+  		WARN_ON_ONCE(!(val & NAPIF_STATE_SCHED));
+  
+@@ -64,7 +64,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  
+  		/* If STATE_MISSED was set, leave STATE_SCHED set,
+  		 * because we will call napi->poll() one more time.
+-@@ -6984,16 +6987,25 @@ static int napi_poll(struct napi_struct
++@@ -6990,16 +6993,25 @@ static int napi_poll(struct napi_struct
+  
+  static int napi_thread_wait(struct napi_struct *napi)
+  {
+diff --git a/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch b/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
+index d921856668d9..1ea38ed286cc 100644
+--- a/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
++++ b/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
+@@ -34,7 +34,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -6991,7 +6991,7 @@ static int napi_thread_wait(struct napi_
++@@ -6997,7 +6997,7 @@ static int napi_thread_wait(struct napi_
+  
+  	set_current_state(TASK_INTERRUPTIBLE);
+  
+@@ -43,7 +43,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		/* Testing SCHED_THREADED bit here to make sure the current
+  		 * kthread owns this napi and could poll on this napi.
+  		 * Testing SCHED bit is not enough because SCHED bit might be
+-@@ -7009,6 +7009,7 @@ static int napi_thread_wait(struct napi_
++@@ -7015,6 +7015,7 @@ static int napi_thread_wait(struct napi_
+  		set_current_state(TASK_INTERRUPTIBLE);
+  	}
+  	__set_current_state(TASK_RUNNING);
+diff --git a/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index 4d721c4f56f2..8e242bfffc03 100644
+--- a/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/782-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -933,7 +933,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+ --- a/drivers/net/ethernet/microchip/lan743x_main.c
+ +++ b/drivers/net/ethernet/microchip/lan743x_main.c
+-@@ -2815,7 +2815,6 @@ static int lan743x_pcidev_probe(struct p
++@@ -2835,7 +2835,6 @@ static int lan743x_pcidev_probe(struct p
+  {
+  	struct lan743x_adapter *adapter = NULL;
+  	struct net_device *netdev = NULL;
+@@ -941,7 +941,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	int ret = -ENODEV;
+  
+  	netdev = devm_alloc_etherdev(&pdev->dev,
+-@@ -2832,9 +2831,7 @@ static int lan743x_pcidev_probe(struct p
++@@ -2852,9 +2851,7 @@ static int lan743x_pcidev_probe(struct p
+  			      NETIF_MSG_IFDOWN | NETIF_MSG_TX_QUEUED;
+  	netdev->max_mtu = LAN743X_MAX_FRAME_SIZE;
+  
+@@ -954,7 +954,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (ret)
+ --- a/drivers/net/ethernet/nxp/lpc_eth.c
+ +++ b/drivers/net/ethernet/nxp/lpc_eth.c
+-@@ -1348,9 +1348,7 @@ static int lpc_eth_drv_probe(struct plat
++@@ -1347,9 +1347,7 @@ static int lpc_eth_drv_probe(struct plat
+  	__lpc_get_mac(pldat, ndev->dev_addr);
+  
+  	if (!is_valid_ether_addr(ndev->dev_addr)) {
+diff --git a/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch b/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
+index a0aac3d14099..5140b509241e 100644
+--- a/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
++++ b/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	__u16			tc_index;	/* traffic control index */
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -6050,6 +6050,9 @@ static enum gro_result dev_gro_receive(s
++@@ -6056,6 +6056,9 @@ static enum gro_result dev_gro_receive(s
+  	int same_flow;
+  	int grow;
+  
+@@ -42,7 +42,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (netif_elide_gro(skb->dev))
+  		goto normal;
+  
+-@@ -8027,6 +8030,48 @@ static void __netdev_adjacent_dev_unlink
++@@ -8033,6 +8036,48 @@ static void __netdev_adjacent_dev_unlink
+  					   &upper_dev->adj_list.lower);
+  }
+  
+@@ -91,7 +91,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  static int __netdev_upper_dev_link(struct net_device *dev,
+  				   struct net_device *upper_dev, bool master,
+  				   void *upper_priv, void *upper_info,
+-@@ -8078,6 +8123,7 @@ static int __netdev_upper_dev_link(struc
++@@ -8084,6 +8129,7 @@ static int __netdev_upper_dev_link(struc
+  	if (ret)
+  		return ret;
+  
+@@ -99,7 +99,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	ret = call_netdevice_notifiers_info(NETDEV_CHANGEUPPER,
+  					    &changeupper_info.info);
+  	ret = notifier_to_errno(ret);
+-@@ -8174,6 +8220,7 @@ static void __netdev_upper_dev_unlink(st
++@@ -8180,6 +8226,7 @@ static void __netdev_upper_dev_unlink(st
+  
+  	__netdev_adjacent_dev_unlink_neighbour(dev, upper_dev);
+  
+@@ -107,7 +107,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	call_netdevice_notifiers_info(NETDEV_CHANGEUPPER,
+  				      &changeupper_info.info);
+  
+-@@ -8960,6 +9007,7 @@ int dev_set_mac_address(struct net_devic
++@@ -8966,6 +9013,7 @@ int dev_set_mac_address(struct net_devic
+  	if (err)
+  		return err;
+  	dev->addr_assign_type = NET_ADDR_SET;
+diff --git a/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch b/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
+index 97a36872e963..8afcbdcf9881 100644
+--- a/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
++++ b/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
+ +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+-@@ -141,9 +141,9 @@
++@@ -140,9 +140,9 @@
+  	};
+  
+  	clocks {
+diff --git a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+index a2ace6057f5e..c9fcefe18b08 100644
+--- a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
++++ b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+@@ -33,7 +33,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  	phy_led_trigger_change_speed(phydev);
+  }
+  
+-@@ -618,7 +618,7 @@ int phy_start_cable_test(struct phy_devi
++@@ -567,7 +567,7 @@ int phy_start_cable_test(struct phy_devi
+  		goto out;
+  
+  	/* Mark the carrier down until the test is complete */
+@@ -42,7 +42,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  
+  	netif_testing_on(dev);
+  	err = phydev->drv->cable_test_start(phydev);
+-@@ -689,7 +689,7 @@ int phy_start_cable_test_tdr(struct phy_
++@@ -638,7 +638,7 @@ int phy_start_cable_test_tdr(struct phy_
+  		goto out;
+  
+  	/* Mark the carrier down until the test is complete */
+@@ -51,7 +51,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  
+  	netif_testing_on(dev);
+  	err = phydev->drv->cable_test_tdr_start(phydev, config);
+-@@ -760,7 +760,7 @@ static int phy_check_link_status(struct
++@@ -709,7 +709,7 @@ static int phy_check_link_status(struct
+  		phy_link_up(phydev);
+  	} else if (!phydev->link && phydev->state != PHY_NOLINK) {
+  		phydev->state = PHY_NOLINK;
+@@ -60,7 +60,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  	}
+  
+  	return 0;
+-@@ -1164,7 +1164,7 @@ void phy_state_machine(struct work_struc
++@@ -1186,7 +1186,7 @@ void phy_state_machine(struct work_struc
+  	case PHY_HALTED:
+  		if (phydev->link) {
+  			phydev->link = 0;
+diff --git a/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch b/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
+index 02bcb1735449..0ef06615b6ea 100644
+--- a/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
++++ b/target/linux/ramips/patches-5.10/721-NET-no-auto-carrier-off-support.patch
+@@ -11,7 +11,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+ 
+ --- a/drivers/net/phy/phy.c
+ +++ b/drivers/net/phy/phy.c
+-@@ -760,7 +760,10 @@ static int phy_check_link_status(struct
++@@ -709,7 +709,10 @@ static int phy_check_link_status(struct
+  		phy_link_up(phydev);
+  	} else if (!phydev->link && phydev->state != PHY_NOLINK) {
+  		phydev->state = PHY_NOLINK;
+@@ -23,7 +23,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	}
+  
+  	return 0;
+-@@ -1164,7 +1167,10 @@ void phy_state_machine(struct work_struc
++@@ -1186,7 +1189,10 @@ void phy_state_machine(struct work_struc
+  	case PHY_HALTED:
+  		if (phydev->link) {
+  			phydev->link = 0;
