@@ -1,3 +1,7 @@
+20211109-00
+- update to a667f6b8dd4b0f47d9c0aacb900f1fd3045ec945
+- [upstream] update to kernel 5.10.78 (security and bug fixes)
+
 20211102-00
 - update to b7bb176d1c1865b5cf443f72aae9b9c8999d0cd2
 - [cherrypick] #4741: update to kernel 5.10.77 (security and bug fixes)
