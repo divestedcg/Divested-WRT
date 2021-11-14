@@ -1,4 +1,4 @@
-From 9cef92830b74dd2ffe30e5d441ebf5db4ee421ad Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:49:59 -0500
 Subject: [PATCH] base-files: sysctl.d: basic hardening
@@ -44,6 +44,3 @@ index 0000000000..2b5162fdb7
 +vm.mmap_rnd_bits=32
 +vm.mmap_rnd_compat_bits=16
 +vm.unprivileged_userfaultfd=0
--- 
-2.31.1
-

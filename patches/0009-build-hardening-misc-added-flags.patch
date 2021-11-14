@@ -1,4 +1,4 @@
-From 0aa0f75c0e2792a1f75b6879924a5745377c8fd4 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 2 Jul 2021 13:03:00 -0400
 Subject: [PATCH] build: hardening: misc added flags
@@ -17,6 +17,3 @@ index 6acd862f5c..83d30eaed9 100644
  endif
  
 +TARGET_CFLAGS += -fstack-clash-protection -fwrapv
--- 
-2.31.1
-

@@ -1,3 +1,10 @@
+20211114-00
+- update to 9bd9e04b6fe7e427a5d90ccbb186c2727767a756
+- [upstream] update to kernel 5.10.79 (security and bug fixes)
+- reinitialized workspace (sanity)
+- upgraded build vm from f33 to f35
+  note: build vm is always `dnf update`ed before compile
+
 20211109-00
 - update to a667f6b8dd4b0f47d9c0aacb900f1fd3045ec945
 - [upstream] update to kernel 5.10.78 (security and bug fixes)
