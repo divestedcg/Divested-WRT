@@ -1,3 +1,7 @@
+20211119-00
+- update to 7ae04d3799d44b4a9fd3a2c82763d202be97fb77
+- [upstream] update to kernel 5.10.80 (security and bug fixes)
+
 20211114-00
 - update to 9bd9e04b6fe7e427a5d90ccbb186c2727767a756
 - [upstream] update to kernel 5.10.79 (security and bug fixes)

@@ -1,0 +1,41 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+8d5ef0500044cf37cba3535c363d1b744f0572e55e644b6c8426833d94dcb5d0 *config.buildinfo
+876a9fb7147c7396ff91bbd70e7d5a8ed787aa27bdf9415aa4bbc83249410b64 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1200ac-initramfs-kernel.bin
+6cc3e8f76f63958c54c67d4db2cfd63c7f0628974fe5e422a69e81b799a297f5 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1200ac-squashfs-factory.img
+91e177c6849cd7c1879613db9392c626e8fb8e0a70680d88ee96649fee82608a *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1200ac-squashfs-sysupgrade.bin
+e028aefd94b12bb206a91804f1b955179ab85797e68a2dbd77c4e6d4edbe23e8 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v1-initramfs-kernel.bin
+a073dc08256807d09ab057639aa8f755327fef8da9e848b4d6a402ae92d0da89 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v1-squashfs-factory.img
+710a316bebe8901ee515991cbde462e2ab1a0b3593fce43e91f89f3c5c6f73be *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v1-squashfs-sysupgrade.bin
+c3600960f8f0500ba53871373f2c4ed9a05991e568a3cd71482e55de82d4c886 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v2-initramfs-kernel.bin
+a51ff8f3a9d37a80b37f709abf4a31d37440a67ca1033a351b72d98e6bbb6a70 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v2-squashfs-factory.img
+7df6f4fe7aa9ffbfc316668d899098f33279ab19e4f887c9908a51bc9dbbf5b2 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900ac-v2-squashfs-sysupgrade.bin
+0625c07b6b74f5db57aa335c76e7ce162588042b0bf3efdc41775a2c4f4418f9 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900acs-initramfs-kernel.bin
+0ec58bd55a068709cba5ca8d08cef34ad4ae87bc6aec7b54e05dcbf642f205e2 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900acs-squashfs-factory.img
+8ce732940091afd5e5ad073f7d6dada7a3cde23b42cd2759131ec48ffd5f415c *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt1900acs-squashfs-sysupgrade.bin
+784ea1de1f1c058574fd405339a9a213e85705dfab1bbff8e3337ea655a60cab *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt3200acm-initramfs-kernel.bin
+c04723bb5905fa47eef3369bae72dd7b2419f92427b9375bf128900d75bfaa5e *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt3200acm-squashfs-factory.img
+cc3c4c685a85b3edd4451a6c8c556427bb04f5d1c0b2c5ea67f38a6f3da9a09b *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt3200acm-squashfs-sysupgrade.bin
+24854e482e848ef282eba2ef9e0cec92a4cad760c1912ae81e26ef3aa8725c43 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt32x-initramfs-kernel.bin
+a578a673e12382e9cc34bda1ee84405424f626f733f5dfcb4cd9e5f6462c0420 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt32x-squashfs-factory.img
+d715bc83cbded723728cb51ee6bd6724e4f054c46407199c815cd4caa1a780b6 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9-linksys_wrt32x-squashfs-sysupgrade.bin
+74aae469482826040a15fc8c10c18803fc712b622dc84de5758a4b72624563f9 *divested-wrt-snapshot-r18118+9-7ae04d3799-mvebu-cortexa9.manifest
+d743e6d2cb8836da9919fdc9048ae1ac6699e9e13cd78a962260403f1a9218a9 *feeds.buildinfo
+50191c5a10ce41e8c20807c66fd70cdaa342bb1e081971424fa927a1c1a46602 *version.buildinfo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAmGYGRMACgkQut/Kvdv1
+tpQNFA//WjDCi1q76r0YIlBw+qxDFm9M2DX+z5JrwCtlgR8zc3hvQ5a4UkdochHx
+OiZkxB+kC4OOlU482zwdhX+yhCAURN4nVV9U5REMUs65Pp+vMLTSTtAVaIgfsUoC
+RtR1GajkX4gU+Zht59RZ79IUGsjxkwZgely/R+sMi7Fm6edw0K1roeaZ53376R+O
+8Mvw2Xpq5QWNsbg/yNcegFbmdzsQCi0XZDHR/l9RvCOlsZyMcFtBvlIo/b86CwF1
+Ld+n3C9HVDcppx/QXhGsFlNeQGz+Jzy2Vpt8aR1naIBAZ7QlYlN777ijIq6Y+A/R
+wzDEBKeJGP5budK0eqsL09AUvcPtXeJz2ecolqWkc2NtVRumykXsVYPCOzmNZi85
+SzDx4cnhuyZukV/DV5nW9ImNMCfJuwvSuEKb0zuUW6tjkpBhyeA+nASbOXsW3/Yc
+qxFL/0U2RpuEJI9Q8IczEj6i2xGz39k5Z8NubCmEXVTQhBMyzlblqFyUfqFAVd0X
+DX4Hzw9WXFAacVhroBpNrJsLodfk+YXUUlcmSXg+uk+jI4pU3sx77vppLhKSlIg+
+lOREyyE/4GWebHWWhAWGCIW7/EO5pqzRpEwiwc6gbGXgQseYyUrftfvWj/DYjGAx
+jbnsQeYUxOv6QRZB4F/tq9Ip3mMeGbEky1g+CKAvpE12jQqEd1g=
+=l0XK
+-----END PGP SIGNATURE-----
