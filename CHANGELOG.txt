@@ -1,3 +1,8 @@
+20211124-00
+- update to f8b2bc550bd57e59e5def03e397ccfc6fcc0a81c
+- [cherrypick] #4783: update to kernel 5.10.81 (security and bug fixes)
+- includes the recent notable fix for mwlwifi from @nbd found by @cotequeiroz!
+
 20211119-00
 - update to 7ae04d3799d44b4a9fd3a2c82763d202be97fb77
 - [upstream] update to kernel 5.10.80 (security and bug fixes)
