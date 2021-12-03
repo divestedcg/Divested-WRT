@@ -1,0 +1,772 @@
+From 6a4b1d2e16d9114476ba31fff04aa18a79092411 Mon Sep 17 00:00:00 2001
+From: graysky <graysky@archlinux.us>
+Date: Wed, 1 Dec 2021 06:28:02 -0500
+Subject: [PATCH] kernel: bump 5.10 to 5.10.83
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Removed upstreamed:
+    bcm53xx/patches-5.10/033-v5.16-0024-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch[1]
+    bcm53xx/patches-5.10/033-v5.16-0025-ARM-dts-BCM5301X-Add-interrupt-properties-to-GPIO-no.patch[2]
+
+All other patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.10.83&id=b2cd6fdcbe0a5cb44e4610a08cc58261d494a885
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.10.83&id=9db1d4a3c2700e1cc84c3d61199411d75c2a3ec6
+
+Build system: x86_64*
+Build-tested: bcm2711/RPi4B, ipq806x/R7800†
+Run-tested: bcm2711/RPi4B, ipq806x/R7800†
+
+* Had to revert 7c99085bd69742f66207d61e9f2da5ec4f8f9d2f in order to build
+  (latest bump of ca-certificates)
+
+† Had to revert 7f1edbd41295dff9f2127b169fbc086c0fb2c14e in order to build
+  (binutils 2.37, https://bugs.openwrt.org/index.php?do=details&task_id=4149)
+
+Signed-off-by: graysky <graysky@archlinux.us>
+---
+ include/kernel-version.mk                     |  4 +--
+ .../950-0040-Add-dwc_otg-driver.patch         |  2 +-
+ ...-0201-mmc-sdhci-Silence-MMC-warnings.patch |  4 +--
+ ...tft-Add-support-for-display-variants.patch |  6 ++--
+ ...ARM-dts-Expand-PCIe-space-on-BCM2711.patch |  2 +-
+ ...e-compatible-string-for-BCM2711-DSI1.patch |  2 +-
+ ...cm2711-fold-in-the-correct-interrupt.patch |  2 +-
+ ...1X-Harmonize-EHCI-OHCI-DT-nodes-name.patch |  4 +--
+ ...CM5310X-Harmonize-xHCI-DT-nodes-name.patch |  2 +-
+ ...-Use-corretc-pinctrl-compatible-for-.patch |  2 +-
+ ...01X-Move-CRU-devices-to-the-CRU-node.patch |  4 +--
+ ...01X-Update-Ethernet-switch-node-name.patch |  2 +-
+ ...-Add-a-default-compatible-for-switch.patch |  2 +-
+ ...-Provide-defaults-ports-container-no.patch |  2 +-
+ ...RM-dts-BCM5301X-Fix-NAND-nodes-names.patch |  2 +-
+ ...s-BCM5301X-Fix-pinmux-subnodes-names.patch |  2 +-
+ ...010-ARM-dts-BCM5301X-Fix-nodes-names.patch |  4 +--
+ ...RM-dts-BCM5301X-Fix-MDIO-mux-binding.patch |  2 +-
+ ...CM5301X-Fix-I2C-controller-interrupt.patch | 29 -------------------
+ ...-Add-interrupt-properties-to-GPIO-no.patch | 26 -----------------
+ ...lve-forwarding-path-for-vlan-devices.patch |  4 +--
+ ...ve-forwarding-path-for-VLAN-tag-acti.patch |  2 +-
+ ...the-dst-buffer-to-of_get_mac_address.patch | 12 ++++----
+ .../generic/hack-5.10/902-debloat_proc.patch  |  2 +-
+ ...ng-with-source-address-failed-policy.patch | 18 ++++++------
+ .../105-ipq40xx-fix-sleep-clock.patch         |  2 +-
+ ...702-dts-ipq4019-add-PHY-switch-nodes.patch |  2 +-
+ ...8-arm-dts-ipq4019-QCA807x-properties.patch |  2 +-
+ ...ts-ipq4019-add-ethernet-essedma-node.patch |  2 +-
+ .../083-ipq8064-dtsi-additions.patch          | 12 ++++----
+ ...c-explicitly-deassert-gmac-ahb-reset.patch |  6 ++--
+ ...y-simplify-phy_link_change-arguments.patch |  2 +-
+ ...vers-net-phy-eee-support-for-rtl838x.patch |  6 ++--
+ 33 files changed, 61 insertions(+), 116 deletions(-)
+ delete mode 100644 target/linux/bcm53xx/patches-5.10/033-v5.16-0024-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
+ delete mode 100644 target/linux/bcm53xx/patches-5.10/033-v5.16-0025-ARM-dts-BCM5301X-Add-interrupt-properties-to-GPIO-no.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 73de553a7b02..ccedcb18c069 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .162
+-LINUX_VERSION-5.10 = .82
++LINUX_VERSION-5.10 = .83
+ 
+ LINUX_KERNEL_HASH-5.4.162 = c12d72ddaac78189305a5e98825295ecb02282970033b052276035e83189e25b
+-LINUX_KERNEL_HASH-5.10.82 = d66f7c7eed02f84ae550b3c91a26c70eea13682a6d672432f07bce66ff8ce350
++LINUX_KERNEL_HASH-5.10.83 = ef259a43f33ddb56001283f4f4e50af29b8a48fa066aed7371a90ebf38c29b70
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0040-Add-dwc_otg-driver.patch b/target/linux/bcm27xx/patches-5.10/950-0040-Add-dwc_otg-driver.patch
+index ec5906939257..c0a315042a69 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0040-Add-dwc_otg-driver.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0040-Add-dwc_otg-driver.patch
+@@ -1123,7 +1123,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+  }
+ --- a/drivers/usb/core/hub.c
+ +++ b/drivers/usb/core/hub.c
+-@@ -5494,7 +5494,7 @@ static void port_event(struct usb_hub *h
++@@ -5503,7 +5503,7 @@ static void port_event(struct usb_hub *h
+  		port_dev->over_current_count++;
+  		port_over_current_notify(port_dev);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch b/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
+index ae6eba1cb46d..fabb3b0e6d04 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0201-mmc-sdhci-Silence-MMC-warnings.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  
+  #define MAX_TUNING_LOOP 40
+  
+-@@ -3133,7 +3133,7 @@ static void sdhci_timeout_timer(struct t
++@@ -3145,7 +3145,7 @@ static void sdhci_timeout_timer(struct t
+  	spin_lock_irqsave(&host->lock, flags);
+  
+  	if (host->cmd && !sdhci_data_line_cmd(host->cmd)) {
+@@ -31,7 +31,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  		       mmc_hostname(host->mmc));
+  		sdhci_dumpregs(host);
+  
+-@@ -3155,7 +3155,7 @@ static void sdhci_timeout_data_timer(str
++@@ -3167,7 +3167,7 @@ static void sdhci_timeout_data_timer(str
+  
+  	if (host->data || host->data_cmd ||
+  	    (host->cmd && sdhci_data_line_cmd(host->cmd))) {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0332-staging-fbtft-Add-support-for-display-variants.patch b/target/linux/bcm27xx/patches-5.10/950-0332-staging-fbtft-Add-support-for-display-variants.patch
+index 72f741fa892b..7bdc80b46cce 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0332-staging-fbtft-Add-support-for-display-variants.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0332-staging-fbtft-Add-support-for-display-variants.patch
+@@ -95,7 +95,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  
+  #include <video/mipi_display.h>
+  
+-@@ -1194,6 +1196,7 @@ static struct fbtft_platform_data *fbtft
++@@ -1187,6 +1189,7 @@ static struct fbtft_platform_data *fbtft
+   * @display: Display properties
+   * @sdev: SPI device
+   * @pdev: Platform device
+@@ -103,7 +103,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+   *
+   * Allocates, initializes and registers a framebuffer
+   *
+-@@ -1203,12 +1206,15 @@ static struct fbtft_platform_data *fbtft
++@@ -1196,12 +1199,15 @@ static struct fbtft_platform_data *fbtft
+   */
+  int fbtft_probe_common(struct fbtft_display *display,
+  		       struct spi_device *sdev,
+@@ -120,7 +120,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	int ret;
+  
+  	if (sdev)
+-@@ -1224,6 +1230,14 @@ int fbtft_probe_common(struct fbtft_disp
++@@ -1217,6 +1223,14 @@ int fbtft_probe_common(struct fbtft_disp
+  		pdata = fbtft_properties_read(dev);
+  		if (IS_ERR(pdata))
+  			return PTR_ERR(pdata);
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0361-ARM-dts-Expand-PCIe-space-on-BCM2711.patch b/target/linux/bcm27xx/patches-5.10/950-0361-ARM-dts-Expand-PCIe-space-on-BCM2711.patch
+index a791013aa0d9..5dfc9221c5ad 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0361-ARM-dts-Expand-PCIe-space-on-BCM2711.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0361-ARM-dts-Expand-PCIe-space-on-BCM2711.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/arch/arm/boot/dts/bcm2711.dtsi
+ +++ b/arch/arm/boot/dts/bcm2711.dtsi
+-@@ -503,8 +503,8 @@
++@@ -509,8 +509,8 @@
+  			msi-controller;
+  			msi-parent = <&pcie0>;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0388-dt-Use-compatible-string-for-BCM2711-DSI1.patch b/target/linux/bcm27xx/patches-5.10/950-0388-dt-Use-compatible-string-for-BCM2711-DSI1.patch
+index 635718e01d51..b409d5c534e1 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0388-dt-Use-compatible-string-for-BCM2711-DSI1.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0388-dt-Use-compatible-string-for-BCM2711-DSI1.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/arch/arm/boot/dts/bcm2711.dtsi
+ +++ b/arch/arm/boot/dts/bcm2711.dtsi
+-@@ -554,6 +554,7 @@
++@@ -560,6 +560,7 @@
+  
+  &dsi1 {
+  	interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0697-ARM-dts-bcm2711-fold-in-the-correct-interrupt.patch b/target/linux/bcm27xx/patches-5.10/950-0697-ARM-dts-bcm2711-fold-in-the-correct-interrupt.patch
+index 103b5d547348..6720d0887218 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0697-ARM-dts-bcm2711-fold-in-the-correct-interrupt.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0697-ARM-dts-bcm2711-fold-in-the-correct-interrupt.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  			status = "disabled";
+  		};
+  
+-@@ -1106,7 +1106,3 @@
++@@ -1112,7 +1112,3 @@
+  &usb {
+  	interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+  };
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0002-ARM-dts-BCM5301X-Harmonize-EHCI-OHCI-DT-nodes-name.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0002-ARM-dts-BCM5301X-Harmonize-EHCI-OHCI-DT-nodes-name.patch
+index 271257c669fc..d6e5fca96761 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0002-ARM-dts-BCM5301X-Harmonize-EHCI-OHCI-DT-nodes-name.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0002-ARM-dts-BCM5301X-Harmonize-EHCI-OHCI-DT-nodes-name.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -265,7 +265,7 @@
++@@ -267,7 +267,7 @@
+  
+  			interrupt-parent = <&gic>;
+  
+@@ -29,7 +29,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  				#usb-cells = <0>;
+  
+  				compatible = "generic-ehci";
+-@@ -287,7 +287,7 @@
++@@ -289,7 +289,7 @@
+  				};
+  			};
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0003-ARM-dts-BCM5310X-Harmonize-xHCI-DT-nodes-name.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0003-ARM-dts-BCM5310X-Harmonize-xHCI-DT-nodes-name.patch
+index 08380d735c6a..2f9c8ce8c065 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0003-ARM-dts-BCM5310X-Harmonize-xHCI-DT-nodes-name.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0003-ARM-dts-BCM5310X-Harmonize-xHCI-DT-nodes-name.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -318,7 +318,7 @@
++@@ -320,7 +320,7 @@
+  
+  			interrupt-parent = <&gic>;
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0005-ARM-dts-BCM5301X-Use-corretc-pinctrl-compatible-for-.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0005-ARM-dts-BCM5301X-Use-corretc-pinctrl-compatible-for-.patch
+index 379696793612..ddebdc434306 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0005-ARM-dts-BCM5301X-Use-corretc-pinctrl-compatible-for-.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0005-ARM-dts-BCM5301X-Use-corretc-pinctrl-compatible-for-.patch
+@@ -38,7 +38,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  };
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -428,7 +428,7 @@
++@@ -430,7 +430,7 @@
+  			#address-cells = <1>;
+  			#size-cells = <1>;
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0007-ARM-dts-BCM5301X-Move-CRU-devices-to-the-CRU-node.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0007-ARM-dts-BCM5301X-Move-CRU-devices-to-the-CRU-node.patch
+index 6f763a2bf7c0..3c3db540d0d9 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0007-ARM-dts-BCM5301X-Move-CRU-devices-to-the-CRU-node.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0007-ARM-dts-BCM5301X-Move-CRU-devices-to-the-CRU-node.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -428,6 +428,26 @@
++@@ -430,6 +430,26 @@
+  			#address-cells = <1>;
+  			#size-cells = <1>;
+  
+@@ -44,7 +44,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  			pinctrl: pin-controller@1c0 {
+  				compatible = "brcm,bcm4708-pinmux";
+  				reg = <0x1c0 0x24>;
+-@@ -454,32 +474,13 @@
++@@ -456,32 +476,13 @@
+  					function = "uart1";
+  				};
+  			};
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0010-ARM-dts-BCM5301X-Update-Ethernet-switch-node-name.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0010-ARM-dts-BCM5301X-Update-Ethernet-switch-node-name.patch
+index 201aba913ab4..b3a774e3403c 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0010-ARM-dts-BCM5301X-Update-Ethernet-switch-node-name.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0010-ARM-dts-BCM5301X-Update-Ethernet-switch-node-name.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -483,7 +483,7 @@
++@@ -485,7 +485,7 @@
+  		};
+  	};
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0011-ARM-dts-BCM5301X-Add-a-default-compatible-for-switch.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0011-ARM-dts-BCM5301X-Add-a-default-compatible-for-switch.patch
+index 36a3b4c7284c..677e94f271c2 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0011-ARM-dts-BCM5301X-Add-a-default-compatible-for-switch.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0011-ARM-dts-BCM5301X-Add-a-default-compatible-for-switch.patch
+@@ -71,7 +71,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ +};
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -484,7 +484,7 @@
++@@ -486,7 +486,7 @@
+  	};
+  
+  	srab: ethernet-switch@18007000 {
+diff --git a/target/linux/bcm53xx/patches-5.10/030-v5.11-0012-ARM-dts-BCM5301X-Provide-defaults-ports-container-no.patch b/target/linux/bcm53xx/patches-5.10/030-v5.11-0012-ARM-dts-BCM5301X-Provide-defaults-ports-container-no.patch
+index 24689e998b67..6e4f5f7bb8a0 100644
+--- a/target/linux/bcm53xx/patches-5.10/030-v5.11-0012-ARM-dts-BCM5301X-Provide-defaults-ports-container-no.patch
++++ b/target/linux/bcm53xx/patches-5.10/030-v5.11-0012-ARM-dts-BCM5301X-Provide-defaults-ports-container-no.patch
+@@ -155,7 +155,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  			label = "lan4";
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -490,6 +490,10 @@
++@@ -492,6 +492,10 @@
+  		status = "disabled";
+  
+  		/* ports are defined in board DTS */
+diff --git a/target/linux/bcm53xx/patches-5.10/032-v5.14-0001-ARM-dts-BCM5301X-Fix-NAND-nodes-names.patch b/target/linux/bcm53xx/patches-5.10/032-v5.14-0001-ARM-dts-BCM5301X-Fix-NAND-nodes-names.patch
+index 3a661062b674..48cceee743ad 100644
+--- a/target/linux/bcm53xx/patches-5.10/032-v5.14-0001-ARM-dts-BCM5301X-Fix-NAND-nodes-names.patch
++++ b/target/linux/bcm53xx/patches-5.10/032-v5.14-0001-ARM-dts-BCM5301X-Fix-NAND-nodes-names.patch
+@@ -53,7 +53,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  			#address-cells = <1>;
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -501,7 +501,7 @@
++@@ -503,7 +503,7 @@
+  		reg = <0x18004000 0x14>;
+  	};
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/032-v5.14-0002-ARM-dts-BCM5301X-Fix-pinmux-subnodes-names.patch b/target/linux/bcm53xx/patches-5.10/032-v5.14-0002-ARM-dts-BCM5301X-Fix-pinmux-subnodes-names.patch
+index 1a342474a470..d8a4f87c3818 100644
+--- a/target/linux/bcm53xx/patches-5.10/032-v5.14-0002-ARM-dts-BCM5301X-Fix-pinmux-subnodes-names.patch
++++ b/target/linux/bcm53xx/patches-5.10/032-v5.14-0002-ARM-dts-BCM5301X-Fix-pinmux-subnodes-names.patch
+@@ -28,7 +28,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  	};
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -458,18 +458,18 @@
++@@ -460,18 +460,18 @@
+  					function = "spi";
+  				};
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/033-v5.15-0010-ARM-dts-BCM5301X-Fix-nodes-names.patch b/target/linux/bcm53xx/patches-5.10/033-v5.15-0010-ARM-dts-BCM5301X-Fix-nodes-names.patch
+index efcea1053f0f..e779d4564530 100644
+--- a/target/linux/bcm53xx/patches-5.10/033-v5.15-0010-ARM-dts-BCM5301X-Fix-nodes-names.patch
++++ b/target/linux/bcm53xx/patches-5.10/033-v5.15-0010-ARM-dts-BCM5301X-Fix-nodes-names.patch
+@@ -50,7 +50,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  		compatible = "simple-bus";
+  		ranges = <0x00000000 0x19000000 0x00023000>;
+  		#address-cells = <1>;
+-@@ -369,7 +369,7 @@
++@@ -371,7 +371,7 @@
+  		#address-cells = <1>;
+  	};
+  
+@@ -59,7 +59,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+  		compatible = "mdio-mux-mmioreg";
+  		mdio-parent-bus = <&mdio>;
+  		#address-cells = <1>;
+-@@ -415,7 +415,7 @@
++@@ -417,7 +417,7 @@
+  		status = "disabled";
+  	};
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/033-v5.15-0011-ARM-dts-BCM5301X-Fix-MDIO-mux-binding.patch b/target/linux/bcm53xx/patches-5.10/033-v5.15-0011-ARM-dts-BCM5301X-Fix-MDIO-mux-binding.patch
+index ee0adc049246..dc20720dbd36 100644
+--- a/target/linux/bcm53xx/patches-5.10/033-v5.15-0011-ARM-dts-BCM5301X-Fix-MDIO-mux-binding.patch
++++ b/target/linux/bcm53xx/patches-5.10/033-v5.15-0011-ARM-dts-BCM5301X-Fix-MDIO-mux-binding.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/bcm5301x.dtsi
+ +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -370,7 +370,7 @@
++@@ -372,7 +372,7 @@
+  	};
+  
+  	mdio-mux@18003000 {
+diff --git a/target/linux/bcm53xx/patches-5.10/033-v5.16-0024-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch b/target/linux/bcm53xx/patches-5.10/033-v5.16-0024-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
+deleted file mode 100644
+index 36ac748af091..000000000000
+--- a/target/linux/bcm53xx/patches-5.10/033-v5.16-0024-ARM-dts-BCM5301X-Fix-I2C-controller-interrupt.patch
++++ /dev/null
+@@ -1,29 +0,0 @@
+-From 6e238362b9793bf334c9bed2291b571cbbc75b0b Mon Sep 17 00:00:00 2001
+-From: Florian Fainelli <f.fainelli@gmail.com>
+-Date: Wed, 27 Oct 2021 12:37:29 -0700
+-Subject: [PATCH] ARM: dts: BCM5301X: Fix I2C controller interrupt
+-
+-The I2C interrupt controller line is off by 32 because the datasheet
+-describes interrupt inputs into the GIC which are for Shared Peripheral
+-Interrupts and are starting at offset 32. The ARM GIC binding expects
+-the SPI interrupts to be numbered from 0 relative to the SPI base.
+-
+-Fixes: bb097e3e0045 ("ARM: dts: BCM5301X: Add I2C support to the DT")
+-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+-Tested-by: Christian Lamparter <chunkeey@gmail.com>
+-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+----
+- arch/arm/boot/dts/bcm5301x.dtsi | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+---- a/arch/arm/boot/dts/bcm5301x.dtsi
+-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -408,7 +408,7 @@
+- 	i2c0: i2c@18009000 {
+- 		compatible = "brcm,iproc-i2c";
+- 		reg = <0x18009000 0x50>;
+--		interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
+-+		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+- 		#address-cells = <1>;
+- 		#size-cells = <0>;
+- 		clock-frequency = <100000>;
+diff --git a/target/linux/bcm53xx/patches-5.10/033-v5.16-0025-ARM-dts-BCM5301X-Add-interrupt-properties-to-GPIO-no.patch b/target/linux/bcm53xx/patches-5.10/033-v5.16-0025-ARM-dts-BCM5301X-Add-interrupt-properties-to-GPIO-no.patch
+deleted file mode 100644
+index 5a4e4497d67d..000000000000
+--- a/target/linux/bcm53xx/patches-5.10/033-v5.16-0025-ARM-dts-BCM5301X-Add-interrupt-properties-to-GPIO-no.patch
++++ /dev/null
+@@ -1,26 +0,0 @@
+-From acead95bf77a34cae7ff04dd99387046310cca0d Mon Sep 17 00:00:00 2001
+-From: Florian Fainelli <f.fainelli@gmail.com>
+-Date: Thu, 28 Oct 2021 09:46:53 -0700
+-Subject: [PATCH] ARM: dts: BCM5301X: Add interrupt properties to GPIO node
+-
+-The GPIO controller is also an interrupt controller provider and is
+-currently missing the appropriate 'interrupt-controller' and
+-'#interrupt-cells' properties to denote that.
+-
+-Fixes: fb026d3de33b ("ARM: BCM5301X: Add Broadcom's bus-axi to the DTS file")
+-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+----
+- arch/arm/boot/dts/bcm5301x.dtsi | 2 ++
+- 1 file changed, 2 insertions(+)
+-
+---- a/arch/arm/boot/dts/bcm5301x.dtsi
+-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
+-@@ -242,6 +242,8 @@
+- 
+- 			gpio-controller;
+- 			#gpio-cells = <2>;
+-+			interrupt-controller;
+-+			#interrupt-cells = <2>;
+- 		};
+- 
+- 		pcie0: pcie@12000 {
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-12-net-8021q-resolve-forwarding-path-for-vlan-devices.patch b/target/linux/generic/backport-5.10/610-v5.13-12-net-8021q-resolve-forwarding-path-for-vlan-devices.patch
+index 16eb940ad1d1..32c8c9bb780a 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-12-net-8021q-resolve-forwarding-path-for-vlan-devices.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-12-net-8021q-resolve-forwarding-path-for-vlan-devices.patch
+@@ -49,7 +49,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  #define NET_DEVICE_PATH_STACK_MAX	5
+ --- a/net/8021q/vlan_dev.c
+ +++ b/net/8021q/vlan_dev.c
+-@@ -767,6 +767,20 @@ static int vlan_dev_get_iflink(const str
++@@ -770,6 +770,20 @@ static int vlan_dev_get_iflink(const str
+  	return real_dev->ifindex;
+  }
+  
+@@ -70,7 +70,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  static const struct ethtool_ops vlan_ethtool_ops = {
+  	.get_link_ksettings	= vlan_ethtool_get_link_ksettings,
+  	.get_drvinfo	        = vlan_ethtool_get_drvinfo,
+-@@ -805,6 +819,7 @@ static const struct net_device_ops vlan_
++@@ -808,6 +822,7 @@ static const struct net_device_ops vlan_
+  #endif
+  	.ndo_fix_features	= vlan_dev_fix_features,
+  	.ndo_get_iflink		= vlan_dev_get_iflink,
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch b/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
+index 9abc6e6778d5..ba2b1a287706 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-14-net-bridge-resolve-forwarding-path-for-VLAN-tag-acti.patch
+@@ -51,7 +51,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  enum tc_setup_type {
+ --- a/net/8021q/vlan_dev.c
+ +++ b/net/8021q/vlan_dev.c
+-@@ -777,6 +777,12 @@ static int vlan_dev_fill_forward_path(st
++@@ -780,6 +780,12 @@ static int vlan_dev_fill_forward_path(st
+  	path->encap.proto = vlan->vlan_proto;
+  	path->dev = ctx->dev;
+  	ctx->dev = vlan->real_dev;
+diff --git a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index e7e9d19a2f34..196ff1dcba57 100644
+--- a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -933,7 +933,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+ --- a/drivers/net/ethernet/microchip/lan743x_main.c
+ +++ b/drivers/net/ethernet/microchip/lan743x_main.c
+-@@ -2837,7 +2837,6 @@ static int lan743x_pcidev_probe(struct p
++@@ -2831,7 +2831,6 @@ static int lan743x_pcidev_probe(struct p
+  {
+  	struct lan743x_adapter *adapter = NULL;
+  	struct net_device *netdev = NULL;
+@@ -941,7 +941,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	int ret = -ENODEV;
+  
+  	netdev = devm_alloc_etherdev(&pdev->dev,
+-@@ -2854,9 +2853,7 @@ static int lan743x_pcidev_probe(struct p
++@@ -2848,9 +2847,7 @@ static int lan743x_pcidev_probe(struct p
+  			      NETIF_MSG_IFDOWN | NETIF_MSG_TX_QUEUED;
+  	netdev->max_mtu = LAN743X_MAX_FRAME_SIZE;
+  
+@@ -1360,7 +1360,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	int irq;
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -4957,7 +4957,7 @@ int stmmac_dvr_probe(struct device *devi
++@@ -4990,7 +4990,7 @@ int stmmac_dvr_probe(struct device *devi
+  	priv->wol_irq = res->wol_irq;
+  	priv->lpi_irq = res->lpi_irq;
+  
+@@ -1371,7 +1371,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	dev_set_drvdata(device, priv->dev);
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+-@@ -394,7 +394,7 @@ static int stmmac_of_get_mac_mode(struct
++@@ -395,7 +395,7 @@ static int stmmac_of_get_mac_mode(struct
+   * set some private fields that will be used by the main at runtime.
+   */
+  struct plat_stmmacenet_data *
+@@ -1380,7 +1380,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  {
+  	struct device_node *np = pdev->dev.of_node;
+  	struct plat_stmmacenet_data *plat;
+-@@ -406,12 +406,12 @@ stmmac_probe_config_dt(struct platform_d
++@@ -407,12 +407,12 @@ stmmac_probe_config_dt(struct platform_d
+  	if (!plat)
+  		return ERR_PTR(-ENOMEM);
+  
+@@ -1398,7 +1398,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	phy_mode = device_get_phy_mode(&pdev->dev);
+-@@ -643,7 +643,7 @@ void stmmac_remove_config_dt(struct plat
++@@ -644,7 +644,7 @@ void stmmac_remove_config_dt(struct plat
+  }
+  #else
+  struct plat_stmmacenet_data *
+diff --git a/target/linux/generic/hack-5.10/902-debloat_proc.patch b/target/linux/generic/hack-5.10/902-debloat_proc.patch
+index e9ed09f15a6d..5d7620b80df7 100644
+--- a/target/linux/generic/hack-5.10/902-debloat_proc.patch
++++ b/target/linux/generic/hack-5.10/902-debloat_proc.patch
+@@ -158,7 +158,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  				IPC_SEM_IDS, sysvipc_sem_proc_show);
+ --- a/ipc/shm.c
+ +++ b/ipc/shm.c
+-@@ -144,6 +144,8 @@ pure_initcall(ipc_ns_init);
++@@ -154,6 +154,8 @@ pure_initcall(ipc_ns_init);
+  
+  void __init shm_init(void)
+  {
+diff --git a/target/linux/generic/pending-5.10/670-ipv6-allow-rejecting-with-source-address-failed-policy.patch b/target/linux/generic/pending-5.10/670-ipv6-allow-rejecting-with-source-address-failed-policy.patch
+index 2daf1c964153..350a0f45969d 100644
+--- a/target/linux/generic/pending-5.10/670-ipv6-allow-rejecting-with-source-address-failed-policy.patch
++++ b/target/linux/generic/pending-5.10/670-ipv6-allow-rejecting-with-source-address-failed-policy.patch
+@@ -157,7 +157,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  	case RTN_THROW:
+  	case RTN_UNREACHABLE:
+  	default:
+-@@ -4429,6 +4448,17 @@ static int ip6_pkt_prohibit_out(struct n
++@@ -4448,6 +4467,17 @@ static int ip6_pkt_prohibit_out(struct n
+  	return ip6_pkt_drop(skb, ICMPV6_ADM_PROHIBITED, IPSTATS_MIB_OUTNOROUTES);
+  }
+  
+@@ -175,7 +175,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  /*
+   *	Allocate a dst for local (unicast / anycast) address.
+   */
+-@@ -4909,7 +4939,8 @@ static int rtm_to_fib6_config(struct sk_
++@@ -4928,7 +4958,8 @@ static int rtm_to_fib6_config(struct sk_
+  	if (rtm->rtm_type == RTN_UNREACHABLE ||
+  	    rtm->rtm_type == RTN_BLACKHOLE ||
+  	    rtm->rtm_type == RTN_PROHIBIT ||
+@@ -185,7 +185,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  		cfg->fc_flags |= RTF_REJECT;
+  
+  	if (rtm->rtm_type == RTN_LOCAL)
+-@@ -6080,6 +6111,8 @@ static int ip6_route_dev_notify(struct n
++@@ -6099,6 +6130,8 @@ static int ip6_route_dev_notify(struct n
+  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+  		net->ipv6.ip6_prohibit_entry->dst.dev = dev;
+  		net->ipv6.ip6_prohibit_entry->rt6i_idev = in6_dev_get(dev);
+@@ -194,7 +194,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  		net->ipv6.ip6_blk_hole_entry->dst.dev = dev;
+  		net->ipv6.ip6_blk_hole_entry->rt6i_idev = in6_dev_get(dev);
+  #endif
+-@@ -6091,6 +6124,7 @@ static int ip6_route_dev_notify(struct n
++@@ -6110,6 +6143,7 @@ static int ip6_route_dev_notify(struct n
+  		in6_dev_put_clear(&net->ipv6.ip6_null_entry->rt6i_idev);
+  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+  		in6_dev_put_clear(&net->ipv6.ip6_prohibit_entry->rt6i_idev);
+@@ -202,7 +202,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  		in6_dev_put_clear(&net->ipv6.ip6_blk_hole_entry->rt6i_idev);
+  #endif
+  	}
+-@@ -6282,6 +6316,8 @@ static int __net_init ip6_route_net_init
++@@ -6301,6 +6335,8 @@ static int __net_init ip6_route_net_init
+  
+  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+  	net->ipv6.fib6_has_custom_rules = false;
+@@ -211,7 +211,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  	net->ipv6.ip6_prohibit_entry = kmemdup(&ip6_prohibit_entry_template,
+  					       sizeof(*net->ipv6.ip6_prohibit_entry),
+  					       GFP_KERNEL);
+-@@ -6292,11 +6328,21 @@ static int __net_init ip6_route_net_init
++@@ -6311,11 +6347,21 @@ static int __net_init ip6_route_net_init
+  			 ip6_template_metrics, true);
+  	INIT_LIST_HEAD(&net->ipv6.ip6_prohibit_entry->rt6i_uncached);
+  
+@@ -234,7 +234,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  	net->ipv6.ip6_blk_hole_entry->dst.ops = &net->ipv6.ip6_dst_ops;
+  	dst_init_metrics(&net->ipv6.ip6_blk_hole_entry->dst,
+  			 ip6_template_metrics, true);
+-@@ -6323,6 +6369,8 @@ out:
++@@ -6342,6 +6388,8 @@ out:
+  	return ret;
+  
+  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+@@ -243,7 +243,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  out_ip6_prohibit_entry:
+  	kfree(net->ipv6.ip6_prohibit_entry);
+  out_ip6_null_entry:
+-@@ -6342,6 +6390,7 @@ static void __net_exit ip6_route_net_exi
++@@ -6361,6 +6409,7 @@ static void __net_exit ip6_route_net_exi
+  	kfree(net->ipv6.ip6_null_entry);
+  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+  	kfree(net->ipv6.ip6_prohibit_entry);
+@@ -251,7 +251,7 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+  	kfree(net->ipv6.ip6_blk_hole_entry);
+  #endif
+  	dst_entries_destroy(&net->ipv6.ip6_dst_ops);
+-@@ -6419,6 +6468,9 @@ void __init ip6_route_init_special_entri
++@@ -6438,6 +6487,9 @@ void __init ip6_route_init_special_entri
+  	init_net.ipv6.ip6_prohibit_entry->rt6i_idev = in6_dev_get(init_net.loopback_dev);
+  	init_net.ipv6.ip6_blk_hole_entry->dst.dev = init_net.loopback_dev;
+  	init_net.ipv6.ip6_blk_hole_entry->rt6i_idev = in6_dev_get(init_net.loopback_dev);
+diff --git a/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch b/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
+index 8be7eeaff4bd..7a304f69ca24 100644
+--- a/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
++++ b/target/linux/ipq40xx/patches-5.10/105-ipq40xx-fix-sleep-clock.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com> [just fixed the value]
+ ---
+ --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
+ +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+-@@ -146,7 +146,8 @@ pmu {
++@@ -142,7 +142,8 @@
+  	clocks {
+  		sleep_clk: sleep_clk {
+  			compatible = "fixed-clock";
+diff --git a/target/linux/ipq40xx/patches-5.10/702-dts-ipq4019-add-PHY-switch-nodes.patch b/target/linux/ipq40xx/patches-5.10/702-dts-ipq4019-add-PHY-switch-nodes.patch
+index cfbf7bd41fc2..d95e75107bc6 100644
+--- a/target/linux/ipq40xx/patches-5.10/702-dts-ipq4019-add-PHY-switch-nodes.patch
++++ b/target/linux/ipq40xx/patches-5.10/702-dts-ipq4019-add-PHY-switch-nodes.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+ 
+ --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
+ +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+-@@ -616,6 +616,29 @@
++@@ -617,6 +617,29 @@
+  			};
+  		};
+  
+diff --git a/target/linux/ipq40xx/patches-5.10/708-arm-dts-ipq4019-QCA807x-properties.patch b/target/linux/ipq40xx/patches-5.10/708-arm-dts-ipq4019-QCA807x-properties.patch
+index 4b04a3ce9ab9..c08f3a83e676 100644
+--- a/target/linux/ipq40xx/patches-5.10/708-arm-dts-ipq4019-QCA807x-properties.patch
++++ b/target/linux/ipq40xx/patches-5.10/708-arm-dts-ipq4019-QCA807x-properties.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+  
+  / {
+  	#address-cells = <1>;
+-@@ -597,22 +598,39 @@
++@@ -598,22 +599,39 @@
+  
+  			ethphy0: ethernet-phy@0 {
+  				reg = <0>;
+diff --git a/target/linux/ipq40xx/patches-5.10/711-dts-ipq4019-add-ethernet-essedma-node.patch b/target/linux/ipq40xx/patches-5.10/711-dts-ipq4019-add-ethernet-essedma-node.patch
+index 7b2ddfe00d5d..3567eb7810c8 100644
+--- a/target/linux/ipq40xx/patches-5.10/711-dts-ipq4019-add-ethernet-essedma-node.patch
++++ b/target/linux/ipq40xx/patches-5.10/711-dts-ipq4019-add-ethernet-essedma-node.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+  	};
+  
+  	cpus {
+-@@ -657,6 +659,64 @@
++@@ -658,6 +660,64 @@
+  			status = "disabled";
+  		};
+  
+diff --git a/target/linux/ipq806x/patches-5.10/083-ipq8064-dtsi-additions.patch b/target/linux/ipq806x/patches-5.10/083-ipq8064-dtsi-additions.patch
+index e6f2027e221c..2667bd636ea9 100644
+--- a/target/linux/ipq806x/patches-5.10/083-ipq8064-dtsi-additions.patch
++++ b/target/linux/ipq806x/patches-5.10/083-ipq8064-dtsi-additions.patch
+@@ -78,9 +78,9 @@
+ +			opp-microvolt = <1150000>;
+ +			clock-latency-ns = <100000>;
+ +			opp-level = <2>;
+- 		};
+- 	};
+- 
+++		};
+++	};
+++
+ +	opp_table0: opp_table0 {
+ +		compatible = "operating-points-v2-kryo-cpu";
+ +		nvmem-cells = <&speedbin_efuse>;
+@@ -152,9 +152,9 @@
+ +			opp-supported-hw = <0x1>;
+ +			clock-latency-ns = <100000>;
+ +			opp-level = <2>;
+-+		};
+-+	};
+-+
++ 		};
++ 	};
++ 
+ +	thermal-zones {
+ +		tsens_tz_sensor0 {
+ +			polling-delay-passive = <0>;
+diff --git a/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch b/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
+index a797492beeee..2bcf17751a61 100644
+--- a/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
++++ b/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
+@@ -29,7 +29,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -4990,6 +4990,10 @@ int stmmac_dvr_probe(struct device *devi
++@@ -5023,6 +5023,10 @@ int stmmac_dvr_probe(struct device *devi
+  			reset_control_reset(priv->plat->stmmac_rst);
+  	}
+  
+@@ -40,7 +40,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	/* Init MAC and get the capabilities */
+  	ret = stmmac_hw_init(priv);
+  	if (ret)
+-@@ -5214,6 +5218,7 @@ int stmmac_dvr_remove(struct device *dev
++@@ -5247,6 +5251,7 @@ int stmmac_dvr_remove(struct device *dev
+  	phylink_destroy(priv->phylink);
+  	if (priv->plat->stmmac_rst)
+  		reset_control_assert(priv->plat->stmmac_rst);
+@@ -50,7 +50,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+-@@ -616,6 +616,12 @@ stmmac_probe_config_dt(struct platform_d
++@@ -617,6 +617,12 @@ stmmac_probe_config_dt(struct platform_d
+  		plat->stmmac_rst = NULL;
+  	}
+  
+diff --git a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+index ca8550e15fbe..a73d5e7b1eb7 100644
+--- a/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
++++ b/target/linux/ramips/patches-5.10/720-Revert-net-phy-simplify-phy_link_change-arguments.patch
+@@ -95,7 +95,7 @@ still required by target/linux/ramips/files/drivers/net/ethernet/ralink/mdio.c
+  		phydev->mii_ts->link_state(phydev->mii_ts, phydev);
+ --- a/drivers/net/phy/phylink.c
+ +++ b/drivers/net/phy/phylink.c
+-@@ -907,7 +907,8 @@ void phylink_destroy(struct phylink *pl)
++@@ -931,7 +931,8 @@ void phylink_destroy(struct phylink *pl)
+  }
+  EXPORT_SYMBOL_GPL(phylink_destroy);
+  
+diff --git a/target/linux/realtek/patches-5.10/704-drivers-net-phy-eee-support-for-rtl838x.patch b/target/linux/realtek/patches-5.10/704-drivers-net-phy-eee-support-for-rtl838x.patch
+index 4fc31c4f4fdc..3cb04c086873 100644
+--- a/target/linux/realtek/patches-5.10/704-drivers-net-phy-eee-support-for-rtl838x.patch
++++ b/target/linux/realtek/patches-5.10/704-drivers-net-phy-eee-support-for-rtl838x.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/net/phy/phylink.c
+ +++ b/drivers/net/phy/phylink.c
+-@@ -1425,6 +1425,11 @@ int phylink_ethtool_ksettings_set(struct
++@@ -1449,6 +1449,11 @@ int phylink_ethtool_ksettings_set(struct
+  		 *   the presence of a PHY, this should not be changed as that
+  		 *   should be determined from the media side advertisement.
+  		 */
+@@ -12,7 +12,7 @@
+  		return phy_ethtool_ksettings_set(pl->phydev, kset);
+  	}
+  
+-@@ -1726,8 +1731,11 @@ int phylink_ethtool_get_eee(struct phyli
++@@ -1750,8 +1755,11 @@ int phylink_ethtool_get_eee(struct phyli
+  
+  	ASSERT_RTNL();
+  
+@@ -25,7 +25,7 @@
+  
+  	return ret;
+  }
+-@@ -1744,8 +1752,11 @@ int phylink_ethtool_set_eee(struct phyli
++@@ -1768,8 +1776,11 @@ int phylink_ethtool_set_eee(struct phyli
+  
+  	ASSERT_RTNL();
+  

@@ -1,3 +1,19 @@
+20211203-04
+- update to e22c91e144d63ccbd7b76b370a53652c48db1d6f
+- drop adblock
+  Startup takes too long
+  No option to just drop a file in place
+  Can't edit source(s) easily due to compressed lists
+- add divblock
+  I already maintain for many years now my own HOSTS lists.
+  These are already reasonably well tested through use in DivestOS.
+  These lists are *highly* optimized thanks to my wildcard optimzer.
+  Can be easily pointed to another source in dnsmasq format.
+  Startup is under 10 seconds!
+  https://divested.dev/index.php?page=dnsbl
+  https://gitlab.com/divested/simple_hosts_merger
+  Please report any issues you find!
+
 20211203-01
 - [cherrypick] #4813: mvebu: *next driver backport of mvneta MQPrio TC offload changes
 
