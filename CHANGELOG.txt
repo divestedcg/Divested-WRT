@@ -1,3 +1,6 @@
+20211203-01
+- [cherrypick] #4813: mvebu: *next driver backport of mvneta MQPrio TC offload changes
+
 20211203-00
 - update to fc4398fe71810f3bb5637bdfd0b3975a8ec858f0
 - [cherrypick] #4811: update to kernel 5.10.83 (security and bug fixes)
