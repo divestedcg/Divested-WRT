@@ -1,3 +1,7 @@
+20211204-00
+- update to dd681838d370f1f6f6fa1bf1f22b0414322292f3
+- divblock: add sanitization (security fix)
+
 20211203-04
 - update to e22c91e144d63ccbd7b76b370a53652c48db1d6f
 - drop adblock
