@@ -1,3 +1,7 @@
+20211208-00
+- update to 7e89421a7c3855d66a20350a5bf9ca4cc7a2caf9
+- [cherrypick] #4811: update to kernel 5.10.84 (security and bug fixes)
+
 20211204-00
 - update to dd681838d370f1f6f6fa1bf1f22b0414322292f3
 - divblock: add sanitization (security fix)

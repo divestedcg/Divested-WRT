@@ -5,16 +5,16 @@ Subject: [PATCH] Add divblock, an extremely simple "ad" blocker
 
 Signed-off-by: Tad <tad@spotco.us>
 ---
- package/base-files/files/etc/init.d/divblock | 48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ package/base-files/files/etc/init.d/divblock | 49 ++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
  create mode 100755 package/base-files/files/etc/init.d/divblock
 
 diff --git a/package/base-files/files/etc/init.d/divblock b/package/base-files/files/etc/init.d/divblock
 new file mode 100755
-index 0000000000..3d6a8c8f30
+index 0000000000..f71e908537
 --- /dev/null
 +++ b/package/base-files/files/etc/init.d/divblock
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,49 @@
 +#!/bin/sh /etc/rc.common
 +#License: GPL-2.0-or-later
 +
@@ -38,6 +38,7 @@ index 0000000000..3d6a8c8f30
 +	# - TODO: add basic exclusion list support
 +	# - Restart dnsmasq
 +	if /etc/init.d/dnsmasq enabled; then
++		sleep 15; #wait for network and system to settle after boot XXX: ugly
 +		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' > $DIVBLOCK_OUTPUT; then
 +			logger -t divblock "downloaded";
 +			/etc/init.d/dnsmasq restart;

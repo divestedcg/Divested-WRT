@@ -21,6 +21,7 @@ start_service()
 	# - TODO: add basic exclusion list support
 	# - Restart dnsmasq
 	if /etc/init.d/dnsmasq enabled; then
+		sleep 15; #wait for network and system to settle after boot XXX: ugly
 		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' > $DIVBLOCK_OUTPUT; then
 			logger -t divblock "downloaded";
 			/etc/init.d/dnsmasq restart;
