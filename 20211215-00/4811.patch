@@ -1,0 +1,760 @@
+From aa6df2b37a0343edeffb916b367c12fe9805cefb Mon Sep 17 00:00:00 2001
+From: John Audia <graysky@archlinux.us>
+Date: Wed, 8 Dec 2021 06:14:30 -0500
+Subject: [PATCH 1/2] kernel: bump 5.10 to 5.10.84
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B
+Run-tested: bcm2711/RPi4B
+
+Signed-off-by: John Audia <graysky@archlinux.us>
+---
+ include/kernel-version.mk                       |  4 ++--
+ ...ci-quirks-add-link-TRB-quirk-for-VL805.patch |  2 +-
+ ...ull-state-to-connectors-atomic-functio.patch |  2 +-
+ ...round-for-bogus-SET_DEQ_PENDING-endpoi.patch |  2 +-
+ ...napi-poll-functionality-to-__napi_poll.patch |  8 ++++----
+ ...t-threaded-able-napi-poll-loop-support.patch | 10 +++++-----
+ ...attribute-to-control-napi-threaded-mod.patch |  4 ++--
+ ...etween-napi-kthread-mode-and-busy-poll.patch |  6 +++---
+ ...ngup-on-napi_disable-for-threaded-napi.patch |  4 ++--
+ ...NET-skip-GRO-for-foreign-MAC-addresses.patch | 10 +++++-----
+ .../331-mt7622-rfb1-enable-bmt.patch            |  2 +-
+ .../patches-5.10/410-bt-mtk-serial-fix.patch    |  2 +-
+ ...t-ethernet-marvell-mvnetaMQPrioOffload.patch |  9 ++-------
+ ...next-ethernet-marvell-mvnetaMQPrioFlag.patch |  7 +------
+ ...ext-ethernet-marvell-mvnetaMQPrioQueue.patch | 17 ++++++-----------
+ ...ethernet-marvell-mvnetaMQPrioTCOffload.patch | 11 +++--------
+ 16 files changed, 40 insertions(+), 60 deletions(-)
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index ccedcb18c069..63500a6967eb 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .162
+-LINUX_VERSION-5.10 = .83
++LINUX_VERSION-5.10 = .84
+ 
+ LINUX_KERNEL_HASH-5.4.162 = c12d72ddaac78189305a5e98825295ecb02282970033b052276035e83189e25b
+-LINUX_KERNEL_HASH-5.10.83 = ef259a43f33ddb56001283f4f4e50af29b8a48fa066aed7371a90ebf38c29b70
++LINUX_KERNEL_HASH-5.10.84 = 6e96271d72dd106c4bd83931ca16fda622413b34c5649e2916116c38c12e233d
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch b/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+index 5f451a01d42e..ec889df41133 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0355-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ --- a/drivers/usb/host/xhci-ring.c
+ +++ b/drivers/usb/host/xhci-ring.c
+-@@ -659,6 +659,16 @@ void xhci_find_new_dequeue_state(struct
++@@ -666,6 +666,16 @@ void xhci_find_new_dequeue_state(struct
+  
+  	} while (!cycle_found || !td_last_trb_found);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0690-drm-Pass-the-full-state-to-connectors-atomic-functio.patch b/target/linux/bcm27xx/patches-5.10/950-0690-drm-Pass-the-full-state-to-connectors-atomic-functio.patch
+index 8d62659ff0f9..402f89f06b60 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0690-drm-Pass-the-full-state-to-connectors-atomic-functio.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0690-drm-Pass-the-full-state-to-connectors-atomic-functio.patch
+@@ -190,7 +190,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20201118094758.506730-1-maxi
+  #include <drm/drm_atomic_helper.h>
+  #include <drm/drm_dp_mst_helper.h>
+  #include <drm/drm_dp_helper.h>
+-@@ -252,8 +253,10 @@ static int dm_dp_mst_get_modes(struct dr
++@@ -264,8 +265,10 @@ static int dm_dp_mst_get_modes(struct dr
+  
+  static struct drm_encoder *
+  dm_mst_atomic_best_encoder(struct drm_connector *connector,
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch b/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
+index 8a76dd1b26c8..830616612778 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci-ring.c
+ +++ b/drivers/usb/host/xhci-ring.c
+-@@ -4262,9 +4262,9 @@ void xhci_queue_new_dequeue_state(struct
++@@ -4269,9 +4269,9 @@ void xhci_queue_new_dequeue_state(struct
+  	}
+  	ep = &xhci->devs[slot_id]->eps[ep_index];
+  	if ((ep->ep_state & SET_DEQ_PENDING)) {
+diff --git a/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch b/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
+index 680b88d8d36f..1fca4a5e7433 100644
+--- a/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
++++ b/target/linux/generic/backport-5.10/600-v5.12-net-extract-napi-poll-functionality-to-__napi_poll.patch
+@@ -18,7 +18,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -6802,15 +6802,10 @@ void __netif_napi_del(struct napi_struct
++@@ -6805,15 +6805,10 @@ void __netif_napi_del(struct napi_struct
+  }
+  EXPORT_SYMBOL(__netif_napi_del);
+  
+@@ -35,7 +35,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	weight = n->weight;
+  
+  	/* This NAPI_STATE_SCHED test is for avoiding a race
+-@@ -6830,7 +6825,7 @@ static int napi_poll(struct napi_struct
++@@ -6833,7 +6828,7 @@ static int napi_poll(struct napi_struct
+  			    n->poll, work, weight);
+  
+  	if (likely(work < weight))
+@@ -44,7 +44,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+  	/* Drivers must not modify the NAPI state if they
+  	 * consume the entire weight.  In such cases this code
+-@@ -6839,7 +6834,7 @@ static int napi_poll(struct napi_struct
++@@ -6842,7 +6837,7 @@ static int napi_poll(struct napi_struct
+  	 */
+  	if (unlikely(napi_disable_pending(n))) {
+  		napi_complete(n);
+@@ -53,7 +53,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	if (n->gro_bitmask) {
+-@@ -6857,12 +6852,29 @@ static int napi_poll(struct napi_struct
++@@ -6860,12 +6855,29 @@ static int napi_poll(struct napi_struct
+  	if (unlikely(!list_empty(&n->poll_list))) {
+  		pr_warn_once("%s: Budget exhausted after napi rescheduled\n",
+  			     n->dev ? n->dev->name : "backlog");
+diff --git a/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch b/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
+index ef94cc8e01e2..38e276ef72c5 100644
+--- a/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
++++ b/target/linux/generic/backport-5.10/601-v5.12-net-implement-threaded-able-napi-poll-loop-support.patch
+@@ -131,7 +131,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static int __dev_open(struct net_device *dev, struct netlink_ext_ack *extack)
+  {
+  	const struct net_device_ops *ops = dev->netdev_ops;
+-@@ -4264,6 +4286,21 @@ int gro_normal_batch __read_mostly = 8;
++@@ -4267,6 +4289,21 @@ int gro_normal_batch __read_mostly = 8;
+  static inline void ____napi_schedule(struct softnet_data *sd,
+  				     struct napi_struct *napi)
+  {
+@@ -153,7 +153,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	list_add_tail(&napi->poll_list, &sd->poll_list);
+  	__raise_softirq_irqoff(NET_RX_SOFTIRQ);
+  }
+-@@ -6755,6 +6792,12 @@ void netif_napi_add(struct net_device *d
++@@ -6758,6 +6795,12 @@ void netif_napi_add(struct net_device *d
+  	set_bit(NAPI_STATE_NPSVC, &napi->state);
+  	list_add_rcu(&napi->dev_list, &dev->napi_list);
+  	napi_hash_add(napi);
+@@ -166,7 +166,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  EXPORT_SYMBOL(netif_napi_add);
+  
+-@@ -6771,9 +6814,28 @@ void napi_disable(struct napi_struct *n)
++@@ -6774,9 +6817,28 @@ void napi_disable(struct napi_struct *n)
+  	hrtimer_cancel(&n->timer);
+  
+  	clear_bit(NAPI_STATE_DISABLE, &n->state);
+@@ -195,7 +195,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  static void flush_gro_hash(struct napi_struct *napi)
+  {
+  	int i;
+-@@ -6799,6 +6861,11 @@ void __netif_napi_del(struct napi_struct
++@@ -6802,6 +6864,11 @@ void __netif_napi_del(struct napi_struct
+  
+  	flush_gro_hash(napi);
+  	napi->gro_bitmask = 0;
+@@ -207,7 +207,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  }
+  EXPORT_SYMBOL(__netif_napi_del);
+  
+-@@ -6880,6 +6947,51 @@ static int napi_poll(struct napi_struct
++@@ -6883,6 +6950,51 @@ static int napi_poll(struct napi_struct
+  	return work;
+  }
+  
+diff --git a/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch b/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
+index de1cd08df4a8..c3119a6e9b27 100644
+--- a/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
++++ b/target/linux/generic/backport-5.10/602-v5.12-net-add-sysfs-attribute-to-control-napi-threaded-mod.patch
+@@ -57,7 +57,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+   *	@n: NAPI context
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -4290,8 +4290,9 @@ static inline void ____napi_schedule(str
++@@ -4293,8 +4293,9 @@ static inline void ____napi_schedule(str
+  
+  	if (test_bit(NAPI_STATE_THREADED, &napi->state)) {
+  		/* Paired with smp_mb__before_atomic() in
+@@ -69,7 +69,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		 * wake_up_process() when it's not NULL.
+  		 */
+  		thread = READ_ONCE(napi->thread);
+-@@ -6765,6 +6766,49 @@ static void init_gro_hash(struct napi_st
++@@ -6768,6 +6769,49 @@ static void init_gro_hash(struct napi_st
+  	napi->gro_bitmask = 0;
+  }
+  
+diff --git a/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch b/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
+index a9e83a6d2344..febef3e28a66 100644
+--- a/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
++++ b/target/linux/generic/backport-5.10/603-v5.12-net-fix-race-between-napi-kthread-mode-and-busy-poll.patch
+@@ -45,7 +45,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  enum gro_result {
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -4297,6 +4297,8 @@ static inline void ____napi_schedule(str
++@@ -4300,6 +4300,8 @@ static inline void ____napi_schedule(str
+  		 */
+  		thread = READ_ONCE(napi->thread);
+  		if (thread) {
+@@ -54,7 +54,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  			wake_up_process(thread);
+  			return;
+  		}
+-@@ -6557,7 +6559,8 @@ bool napi_complete_done(struct napi_stru
++@@ -6560,7 +6562,8 @@ bool napi_complete_done(struct napi_stru
+  
+  		WARN_ON_ONCE(!(val & NAPIF_STATE_SCHED));
+  
+@@ -64,7 +64,7 @@ Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+  
+  		/* If STATE_MISSED was set, leave STATE_SCHED set,
+  		 * because we will call napi->poll() one more time.
+-@@ -6993,16 +6996,25 @@ static int napi_poll(struct napi_struct
++@@ -6996,16 +6999,25 @@ static int napi_poll(struct napi_struct
+  
+  static int napi_thread_wait(struct napi_struct *napi)
+  {
+diff --git a/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch b/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
+index d012f49bf591..1223b15c33ee 100644
+--- a/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
++++ b/target/linux/generic/backport-5.10/604-v5.12-net-fix-hangup-on-napi_disable-for-threaded-napi.patch
+@@ -34,7 +34,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -7000,7 +7000,7 @@ static int napi_thread_wait(struct napi_
++@@ -7003,7 +7003,7 @@ static int napi_thread_wait(struct napi_
+  
+  	set_current_state(TASK_INTERRUPTIBLE);
+  
+@@ -43,7 +43,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		/* Testing SCHED_THREADED bit here to make sure the current
+  		 * kthread owns this napi and could poll on this napi.
+  		 * Testing SCHED bit is not enough because SCHED bit might be
+-@@ -7018,6 +7018,7 @@ static int napi_thread_wait(struct napi_
++@@ -7021,6 +7021,7 @@ static int napi_thread_wait(struct napi_
+  		set_current_state(TASK_INTERRUPTIBLE);
+  	}
+  	__set_current_state(TASK_RUNNING);
+diff --git a/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch b/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
+index 6f11ba18f506..e64e0421e174 100644
+--- a/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
++++ b/target/linux/generic/pending-5.10/680-NET-skip-GRO-for-foreign-MAC-addresses.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	__u16			tc_index;	/* traffic control index */
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -6059,6 +6059,9 @@ static enum gro_result dev_gro_receive(s
++@@ -6062,6 +6062,9 @@ static enum gro_result dev_gro_receive(s
+  	int same_flow;
+  	int grow;
+  
+@@ -42,7 +42,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (netif_elide_gro(skb->dev))
+  		goto normal;
+  
+-@@ -8036,6 +8039,48 @@ static void __netdev_adjacent_dev_unlink
++@@ -8039,6 +8042,48 @@ static void __netdev_adjacent_dev_unlink
+  					   &upper_dev->adj_list.lower);
+  }
+  
+@@ -91,7 +91,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  static int __netdev_upper_dev_link(struct net_device *dev,
+  				   struct net_device *upper_dev, bool master,
+  				   void *upper_priv, void *upper_info,
+-@@ -8087,6 +8132,7 @@ static int __netdev_upper_dev_link(struc
++@@ -8090,6 +8135,7 @@ static int __netdev_upper_dev_link(struc
+  	if (ret)
+  		return ret;
+  
+@@ -99,7 +99,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	ret = call_netdevice_notifiers_info(NETDEV_CHANGEUPPER,
+  					    &changeupper_info.info);
+  	ret = notifier_to_errno(ret);
+-@@ -8183,6 +8229,7 @@ static void __netdev_upper_dev_unlink(st
++@@ -8186,6 +8232,7 @@ static void __netdev_upper_dev_unlink(st
+  
+  	__netdev_adjacent_dev_unlink_neighbour(dev, upper_dev);
+  
+@@ -107,7 +107,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	call_netdevice_notifiers_info(NETDEV_CHANGEUPPER,
+  				      &changeupper_info.info);
+  
+-@@ -8969,6 +9016,7 @@ int dev_set_mac_address(struct net_devic
++@@ -8972,6 +9019,7 @@ int dev_set_mac_address(struct net_devic
+  	if (err)
+  		return err;
+  	dev->addr_assign_type = NET_ADDR_SET;
+diff --git a/target/linux/mediatek/patches-5.10/331-mt7622-rfb1-enable-bmt.patch b/target/linux/mediatek/patches-5.10/331-mt7622-rfb1-enable-bmt.patch
+index 3f59163e09e4..a79bd8fcdc0e 100644
+--- a/target/linux/mediatek/patches-5.10/331-mt7622-rfb1-enable-bmt.patch
++++ b/target/linux/mediatek/patches-5.10/331-mt7622-rfb1-enable-bmt.patch
+@@ -1,6 +1,6 @@
+ --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+ +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+-@@ -533,6 +533,8 @@
++@@ -535,6 +535,8 @@
+  	pinctrl-0 = <&serial_nand_pins>;
+  	status = "okay";
+  
+diff --git a/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch b/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
+index d18f49e1b76b..0cc9668f8162 100644
+--- a/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
++++ b/target/linux/mediatek/patches-5.10/410-bt-mtk-serial-fix.patch
+@@ -19,7 +19,7 @@
+  	},
+  	[PORT_NPCM] = {
+  		.name		= "Nuvoton 16550",
+-@@ -2732,6 +2732,11 @@ serial8250_do_set_termios(struct uart_po
++@@ -2725,6 +2725,11 @@ serial8250_do_set_termios(struct uart_po
+  	unsigned long flags;
+  	unsigned int baud, quot, frac = 0;
+  
+diff --git a/target/linux/mvebu/patches-5.10/702-net-next-ethernet-marvell-mvnetaMQPrioOffload.patch b/target/linux/mvebu/patches-5.10/702-net-next-ethernet-marvell-mvnetaMQPrioOffload.patch
+index 8a5f3f3cf41c..41f8c1fbfd69 100644
+--- a/target/linux/mvebu/patches-5.10/702-net-next-ethernet-marvell-mvnetaMQPrioOffload.patch
++++ b/target/linux/mvebu/patches-5.10/702-net-next-ethernet-marvell-mvnetaMQPrioOffload.patch
+@@ -16,8 +16,6 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ (limited to 'drivers/net/ethernet/marvell/mvneta.c')
+ 
+-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+-index 80e4b500695e6..46b7604805f76 100644
+ --- a/drivers/net/ethernet/marvell/mvneta.c
+ +++ b/drivers/net/ethernet/marvell/mvneta.c
+ @@ -38,6 +38,7 @@
+@@ -28,7 +26,7 @@ index 80e4b500695e6..46b7604805f76 100644
+  #include <linux/bpf_trace.h>
+  
+  /* Registers */
+-@@ -4908,14 +4909,14 @@ static void mvneta_setup_rx_prio_map(struct mvneta_port *pp)
++@@ -4933,14 +4934,14 @@ static void mvneta_setup_rx_prio_map(str
+  }
+  
+  static int mvneta_setup_mqprio(struct net_device *dev,
+@@ -46,7 +44,7 @@ index 80e4b500695e6..46b7604805f76 100644
+  
+  	if (num_tc > rxq_number)
+  		return -EINVAL;
+-@@ -4926,13 +4927,15 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4951,13 +4952,15 @@ static int mvneta_setup_mqprio(struct ne
+  		return 0;
+  	}
+  
+@@ -66,6 +64,3 @@ index 80e4b500695e6..46b7604805f76 100644
+  
+  	return 0;
+  }
+--- 
+-cgit 1.2.3-1.el7
+-
+diff --git a/target/linux/mvebu/patches-5.10/703-net-next-ethernet-marvell-mvnetaMQPrioFlag.patch b/target/linux/mvebu/patches-5.10/703-net-next-ethernet-marvell-mvnetaMQPrioFlag.patch
+index a9bf9b22c35d..8529b6ae5e46 100644
+--- a/target/linux/mvebu/patches-5.10/703-net-next-ethernet-marvell-mvnetaMQPrioFlag.patch
++++ b/target/linux/mvebu/patches-5.10/703-net-next-ethernet-marvell-mvnetaMQPrioFlag.patch
+@@ -15,11 +15,9 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ (limited to 'drivers/net/ethernet/marvell/mvneta.c')
+ 
+-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+-index 46b7604805f76..d3ce87e69d2a8 100644
+ --- a/drivers/net/ethernet/marvell/mvneta.c
+ +++ b/drivers/net/ethernet/marvell/mvneta.c
+-@@ -4915,7 +4915,9 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4940,7 +4940,9 @@ static int mvneta_setup_mqprio(struct ne
+  	u8 num_tc;
+  	int i;
+  
+@@ -30,6 +28,3 @@ index 46b7604805f76..d3ce87e69d2a8 100644
+  	num_tc = mqprio->qopt.num_tc;
+  
+  	if (num_tc > rxq_number)
+--- 
+-cgit 1.2.3-1.el7
+-
+diff --git a/target/linux/mvebu/patches-5.10/704-net-next-ethernet-marvell-mvnetaMQPrioQueue.patch b/target/linux/mvebu/patches-5.10/704-net-next-ethernet-marvell-mvnetaMQPrioQueue.patch
+index ac5fdc329aee..ed4f0441dd07 100644
+--- a/target/linux/mvebu/patches-5.10/704-net-next-ethernet-marvell-mvnetaMQPrioQueue.patch
++++ b/target/linux/mvebu/patches-5.10/704-net-next-ethernet-marvell-mvnetaMQPrioQueue.patch
+@@ -20,8 +20,6 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ (limited to 'drivers/net/ethernet/marvell/mvneta.c')
+ 
+-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+-index d3ce87e69d2a8..aba452e8abfe6 100644
+ --- a/drivers/net/ethernet/marvell/mvneta.c
+ +++ b/drivers/net/ethernet/marvell/mvneta.c
+ @@ -493,7 +493,6 @@ struct mvneta_port {
+@@ -32,7 +30,7 @@ index d3ce87e69d2a8..aba452e8abfe6 100644
+  
+  	phy_interface_t phy_interface;
+  	struct device_node *dn;
+-@@ -4897,13 +4896,12 @@ static void mvneta_clear_rx_prio_map(struct mvneta_port *pp)
++@@ -4922,13 +4921,12 @@ static void mvneta_clear_rx_prio_map(str
+  	mvreg_write(pp, MVNETA_VLAN_PRIO_TO_RXQ, 0);
+  }
+  
+@@ -50,7 +48,7 @@ index d3ce87e69d2a8..aba452e8abfe6 100644
+  
+  	mvreg_write(pp, MVNETA_VLAN_PRIO_TO_RXQ, val);
+  }
+-@@ -4912,8 +4910,8 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4937,8 +4935,8 @@ static int mvneta_setup_mqprio(struct ne
+  			       struct tc_mqprio_qopt_offload *mqprio)
+  {
+  	struct mvneta_port *pp = netdev_priv(dev);
+@@ -60,7 +58,7 @@ index d3ce87e69d2a8..aba452e8abfe6 100644
+  
+  	if (mqprio->qopt.hw != TC_MQPRIO_HW_OFFLOAD_TCS)
+  		return 0;
+-@@ -4923,21 +4921,28 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4948,21 +4946,28 @@ static int mvneta_setup_mqprio(struct ne
+  	if (num_tc > rxq_number)
+  		return -EINVAL;
+  
+@@ -75,12 +73,12 @@ index d3ce87e69d2a8..aba452e8abfe6 100644
+ -	memcpy(pp->prio_tc_map, mqprio->qopt.prio_tc_map,
+ -	       sizeof(pp->prio_tc_map));
+ +	netdev_set_num_tc(dev, mqprio->qopt.num_tc);
+-+
++ 
++-	mvneta_setup_rx_prio_map(pp);
+ +	for (tc = 0; tc < mqprio->qopt.num_tc; tc++) {
+ +		netdev_set_tc_queue(dev, tc, mqprio->qopt.count[tc],
+ +				    mqprio->qopt.offset[tc]);
+- 
+--	mvneta_setup_rx_prio_map(pp);
+++
+ +		for (rxq = mqprio->qopt.offset[tc];
+ +		     rxq < mqprio->qopt.count[tc] + mqprio->qopt.offset[tc];
+ +		     rxq++) {
+@@ -97,6 +95,3 @@ index d3ce87e69d2a8..aba452e8abfe6 100644
+  
+  	return 0;
+  }
+--- 
+-cgit 1.2.3-1.el7
+-
+diff --git a/target/linux/mvebu/patches-5.10/705-net-next-ethernet-marvell-mvnetaMQPrioTCOffload.patch b/target/linux/mvebu/patches-5.10/705-net-next-ethernet-marvell-mvnetaMQPrioTCOffload.patch
+index d2fd1832d8b0..15a0ce6b583e 100644
+--- a/target/linux/mvebu/patches-5.10/705-net-next-ethernet-marvell-mvnetaMQPrioTCOffload.patch
++++ b/target/linux/mvebu/patches-5.10/705-net-next-ethernet-marvell-mvnetaMQPrioTCOffload.patch
+@@ -20,8 +20,6 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ (limited to 'drivers/net/ethernet/marvell/mvneta.c')
+ 
+-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+-index aba452e8abfe6..2368ae3f0e10d 100644
+ --- a/drivers/net/ethernet/marvell/mvneta.c
+ +++ b/drivers/net/ethernet/marvell/mvneta.c
+ @@ -248,12 +248,39 @@
+@@ -64,7 +62,7 @@ index aba452e8abfe6..2368ae3f0e10d 100644
+  #define MVNETA_LPI_CTRL_0                        0x2cc0
+  #define MVNETA_LPI_CTRL_1                        0x2cc4
+  #define      MVNETA_LPI_REQUEST_ENABLE           BIT(0)
+-@@ -4906,11 +4933,74 @@ static void mvneta_map_vlan_prio_to_rxq(struct mvneta_port *pp, u8 pri, u8 rxq)
++@@ -4931,11 +4958,74 @@ static void mvneta_map_vlan_prio_to_rxq(
+  	mvreg_write(pp, MVNETA_VLAN_PRIO_TO_RXQ, val);
+  }
+  
+@@ -140,7 +138,7 @@ index aba452e8abfe6..2368ae3f0e10d 100644
+  	u8 num_tc;
+  
+  	if (mqprio->qopt.hw != TC_MQPRIO_HW_OFFLOAD_TCS)
+-@@ -4924,6 +5014,7 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4949,6 +5039,7 @@ static int mvneta_setup_mqprio(struct ne
+  	mvneta_clear_rx_prio_map(pp);
+  
+  	if (!num_tc) {
+@@ -148,7 +146,7 @@ index aba452e8abfe6..2368ae3f0e10d 100644
+  		netdev_reset_tc(dev);
+  		return 0;
+  	}
+-@@ -4944,6 +5035,33 @@ static int mvneta_setup_mqprio(struct net_device *dev,
++@@ -4969,6 +5060,33 @@ static int mvneta_setup_mqprio(struct ne
+  		}
+  	}
+  
+@@ -182,6 +180,3 @@ index aba452e8abfe6..2368ae3f0e10d 100644
+  	return 0;
+  }
+  
+--- 
+-cgit 1.2.3-1.el7
+-
+
+From 663ddd3c986dc299ddec670157760f5126f9aeb8 Mon Sep 17 00:00:00 2001
+From: John Audia <graysky@archlinux.us>
+Date: Tue, 14 Dec 2021 06:15:08 -0500
+Subject: [PATCH 2/2] kernel: bump 5.10 to 5.10.85
+
+Removed target for patch which does not exist:
+    bcm27xx/patches-5.10/950-0249-kbuild-Disable-gcc-plugins.patch
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, ipq806x/R7800*
+Run-tested: bcm2711/RPi4B, ipq806x/R7800*
+
+* Had to revert 7f1edbd41295dff9f2127b169fbc086c0fb2c14e in order to build
+  (binutils 2.37, https://bugs.openwrt.org/index.php?do=details&task_id=4149)
+
+Signed-off-by: John Audia <graysky@archlinux.us>
+---
+ include/kernel-version.mk                     |  4 +--
+ ...hci_fixup_endpoint-for-interval-adju.patch |  2 +-
+ ...ce-quirks-for-Freeway-Airmouse-T3-an.patch |  4 +--
+ .../950-0249-kbuild-Disable-gcc-plugins.patch | 28 -------------------
+ ...2c-Add-driver-for-Sony-IMX477-sensor.patch |  2 +-
+ ...vicetree-Add-documentation-for-imx37.patch |  2 +-
+ ...und-for-bogus-SET_DEQ_PENDING-endpoi.patch |  2 +-
+ ...ble-Set-offload-timeouts-according-t.patch |  4 +--
+ ...the-dst-buffer-to-of_get_mac_address.patch |  2 +-
+ .../pending-5.10/834-ledtrig-libata.patch     |  8 +++---
+ .../oxnas/patches-5.10/999-libata-hacks.patch |  4 +--
+ ...hdog-add-realtek-otto-watchdog-timer.patch |  2 +-
+ 12 files changed, 18 insertions(+), 46 deletions(-)
+ delete mode 100644 target/linux/bcm27xx/patches-5.10/950-0249-kbuild-Disable-gcc-plugins.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index 63500a6967eb..445f6a7c826e 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .162
+-LINUX_VERSION-5.10 = .84
++LINUX_VERSION-5.10 = .85
+ 
+ LINUX_KERNEL_HASH-5.4.162 = c12d72ddaac78189305a5e98825295ecb02282970033b052276035e83189e25b
+-LINUX_KERNEL_HASH-5.10.84 = 6e96271d72dd106c4bd83931ca16fda622413b34c5649e2916116c38c12e233d
++LINUX_KERNEL_HASH-5.10.85 = ba89162605ac447db8953c29f649b64d16aff7de8145e2db30d759e5476b19ac
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0139-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch b/target/linux/bcm27xx/patches-5.10/950-0139-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+index dfd6e89b3d7b..6cc7482115b7 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0139-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0139-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+@@ -119,7 +119,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+   * non-error returns are a promise to giveback() the urb later
+   * we drop ownership so next owner (or urb unlink) can get it
+   */
+-@@ -5366,6 +5463,7 @@ static const struct hc_driver xhci_hc_dr
++@@ -5370,6 +5467,7 @@ static const struct hc_driver xhci_hc_dr
+  	.endpoint_reset =	xhci_endpoint_reset,
+  	.check_bandwidth =	xhci_check_bandwidth,
+  	.reset_bandwidth =	xhci_reset_bandwidth,
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0151-hid-usb-Add-device-quirks-for-Freeway-Airmouse-T3-an.patch b/target/linux/bcm27xx/patches-5.10/950-0151-hid-usb-Add-device-quirks-for-Freeway-Airmouse-T3-an.patch
+index 217b2117d49d..fa76e0a82294 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0151-hid-usb-Add-device-quirks-for-Freeway-Airmouse-T3-an.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0151-hid-usb-Add-device-quirks-for-Freeway-Airmouse-T3-an.patch
+@@ -33,7 +33,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+  #define USB_VENDOR_ID_BELKIN		0x050d
+  #define USB_DEVICE_ID_FLIP_KVM		0x3201
+  
+-@@ -1268,6 +1271,9 @@
++@@ -1270,6 +1273,9 @@
+  #define USB_VENDOR_ID_XAT	0x2505
+  #define USB_DEVICE_ID_XAT_CSR	0x0220
+  
+@@ -53,7 +53,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_TOUCH), HID_QUIRK_MULTI_INPUT },
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
+-@@ -193,6 +194,7 @@ static const struct hid_device_id hid_qu
++@@ -194,6 +195,7 @@ static const struct hid_device_id hid_qu
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
+  	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0249-kbuild-Disable-gcc-plugins.patch b/target/linux/bcm27xx/patches-5.10/950-0249-kbuild-Disable-gcc-plugins.patch
+deleted file mode 100644
+index f3a0b33a923f..000000000000
+--- a/target/linux/bcm27xx/patches-5.10/950-0249-kbuild-Disable-gcc-plugins.patch
++++ /dev/null
+@@ -1,28 +0,0 @@
+-From 4c6ffdf90a3a982fa11676faf658eebfd000867b Mon Sep 17 00:00:00 2001
+-From: Phil Elwell <phil@raspberrypi.com>
+-Date: Wed, 8 Apr 2020 15:23:56 +0100
+-Subject: [PATCH] kbuild: Disable gcc plugins
+-
+-The GCC plugin feature leads to different kernel configurations on what
+-ought to be equivalent build systems because they depend on the build
+-hosts native compilers rather than the cross compilers needed for the
+-target. This causes problems with module symbol version mismatches.
+-
+-Disable GCC plugins for all build hosts.
+-
+-Advanced build script hackery borrowed from a patch by milhouse.
+-
+-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+----
+- scripts/gcc-plugin.sh | 1 +
+- 1 file changed, 1 insertion(+)
+-
+---- a/scripts/gcc-plugin.sh
+-+++ b/scripts/gcc-plugin.sh
+-@@ -1,5 +1,6 @@
+- #!/bin/sh
+- # SPDX-License-Identifier: GPL-2.0
+-+exit 1 # Disable plugins
+- 
+- set -e
+- 
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+index d24d8f51e5d2..bbfecb7ad62f 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0323-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -16347,6 +16347,14 @@ S:	Maintained
++@@ -16346,6 +16346,14 @@ S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+  F:	drivers/media/i2c/imx355.c
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch b/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
+index 4116fa11c46e..cd2c028d5e15 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0657-Documentation-devicetree-Add-documentation-for-imx37.patch
+@@ -132,7 +132,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -16361,6 +16361,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -16360,6 +16360,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch b/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
+index 830616612778..c0a4caad4bfa 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0733-usb-xhci-workaround-for-bogus-SET_DEQ_PENDING-endpoi.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci-ring.c
+ +++ b/drivers/usb/host/xhci-ring.c
+-@@ -4269,9 +4269,9 @@ void xhci_queue_new_dequeue_state(struct
++@@ -4268,9 +4268,9 @@ void xhci_queue_new_dequeue_state(struct
+  	}
+  	ep = &xhci->devs[slot_id]->eps[ep_index];
+  	if ((ep->ep_state & SET_DEQ_PENDING)) {
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-57-netfilter-flowtable-Set-offload-timeouts-according-t.patch b/target/linux/generic/backport-5.10/610-v5.13-57-netfilter-flowtable-Set-offload-timeouts-according-t.patch
+index 5410e2751a91..1e82308eaa64 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-57-netfilter-flowtable-Set-offload-timeouts-according-t.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-57-netfilter-flowtable-Set-offload-timeouts-according-t.patch
+@@ -64,8 +64,8 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  		return;
+ +	}
+  
+- 	if (nf_flow_timeout_delta(ct->timeout) > (__s32)timeout)
+- 		ct->timeout = nfct_time_stamp + timeout;
++ 	if (nf_flow_timeout_delta(READ_ONCE(ct->timeout)) > (__s32)timeout)
++ 		WRITE_ONCE(ct->timeout, nfct_time_stamp + timeout);
+ @@ -265,11 +268,35 @@ static const struct rhashtable_params nf
+  	.automatic_shrinking	= true,
+  };
+diff --git a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index 196ff1dcba57..794d87dc6e4d 100644
+--- a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -272,7 +272,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	void __iomem *descmap;
+  	const struct of_device_id *of_id = NULL;
+  
+-@@ -1525,10 +1524,8 @@ static int altera_tse_probe(struct platf
++@@ -1528,10 +1527,8 @@ static int altera_tse_probe(struct platf
+  	priv->rx_dma_buf_sz = ALTERA_RXDMABUFFER_SIZE;
+  
+  	/* get default MAC address from device tree */
+diff --git a/target/linux/generic/pending-5.10/834-ledtrig-libata.patch b/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
+index fddec74d9692..e43a97bfe8ac 100644
+--- a/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
++++ b/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
+@@ -65,7 +65,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  /**
+   *	ata_build_rw_tf - Build ATA taskfile for given read/write request
+   *	@tf: Target ATA taskfile
+-@@ -4545,6 +4558,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
++@@ -4547,6 +4560,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
+  		if (tag < 0)
+  			return NULL;
+  	}
+@@ -75,7 +75,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  
+  	qc = __ata_qc_from_tag(ap, tag);
+  	qc->tag = qc->hw_tag = tag;
+-@@ -5323,6 +5339,9 @@ struct ata_port *ata_port_alloc(struct a
++@@ -5325,6 +5341,9 @@ struct ata_port *ata_port_alloc(struct a
+  	ap->stats.unhandled_irq = 1;
+  	ap->stats.idle_irq = 1;
+  #endif
+@@ -85,7 +85,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	ata_sff_port_init(ap);
+  
+  	return ap;
+-@@ -5358,6 +5377,12 @@ static void ata_host_release(struct kref
++@@ -5360,6 +5379,12 @@ static void ata_host_release(struct kref
+  
+  		kfree(ap->pmp_link);
+  		kfree(ap->slave_link);
+@@ -98,7 +98,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  		kfree(ap);
+  		host->ports[i] = NULL;
+  	}
+-@@ -5764,7 +5789,23 @@ int ata_host_register(struct ata_host *h
++@@ -5766,7 +5791,23 @@ int ata_host_register(struct ata_host *h
+  		host->ports[i]->print_id = atomic_inc_return(&ata_print_id);
+  		host->ports[i]->local_port_no = i + 1;
+  	}
+diff --git a/target/linux/oxnas/patches-5.10/999-libata-hacks.patch b/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
+index e34891cbb679..61c0c045a68e 100644
+--- a/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
++++ b/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
+@@ -15,7 +15,7 @@
+  	/* initialize internal qc */
+  	qc = __ata_qc_from_tag(ap, ATA_TAG_INTERNAL);
+  
+-@@ -4552,6 +4560,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
++@@ -4554,6 +4562,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
+  	if (unlikely(ap->pflags & ATA_PFLAG_FROZEN))
+  		return NULL;
+  
+@@ -25,7 +25,7 @@
+  	/* libsas case */
+  	if (ap->flags & ATA_FLAG_SAS_HOST) {
+  		tag = ata_sas_allocate_tag(ap);
+-@@ -4597,6 +4608,8 @@ void ata_qc_free(struct ata_queued_cmd *
++@@ -4599,6 +4610,8 @@ void ata_qc_free(struct ata_queued_cmd *
+  		qc->tag = ATA_TAG_POISON;
+  		if (ap->flags & ATA_FLAG_SAS_HOST)
+  			ata_sas_free_tag(tag, ap);
+diff --git a/target/linux/realtek/patches-5.10/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch b/target/linux/realtek/patches-5.10/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
+index 9b06a3e31862..cc5ee924669e 100644
+--- a/target/linux/realtek/patches-5.10/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
++++ b/target/linux/realtek/patches-5.10/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -14815,6 +14815,13 @@ S:	Maintained
++@@ -14814,6 +14814,13 @@ S:	Maintained
+  F:	include/sound/rt*.h
+  F:	sound/soc/codecs/rt*
+  

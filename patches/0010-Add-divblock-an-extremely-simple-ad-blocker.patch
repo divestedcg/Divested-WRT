@@ -5,16 +5,16 @@ Subject: [PATCH] Add divblock, an extremely simple "ad" blocker
 
 Signed-off-by: Tad <tad@spotco.us>
 ---
- package/base-files/files/etc/init.d/divblock | 49 ++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ package/base-files/files/etc/init.d/divblock | 51 ++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100755 package/base-files/files/etc/init.d/divblock
 
 diff --git a/package/base-files/files/etc/init.d/divblock b/package/base-files/files/etc/init.d/divblock
 new file mode 100755
-index 0000000000..f71e908537
+index 0000000000..19bd197520
 --- /dev/null
 +++ b/package/base-files/files/etc/init.d/divblock
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,51 @@
 +#!/bin/sh /etc/rc.common
 +#License: GPL-2.0-or-later
 +
@@ -23,6 +23,7 @@ index 0000000000..f71e908537
 +
 +DIVBLOCK_HOSTS="https://divested.dev/hosts-dnsmasq";
 +DIVBLOCK_OUTPUT="/tmp/dnsmasq.d/divblock.conf";
++DIVBLOCK_EXCLUSIONS="/etc/config/divblock-exclusions";
 +
 +reload_service()
 +{
@@ -32,14 +33,15 @@ index 0000000000..f71e908537
 +
 +start_service()
 +{
++	if [ ! -e "$DIVBLOCK_EXCLUSIONS" ]; then touch "$DIVBLOCK_EXCLUSIONS"; fi;
 +	#Tasks
 +	# - Download the list if dnsmasq is enabled
 +	# - Sanitize it to only allow comments and domain overrides to the invalid (#) address
-+	# - TODO: add basic exclusion list support
++	# - Filter out patterns from the exclusion file
 +	# - Restart dnsmasq
 +	if /etc/init.d/dnsmasq enabled; then
 +		sleep 15; #wait for network and system to settle after boot XXX: ugly
-+		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' > $DIVBLOCK_OUTPUT; then
++		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' | grep -v -f "$DIVBLOCK_EXCLUSIONS" > $DIVBLOCK_OUTPUT; then
 +			logger -t divblock "downloaded";
 +			/etc/init.d/dnsmasq restart;
 +			logger -t divblock "restarted dnsmasq";

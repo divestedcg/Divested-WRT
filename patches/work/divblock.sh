@@ -6,6 +6,7 @@ USE_PROCD=1
 
 DIVBLOCK_HOSTS="https://divested.dev/hosts-dnsmasq";
 DIVBLOCK_OUTPUT="/tmp/dnsmasq.d/divblock.conf";
+DIVBLOCK_EXCLUSIONS="/etc/config/divblock-exclusions";
 
 reload_service()
 {
@@ -18,11 +19,12 @@ start_service()
 	#Tasks
 	# - Download the list if dnsmasq is enabled
 	# - Sanitize it to only allow comments and domain overrides to the invalid (#) address
-	# - TODO: add basic exclusion list support
+	# - Filter out patterns from the exclusion file
 	# - Restart dnsmasq
 	if /etc/init.d/dnsmasq enabled; then
 		sleep 15; #wait for network and system to settle after boot XXX: ugly
-		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' > $DIVBLOCK_OUTPUT; then
+		if [ ! -e "$DIVBLOCK_EXCLUSIONS" ]; then touch "$DIVBLOCK_EXCLUSIONS"; fi;
+		if wget $DIVBLOCK_HOSTS -O - | grep -i -e '^#' -e '^address=/.*/#' | grep -v -f "$DIVBLOCK_EXCLUSIONS" > $DIVBLOCK_OUTPUT; then
 			logger -t divblock "downloaded";
 			/etc/init.d/dnsmasq restart;
 			logger -t divblock "restarted dnsmasq";
