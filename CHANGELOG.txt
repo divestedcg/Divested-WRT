@@ -1,3 +1,7 @@
+20211219-00
+- update to 54cfe0774ce4203d23ffcb397ba15bd36968d098
+- [upstream] update to kernel 5.10.87 (security and bug fixes)
+
 20211215-00
 - update to 01bebc070c35d87c24a594fff7ee1911965759aa
 - [cherrypick] #4811: update to kernel 5.10.85 (security and bug fixes)
