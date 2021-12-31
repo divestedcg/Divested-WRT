@@ -1,0 +1,351 @@
+From 75fffedddd34dceb62771b1bee6873644a229833 Mon Sep 17 00:00:00 2001
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 29 Dec 2021 13:13:29 +0000
+Subject: [PATCH] kernel: bump 5.10 to 5.10.89
+
+Deleted (upstreamed):
+bcm27xx/patches-5.10/950-0186-pinctrl-bcm2835-Change-init-order-for-gpio-hogs.patch [1]
+sunxi/patches-5.10/103-arm64-dts-allwinner-orangepi-zero-plus-fix-PHY-mo.patch [2]
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.10.89&id=ba696b470839d70c6b8290c1f798bac7fb2a584c
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.10.89&id=93a957bbf46ceb224b959de61fe85cfc6f71b6c7
+
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
+ include/kernel-version.mk                     |  4 +-
+ ...8xx-Enable-LEDs-and-auto-negotiation.patch |  6 +-
+ ...78xx-Read-initial-EEE-status-from-DT.patch |  2 +-
+ ...Disable-TCP-Segmentation-Offload-TSO.patch |  4 +-
+ ...e-enabling-of-EEE-into-PHY-init-code.patch |  4 +-
+ ...e-link-events-to-minimize-poll-storm.patch |  4 +-
+ ...xx-EEE-support-is-now-a-PHY-property.patch |  2 +-
+ ...use-default-alignment-for-rx-buffers.patch |  2 +-
+ ...trl-bcm2835-Remove-gpiochip-on-error.patch |  4 +-
+ ...2835-Change-init-order-for-gpio-hogs.patch | 78 -------------------
+ ...-Ack-pending-PHY-ints-when-resetting.patch |  2 +-
+ ...the-dst-buffer-to-of_get_mac_address.patch |  2 +-
+ ...winner-orangepi-zero-plus-fix-PHY-mo.patch | 32 --------
+ 13 files changed, 18 insertions(+), 128 deletions(-)
+ delete mode 100644 target/linux/bcm27xx/patches-5.10/950-0186-pinctrl-bcm2835-Change-init-order-for-gpio-hogs.patch
+ delete mode 100644 target/linux/sunxi/patches-5.10/103-arm64-dts-allwinner-orangepi-zero-plus-fix-PHY-mo.patch
+
+diff --git a/include/kernel-version.mk b/include/kernel-version.mk
+index ae0d01e74d9e..756e94f89914 100644
+--- a/include/kernel-version.mk
++++ b/include/kernel-version.mk
+@@ -7,10 +7,10 @@ ifdef CONFIG_TESTING_KERNEL
+ endif
+ 
+ LINUX_VERSION-5.4 = .167
+-LINUX_VERSION-5.10 = .88
++LINUX_VERSION-5.10 = .89
+ 
+ LINUX_KERNEL_HASH-5.4.167 = b4e43116217ee02009aba7eab3081e64560b81ce42bc6096fcd81257f470a5a7
+-LINUX_KERNEL_HASH-5.10.88 = 6f8631b6c382a2b0cfeff1e5f8805c8e1cfbe8d714b6e65f5bb79733c99068eb
++LINUX_KERNEL_HASH-5.10.89 = 92218b1a4a18f1cb9ec07d2b7fce41577452aa552c54c25b6d5fe9b4b543bb30
+ 
+ remove_uri_prefix=$(subst git://,,$(subst http://,,$(subst https://,,$(1))))
+ sanitize_uri=$(call qstrip,$(subst @,_,$(subst :,_,$(subst .,_,$(subst -,_,$(subst /,_,$(1)))))))
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0030-lan78xx-Enable-LEDs-and-auto-negotiation.patch b/target/linux/bcm27xx/patches-5.10/950-0030-lan78xx-Enable-LEDs-and-auto-negotiation.patch
+index 893461975bbc..9d03b49ab213 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0030-lan78xx-Enable-LEDs-and-auto-negotiation.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0030-lan78xx-Enable-LEDs-and-auto-negotiation.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -2461,6 +2461,11 @@ static int lan78xx_reset(struct lan78xx_
++@@ -2463,6 +2463,11 @@ static int lan78xx_reset(struct lan78xx_
+  	int ret = 0;
+  	unsigned long timeout;
+  	u8 sig;
+@@ -26,7 +26,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  
+  	ret = lan78xx_read_reg(dev, HW_CFG, &buf);
+  	buf |= HW_CFG_LRST_;
+-@@ -2514,6 +2519,9 @@ static int lan78xx_reset(struct lan78xx_
++@@ -2516,6 +2521,9 @@ static int lan78xx_reset(struct lan78xx_
+  
+  	ret = lan78xx_read_reg(dev, HW_CFG, &buf);
+  	buf |= HW_CFG_MEF_;
+@@ -36,7 +36,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	ret = lan78xx_write_reg(dev, HW_CFG, buf);
+  
+  	ret = lan78xx_read_reg(dev, USB_CFG0, &buf);
+-@@ -2569,6 +2577,9 @@ static int lan78xx_reset(struct lan78xx_
++@@ -2571,6 +2579,9 @@ static int lan78xx_reset(struct lan78xx_
+  			buf |= MAC_CR_AUTO_DUPLEX_ | MAC_CR_AUTO_SPEED_;
+  		}
+  	}
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0076-lan78xx-Read-initial-EEE-status-from-DT.patch b/target/linux/bcm27xx/patches-5.10/950-0076-lan78xx-Read-initial-EEE-status-from-DT.patch
+index 1670e8f1f05f..58dc9997d60e 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0076-lan78xx-Read-initial-EEE-status-from-DT.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0076-lan78xx-Read-initial-EEE-status-from-DT.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -2643,6 +2643,22 @@ static int lan78xx_open(struct net_devic
++@@ -2645,6 +2645,22 @@ static int lan78xx_open(struct net_devic
+  
+  	netif_dbg(dev, ifup, dev->net, "phy initialised successfully");
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0082-net-lan78xx-Disable-TCP-Segmentation-Offload-TSO.patch b/target/linux/bcm27xx/patches-5.10/950-0082-net-lan78xx-Disable-TCP-Segmentation-Offload-TSO.patch
+index 7123c383555e..919d6b0f83d1 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0082-net-lan78xx-Disable-TCP-Segmentation-Offload-TSO.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0082-net-lan78xx-Disable-TCP-Segmentation-Offload-TSO.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -425,6 +425,15 @@ static int msg_level = -1;
++@@ -427,6 +427,15 @@ static int msg_level = -1;
+  module_param(msg_level, int, 0);
+  MODULE_PARM_DESC(msg_level, "Override default message level");
+  
+@@ -37,7 +37,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+  static int lan78xx_read_reg(struct lan78xx_net *dev, u32 index, u32 *data)
+  {
+  	u32 *buf = kmalloc(sizeof(u32), GFP_KERNEL);
+-@@ -2925,8 +2934,14 @@ static int lan78xx_bind(struct lan78xx_n
++@@ -2927,8 +2936,14 @@ static int lan78xx_bind(struct lan78xx_n
+  	if (DEFAULT_RX_CSUM_ENABLE)
+  		dev->net->features |= NETIF_F_RXCSUM;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0083-lan78xx-Move-enabling-of-EEE-into-PHY-init-code.patch b/target/linux/bcm27xx/patches-5.10/950-0083-lan78xx-Move-enabling-of-EEE-into-PHY-init-code.patch
+index ea7bffa67a51..4069ab598ca1 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0083-lan78xx-Move-enabling-of-EEE-into-PHY-init-code.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0083-lan78xx-Move-enabling-of-EEE-into-PHY-init-code.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -2175,6 +2175,22 @@ static int lan78xx_phy_init(struct lan78
++@@ -2177,6 +2177,22 @@ static int lan78xx_phy_init(struct lan78
+  	mii_adv_to_linkmode_adv_t(fc, mii_adv);
+  	linkmode_or(phydev->advertising, fc, phydev->advertising);
+  
+@@ -39,7 +39,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	if (phydev->mdio.dev.of_node) {
+  		u32 reg;
+  		int len;
+-@@ -2652,22 +2668,6 @@ static int lan78xx_open(struct net_devic
++@@ -2654,22 +2670,6 @@ static int lan78xx_open(struct net_devic
+  
+  	netif_dbg(dev, ifup, dev->net, "phy initialised successfully");
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0094-lan78xx-Debounce-link-events-to-minimize-poll-storm.patch b/target/linux/bcm27xx/patches-5.10/950-0094-lan78xx-Debounce-link-events-to-minimize-poll-storm.patch
+index a4fa444f9a43..d91488075b09 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0094-lan78xx-Debounce-link-events-to-minimize-poll-storm.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0094-lan78xx-Debounce-link-events-to-minimize-poll-storm.patch
+@@ -16,7 +16,7 @@ See: https://github.com/raspberrypi/linux/issues/2447
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -434,6 +434,11 @@ static bool enable_tso;
++@@ -436,6 +436,11 @@ static bool enable_tso;
+  module_param(enable_tso, bool, 0644);
+  MODULE_PARM_DESC(enable_tso, "Enables TCP segmentation offload");
+  
+@@ -28,7 +28,7 @@ See: https://github.com/raspberrypi/linux/issues/2447
+  static int lan78xx_read_reg(struct lan78xx_net *dev, u32 index, u32 *data)
+  {
+  	u32 *buf = kmalloc(sizeof(u32), GFP_KERNEL);
+-@@ -3768,7 +3773,13 @@ static int lan78xx_probe(struct usb_inte
++@@ -3770,7 +3775,13 @@ static int lan78xx_probe(struct usb_inte
+  	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+  	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0095-lan78xx-EEE-support-is-now-a-PHY-property.patch b/target/linux/bcm27xx/patches-5.10/950-0095-lan78xx-EEE-support-is-now-a-PHY-property.patch
+index 87bda1b41f7f..e556f46d9f9d 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0095-lan78xx-EEE-support-is-now-a-PHY-property.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0095-lan78xx-EEE-support-is-now-a-PHY-property.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -2180,7 +2180,7 @@ static int lan78xx_phy_init(struct lan78
++@@ -2182,7 +2182,7 @@ static int lan78xx_phy_init(struct lan78
+  	mii_adv_to_linkmode_adv_t(fc, mii_adv);
+  	linkmode_or(phydev->advertising, fc, phydev->advertising);
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0098-lan78xx-use-default-alignment-for-rx-buffers.patch b/target/linux/bcm27xx/patches-5.10/950-0098-lan78xx-use-default-alignment-for-rx-buffers.patch
+index e8022aeed557..d7527c3399ed 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0098-lan78xx-use-default-alignment-for-rx-buffers.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0098-lan78xx-use-default-alignment-for-rx-buffers.patch
+@@ -12,7 +12,7 @@ in both dwc_otg and in ipv6 processing.
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -3169,7 +3169,7 @@ static int rx_submit(struct lan78xx_net
++@@ -3171,7 +3171,7 @@ static int rx_submit(struct lan78xx_net
+  	size_t size = dev->rx_urb_size;
+  	int ret = 0;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0185-pinctrl-bcm2835-Remove-gpiochip-on-error.patch b/target/linux/bcm27xx/patches-5.10/950-0185-pinctrl-bcm2835-Remove-gpiochip-on-error.patch
+index 497c2833258e..c08a3f02cd2d 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0185-pinctrl-bcm2835-Remove-gpiochip-on-error.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0185-pinctrl-bcm2835-Remove-gpiochip-on-error.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+ +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+-@@ -1300,7 +1300,7 @@ static int bcm2835_pinctrl_probe(struct
++@@ -1314,7 +1314,7 @@ static int bcm2835_pinctrl_probe(struct
+  	girq->default_type = IRQ_TYPE_NONE;
+  	girq->handler = handle_level_irq;
+  
+@@ -22,4 +22,4 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ +	err = devm_gpiochip_add_data(dev, &pc->gpio_chip, pc);
+  	if (err) {
+  		dev_err(dev, "could not add GPIO chip\n");
+- 		return err;
++ 		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0186-pinctrl-bcm2835-Change-init-order-for-gpio-hogs.patch b/target/linux/bcm27xx/patches-5.10/950-0186-pinctrl-bcm2835-Change-init-order-for-gpio-hogs.patch
+deleted file mode 100644
+index 2d13736fcb07..000000000000
+--- a/target/linux/bcm27xx/patches-5.10/950-0186-pinctrl-bcm2835-Change-init-order-for-gpio-hogs.patch
++++ /dev/null
+@@ -1,78 +0,0 @@
+-From 069990e0b524a7acdcfef0505913ee20401fec5a Mon Sep 17 00:00:00 2001
+-From: Phil Elwell <phil@raspberrypi.org>
+-Date: Mon, 6 Jan 2020 14:05:42 +0000
+-Subject: [PATCH] pinctrl: bcm2835: Change init order for gpio hogs
+-
+-pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+-side is registered first, but this breaks gpio hogs (which are
+-configured during gpiochip_add_data). Part of the hog initialisation
+-is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+-yet been registered this results in an -EPROBE_DEFER from which it can
+-never recover.
+-
+-Change the initialisation sequence to register the pinctrl driver
+-first.
+-
+-See: https://www.raspberrypi.org/forums/viewtopic.php?f=107&t=260600
+-
+-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+----
+- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 29 +++++++++++++++------------
+- 1 file changed, 16 insertions(+), 13 deletions(-)
+-
+---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+-@@ -1244,6 +1244,18 @@ static int bcm2835_pinctrl_probe(struct
+- 		raw_spin_lock_init(&pc->irq_lock[i]);
+- 	}
+- 
+-+	pc->pctl_desc = *pdata->pctl_desc;
+-+	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+-+	if (IS_ERR(pc->pctl_dev)) {
+-+		gpiochip_remove(&pc->gpio_chip);
+-+		return PTR_ERR(pc->pctl_dev);
+-+	}
+-+
+-+	pc->gpio_range = *pdata->gpio_range;
+-+	pc->gpio_range.base = pc->gpio_chip.base;
+-+	pc->gpio_range.gc = &pc->gpio_chip;
+-+	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+-+
+- 	girq = &pc->gpio_chip.irq;
+- 	girq->chip = &bcm2835_gpio_irq_chip;
+- 	girq->parent_handler = bcm2835_gpio_irq_handler;
+-@@ -1251,8 +1263,10 @@ static int bcm2835_pinctrl_probe(struct
+- 	girq->parents = devm_kcalloc(dev, BCM2835_NUM_IRQS,
+- 				     sizeof(*girq->parents),
+- 				     GFP_KERNEL);
+--	if (!girq->parents)
+-+	if (!girq->parents) {
+-+		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
+- 		return -ENOMEM;
+-+	}
+- 
+- 	if (is_7211) {
+- 		pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
+-@@ -1303,21 +1317,10 @@ static int bcm2835_pinctrl_probe(struct
+- 	err = devm_gpiochip_add_data(dev, &pc->gpio_chip, pc);
+- 	if (err) {
+- 		dev_err(dev, "could not add GPIO chip\n");
+-+		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
+- 		return err;
+- 	}
+- 
+--	pc->pctl_desc = *pdata->pctl_desc;
+--	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+--	if (IS_ERR(pc->pctl_dev)) {
+--		gpiochip_remove(&pc->gpio_chip);
+--		return PTR_ERR(pc->pctl_dev);
+--	}
+--
+--	pc->gpio_range = *pdata->gpio_range;
+--	pc->gpio_range.base = pc->gpio_chip.base;
+--	pc->gpio_range.gc = &pc->gpio_chip;
+--	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+--
+- 	return 0;
+- }
+- 
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0401-net-lan78xx-Ack-pending-PHY-ints-when-resetting.patch b/target/linux/bcm27xx/patches-5.10/950-0401-net-lan78xx-Ack-pending-PHY-ints-when-resetting.patch
+index 840a446b7894..0f35bfe060cd 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0401-net-lan78xx-Ack-pending-PHY-ints-when-resetting.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0401-net-lan78xx-Ack-pending-PHY-ints-when-resetting.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/net/usb/lan78xx.c
+ +++ b/drivers/net/usb/lan78xx.c
+-@@ -1181,6 +1181,9 @@ static int lan78xx_link_reset(struct lan
++@@ -1183,6 +1183,9 @@ static int lan78xx_link_reset(struct lan
+  	if (unlikely(ret < 0))
+  		return -EIO;
+  
+diff --git a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index fff6b25ac5c7..696892786eda 100644
+--- a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -819,7 +819,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  		if (is_valid_ether_addr(hw_mac_addr)) {
+ --- a/drivers/net/ethernet/marvell/prestera/prestera_main.c
+ +++ b/drivers/net/ethernet/marvell/prestera/prestera_main.c
+-@@ -462,20 +462,17 @@ static int prestera_switch_set_base_mac_
++@@ -466,20 +466,17 @@ static int prestera_switch_set_base_mac_
+  {
+  	struct device_node *base_mac_np;
+  	struct device_node *np;
+diff --git a/target/linux/sunxi/patches-5.10/103-arm64-dts-allwinner-orangepi-zero-plus-fix-PHY-mo.patch b/target/linux/sunxi/patches-5.10/103-arm64-dts-allwinner-orangepi-zero-plus-fix-PHY-mo.patch
+deleted file mode 100644
+index e3a00348b009..000000000000
+--- a/target/linux/sunxi/patches-5.10/103-arm64-dts-allwinner-orangepi-zero-plus-fix-PHY-mo.patch
++++ /dev/null
+@@ -1,32 +0,0 @@
+-From 4f45f9f370a5bc6a43a7a166f10b3a30ca21353c Mon Sep 17 00:00:00 2001
+-From: Robert Marko <robert.marko@sartura.hr>
+-Date: Wed, 17 Nov 2021 10:36:31 +0100
+-Subject: [PATCH v2] arm64: dts: allwinner: orangepi-zero-plus: fix PHY mode
+-
+-Orange Pi Zero Plus uses a Realtek RTL8211E RGMII Gigabit PHY, but its
+-currently set to plain RGMII mode meaning that it doesn't introduce
+-delays.
+-
+-With this setup, TX packets are completely lost and changing the mode to
+-RGMII-ID so the PHY will add delays internally fixes the issue.
+-
+-Fixes: a7affb13b271 ("arm64: allwinner: H5: Add Xunlong Orange Pi Zero Plus")
+-
+-Tested-by: Ron Goossens <rgoossens@gmail.com>
+-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+-Tested-by: Samuel Holland <samuel@sholland.org>
+----
+- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+-@@ -69,7 +69,7 @@
+- 	pinctrl-0 = <&emac_rgmii_pins>;
+- 	phy-supply = <&reg_gmac_3v3>;
+- 	phy-handle = <&ext_rgmii_phy>;
+--	phy-mode = "rgmii";
+-+	phy-mode = "rgmii-id";
+- 	status = "okay";
+- };
+- 
