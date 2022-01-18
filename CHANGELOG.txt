@@ -1,3 +1,7 @@
+20220118-00
+- update to 266b5c83c32c13dbd05f0d6f251815cbe6f55621
+- [upstream] update to kernel 5.10.92 (security and bug fixes)
+
 20220108-00
 - update to a372946e6080b253f42ab1d3af97f4929c269ed9
 - [upstream] update to kernel 5.10.90 (security and bug fixes)
