@@ -1,3 +1,7 @@
+20220129-00
+- update to 5bd926efa99a0638e03e26ed50f1c44b196888da
+- [cherrypick] #4975: update to kernel 5.10.94 (security and bug fixes)
+
 20220121-00
 - update to af8a059bb41dd7afee49ce9a5d52e9a8e010bbd8
 - upstream has switched to firewall4, however fw3 will be kept until banip has nft support
