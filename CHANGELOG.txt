@@ -1,3 +1,8 @@
+20220203-00
+- update to fb6cf22866b3bb6dfcbee0659f785982d071c863
+- [upstream] glibc update (security fixes)
+- [upstream] update to kernel 5.10.96 (security and bug fixes)
+
 20220129-00
 - update to 5bd926efa99a0638e03e26ed50f1c44b196888da
 - [cherrypick] #4975: update to kernel 5.10.94 (security and bug fixes)
