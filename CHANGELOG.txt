@@ -1,7 +1,17 @@
+20220206-00
+- update to 3343ca7e6837b2ac5f237ea78bf73d50831dea20
+- reinitialized workspace and config (sanity)
+- this release switches to fw4
+  some packages depend on fw3 (banip) and others fw4 (sqm) causing conflict
+  see https://github.com/openwrt/packages/issues/16818
+- drops: banip, usb networking, storage support, tree, ncdu, bridge
+
 20220203-00
+- note: this appears to break banip
 - update to fb6cf22866b3bb6dfcbee0659f785982d071c863
 - [upstream] glibc update (security fixes)
 - [upstream] update to kernel 5.10.96 (security and bug fixes)
+- reinitialized workspace (sanity)
 
 20220129-00
 - update to 5bd926efa99a0638e03e26ed50f1c44b196888da
