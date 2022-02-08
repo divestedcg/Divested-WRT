@@ -1,3 +1,7 @@
+20220207-00
+- update to 04ed224543ad10030c4394c86e533f02bf596a1b
+- fixes feeds
+
 20220206-00
 - update to 3343ca7e6837b2ac5f237ea78bf73d50831dea20
 - reinitialized workspace and config (sanity)
@@ -5,6 +9,7 @@
   some packages depend on fw3 (banip) and others fw4 (sqm) causing conflict
   see https://github.com/openwrt/packages/issues/16818
 - drops: banip, usb networking, storage support, tree, ncdu, bridge
+- note: breaks extra feeds, will be fixed in next build
 
 20220203-00
 - note: this appears to break banip
