@@ -1,3 +1,7 @@
+20220212-00
+- update to c391dcdf86b3001b98725225b54ae60f4b6d493c
+- [upstream] update to kernel 5.10.100 (security and bug fixes)
+
 20220207-00
 - update to 04ed224543ad10030c4394c86e533f02bf596a1b
 - fixes feeds
