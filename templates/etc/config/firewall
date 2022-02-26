@@ -1,0 +1,7 @@
+config defaults
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'DROP'
+	option synflood_protect '1'
+	option drop_invalid '1'
+	option flow_offloading '1'
