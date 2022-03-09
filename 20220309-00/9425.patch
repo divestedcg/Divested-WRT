@@ -1,0 +1,134 @@
+From fe1f06464c0fd9fb60b233099ad3fb85ffcd9901 Mon Sep 17 00:00:00 2001
+From: John Audia <graysky@archlinux.us>
+Date: Tue, 8 Mar 2022 17:01:48 -0500
+Subject: [PATCH] kernel: bump 5.10 to 5.10.104
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, mt7622/RT3200
+Run-tested: bcm2711/RPi4B, mt7622/RT3200
+
+Signed-off-by: John Audia <graysky@archlinux.us>
+---
+ include/kernel-5.10                                |  4 ++--
+ .../950-0027-i2c-bcm2835-Add-debug-support.patch   | 14 +++++++-------
+ ...bcm2835-Set-clock-stretch-timeout-to-35ms.patch |  4 ++--
+ ...rs-trx-parse-firmware-MTD-partitions-only.patch |  6 +++---
+ 4 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index 5eededd53fac..201f2b0ae02b 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .103
+-LINUX_KERNEL_HASH-5.10.103 = 4fb8ad55e6430342e4fbc94d54e594e9be8eb6a8bea1d71eccf835948d08580a
++LINUX_VERSION-5.10 = .104
++LINUX_KERNEL_HASH-5.10.104 = 394a9267ea8e24d0f0cfaad3439bf43abe7bcf6479dc9548e485b48a0ac562f1
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0027-i2c-bcm2835-Add-debug-support.patch b/target/linux/bcm27xx/patches-5.10/950-0027-i2c-bcm2835-Add-debug-support.patch
+index f481af1f9d18..e32618d35e20 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0027-i2c-bcm2835-Add-debug-support.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0027-i2c-bcm2835-Add-debug-support.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+ 
+ --- a/drivers/i2c/busses/i2c-bcm2835.c
+ +++ b/drivers/i2c/busses/i2c-bcm2835.c
+-@@ -51,6 +51,18 @@
++@@ -56,6 +56,18 @@
+  #define BCM2835_I2C_CDIV_MIN	0x0002
+  #define BCM2835_I2C_CDIV_MAX	0xFFFE
+  
+@@ -56,7 +56,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  struct bcm2835_i2c_dev {
+  	struct device *dev;
+  	void __iomem *regs;
+-@@ -63,8 +75,78 @@ struct bcm2835_i2c_dev {
++@@ -68,8 +80,78 @@ struct bcm2835_i2c_dev {
+  	u32 msg_err;
+  	u8 *msg_buf;
+  	size_t msg_buf_remaining;
+@@ -135,7 +135,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  static inline void bcm2835_i2c_writel(struct bcm2835_i2c_dev *i2c_dev,
+  				      u32 reg, u32 val)
+  {
+-@@ -252,6 +334,7 @@ static void bcm2835_i2c_start_transfer(s
++@@ -257,6 +339,7 @@ static void bcm2835_i2c_start_transfer(s
+  	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_A, msg->addr);
+  	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_DLEN, msg->len);
+  	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C, c);
+@@ -143,7 +143,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  }
+  
+  static void bcm2835_i2c_finish_transfer(struct bcm2835_i2c_dev *i2c_dev)
+-@@ -278,6 +361,7 @@ static irqreturn_t bcm2835_i2c_isr(int t
++@@ -283,6 +366,7 @@ static irqreturn_t bcm2835_i2c_isr(int t
+  	u32 val, err;
+  
+  	val = bcm2835_i2c_readl(i2c_dev, BCM2835_I2C_S);
+@@ -151,7 +151,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  
+  	err = val & (BCM2835_I2C_S_CLKT | BCM2835_I2C_S_ERR);
+  	if (err) {
+-@@ -344,6 +428,13 @@ static int bcm2835_i2c_xfer(struct i2c_a
++@@ -349,6 +433,13 @@ static int bcm2835_i2c_xfer(struct i2c_a
+  	unsigned long time_left;
+  	int i;
+  
+@@ -165,7 +165,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  	for (i = 0; i < (num - 1); i++)
+  		if (msgs[i].flags & I2C_M_RD) {
+  			dev_warn_once(i2c_dev->dev,
+-@@ -362,6 +453,10 @@ static int bcm2835_i2c_xfer(struct i2c_a
++@@ -367,6 +458,10 @@ static int bcm2835_i2c_xfer(struct i2c_a
+  
+  	bcm2835_i2c_finish_transfer(i2c_dev);
+  
+@@ -176,7 +176,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  	if (!time_left) {
+  		bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C,
+  				   BCM2835_I2C_C_CLEAR);
+-@@ -372,7 +467,9 @@ static int bcm2835_i2c_xfer(struct i2c_a
++@@ -377,7 +472,9 @@ static int bcm2835_i2c_xfer(struct i2c_a
+  	if (!i2c_dev->msg_err)
+  		return num;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0146-i2c-bcm2835-Set-clock-stretch-timeout-to-35ms.patch b/target/linux/bcm27xx/patches-5.10/950-0146-i2c-bcm2835-Set-clock-stretch-timeout-to-35ms.patch
+index 9cb93621bb20..48a561e38a92 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0146-i2c-bcm2835-Set-clock-stretch-timeout-to-35ms.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0146-i2c-bcm2835-Set-clock-stretch-timeout-to-35ms.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/i2c/busses/i2c-bcm2835.c
+ +++ b/drivers/i2c/busses/i2c-bcm2835.c
+-@@ -188,6 +188,7 @@ static int clk_bcm2835_i2c_set_rate(stru
++@@ -193,6 +193,7 @@ static int clk_bcm2835_i2c_set_rate(stru
+  {
+  	struct clk_bcm2835_i2c *div = to_clk_bcm2835_i2c(hw);
+  	u32 redl, fedl;
+@@ -27,7 +27,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	u32 divider = clk_bcm2835_i2c_calc_divider(rate, parent_rate);
+  
+  	if (divider == -EINVAL)
+-@@ -211,6 +212,17 @@ static int clk_bcm2835_i2c_set_rate(stru
++@@ -216,6 +217,17 @@ static int clk_bcm2835_i2c_set_rate(stru
+  	bcm2835_i2c_writel(div->i2c_dev, BCM2835_I2C_DEL,
+  			   (fedl << BCM2835_I2C_FEDL_SHIFT) |
+  			   (redl << BCM2835_I2C_REDL_SHIFT));
+diff --git a/target/linux/bcm53xx/patches-5.10/140-mtd-parsers-trx-parse-firmware-MTD-partitions-only.patch b/target/linux/bcm53xx/patches-5.10/140-mtd-parsers-trx-parse-firmware-MTD-partitions-only.patch
+index fa8630363714..e1933e75c78a 100644
+--- a/target/linux/bcm53xx/patches-5.10/140-mtd-parsers-trx-parse-firmware-MTD-partitions-only.patch
++++ b/target/linux/bcm53xx/patches-5.10/140-mtd-parsers-trx-parse-firmware-MTD-partitions-only.patch
+@@ -30,9 +30,9 @@ Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+ 
+ --- a/drivers/mtd/parsers/parser_trx.c
+ +++ b/drivers/mtd/parsers/parser_trx.c
+-@@ -85,6 +85,10 @@ static int parser_trx_parse(struct mtd_i
+- 	uint8_t curr_part = 0, i = 0;
+- 	int err;
++@@ -92,6 +92,10 @@ static int parser_trx_parse(struct mtd_i
++ 	if (err != 0 && err != -EINVAL)
++ 		pr_err("failed to parse \"brcm,trx-magic\" DT attribute, using default: %d\n", err);
+  
+ +	/* Don't parse any failsafe / backup partitions */
+ +	if (strcmp(mtd->name, "firmware"))
