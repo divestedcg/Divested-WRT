@@ -1,0 +1,598 @@
+From ce8edfd322d68ce6ef4c246de6cd5d88c0e548fa Mon Sep 17 00:00:00 2001
+From: John Audia <graysky@archlinux.us>
+Date: Wed, 13 Apr 2022 16:25:50 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.111
+
+Removed upstreamed:
+  pending-5.10/850-0003-PCI-aardvark-Fix-support-for-MSI-interrupts.patch
+
+Manually rebased:
+  apm821xx/patches-5.10/150-ata-sata_dwc_460ex-Fix-crash-due-to-OOB-write.patch
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, mt7622/RT3200
+Run-tested: bcm2711/RPi4B, mt7622/RT3200
+
+Signed-off-by: John Audia <graysky@archlinux.us>
+---
+ include/kernel-5.10                           |  4 +-
+ ...dwc_460ex-Fix-crash-due-to-OOB-write.patch | 10 +--
+ ...core_get_rate_recalc-in-clk_rate_get.patch |  2 +-
+ ...-t-prevent-IRQ-usage-of-output-GPIOs.patch |  4 +-
+ ...37-clk-Introduce-a-clock-request-API.patch | 20 +++---
+ ...quests-Ignore-if-the-pointer-is-null.patch |  2 +-
+ ...eference-the-request-pointer-after-t.patch |  2 +-
+ ...96-clk-Always-clamp-the-rounded-rate.patch |  2 +-
+ ...oup-Disable-cgroup-memory-by-default.patch |  8 +--
+ ...tree-gpio-hogs-on-dual-role-gpio-pin.patch |  4 +-
+ ...-sfp-add-support-for-100-base-x-SFPs.patch |  4 +-
+ ...the-dst-buffer-to-of_get_mac_address.patch |  6 +-
+ ...PCI-aardvark-Clear-all-MSIs-at-setup.patch |  2 +-
+ ...ment-actions-in-driver-remove-method.patch |  2 +-
+ ...able-bus-mastering-when-unbinding-dr.patch |  4 +-
+ ...k-all-interrupts-when-unbinding-driv.patch |  2 +-
+ ...ark-Fix-memory-leak-in-driver-unbind.patch |  2 +-
+ ...k-Assert-PERST-when-unbinding-driver.patch |  2 +-
+ ...able-link-training-when-unbinding-dr.patch |  2 +-
+ ...able-common-PHY-when-unbinding-drive.patch |  2 +-
+ ...d-knob-for-filtering-rx-tx-BPDU-pack.patch |  2 +-
+ ...ark-Fix-reading-MSI-interrupt-number.patch |  4 +-
+ ...dvark-Fix-support-for-MSI-interrupts.patch | 72 -------------------
+ ...c-explicitly-deassert-gmac-ahb-reset.patch |  2 +-
+ 24 files changed, 47 insertions(+), 119 deletions(-)
+ delete mode 100644 target/linux/generic/pending-5.10/850-0003-PCI-aardvark-Fix-support-for-MSI-interrupts.patch
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index 2a8fa3c4e706..76c5ff42d187 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .110
+-LINUX_KERNEL_HASH-5.10.110 = dbef6a06325433481551cb8cfca9254d908d0ae950bc809f3da8ade00c485693
++LINUX_VERSION-5.10 = .111
++LINUX_KERNEL_HASH-5.10.111 = 1831b3d8765592ce91e51441bb179d908f6bcfe8c78d03c2bec8c675c4a0ab1a
+diff --git a/target/linux/apm821xx/patches-5.10/150-ata-sata_dwc_460ex-Fix-crash-due-to-OOB-write.patch b/target/linux/apm821xx/patches-5.10/150-ata-sata_dwc_460ex-Fix-crash-due-to-OOB-write.patch
+index c503be9c0d60..7e8ed3ab9650 100644
+--- a/target/linux/apm821xx/patches-5.10/150-ata-sata_dwc_460ex-Fix-crash-due-to-OOB-write.patch
++++ b/target/linux/apm821xx/patches-5.10/150-ata-sata_dwc_460ex-Fix-crash-due-to-OOB-write.patch
+@@ -54,11 +54,11 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+ ---
+ --- a/drivers/ata/sata_dwc_460ex.c
+ +++ b/drivers/ata/sata_dwc_460ex.c
+-@@ -145,7 +145,7 @@ struct sata_dwc_device {
+- #endif
+- };
+- 
+--#define SATA_DWC_QCMD_MAX	32
++@@ -149,7 +149,7 @@ struct sata_dwc_device {
++  * Allow one extra special slot for commands and DMA management
++  * to account for libata internal commands.
++  */
++-#define SATA_DWC_QCMD_MAX	(ATA_MAX_QUEUE + 1)
+ +#define SATA_DWC_QCMD_MAX	33
+  
+  struct sata_dwc_device_port {
+diff --git a/target/linux/at91/patches-5.10/247-clk-use-clk_core_get_rate_recalc-in-clk_rate_get.patch b/target/linux/at91/patches-5.10/247-clk-use-clk_core_get_rate_recalc-in-clk_rate_get.patch
+index a17acc2742f9..2e8893645c0b 100644
+--- a/target/linux/at91/patches-5.10/247-clk-use-clk_core_get_rate_recalc-in-clk_rate_get.patch
++++ b/target/linux/at91/patches-5.10/247-clk-use-clk_core_get_rate_recalc-in-clk_rate_get.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+ 
+ --- a/drivers/clk/clk.c
+ +++ b/drivers/clk/clk.c
+-@@ -3082,7 +3082,10 @@ static int clk_rate_get(void *data, u64
++@@ -3106,7 +3106,10 @@ static int clk_rate_get(void *data, u64
+  {
+  	struct clk_core *core = data;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0256-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch b/target/linux/bcm27xx/patches-5.10/950-0256-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
+index fb57e916c548..e23e7ec376e5 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0256-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0256-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  /* Device and char device-related information */
+  static DEFINE_IDA(gpio_ida);
+  static dev_t gpio_devt;
+-@@ -2444,8 +2446,8 @@ int gpiod_direction_output(struct gpio_d
++@@ -2463,8 +2465,8 @@ int gpiod_direction_output(struct gpio_d
+  		value = !!value;
+  
+  	/* GPIOs used for enabled IRQs shall not be set as output */
+@@ -37,7 +37,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  		gpiod_err(desc,
+  			  "%s: tried to set a GPIO tied to an IRQ as output\n",
+  			  __func__);
+-@@ -3260,8 +3262,8 @@ int gpiochip_lock_as_irq(struct gpio_chi
++@@ -3279,8 +3281,8 @@ int gpiochip_lock_as_irq(struct gpio_chi
+  	}
+  
+  	/* To be valid for IRQ the line needs to be input or open drain */
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0537-clk-Introduce-a-clock-request-API.patch b/target/linux/bcm27xx/patches-5.10/950-0537-clk-Introduce-a-clock-request-API.patch
+index b9b916f15de4..e90134d682ad 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0537-clk-Introduce-a-clock-request-API.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0537-clk-Introduce-a-clock-request-API.patch
+@@ -75,7 +75,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  /***           runtime pm          ***/
+  static int clk_pm_runtime_get(struct clk_core *core)
+  {
+-@@ -1413,10 +1421,14 @@ unsigned long clk_hw_round_rate(struct c
++@@ -1431,10 +1439,14 @@ unsigned long clk_hw_round_rate(struct c
+  {
+  	int ret;
+  	struct clk_rate_request req;
+@@ -90,7 +90,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	ret = clk_core_round_rate_nolock(hw->core, &req);
+  	if (ret)
+  		return 0;
+-@@ -1437,6 +1449,7 @@ EXPORT_SYMBOL_GPL(clk_hw_round_rate);
++@@ -1455,6 +1467,7 @@ EXPORT_SYMBOL_GPL(clk_hw_round_rate);
+  long clk_round_rate(struct clk *clk, unsigned long rate)
+  {
+  	struct clk_rate_request req;
+@@ -98,7 +98,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	int ret;
+  
+  	if (!clk)
+-@@ -1450,6 +1463,9 @@ long clk_round_rate(struct clk *clk, uns
++@@ -1468,6 +1481,9 @@ long clk_round_rate(struct clk *clk, uns
+  	clk_core_get_boundaries(clk->core, &req.min_rate, &req.max_rate);
+  	req.rate = rate;
+  
+@@ -108,7 +108,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	ret = clk_core_round_rate_nolock(clk->core, &req);
+  
+  	if (clk->exclusive_count)
+-@@ -1917,6 +1933,7 @@ static struct clk_core *clk_calc_new_rat
++@@ -1935,6 +1951,7 @@ static struct clk_core *clk_calc_new_rat
+  	unsigned long new_rate;
+  	unsigned long min_rate;
+  	unsigned long max_rate;
+@@ -116,7 +116,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	int p_index = 0;
+  	long ret;
+  
+-@@ -1931,6 +1948,9 @@ static struct clk_core *clk_calc_new_rat
++@@ -1949,6 +1966,9 @@ static struct clk_core *clk_calc_new_rat
+  
+  	clk_core_get_boundaries(core, &min_rate, &max_rate);
+  
+@@ -126,7 +126,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	/* find the closest rate and parent clk/rate */
+  	if (clk_core_can_round(core)) {
+  		struct clk_rate_request req;
+-@@ -2135,6 +2155,7 @@ static unsigned long clk_core_req_round_
++@@ -2153,6 +2173,7 @@ static unsigned long clk_core_req_round_
+  {
+  	int ret, cnt;
+  	struct clk_rate_request req;
+@@ -134,7 +134,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  
+  	lockdep_assert_held(&prepare_lock);
+  
+-@@ -2149,6 +2170,9 @@ static unsigned long clk_core_req_round_
++@@ -2167,6 +2188,9 @@ static unsigned long clk_core_req_round_
+  	clk_core_get_boundaries(core, &req.min_rate, &req.max_rate);
+  	req.rate = req_rate;
+  
+@@ -144,7 +144,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	ret = clk_core_round_rate_nolock(core, &req);
+  
+  	/* restore the protection */
+-@@ -2242,6 +2266,9 @@ int clk_set_rate(struct clk *clk, unsign
++@@ -2260,6 +2284,9 @@ int clk_set_rate(struct clk *clk, unsign
+  
+  	ret = clk_core_set_rate_nolock(clk->core, rate);
+  
+@@ -154,7 +154,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  	if (clk->exclusive_count)
+  		clk_core_rate_protect(clk->core);
+  
+-@@ -2402,6 +2429,99 @@ int clk_set_max_rate(struct clk *clk, un
++@@ -2426,6 +2453,99 @@ int clk_set_max_rate(struct clk *clk, un
+  EXPORT_SYMBOL_GPL(clk_set_max_rate);
+  
+  /**
+@@ -254,7 +254,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+   * clk_get_parent - return the parent of a clk
+   * @clk: the clk whose parent gets returned
+   *
+-@@ -3851,6 +3971,7 @@ __clk_register(struct device *dev, struc
++@@ -3875,6 +3995,7 @@ __clk_register(struct device *dev, struc
+  		goto fail_parents;
+  
+  	INIT_HLIST_HEAD(&core->clks);
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0572-clk-requests-Ignore-if-the-pointer-is-null.patch b/target/linux/bcm27xx/patches-5.10/950-0572-clk-requests-Ignore-if-the-pointer-is-null.patch
+index 5ee8e71bda68..973fc4e92bf9 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0572-clk-requests-Ignore-if-the-pointer-is-null.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0572-clk-requests-Ignore-if-the-pointer-is-null.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/clk/clk.c
+ +++ b/drivers/clk/clk.c
+-@@ -2498,6 +2498,9 @@ void clk_request_done(struct clk_request
++@@ -2522,6 +2522,9 @@ void clk_request_done(struct clk_request
+  {
+  	struct clk_core *core = req->clk->core;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0581-clk-requests-Dereference-the-request-pointer-after-t.patch b/target/linux/bcm27xx/patches-5.10/950-0581-clk-requests-Dereference-the-request-pointer-after-t.patch
+index 9f87aadc177f..9f7ccf85e992 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0581-clk-requests-Dereference-the-request-pointer-after-t.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0581-clk-requests-Dereference-the-request-pointer-after-t.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/clk/clk.c
+ +++ b/drivers/clk/clk.c
+-@@ -2496,10 +2496,11 @@ EXPORT_SYMBOL_GPL(clk_request_start);
++@@ -2520,10 +2520,11 @@ EXPORT_SYMBOL_GPL(clk_request_start);
+   */
+  void clk_request_done(struct clk_request *req)
+  {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0596-clk-Always-clamp-the-rounded-rate.patch b/target/linux/bcm27xx/patches-5.10/950-0596-clk-Always-clamp-the-rounded-rate.patch
+index 05cbc7afae7a..868e1569bc6d 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0596-clk-Always-clamp-the-rounded-rate.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0596-clk-Always-clamp-the-rounded-rate.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/clk/clk.c
+ +++ b/drivers/clk/clk.c
+-@@ -1316,6 +1316,8 @@ static int clk_core_determine_round_nolo
++@@ -1334,6 +1334,8 @@ static int clk_core_determine_round_nolo
+  	if (!core)
+  		return 0;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch b/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
+index 315d79ddf472..84fbcdb2c28d 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0639-cgroup-Disable-cgroup-memory-by-default.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/kernel/cgroup/cgroup.c
+ +++ b/kernel/cgroup/cgroup.c
+-@@ -5720,6 +5720,9 @@ int __init cgroup_init_early(void)
++@@ -5735,6 +5735,9 @@ int __init cgroup_init_early(void)
+  	return 0;
+  }
+  
+@@ -27,7 +27,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  /**
+   * cgroup_init - cgroup initialization
+   *
+-@@ -5758,6 +5761,12 @@ int __init cgroup_init(void)
++@@ -5773,6 +5776,12 @@ int __init cgroup_init(void)
+  
+  	mutex_unlock(&cgroup_mutex);
+  
+@@ -40,7 +40,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	for_each_subsys(ss, ssid) {
+  		if (ss->early_init) {
+  			struct cgroup_subsys_state *css =
+-@@ -6296,6 +6305,10 @@ static int __init cgroup_disable(char *s
++@@ -6311,6 +6320,10 @@ static int __init cgroup_disable(char *s
+  			    strcmp(token, ss->legacy_name))
+  				continue;
+  
+@@ -51,7 +51,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  			static_branch_disable(cgroup_subsys_enabled_key[i]);
+  			pr_info("Disabling %s control group subsystem\n",
+  				ss->name);
+-@@ -6305,6 +6318,31 @@ static int __init cgroup_disable(char *s
++@@ -6320,6 +6333,31 @@ static int __init cgroup_disable(char *s
+  }
+  __setup("cgroup_disable=", cgroup_disable);
+  
+diff --git a/target/linux/bcm63xx/patches-5.10/143-gpio-fix-device-tree-gpio-hogs-on-dual-role-gpio-pin.patch b/target/linux/bcm63xx/patches-5.10/143-gpio-fix-device-tree-gpio-hogs-on-dual-role-gpio-pin.patch
+index 17cb9e0f0054..9657592d70cc 100644
+--- a/target/linux/bcm63xx/patches-5.10/143-gpio-fix-device-tree-gpio-hogs-on-dual-role-gpio-pin.patch
++++ b/target/linux/bcm63xx/patches-5.10/143-gpio-fix-device-tree-gpio-hogs-on-dual-role-gpio-pin.patch
+@@ -116,7 +116,7 @@ Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+  }
+ --- a/drivers/gpio/gpiolib.c
+ +++ b/drivers/gpio/gpiolib.c
+-@@ -1893,7 +1893,8 @@ int gpiochip_add_pingroup_range(struct g
++@@ -1912,7 +1912,8 @@ int gpiochip_add_pingroup_range(struct g
+  
+  	list_add_tail(&pin_range->node, &gdev->pin_ranges);
+  
+@@ -126,7 +126,7 @@ Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+  }
+  EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
+  
+-@@ -1950,7 +1951,7 @@ int gpiochip_add_pin_range(struct gpio_c
++@@ -1969,7 +1970,7 @@ int gpiochip_add_pin_range(struct gpio_c
+  
+  	list_add_tail(&pin_range->node, &gdev->pin_ranges);
+  
+diff --git a/target/linux/generic/backport-5.10/711-v5.12-sfp-add-support-for-100-base-x-SFPs.patch b/target/linux/generic/backport-5.10/711-v5.12-sfp-add-support-for-100-base-x-SFPs.patch
+index 7d06c235d9a5..0c87532e1325 100644
+--- a/target/linux/generic/backport-5.10/711-v5.12-sfp-add-support-for-100-base-x-SFPs.patch
++++ b/target/linux/generic/backport-5.10/711-v5.12-sfp-add-support-for-100-base-x-SFPs.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/phy/sfp-bus.c
+ +++ b/drivers/net/phy/sfp-bus.c
+-@@ -280,6 +280,12 @@ void sfp_parse_support(struct sfp_bus *b
++@@ -286,6 +286,12 @@ void sfp_parse_support(struct sfp_bus *b
+  	    br_min <= 1300 && br_max >= 1200)
+  		phylink_set(modes, 1000baseX_Full);
+  
+@@ -28,7 +28,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	/* For active or passive cables, select the link modes
+  	 * based on the bit rates and the cable compliance bytes.
+  	 */
+-@@ -399,6 +405,9 @@ phy_interface_t sfp_select_interface(str
++@@ -405,6 +411,9 @@ phy_interface_t sfp_select_interface(str
+  	if (phylink_test(link_modes, 1000baseX_Full))
+  		return PHY_INTERFACE_MODE_1000BASEX;
+  
+diff --git a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index ab356655810d..3b7f618a31ec 100644
+--- a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -1398,7 +1398,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	}
+  
+  	phy_mode = device_get_phy_mode(&pdev->dev);
+-@@ -644,7 +644,7 @@ void stmmac_remove_config_dt(struct plat
++@@ -643,7 +643,7 @@ void stmmac_remove_config_dt(struct plat
+  }
+  #else
+  struct plat_stmmacenet_data *
+@@ -1834,7 +1834,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	/*
+ --- a/drivers/staging/wfx/main.c
+ +++ b/drivers/staging/wfx/main.c
+-@@ -334,7 +334,6 @@ int wfx_probe(struct wfx_dev *wdev)
++@@ -339,7 +339,6 @@ int wfx_probe(struct wfx_dev *wdev)
+  {
+  	int i;
+  	int err;
+@@ -1842,7 +1842,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	struct gpio_desc *gpio_saved;
+  
+  	// During first part of boot, gpio_wakeup cannot yet been used. So
+-@@ -423,9 +422,9 @@ int wfx_probe(struct wfx_dev *wdev)
++@@ -428,9 +427,9 @@ int wfx_probe(struct wfx_dev *wdev)
+  
+  	for (i = 0; i < ARRAY_SIZE(wdev->addresses); i++) {
+  		eth_zero_addr(wdev->addresses[i].addr);
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0004-PCI-aardvark-Clear-all-MSIs-at-setup.patch b/target/linux/generic/backport-5.10/850-v5.17-0004-PCI-aardvark-Clear-all-MSIs-at-setup.patch
+index d617845e42ff..dc01c5f85d7b 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0004-PCI-aardvark-Clear-all-MSIs-at-setup.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0004-PCI-aardvark-Clear-all-MSIs-at-setup.patch
+@@ -48,7 +48,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+  
+  	/* Enable summary interrupt for GIC SPI source */
+  	reg = PCIE_IRQ_ALL_MASK & (~PCIE_IRQ_ENABLE_INTS_MASK);
+-@@ -1401,7 +1403,7 @@ static void advk_pcie_handle_msi(struct
++@@ -1397,7 +1399,7 @@ static void advk_pcie_handle_msi(struct
+  
+  	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
+  	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0005-PCI-aardvark-Comment-actions-in-driver-remove-method.patch b/target/linux/generic/backport-5.10/850-v5.17-0005-PCI-aardvark-Comment-actions-in-driver-remove-method.patch
+index 12610662893d..45df1b969576 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0005-PCI-aardvark-Comment-actions-in-driver-remove-method.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0005-PCI-aardvark-Comment-actions-in-driver-remove-method.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1700,11 +1700,13 @@ static int advk_pcie_remove(struct platf
++@@ -1696,11 +1696,13 @@ static int advk_pcie_remove(struct platf
+  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+  	int i;
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0006-PCI-aardvark-Disable-bus-mastering-when-unbinding-dr.patch b/target/linux/generic/backport-5.10/850-v5.17-0006-PCI-aardvark-Disable-bus-mastering-when-unbinding-dr.patch
+index cb50e08fdcdd..5959d80592cd 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0006-PCI-aardvark-Disable-bus-mastering-when-unbinding-dr.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0006-PCI-aardvark-Disable-bus-mastering-when-unbinding-dr.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1698,6 +1698,7 @@ static int advk_pcie_remove(struct platf
++@@ -1694,6 +1694,7 @@ static int advk_pcie_remove(struct platf
+  {
+  	struct advk_pcie *pcie = platform_get_drvdata(pdev);
+  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+@@ -27,7 +27,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+  	int i;
+  
+  	/* Remove PCI bus with all devices */
+-@@ -1706,6 +1707,11 @@ static int advk_pcie_remove(struct platf
++@@ -1702,6 +1703,11 @@ static int advk_pcie_remove(struct platf
+  	pci_remove_root_bus(bridge->bus);
+  	pci_unlock_rescan_remove();
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0007-PCI-aardvark-Mask-all-interrupts-when-unbinding-driv.patch b/target/linux/generic/backport-5.10/850-v5.17-0007-PCI-aardvark-Mask-all-interrupts-when-unbinding-driv.patch
+index ce8088b3b19f..130bb701f8ea 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0007-PCI-aardvark-Mask-all-interrupts-when-unbinding-driv.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0007-PCI-aardvark-Mask-all-interrupts-when-unbinding-driv.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1712,6 +1712,27 @@ static int advk_pcie_remove(struct platf
++@@ -1708,6 +1708,27 @@ static int advk_pcie_remove(struct platf
+  	val &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
+  	advk_writel(pcie, val, PCIE_CORE_CMD_STATUS_REG);
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0008-PCI-aardvark-Fix-memory-leak-in-driver-unbind.patch b/target/linux/generic/backport-5.10/850-v5.17-0008-PCI-aardvark-Fix-memory-leak-in-driver-unbind.patch
+index a460f770f877..74d25d508bba 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0008-PCI-aardvark-Fix-memory-leak-in-driver-unbind.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0008-PCI-aardvark-Fix-memory-leak-in-driver-unbind.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1737,6 +1737,9 @@ static int advk_pcie_remove(struct platf
++@@ -1733,6 +1733,9 @@ static int advk_pcie_remove(struct platf
+  	advk_pcie_remove_msi_irq_domain(pcie);
+  	advk_pcie_remove_irq_domain(pcie);
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0009-PCI-aardvark-Assert-PERST-when-unbinding-driver.patch b/target/linux/generic/backport-5.10/850-v5.17-0009-PCI-aardvark-Assert-PERST-when-unbinding-driver.patch
+index 2dfd22f439df..26d8afdddd8f 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0009-PCI-aardvark-Assert-PERST-when-unbinding-driver.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0009-PCI-aardvark-Assert-PERST-when-unbinding-driver.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1740,6 +1740,10 @@ static int advk_pcie_remove(struct platf
++@@ -1736,6 +1736,10 @@ static int advk_pcie_remove(struct platf
+  	/* Free config space for emulated root bridge */
+  	pci_bridge_emul_cleanup(&pcie->bridge);
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0010-PCI-aardvark-Disable-link-training-when-unbinding-dr.patch b/target/linux/generic/backport-5.10/850-v5.17-0010-PCI-aardvark-Disable-link-training-when-unbinding-dr.patch
+index e1ff7e85735b..23346a9284a9 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0010-PCI-aardvark-Disable-link-training-when-unbinding-dr.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0010-PCI-aardvark-Disable-link-training-when-unbinding-dr.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1744,6 +1744,11 @@ static int advk_pcie_remove(struct platf
++@@ -1740,6 +1740,11 @@ static int advk_pcie_remove(struct platf
+  	if (pcie->reset_gpio)
+  		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+  
+diff --git a/target/linux/generic/backport-5.10/850-v5.17-0011-PCI-aardvark-Disable-common-PHY-when-unbinding-drive.patch b/target/linux/generic/backport-5.10/850-v5.17-0011-PCI-aardvark-Disable-common-PHY-when-unbinding-drive.patch
+index 5a0840f3edbc..a7d5c014ab1e 100644
+--- a/target/linux/generic/backport-5.10/850-v5.17-0011-PCI-aardvark-Disable-common-PHY-when-unbinding-drive.patch
++++ b/target/linux/generic/backport-5.10/850-v5.17-0011-PCI-aardvark-Disable-common-PHY-when-unbinding-drive.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1753,6 +1753,9 @@ static int advk_pcie_remove(struct platf
++@@ -1749,6 +1749,9 @@ static int advk_pcie_remove(struct platf
+  	for (i = 0; i < OB_WIN_COUNT; i++)
+  		advk_pcie_disable_ob_win(pcie, i);
+  
+diff --git a/target/linux/generic/pending-5.10/710-bridge-add-knob-for-filtering-rx-tx-BPDU-pack.patch b/target/linux/generic/pending-5.10/710-bridge-add-knob-for-filtering-rx-tx-BPDU-pack.patch
+index ecd6e9e7a250..106f7d356098 100644
+--- a/target/linux/generic/pending-5.10/710-bridge-add-knob-for-filtering-rx-tx-BPDU-pack.patch
++++ b/target/linux/generic/pending-5.10/710-bridge-add-knob-for-filtering-rx-tx-BPDU-pack.patch
+@@ -164,7 +164,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  struct rtnl_link {
+  	rtnl_doit_func		doit;
+-@@ -4684,7 +4684,9 @@ int ndo_dflt_bridge_getlink(struct sk_bu
++@@ -4695,7 +4695,9 @@ int ndo_dflt_bridge_getlink(struct sk_bu
+  	    brport_nla_put_flag(skb, flags, mask,
+  				IFLA_BRPORT_MCAST_FLOOD, BR_MCAST_FLOOD) ||
+  	    brport_nla_put_flag(skb, flags, mask,
+diff --git a/target/linux/generic/pending-5.10/850-0002-PCI-aardvark-Fix-reading-MSI-interrupt-number.patch b/target/linux/generic/pending-5.10/850-0002-PCI-aardvark-Fix-reading-MSI-interrupt-number.patch
+index 6d08456d4700..b2d32f5566ce 100644
+--- a/target/linux/generic/pending-5.10/850-0002-PCI-aardvark-Fix-reading-MSI-interrupt-number.patch
++++ b/target/linux/generic/pending-5.10/850-0002-PCI-aardvark-Fix-reading-MSI-interrupt-number.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Marek Behún <kabel@kernel.org>
+ 
+ --- a/drivers/pci/controller/pci-aardvark.c
+ +++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1395,7 +1395,7 @@ static void advk_pcie_remove_irq_domain(
++@@ -1391,7 +1391,7 @@ static void advk_pcie_remove_irq_domain(
+  static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+  {
+  	u32 msi_val, msi_mask, msi_status, msi_idx;
+@@ -36,7 +36,7 @@ Signed-off-by: Marek Behún <kabel@kernel.org>
+  
+  	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
+  	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
+-@@ -1405,13 +1405,12 @@ static void advk_pcie_handle_msi(struct
++@@ -1401,13 +1401,12 @@ static void advk_pcie_handle_msi(struct
+  		if (!(BIT(msi_idx) & msi_status))
+  			continue;
+  
+diff --git a/target/linux/generic/pending-5.10/850-0003-PCI-aardvark-Fix-support-for-MSI-interrupts.patch b/target/linux/generic/pending-5.10/850-0003-PCI-aardvark-Fix-support-for-MSI-interrupts.patch
+deleted file mode 100644
+index 813cbe5148f7..000000000000
+--- a/target/linux/generic/pending-5.10/850-0003-PCI-aardvark-Fix-support-for-MSI-interrupts.patch
++++ /dev/null
+@@ -1,72 +0,0 @@
+-From bb03b126ea6c9e57177b537dd022246fa5dbef16 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+-Date: Fri, 12 Feb 2021 16:24:07 +0100
+-Subject: [PATCH] PCI: aardvark: Fix support for MSI interrupts
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Aardvark hardware supports Multi-MSI and MSI_FLAG_MULTI_PCI_MSI is already
+-set for the MSI chip. But when allocating MSI interrupt numbers for
+-Multi-MSI, the numbers need to be properly aligned, otherwise endpoint
+-devices send MSI interrupt with incorrect numbers.
+-
+-Fix this issue by using function bitmap_find_free_region() instead of
+-bitmap_find_next_zero_area().
+-
+-To ensure that aligned MSI interrupt numbers are used by endpoint devices,
+-we cannot use Linux virtual irq numbers (as they are random and not
+-properly aligned). Instead we need to use the aligned hwirq numbers.
+-
+-This change fixes receiving MSI interrupts on Armada 3720 boards and
+-allows using NVMe disks which use Multi-MSI feature with 3 interrupts.
+-
+-Without this NVMe disks freeze booting as linux nvme-core.c is waiting
+-60s for an interrupt.
+-
+-Signed-off-by: Pali Rohár <pali@kernel.org>
+-Signed-off-by: Marek Behún <kabel@kernel.org>
+----
+- drivers/pci/controller/pci-aardvark.c | 16 ++++++----------
+- 1 file changed, 6 insertions(+), 10 deletions(-)
+-
+---- a/drivers/pci/controller/pci-aardvark.c
+-+++ b/drivers/pci/controller/pci-aardvark.c
+-@@ -1191,7 +1191,7 @@ static void advk_msi_irq_compose_msi_msg
+- 
+- 	msg->address_lo = lower_32_bits(msi_msg);
+- 	msg->address_hi = upper_32_bits(msi_msg);
+--	msg->data = data->irq;
+-+	msg->data = data->hwirq;
+- }
+- 
+- static int advk_msi_set_affinity(struct irq_data *irq_data,
+-@@ -1208,15 +1208,11 @@ static int advk_msi_irq_domain_alloc(str
+- 	int hwirq, i;
+- 
+- 	mutex_lock(&pcie->msi_used_lock);
+--	hwirq = bitmap_find_next_zero_area(pcie->msi_used, MSI_IRQ_NUM,
+--					   0, nr_irqs, 0);
+--	if (hwirq >= MSI_IRQ_NUM) {
+--		mutex_unlock(&pcie->msi_used_lock);
+--		return -ENOSPC;
+--	}
+--
+--	bitmap_set(pcie->msi_used, hwirq, nr_irqs);
+-+	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
+-+					order_base_2(nr_irqs));
+- 	mutex_unlock(&pcie->msi_used_lock);
+-+	if (hwirq < 0)
+-+		return -ENOSPC;
+- 
+- 	for (i = 0; i < nr_irqs; i++)
+- 		irq_domain_set_info(domain, virq + i, hwirq + i,
+-@@ -1234,7 +1230,7 @@ static void advk_msi_irq_domain_free(str
+- 	struct advk_pcie *pcie = domain->host_data;
+- 
+- 	mutex_lock(&pcie->msi_used_lock);
+--	bitmap_clear(pcie->msi_used, d->hwirq, nr_irqs);
+-+	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
+- 	mutex_unlock(&pcie->msi_used_lock);
+- }
+- 
+diff --git a/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch b/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
+index dd1e506e5bda..77667b139e3d 100644
+--- a/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
++++ b/target/linux/ipq806x/patches-5.10/108-v5.14-net-stmmac-explicitly-deassert-gmac-ahb-reset.patch
+@@ -50,7 +50,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+-@@ -617,6 +617,12 @@ stmmac_probe_config_dt(struct platform_d
++@@ -616,6 +616,12 @@ stmmac_probe_config_dt(struct platform_d
+  		plat->stmmac_rst = NULL;
+  	}
+  
