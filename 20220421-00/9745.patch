@@ -1,0 +1,232 @@
+From 42e95cc09530cb10f1f5b54ed7b46b48935a9288 Mon Sep 17 00:00:00 2001
+From: John Audia <graysky@archlinux.us>
+Date: Wed, 20 Apr 2022 06:44:30 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.112
+
+Manually rebased:
+  ath79/patches-5.10/901-phy-mdio-bitbang-prevent-rescheduling-during-command.patch
+
+All other patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, mt7622/RT3200
+Run-tested: bcm2711/RPi4B, mt7622/RT3200
+
+Signed-off-by: John Audia <graysky@archlinux.us>
+---
+ include/kernel-5.10                                |  4 ++--
+ .../600-of_net-add-mac-address-ascii-support.patch | 14 ++++++--------
+ ...tbang-prevent-rescheduling-during-command.patch |  6 +++---
+ ...-Pass-the-full-state-to-CRTC-atomic_check.patch |  4 ++--
+ ...or-Create-a-helper-to-attach-the-hdr_outp.patch |  2 +-
+ ...nector-Add-helper-to-compare-HDR-metadata.patch |  4 ++--
+ ...0-0689-drm-automatic-legacy-gamma-support.patch |  2 +-
+ ...pass-the-dst-buffer-to-of_get_mac_address.patch |  2 +-
+ .../generic/pending-5.10/834-ledtrig-libata.patch  |  8 ++++----
+ .../oxnas/patches-5.10/999-libata-hacks.patch      |  4 ++--
+ 10 files changed, 24 insertions(+), 26 deletions(-)
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index 76c5ff42d187..6a0cb0c85a89 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .111
+-LINUX_KERNEL_HASH-5.10.111 = 1831b3d8765592ce91e51441bb179d908f6bcfe8c78d03c2bec8c675c4a0ab1a
++LINUX_VERSION-5.10 = .112
++LINUX_KERNEL_HASH-5.10.112 = 8c6c1dc361ebb1ef63a7666b2069c9d7cdcec8ebb706b03780af1c8bb03b4aa5
+diff --git a/target/linux/ath79/patches-5.10/600-of_net-add-mac-address-ascii-support.patch b/target/linux/ath79/patches-5.10/600-of_net-add-mac-address-ascii-support.patch
+index 8849afb4d605..1788419c70e5 100644
+--- a/target/linux/ath79/patches-5.10/600-of_net-add-mac-address-ascii-support.patch
++++ b/target/linux/ath79/patches-5.10/600-of_net-add-mac-address-ascii-support.patch
+@@ -1,8 +1,6 @@
+-Index: linux-5.15.31/net/ethernet/eth.c
+-===================================================================
+---- linux-5.15.31.orig/net/ethernet/eth.c
+-+++ linux-5.15.31/net/ethernet/eth.c
+-@@ -544,6 +544,63 @@ int eth_platform_get_mac_address(struct
++--- a/net/ethernet/eth.c
+++++ b/net/ethernet/eth.c
++@@ -545,6 +545,63 @@ int eth_platform_get_mac_address(struct
+  }
+  EXPORT_SYMBOL(eth_platform_get_mac_address);
+  
+@@ -64,9 +62,9 @@ Index: linux-5.15.31/net/ethernet/eth.c
+ +};
+ +
+  /**
+-  * nvmem_get_mac_address - Obtain the MAC address from an nvmem cell named
+-  * 'mac-address' associated with given device.
+-@@ -557,19 +614,23 @@ int nvmem_get_mac_address(struct device
++  * Obtain the MAC address from an nvmem cell named 'mac-address' associated
++  * with given device.
++@@ -558,19 +615,23 @@ int nvmem_get_mac_address(struct device
+  {
+  	struct nvmem_cell *cell;
+  	const void *mac;
+diff --git a/target/linux/ath79/patches-5.10/901-phy-mdio-bitbang-prevent-rescheduling-during-command.patch b/target/linux/ath79/patches-5.10/901-phy-mdio-bitbang-prevent-rescheduling-during-command.patch
+index 5b3260eecb25..e6fae3349d53 100644
+--- a/target/linux/ath79/patches-5.10/901-phy-mdio-bitbang-prevent-rescheduling-during-command.patch
++++ b/target/linux/ath79/patches-5.10/901-phy-mdio-bitbang-prevent-rescheduling-during-command.patch
+@@ -14,13 +14,13 @@ Signed-off-by: Jonas Gorski <jogo@openwrt.org>
+ 
+ --- a/drivers/net/mdio/mdio-bitbang.c
+ +++ b/drivers/net/mdio/mdio-bitbang.c
+-@@ -14,6 +14,7 @@
+-  * Vitaly Bordug <vbordug@ru.mvista.com>
++@@ -15,6 +15,7 @@
+   */
+  
++ #include <linux/delay.h>
+ +#include <linux/irqflags.h>
+- #include <linux/module.h>
+  #include <linux/mdio-bitbang.h>
++ #include <linux/module.h>
+  #include <linux/types.h>
+ @@ -153,7 +154,9 @@ static int mdiobb_read(struct mii_bus *b
+  {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0409-drm-atomic-Pass-the-full-state-to-CRTC-atomic_check.patch b/target/linux/bcm27xx/patches-5.10/950-0409-drm-atomic-Pass-the-full-state-to-CRTC-atomic_check.patch
+index 27e44d90740e..a110b7a605d6 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0409-drm-atomic-Pass-the-full-state-to-CRTC-atomic_check.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0409-drm-atomic-Pass-the-full-state-to-CRTC-atomic_check.patch
+@@ -201,7 +201,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20201028123222.1732139-1-max
+ 
+ --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+ +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+-@@ -5605,17 +5605,19 @@ static void dm_update_crtc_active_planes
++@@ -5606,17 +5606,19 @@ static void dm_update_crtc_active_planes
+  }
+  
+  static int dm_crtc_helper_atomic_check(struct drm_crtc *crtc,
+@@ -225,7 +225,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20201028123222.1732139-1-max
+  		WARN_ON(1);
+  		return ret;
+  	}
+-@@ -5626,8 +5628,8 @@ static int dm_crtc_helper_atomic_check(s
++@@ -5627,8 +5629,8 @@ static int dm_crtc_helper_atomic_check(s
+  	 * planes are disabled, which is not supported by the hardware. And there is legacy
+  	 * userspace which stops using the HW cursor altogether in response to the resulting EINVAL.
+  	 */
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0527-drm-connector-Create-a-helper-to-attach-the-hdr_outp.patch b/target/linux/bcm27xx/patches-5.10/950-0527-drm-connector-Create-a-helper-to-attach-the-hdr_outp.patch
+index 64b7f2cf840f..5ccff1866ac3 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0527-drm-connector-Create-a-helper-to-attach-the-hdr_outp.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0527-drm-connector-Create-a-helper-to-attach-the-hdr_outp.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+ +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+-@@ -6531,9 +6531,7 @@ void amdgpu_dm_connector_init_helper(str
++@@ -6532,9 +6532,7 @@ void amdgpu_dm_connector_init_helper(str
+  	if (connector_type == DRM_MODE_CONNECTOR_HDMIA ||
+  	    connector_type == DRM_MODE_CONNECTOR_DisplayPort ||
+  	    connector_type == DRM_MODE_CONNECTOR_eDP) {
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0528-drm-connector-Add-helper-to-compare-HDR-metadata.patch b/target/linux/bcm27xx/patches-5.10/950-0528-drm-connector-Add-helper-to-compare-HDR-metadata.patch
+index 3e61bb486e0a..4cc8aa6d4b50 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0528-drm-connector-Add-helper-to-compare-HDR-metadata.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0528-drm-connector-Add-helper-to-compare-HDR-metadata.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+ +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+-@@ -5476,25 +5476,6 @@ static int fill_hdr_info_packet(const st
++@@ -5477,25 +5477,6 @@ static int fill_hdr_info_packet(const st
+  	return 0;
+  }
+  
+@@ -47,7 +47,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  static int
+  amdgpu_dm_connector_atomic_check(struct drm_connector *conn,
+  				 struct drm_atomic_state *state)
+-@@ -5510,7 +5491,7 @@ amdgpu_dm_connector_atomic_check(struct
++@@ -5511,7 +5492,7 @@ amdgpu_dm_connector_atomic_check(struct
+  	if (!crtc)
+  		return 0;
+  
+diff --git a/target/linux/bcm27xx/patches-5.10/950-0689-drm-automatic-legacy-gamma-support.patch b/target/linux/bcm27xx/patches-5.10/950-0689-drm-automatic-legacy-gamma-support.patch
+index d536e6722c1d..8cf7f99513df 100644
+--- a/target/linux/bcm27xx/patches-5.10/950-0689-drm-automatic-legacy-gamma-support.patch
++++ b/target/linux/bcm27xx/patches-5.10/950-0689-drm-automatic-legacy-gamma-support.patch
+@@ -42,7 +42,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20201211114237.213288-2-tomi
+ 
+ --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+ +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+-@@ -4992,7 +4992,6 @@ static void dm_disable_vblank(struct drm
++@@ -4993,7 +4993,6 @@ static void dm_disable_vblank(struct drm
+  static const struct drm_crtc_funcs amdgpu_dm_crtc_funcs = {
+  	.reset = dm_crtc_reset_state,
+  	.destroy = amdgpu_dm_crtc_destroy,
+diff --git a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+index 3b7f618a31ec..fe12ffd9cca4 100644
+--- a/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
++++ b/target/linux/generic/backport-5.10/732-net-next-1-of-net-pass-the-dst-buffer-to-of_get_mac_address.patch
+@@ -1294,7 +1294,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  
+ --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+-@@ -398,7 +398,7 @@ static int socfpga_dwmac_probe(struct pl
++@@ -395,7 +395,7 @@ static int socfpga_dwmac_probe(struct pl
+  	if (ret)
+  		return ret;
+  
+diff --git a/target/linux/generic/pending-5.10/834-ledtrig-libata.patch b/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
+index 25cffb1444db..5b10f1257ef4 100644
+--- a/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
++++ b/target/linux/generic/pending-5.10/834-ledtrig-libata.patch
+@@ -65,7 +65,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  /**
+   *	ata_build_rw_tf - Build ATA taskfile for given read/write request
+   *	@tf: Target ATA taskfile
+-@@ -4548,6 +4561,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
++@@ -4551,6 +4564,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
+  		if (tag < 0)
+  			return NULL;
+  	}
+@@ -75,7 +75,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  
+  	qc = __ata_qc_from_tag(ap, tag);
+  	qc->tag = qc->hw_tag = tag;
+-@@ -5326,6 +5342,9 @@ struct ata_port *ata_port_alloc(struct a
++@@ -5329,6 +5345,9 @@ struct ata_port *ata_port_alloc(struct a
+  	ap->stats.unhandled_irq = 1;
+  	ap->stats.idle_irq = 1;
+  #endif
+@@ -85,7 +85,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	ata_sff_port_init(ap);
+  
+  	return ap;
+-@@ -5361,6 +5380,12 @@ static void ata_host_release(struct kref
++@@ -5364,6 +5383,12 @@ static void ata_host_release(struct kref
+  
+  		kfree(ap->pmp_link);
+  		kfree(ap->slave_link);
+@@ -98,7 +98,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  		kfree(ap);
+  		host->ports[i] = NULL;
+  	}
+-@@ -5767,7 +5792,23 @@ int ata_host_register(struct ata_host *h
++@@ -5770,7 +5795,23 @@ int ata_host_register(struct ata_host *h
+  		host->ports[i]->print_id = atomic_inc_return(&ata_print_id);
+  		host->ports[i]->local_port_no = i + 1;
+  	}
+diff --git a/target/linux/oxnas/patches-5.10/999-libata-hacks.patch b/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
+index 84d418887c09..5af87b4a8608 100644
+--- a/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
++++ b/target/linux/oxnas/patches-5.10/999-libata-hacks.patch
+@@ -15,7 +15,7 @@
+  	/* initialize internal qc */
+  	qc = __ata_qc_from_tag(ap, ATA_TAG_INTERNAL);
+  
+-@@ -4555,6 +4563,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
++@@ -4558,6 +4566,9 @@ struct ata_queued_cmd *ata_qc_new_init(s
+  	if (unlikely(ap->pflags & ATA_PFLAG_FROZEN))
+  		return NULL;
+  
+@@ -25,7 +25,7 @@
+  	/* libsas case */
+  	if (ap->flags & ATA_FLAG_SAS_HOST) {
+  		tag = ata_sas_allocate_tag(ap);
+-@@ -4600,6 +4611,8 @@ void ata_qc_free(struct ata_queued_cmd *
++@@ -4603,6 +4614,8 @@ void ata_qc_free(struct ata_queued_cmd *
+  		qc->tag = ATA_TAG_POISON;
+  		if (ap->flags & ATA_FLAG_SAS_HOST)
+  			ata_sas_free_tag(tag, ap);

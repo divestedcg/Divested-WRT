@@ -1,3 +1,8 @@
+20220421-00
+- update to 0d2d52df69e91fe2f6e3e65750c0728fc45f5ab2
+- [upstream] glibc update (security fixes)
+- [cherrypick] #9745: update to kernel 5.10.112 (security and bug fixes)
+
 20220415-00
 - update to 08ebc3881d3f351d2d4ca9202ca446c96b38a1e1
 - [cherrypick] #9712: update to kernel 5.10.111 (security and bug fixes)
