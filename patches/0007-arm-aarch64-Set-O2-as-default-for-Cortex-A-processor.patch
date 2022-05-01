@@ -17,10 +17,10 @@ Tested-by: Tad <tad@spotco.us>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/include/target.mk b/include/target.mk
-index 72fe493776..6af21e0a6d 100644
+index a2c8b7bdbf..de5038c17c 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -200,7 +200,11 @@ LINUX_RECONF_DIFF = $(SCRIPT_DIR)/kconfig.pl - '>' $(call __linux_confcmd,$(filt
+@@ -208,7 +208,11 @@ LINUX_RECONF_DIFF = $(SCRIPT_DIR)/kconfig.pl - '>' $(call __linux_confcmd,$(filt
  ifeq ($(DUMP),1)
    BuildTarget=$(BuildTargets/DumpCurrent)
  

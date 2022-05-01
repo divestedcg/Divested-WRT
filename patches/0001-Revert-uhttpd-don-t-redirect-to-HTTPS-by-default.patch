@@ -11,7 +11,7 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/package/network/services/uhttpd/files/uhttpd.config b/package/network/services/uhttpd/files/uhttpd.config
-index 40ce67fd01..aeded08afc 100644
+index a9b8ff3d15..4bb2c3463e 100644
 --- a/package/network/services/uhttpd/files/uhttpd.config
 +++ b/package/network/services/uhttpd/files/uhttpd.config
 @@ -10,7 +10,7 @@ config uhttpd main

@@ -1,3 +1,8 @@
+20220430-01
+- update to ab4eafbed974c6ead13b11a50b3032670c26540a
+- [upstream] update to kernel 5.10.113 (security and bug fixes)
+- additional kernel hardening
+
 20220421-00
 - update to 0d2d52df69e91fe2f6e3e65750c0728fc45f5ab2
 - [upstream] glibc update (security fixes)
