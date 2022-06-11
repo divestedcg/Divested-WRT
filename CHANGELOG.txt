@@ -1,3 +1,7 @@
+20220611-00
+- update to e3e9eb31a281643737142e8e80c6f49204b5ba18
+- [cherrypick] #10033: update to kernel 5.10.121 (security and bug fixes)
+
 20220531-00
 - update to a7ddef6ef122a935d6bdf38d7ead686b12738007
 - [cherrypick] #9918: update to kernel 5.10.119 (security and bug fixes)
