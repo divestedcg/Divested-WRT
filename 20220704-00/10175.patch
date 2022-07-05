@@ -1,0 +1,127 @@
+From 1ef2815bdfbff90ca89c7ece1e44e028d0bb5eda Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Sat, 2 Jul 2022 13:06:09 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.128
+
+All patches automatically rebased.
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.10                                         | 4 ++--
+ .../401-mtd-nor-support-mtd-name-from-device-tree.patch     | 6 +++---
+ .../402-mtd-blktrans-call-add-disks-after-mtd-device.patch  | 2 +-
+ .../hack-5.10/420-mtd-set-rootfs-to-be-root-dev.patch       | 2 +-
+ .../495-mtd-core-add-get_mtd_device_by_node.patch           | 2 +-
+ .../401-mtd-nor-support-mtd-name-from-device-tree.patch     | 6 +++---
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index 658767af331f..89d124de8bb3 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .127
+-LINUX_KERNEL_HASH-5.10.127 = 419233ee0b1ee1dc2be8abf1b241545d10dad19d95f237180d6ccdc0cd221580
++LINUX_VERSION-5.10 = .128
++LINUX_KERNEL_HASH-5.10.128 = ec59e9d208d7ddf949bf45e780f1df984763b2e31e2b8d888d7d3092741cd34b
+diff --git a/target/linux/ath79/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch b/target/linux/ath79/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
+index 38a65b183f12..d7ee9e56fc64 100644
+--- a/target/linux/ath79/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
++++ b/target/linux/ath79/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+ 
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -3156,6 +3156,7 @@ int spi_nor_scan(struct spi_nor *nor, co
++@@ -3141,6 +3141,7 @@ int spi_nor_scan(struct spi_nor *nor, co
+  	struct device *dev = nor->dev;
+  	struct mtd_info *mtd = &nor->mtd;
+  	struct device_node *np = spi_nor_get_flash_node(nor);
+@@ -18,7 +18,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+  	int ret;
+  	int i;
+  
+-@@ -3210,7 +3211,12 @@ int spi_nor_scan(struct spi_nor *nor, co
++@@ -3195,7 +3196,12 @@ int spi_nor_scan(struct spi_nor *nor, co
+  	if (ret)
+  		return ret;
+  
+@@ -34,7 +34,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+  	mtd->type = MTD_NORFLASH;
+ --- a/drivers/mtd/mtdcore.c
+ +++ b/drivers/mtd/mtdcore.c
+-@@ -778,6 +778,17 @@ out_error:
++@@ -788,6 +788,17 @@ out_error:
+   */
+  static void mtd_set_dev_defaults(struct mtd_info *mtd)
+  {
+diff --git a/target/linux/generic/hack-5.10/402-mtd-blktrans-call-add-disks-after-mtd-device.patch b/target/linux/generic/hack-5.10/402-mtd-blktrans-call-add-disks-after-mtd-device.patch
+index 988d900b3110..a5dc72f43b1b 100644
+--- a/target/linux/generic/hack-5.10/402-mtd-blktrans-call-add-disks-after-mtd-device.patch
++++ b/target/linux/generic/hack-5.10/402-mtd-blktrans-call-add-disks-after-mtd-device.patch
+@@ -77,7 +77,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  
+  #include "mtdcore.h"
+  
+-@@ -851,6 +852,8 @@ int mtd_device_parse_register(struct mtd
++@@ -861,6 +862,8 @@ int mtd_device_parse_register(struct mtd
+  		register_reboot_notifier(&mtd->reboot_notifier);
+  	}
+  
+diff --git a/target/linux/generic/hack-5.10/420-mtd-set-rootfs-to-be-root-dev.patch b/target/linux/generic/hack-5.10/420-mtd-set-rootfs-to-be-root-dev.patch
+index b071ac61ecfe..d34306b7fc88 100644
+--- a/target/linux/generic/hack-5.10/420-mtd-set-rootfs-to-be-root-dev.patch
++++ b/target/linux/generic/hack-5.10/420-mtd-set-rootfs-to-be-root-dev.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  #include <linux/nvmem-provider.h>
+  
+  #include <linux/mtd/mtd.h>
+-@@ -694,6 +695,19 @@ int add_mtd_device(struct mtd_info *mtd)
++@@ -704,6 +705,19 @@ int add_mtd_device(struct mtd_info *mtd)
+  	   of this try_ nonsense, and no bitching about it
+  	   either. :) */
+  	__module_get(THIS_MODULE);
+diff --git a/target/linux/generic/pending-5.10/495-mtd-core-add-get_mtd_device_by_node.patch b/target/linux/generic/pending-5.10/495-mtd-core-add-get_mtd_device_by_node.patch
+index 22c3ba56d46c..ac5e4086d930 100644
+--- a/target/linux/generic/pending-5.10/495-mtd-core-add-get_mtd_device_by_node.patch
++++ b/target/linux/generic/pending-5.10/495-mtd-core-add-get_mtd_device_by_node.patch
+@@ -17,7 +17,7 @@ Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+ 
+ --- a/drivers/mtd/mtdcore.c
+ +++ b/drivers/mtd/mtdcore.c
+-@@ -1046,6 +1046,44 @@ out_unlock:
++@@ -1056,6 +1056,44 @@ out_unlock:
+  }
+  EXPORT_SYMBOL_GPL(get_mtd_device_nm);
+  
+diff --git a/target/linux/pistachio/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch b/target/linux/pistachio/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
+index 38a65b183f12..d7ee9e56fc64 100644
+--- a/target/linux/pistachio/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
++++ b/target/linux/pistachio/patches-5.10/401-mtd-nor-support-mtd-name-from-device-tree.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+ 
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -3156,6 +3156,7 @@ int spi_nor_scan(struct spi_nor *nor, co
++@@ -3141,6 +3141,7 @@ int spi_nor_scan(struct spi_nor *nor, co
+  	struct device *dev = nor->dev;
+  	struct mtd_info *mtd = &nor->mtd;
+  	struct device_node *np = spi_nor_get_flash_node(nor);
+@@ -18,7 +18,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+  	int ret;
+  	int i;
+  
+-@@ -3210,7 +3211,12 @@ int spi_nor_scan(struct spi_nor *nor, co
++@@ -3195,7 +3196,12 @@ int spi_nor_scan(struct spi_nor *nor, co
+  	if (ret)
+  		return ret;
+  
+@@ -34,7 +34,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+  	mtd->type = MTD_NORFLASH;
+ --- a/drivers/mtd/mtdcore.c
+ +++ b/drivers/mtd/mtdcore.c
+-@@ -778,6 +778,17 @@ out_error:
++@@ -788,6 +788,17 @@ out_error:
+   */
+  static void mtd_set_dev_defaults(struct mtd_info *mtd)
+  {

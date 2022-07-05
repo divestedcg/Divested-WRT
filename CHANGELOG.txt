@@ -1,5 +1,10 @@
+20220704-00
+- update to eb7d2abbf06f0a3fe700df5dc6b57ee90016f1f1
+- [upstream] update to OpenSSL 1.1.1p (security fixes)
+- [cherrypick] #10175: update to kernel 5.10.128 (security and bug fixes)
+
 20220624-00
-- f770c33d7bb94b610d3a1c1fa84bc917678b65bc
+- update to f770c33d7bb94b610d3a1c1fa84bc917678b65bc
 - [cherrypick] #10033: update to kernel 5.10.124 (security and bug fixes)
 - reinitialized workspace (sanity)
 
