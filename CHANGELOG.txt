@@ -1,3 +1,9 @@
+20220715-00
+- update to e37ba80633c30ff179df92e8826ba52ff00b2a66
+- [upstream] update to OpenSSL 1.1.1q (security fixes)
+- [cherrypick] #10175: update to kernel 5.10.130 (security and bug fixes)
+- [cherrypick] packages: #18733: irqbalance: fix iconv handling (compile fix)
+
 20220704-00
 - update to eb7d2abbf06f0a3fe700df5dc6b57ee90016f1f1
 - [upstream] update to OpenSSL 1.1.1p (security fixes)
