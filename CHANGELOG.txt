@@ -1,3 +1,9 @@
+20220725-00
+- update to a8e1e30543239e85ff5dc220368164b66cf73fba
+- [cherrypick] #10318: update to kernel 5.10.133 (security and bug fixes)
+- revert 9710fe70a68e0a004b1906db192d7a6c8f810ac5 due to breakage
+  https://github.com/openwrt/openwrt/issues/10311
+
 20220715-00
 - update to e37ba80633c30ff179df92e8826ba52ff00b2a66
 - [upstream] update to OpenSSL 1.1.1q (security fixes)
