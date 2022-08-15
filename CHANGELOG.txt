@@ -1,3 +1,7 @@
+20220814-00
+- update to a9eb5cce7e5c4996fa6ffc081b5323bfd4735dc2
+- [upstream] update to kernel 5.10.136 (security and bug fixes)
+
 20220804-00
 - update to beeb49740bb4f68aadf92095984a2d1f9a488956
 - [cherrypick] #10379: update to kernel 5.10.135 (security and bug fixes)
