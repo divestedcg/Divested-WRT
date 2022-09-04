@@ -1,3 +1,7 @@
+20220904-00
+- update to b8f8c6f2dd8d47216117cb5b78184531ab21dddd
+- [upstream] update to kernel 5.10.139 (security and bug fixes)
+
 20220824-00
 - update to ca5c695a4522091234026e22e8336f05d65602ba
 - [upstream] update to kernel 5.10.137 (security and bug fixes)
