@@ -1,0 +1,127 @@
+From 88377639086901ed68642095f98aacd729b78e7f Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 15 Sep 2022 09:56:36 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.143
+
+All patches automatically rebased.
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.10                                         | 4 ++--
+ ...gulator-core-validate-selector-against-linear_min_.patch | 6 +++---
+ ...8-regulator-core-do-not-continue-if-selector-match.patch | 2 +-
+ ...gulator-core-return-zero-for-selectors-lower-than-.patch | 4 ++--
+ .../ath79/patches-5.10/910-unaligned_access_hacks.patch     | 2 +-
+ ...tfilter-nftables-update-table-flags-from-the-commi.patch | 4 ++--
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index e52f4b1c48ef8..f5dff37bda995 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .142
+-LINUX_KERNEL_HASH-5.10.142 = 3f47ebdb9afe152a0c32c1157336ef13fa5cc08ac6d884dfc1f6ddc2b7dba268
++LINUX_VERSION-5.10 = .143
++LINUX_KERNEL_HASH-5.10.143 = fa2c9edef272d39dca52e057e1d41433cf1b6ab6a00d24a00333c0b735054e91
+diff --git a/target/linux/at91/patches-5.10/127-regulator-core-validate-selector-against-linear_min_.patch b/target/linux/at91/patches-5.10/127-regulator-core-validate-selector-against-linear_min_.patch
+index 712cdac5dd050..14eedb094c962 100644
+--- a/target/linux/at91/patches-5.10/127-regulator-core-validate-selector-against-linear_min_.patch
++++ b/target/linux/at91/patches-5.10/127-regulator-core-validate-selector-against-linear_min_.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+ 
+ --- a/drivers/regulator/core.c
+ +++ b/drivers/regulator/core.c
+-@@ -2987,7 +2987,8 @@ static int _regulator_list_voltage(struc
++@@ -2992,7 +2992,8 @@ static int _regulator_list_voltage(struc
+  		return rdev->desc->fixed_uV;
+  
+  	if (ops->list_voltage) {
+@@ -30,7 +30,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+  			return -EINVAL;
+  		if (lock)
+  			regulator_lock(rdev);
+-@@ -3138,7 +3139,8 @@ int regulator_list_hardware_vsel(struct
++@@ -3143,7 +3144,8 @@ int regulator_list_hardware_vsel(struct
+  	struct regulator_dev *rdev = regulator->rdev;
+  	const struct regulator_ops *ops = rdev->desc->ops;
+  
+@@ -40,7 +40,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+  		return -EINVAL;
+  	if (ops->set_voltage_sel != regulator_set_voltage_sel_regmap)
+  		return -EOPNOTSUPP;
+-@@ -4061,6 +4063,9 @@ int regulator_set_voltage_time(struct re
++@@ -4066,6 +4068,9 @@ int regulator_set_voltage_time(struct re
+  
+  	for (i = 0; i < rdev->desc->n_voltages; i++) {
+  		/* We only look for exact voltage matches here */
+diff --git a/target/linux/at91/patches-5.10/128-regulator-core-do-not-continue-if-selector-match.patch b/target/linux/at91/patches-5.10/128-regulator-core-do-not-continue-if-selector-match.patch
+index f4f09f888fc4b..2eed3a0aeea0d 100644
+--- a/target/linux/at91/patches-5.10/128-regulator-core-do-not-continue-if-selector-match.patch
++++ b/target/linux/at91/patches-5.10/128-regulator-core-do-not-continue-if-selector-match.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+ 
+ --- a/drivers/regulator/core.c
+ +++ b/drivers/regulator/core.c
+-@@ -4066,6 +4066,9 @@ int regulator_set_voltage_time(struct re
++@@ -4071,6 +4071,9 @@ int regulator_set_voltage_time(struct re
+  		if (i < rdev->desc->linear_min_sel)
+  			continue;
+  
+diff --git a/target/linux/at91/patches-5.10/129-regulator-core-return-zero-for-selectors-lower-than-.patch b/target/linux/at91/patches-5.10/129-regulator-core-return-zero-for-selectors-lower-than-.patch
+index c093b2b2d3f0f..9af0e0f53cedf 100644
+--- a/target/linux/at91/patches-5.10/129-regulator-core-return-zero-for-selectors-lower-than-.patch
++++ b/target/linux/at91/patches-5.10/129-regulator-core-return-zero-for-selectors-lower-than-.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+ 
+ --- a/drivers/regulator/core.c
+ +++ b/drivers/regulator/core.c
+-@@ -2987,9 +2987,10 @@ static int _regulator_list_voltage(struc
++@@ -2992,9 +2992,10 @@ static int _regulator_list_voltage(struc
+  		return rdev->desc->fixed_uV;
+  
+  	if (ops->list_voltage) {
+@@ -34,7 +34,7 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
+  		if (lock)
+  			regulator_lock(rdev);
+  		ret = ops->list_voltage(rdev, selector);
+-@@ -3139,9 +3140,10 @@ int regulator_list_hardware_vsel(struct
++@@ -3144,9 +3145,10 @@ int regulator_list_hardware_vsel(struct
+  	struct regulator_dev *rdev = regulator->rdev;
+  	const struct regulator_ops *ops = rdev->desc->ops;
+  
+diff --git a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+index cd335fbbc8310..07cfb6f4e61f9 100644
+--- a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+@@ -706,7 +706,7 @@
+  EXPORT_SYMBOL(xfrm_parse_spi);
+ --- a/net/ipv4/tcp_input.c
+ +++ b/net/ipv4/tcp_input.c
+-@@ -4116,14 +4116,16 @@ static bool tcp_parse_aligned_timestamp(
++@@ -4127,14 +4127,16 @@ static bool tcp_parse_aligned_timestamp(
+  {
+  	const __be32 *ptr = (const __be32 *)(th + 1);
+  
+diff --git a/target/linux/generic/backport-5.10/610-v5.13-10-netfilter-nftables-update-table-flags-from-the-commi.patch b/target/linux/generic/backport-5.10/610-v5.13-10-netfilter-nftables-update-table-flags-from-the-commi.patch
+index f9bb0e2cc3906..352c6094da2f9 100644
+--- a/target/linux/generic/backport-5.10/610-v5.13-10-netfilter-nftables-update-table-flags-from-the-commi.patch
++++ b/target/linux/generic/backport-5.10/610-v5.13-10-netfilter-nftables-update-table-flags-from-the-commi.patch
+@@ -70,7 +70,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  	nft_trans_table_update(trans) = true;
+  	list_add_tail(&trans->list, &ctx->net->nft.commit_list);
+  	return 0;
+-@@ -7919,11 +7923,10 @@ static int nf_tables_commit(struct net *
++@@ -7921,11 +7925,10 @@ static int nf_tables_commit(struct net *
+  		switch (trans->msg_type) {
+  		case NFT_MSG_NEWTABLE:
+  			if (nft_trans_table_update(trans)) {
+@@ -86,7 +86,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  			} else {
+  				nft_clear(net, trans->ctx.table);
+  			}
+-@@ -8137,11 +8140,9 @@ static int __nf_tables_abort(struct net
++@@ -8139,11 +8142,9 @@ static int __nf_tables_abort(struct net
+  		switch (trans->msg_type) {
+  		case NFT_MSG_NEWTABLE:
+  			if (nft_trans_table_update(trans)) {
