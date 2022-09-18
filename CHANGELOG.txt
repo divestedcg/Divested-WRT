@@ -1,3 +1,14 @@
+20220917-00
+- update to 5110cf7ebdd5af57f98fe4581ce4c5ddb0a2bf86
+- added support for the rest of the mvebu/cortexa9 devices
+- added support for many ramips/mt7621 devices
+  - completely untested
+  - has all but two patches: 0006 (unnecessary) and 0009 (incompatible)
+  - still undecided if I plan to build all, or switch to a subset
+    - I only need a build for WAX202, but trivial to compile the rest
+- reinitialized workspaces (sanity)
+  - there are now two distinct copies for each platform
+
 20220915-01
 - update to 8b06e06832ebe757246582b65306ad2a2537741f
 - [cherrypick] #10733: update to kernel 5.10.143 (security and bug fixes)

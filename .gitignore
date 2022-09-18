@@ -1,2 +1,9 @@
 *.bin
 *.img
+*.kwb
+*.firm
+*.img.gz
+*.tar.gz
+*.gz
+*.trx
+*.chk
