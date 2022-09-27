@@ -1,0 +1,205 @@
+From 18340721612d026ca98612f3dbe1c015d60cab30 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 23 Sep 2022 16:58:05 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.145
+
+Manually rebased:
+  hack-5.10/780-usb-net-MeigLink_modem_support.patch
+
+Removed upstreamed:
+  patches-5.10/110-gpio-mpc8xxx-Fix-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch[1]
+
+All other patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.10.145&id=24196210b198e8e39296e277bb93b362aa207775
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.10                           |  4 +-
+ ...x-keep-the-pvid-at-0-when-VLAN-unawa.patch | 12 +++---
+ ...-dsa-mv88e6xxx-disable-ATU-violation.patch |  2 +-
+ .../780-usb-net-MeigLink_modem_support.patch  |  4 +-
+ ...760-net-dsa-mv88e6xxx-fix-vlan-setup.patch |  2 +-
+ ...equest-assisted-learning-on-CPU-port.patch |  2 +-
+ ..._wwan-add-ZTE-MF286D-modem-19d2-1485.patch |  2 +-
+ ...-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch | 37 -------------------
+ 8 files changed, 14 insertions(+), 51 deletions(-)
+ delete mode 100644 target/linux/mpc85xx/patches-5.10/110-gpio-mpc8xxx-Fix-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index 3dee01cdcf157..fdc44a78fc466 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .144
+-LINUX_KERNEL_HASH-5.10.144 = 20c6d26f4d9d0d15d628982bc5e35862b3016d1832f5a545b3bdb131203cd3ca
++LINUX_VERSION-5.10 = .145
++LINUX_KERNEL_HASH-5.10.145 = fc5990f3e57479369eaf193bd7760b84f26d2b670c2d88e473101cb679c5ac61
+diff --git a/target/linux/generic/backport-5.10/774-v5.15-net-dsa-mv88e6xxx-keep-the-pvid-at-0-when-VLAN-unawa.patch b/target/linux/generic/backport-5.10/774-v5.15-net-dsa-mv88e6xxx-keep-the-pvid-at-0-when-VLAN-unawa.patch
+index 24bb5aa9c80c2..13cc8f3d69696 100644
+--- a/target/linux/generic/backport-5.10/774-v5.15-net-dsa-mv88e6xxx-keep-the-pvid-at-0-when-VLAN-unawa.patch
++++ b/target/linux/generic/backport-5.10/774-v5.15-net-dsa-mv88e6xxx-keep-the-pvid-at-0-when-VLAN-unawa.patch
+@@ -63,7 +63,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/dsa/mv88e6xxx/chip.c
+ +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+-@@ -1586,6 +1586,26 @@ static int mv88e6xxx_port_check_hw_vlan(
++@@ -1590,6 +1590,26 @@ static int mv88e6xxx_port_check_hw_vlan(
+  	return 0;
+  }
+  
+@@ -90,7 +90,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static int mv88e6xxx_port_vlan_filtering(struct dsa_switch *ds, int port,
+  					 bool vlan_filtering,
+  					 struct switchdev_trans *trans)
+-@@ -1599,7 +1619,16 @@ static int mv88e6xxx_port_vlan_filtering
++@@ -1603,7 +1623,16 @@ static int mv88e6xxx_port_vlan_filtering
+  		return chip->info->max_vid ? 0 : -EOPNOTSUPP;
+  
+  	mv88e6xxx_reg_lock(chip);
+@@ -107,7 +107,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	mv88e6xxx_reg_unlock(chip);
+  
+  	return err;
+-@@ -1982,8 +2011,10 @@ static void mv88e6xxx_port_vlan_add(stru
++@@ -1986,8 +2015,10 @@ static void mv88e6xxx_port_vlan_add(stru
+  	struct mv88e6xxx_chip *chip = ds->priv;
+  	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
+  	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
+@@ -118,7 +118,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	u16 vid;
+  
+  	if (!chip->info->max_vid)
+-@@ -2008,9 +2039,23 @@ static void mv88e6xxx_port_vlan_add(stru
++@@ -2012,9 +2043,23 @@ static void mv88e6xxx_port_vlan_add(stru
+  			dev_err(ds->dev, "p%d: failed to add VLAN %d%c\n", port,
+  				vid, untagged ? 'u' : 't');
+  
+@@ -145,7 +145,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	mv88e6xxx_reg_unlock(chip);
+  }
+-@@ -2061,6 +2106,7 @@ static int mv88e6xxx_port_vlan_del(struc
++@@ -2065,6 +2110,7 @@ static int mv88e6xxx_port_vlan_del(struc
+  				   const struct switchdev_obj_port_vlan *vlan)
+  {
+  	struct mv88e6xxx_chip *chip = ds->priv;
+@@ -153,7 +153,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	u16 pvid, vid;
+  	int err = 0;
+  
+-@@ -2079,7 +2125,9 @@ static int mv88e6xxx_port_vlan_del(struc
++@@ -2083,7 +2129,9 @@ static int mv88e6xxx_port_vlan_del(struc
+  			goto unlock;
+  
+  		if (vid == pvid) {
+diff --git a/target/linux/generic/hack-5.10/711-net-dsa-mv88e6xxx-disable-ATU-violation.patch b/target/linux/generic/hack-5.10/711-net-dsa-mv88e6xxx-disable-ATU-violation.patch
+index e69113d3c1abb..7fbbb3eddda4a 100644
+--- a/target/linux/generic/hack-5.10/711-net-dsa-mv88e6xxx-disable-ATU-violation.patch
++++ b/target/linux/generic/hack-5.10/711-net-dsa-mv88e6xxx-disable-ATU-violation.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/net/dsa/mv88e6xxx/chip.c
+ +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+-@@ -2705,6 +2705,9 @@ static int mv88e6xxx_setup_port(struct m
++@@ -2709,6 +2709,9 @@ static int mv88e6xxx_setup_port(struct m
+  	if (dsa_is_cpu_port(ds, port))
+  		reg = 0;
+  
+diff --git a/target/linux/generic/hack-5.10/780-usb-net-MeigLink_modem_support.patch b/target/linux/generic/hack-5.10/780-usb-net-MeigLink_modem_support.patch
+index 0c0739e7eb3bf..a7782eb8df1aa 100644
+--- a/target/linux/generic/hack-5.10/780-usb-net-MeigLink_modem_support.patch
++++ b/target/linux/generic/hack-5.10/780-usb-net-MeigLink_modem_support.patch
+@@ -1,9 +1,9 @@
+ --- a/drivers/net/usb/qmi_wwan.c
+ +++ b/drivers/net/usb/qmi_wwan.c
+-@@ -1024,6 +1024,7 @@ static const struct usb_device_id produc
+- 	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
++@@ -1025,6 +1025,7 @@ static const struct usb_device_id produc
+  	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0620)},	/* Quectel EM160R-GL */
+  	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
++ 	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0801)},	/* Quectel RM520N */
+ +	{QMI_MATCH_FF_FF_FF(0x05c6, 0xf601)},   /* MeigLink SLM750 */
+  
+  	/* 3. Combined interface devices matching on interface number */
+diff --git a/target/linux/generic/pending-5.10/760-net-dsa-mv88e6xxx-fix-vlan-setup.patch b/target/linux/generic/pending-5.10/760-net-dsa-mv88e6xxx-fix-vlan-setup.patch
+index 4e960a0b8a2c6..fff817dd8c1f6 100644
+--- a/target/linux/generic/pending-5.10/760-net-dsa-mv88e6xxx-fix-vlan-setup.patch
++++ b/target/linux/generic/pending-5.10/760-net-dsa-mv88e6xxx-fix-vlan-setup.patch
+@@ -17,7 +17,7 @@ Signed-off-by: DENG Qingfang <dqfext@gmail.com>
+ 
+ --- a/drivers/net/dsa/mv88e6xxx/chip.c
+ +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+-@@ -2917,6 +2917,7 @@ static int mv88e6xxx_setup(struct dsa_sw
++@@ -2921,6 +2921,7 @@ static int mv88e6xxx_setup(struct dsa_sw
+  
+  	chip->ds = ds;
+  	ds->slave_mii_bus = mv88e6xxx_default_mdio_bus(chip);
+diff --git a/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch b/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
+index c952fd4b3a303..80e2b481bf5c3 100644
+--- a/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
++++ b/target/linux/generic/pending-5.10/768-net-dsa-mv88e6xxx-Request-assisted-learning-on-CPU-port.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
+ 
+ --- a/drivers/net/dsa/mv88e6xxx/chip.c
+ +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+-@@ -5486,6 +5486,7 @@ static int mv88e6xxx_register_switch(str
++@@ -5490,6 +5490,7 @@ static int mv88e6xxx_register_switch(str
+  	ds->ops = &mv88e6xxx_switch_ops;
+  	ds->ageing_time_min = chip->info->age_time_coeff;
+  	ds->ageing_time_max = chip->info->age_time_coeff * U8_MAX;
+diff --git a/target/linux/generic/pending-5.10/842-net-qmi_wwan-add-ZTE-MF286D-modem-19d2-1485.patch b/target/linux/generic/pending-5.10/842-net-qmi_wwan-add-ZTE-MF286D-modem-19d2-1485.patch
+index f2f0e61089b30..c6f127add160d 100644
+--- a/target/linux/generic/pending-5.10/842-net-qmi_wwan-add-ZTE-MF286D-modem-19d2-1485.patch
++++ b/target/linux/generic/pending-5.10/842-net-qmi_wwan-add-ZTE-MF286D-modem-19d2-1485.patch
+@@ -49,7 +49,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/drivers/net/usb/qmi_wwan.c
+ +++ b/drivers/net/usb/qmi_wwan.c
+-@@ -1252,6 +1252,7 @@ static const struct usb_device_id produc
++@@ -1253,6 +1253,7 @@ static const struct usb_device_id produc
+  	{QMI_FIXED_INTF(0x19d2, 0x1426, 2)},	/* ZTE MF91 */
+  	{QMI_FIXED_INTF(0x19d2, 0x1428, 2)},	/* Telewell TW-LTE 4G v2 */
+  	{QMI_FIXED_INTF(0x19d2, 0x1432, 3)},	/* ZTE ME3620 */
+diff --git a/target/linux/mpc85xx/patches-5.10/110-gpio-mpc8xxx-Fix-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch b/target/linux/mpc85xx/patches-5.10/110-gpio-mpc8xxx-Fix-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch
+deleted file mode 100644
+index 38ae4e08e6de7..0000000000000
+--- a/target/linux/mpc85xx/patches-5.10/110-gpio-mpc8xxx-Fix-support-for-IRQ_TYPE_LEVEL_LOW-flow.patch
++++ /dev/null
+@@ -1,37 +0,0 @@
+-From 29af30435022442ec4eccf3166956b8e0b8a2134 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+-Date: Mon, 5 Sep 2022 23:13:47 +0200
+-Subject: [PATCH] gpio: mpc8xxx: Fix support for IRQ_TYPE_LEVEL_LOW flow_type
+- in mpc85xx
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Commit e39d5ef67804 ("powerpc/5xxx: extend mpc8xxx_gpio driver to support
+-mpc512x gpios") implemented support for IRQ_TYPE_LEVEL_LOW flow type in
+-mpc512x via falling edge type. Do same for mpc85xx which support was added
+-in commit 345e5c8a1cc3 ("powerpc: Add interrupt support to mpc8xxx_gpio").
+-
+-Fixes probing of lm90 hwmon driver on mpc85xx based board which use level
+-interrupt. Without it kernel prints error and refuse lm90 to work:
+-
+-    [   15.258370] genirq: Setting trigger mode 8 for irq 49 failed (mpc8xxx_irq_set_type+0x0/0xf8)
+-    [   15.267168] lm90 0-004c: cannot request IRQ 49
+-    [   15.272708] lm90: probe of 0-004c failed with error -22
+-
+-Fixes: 345e5c8a1cc3 ("powerpc: Add interrupt support to mpc8xxx_gpio")
+-Signed-off-by: Pali Rohár <pali@kernel.org>
+----
+- drivers/gpio/gpio-mpc8xxx.c | 1 +
+- 1 file changed, 1 insertion(+)
+-
+---- a/drivers/gpio/gpio-mpc8xxx.c
+-+++ b/drivers/gpio/gpio-mpc8xxx.c
+-@@ -169,6 +169,7 @@ static int mpc8xxx_irq_set_type(struct i
+- 
+- 	switch (flow_type) {
+- 	case IRQ_TYPE_EDGE_FALLING:
+-+	case IRQ_TYPE_LEVEL_LOW:
+- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
+- 		gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR,
+- 			gc->read_reg(mpc8xxx_gc->regs + GPIO_ICR)

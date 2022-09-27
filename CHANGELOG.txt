@@ -1,3 +1,7 @@
+20220927-00
+- update to3a8825ad6acbf18b2b472ace56be58868af78be7
+- [cherrypick] #10798: update to kernel 5.10.145 (security and bug fixes)
+
 20220917-00
 - update to 5110cf7ebdd5af57f98fe4581ce4c5ddb0a2bf86
 - added support for the rest of the mvebu/cortexa9 devices
