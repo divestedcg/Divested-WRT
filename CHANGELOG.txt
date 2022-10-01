@@ -1,3 +1,8 @@
+20221001-XX
+- No update
+- mt7621 builds were pulled
+  I bricked my wax202 and nmrpflash was unsuccessful
+
 20220927-00
 - update to3a8825ad6acbf18b2b472ace56be58868af78be7
 - [cherrypick] #10798: update to kernel 5.10.145 (security and bug fixes)
