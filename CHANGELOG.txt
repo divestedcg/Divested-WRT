@@ -1,7 +1,10 @@
-20221001-XX
-- No update
-- mt7621 builds were pulled
-  I bricked my wax202 and nmrpflash was unsuccessful
+20221001-00
+- this build is only for mt7621, the 10798 patch doesn't apply cleanly
+  and I don't want to downgrade mvebu
+- update to 39685292858c7bfc7ad2aa38fa4e6f2f986eab4f
+- new mt7621 builds are limited to ax devices
+  and only the following patches are applied: 0001, 0004, 0005, 0010
+- previous mt7621 builds were pulled after tested not working on wax202
 
 20220927-00
 - update to3a8825ad6acbf18b2b472ace56be58868af78be7
