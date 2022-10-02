@@ -1,3 +1,6 @@
+20221002-XX
+- Drop support for mt7621
+
 20221001-00
 - this build is only for mt7621, the 10798 patch doesn't apply cleanly
   and I don't want to downgrade mvebu
