@@ -1,3 +1,7 @@
+20221010-00
+- update to ffd29a55c31697a69f4ebc59305cd95bda82aae3
+- [upstream] update to kernel 5.10.147 (security and bug fixes)
+
 20221002-XX
 - Drop support for mt7621
 
@@ -10,7 +14,7 @@
 - previous mt7621 builds were pulled after tested not working on wax202
 
 20220927-00
-- update to3a8825ad6acbf18b2b472ace56be58868af78be7
+- update to 3a8825ad6acbf18b2b472ace56be58868af78be7
 - [cherrypick] #10798: update to kernel 5.10.145 (security and bug fixes)
 
 20220917-00
