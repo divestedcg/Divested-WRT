@@ -1,3 +1,8 @@
+20221013-00
+- update to da6b77215b995eb61edd84b2766930bc963b3331
+- includes fixes for the mac80211 security issues disclosed today
+  https://github.com/openwrt/openwrt/commit/26f4002
+
 20221010-00
 - update to ffd29a55c31697a69f4ebc59305cd95bda82aae3
 - [upstream] update to kernel 5.10.147 (security and bug fixes)
