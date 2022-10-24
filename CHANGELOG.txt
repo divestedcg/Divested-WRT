@@ -1,3 +1,7 @@
+20221024-00
+- update to ffe91ca478082b85d44a9c2e78a0e3818fd2093a
+- [upstream] update to kernel 5.10.149 (security and bug fixes)
+
 20221013-00
 - update to da6b77215b995eb61edd84b2766930bc963b3331
 - includes fixes for the mac80211 security issues disclosed today
