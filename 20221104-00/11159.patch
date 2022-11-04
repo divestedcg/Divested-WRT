@@ -1,0 +1,283 @@
+From 916dcd7f2508c82fd042b0454299a90740e0b73a Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 3 Nov 2022 12:54:01 -0400
+Subject: [PATCH] kernel: bump 5.10 to 5.10.153
+
+Manually rebased:
+  bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+  lantiq/patches-5.10/0028-NET-lantiq-various-etop-fixes.patch
+
+All patches automatically rebased.
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.10                           |  4 ++--
+ .../802-usb-xhci-force-msi-renesas-xhci.patch |  4 ++--
+ .../910-unaligned_access_hacks.patch          |  2 +-
+ ...support-for-performing-fake-doorbell.patch |  6 +++---
+ ...Add-support-for-MAP-E-FMRs-mesh-mode.patch | 18 ++++++++--------
+ .../0028-NET-lantiq-various-etop-fixes.patch  | 21 +++++++++----------
+ ...IPS-ralink-add-sdhci-for-mt7620a-SoC.patch |  2 +-
+ 7 files changed, 28 insertions(+), 29 deletions(-)
+
+diff --git a/include/kernel-5.10 b/include/kernel-5.10
+index f4cdfe5faa50a..9b74446f8e6bb 100644
+--- a/include/kernel-5.10
++++ b/include/kernel-5.10
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.10 = .152
+-LINUX_KERNEL_HASH-5.10.152 = fa0b5c83a4ebfda9f0a52cc693646eb6c24dbade6c37ee2d18b66ee2df15d8a6
++LINUX_VERSION-5.10 = .153
++LINUX_KERNEL_HASH-5.10.153 = 3cf2e4519fe451caef0ee0a8beac694612267325f7055fc38d6a990a762f1662
+diff --git a/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch b/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
+index 288276cca64f4..ced9b6a1582ef 100644
+--- a/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
++++ b/target/linux/apm821xx/patches-5.10/802-usb-xhci-force-msi-renesas-xhci.patch
+@@ -13,7 +13,7 @@ produce a noisy warning.
+ 
+ --- a/drivers/usb/host/xhci-pci.c
+ +++ b/drivers/usb/host/xhci-pci.c
+-@@ -287,6 +287,7 @@ static void xhci_pci_quirks(struct devic
++@@ -291,6 +291,7 @@ static void xhci_pci_quirks(struct devic
+  	    pdev->device == 0x0015) {
+  		xhci->quirks |= XHCI_RESET_ON_RESUME;
+  		xhci->quirks |= XHCI_ZERO_64B_REGS;
+@@ -43,7 +43,7 @@ produce a noisy warning.
+  		hcd->msi_enabled = 1;
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1896,6 +1896,7 @@ struct xhci_hcd {
++@@ -1897,6 +1897,7 @@ struct xhci_hcd {
+  	struct xhci_hub		usb2_rhub;
+  	struct xhci_hub		usb3_rhub;
+  	/* support xHCI 1.0 spec USB2 hardware LPM */
+diff --git a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+index 977f394a62fe5..3b0eff9419c2a 100644
+--- a/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-5.10/910-unaligned_access_hacks.patch
+@@ -740,7 +740,7 @@ SVN-Revision: 35130
+  EXPORT_SYMBOL(xfrm_parse_spi);
+ --- a/net/ipv4/tcp_input.c
+ +++ b/net/ipv4/tcp_input.c
+-@@ -4127,14 +4127,16 @@ static bool tcp_parse_aligned_timestamp(
++@@ -4128,14 +4128,16 @@ static bool tcp_parse_aligned_timestamp(
+  {
+  	const __be32 *ptr = (const __be32 *)(th + 1);
+  
+diff --git a/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch b/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+index bce4ea6740188..022b2945ad4a8 100644
+--- a/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
++++ b/target/linux/bcm53xx/patches-5.10/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+@@ -127,11 +127,11 @@ it on BCM4708 family.
+  /*
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1889,6 +1889,7 @@ struct xhci_hcd {
+- #define XHCI_NO_SOFT_RETRY	BIT_ULL(40)
++@@ -1890,6 +1890,7 @@ struct xhci_hcd {
+  #define XHCI_EP_CTX_BROKEN_DCS	BIT_ULL(42)
+  #define XHCI_SUSPEND_RESUME_CLKS	BIT_ULL(43)
+-+#define XHCI_FAKE_DOORBELL	BIT_ULL(44)
++ #define XHCI_RESET_TO_DEFAULT	BIT_ULL(44)
+++#define XHCI_FAKE_DOORBELL	BIT_ULL(45)
+  
+  	unsigned int		num_active_eps;
+  	unsigned int		limit_active_eps;
+diff --git a/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch b/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+index 89eb7d61b3b7e..59f202c4c5f66 100644
+--- a/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
++++ b/target/linux/generic/pending-5.10/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+@@ -338,7 +338,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+  		return -1;
+  
+-@@ -1555,6 +1716,14 @@ ip6_tnl_change(struct ip6_tnl *t, const
++@@ -1556,6 +1717,14 @@ ip6_tnl_change(struct ip6_tnl *t, const
+  	t->parms.link = p->link;
+  	t->parms.proto = p->proto;
+  	t->parms.fwmark = p->fwmark;
+@@ -353,7 +353,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	dst_cache_reset(&t->dst_cache);
+  	ip6_tnl_link_config(t);
+  	return 0;
+-@@ -1593,6 +1762,7 @@ ip6_tnl_parm_from_user(struct __ip6_tnl_
++@@ -1594,6 +1763,7 @@ ip6_tnl_parm_from_user(struct __ip6_tnl_
+  	p->flowinfo = u->flowinfo;
+  	p->link = u->link;
+  	p->proto = u->proto;
+@@ -361,7 +361,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	memcpy(p->name, u->name, sizeof(u->name));
+  }
+  
+-@@ -1978,6 +2148,15 @@ static int ip6_tnl_validate(struct nlatt
++@@ -1979,6 +2149,15 @@ static int ip6_tnl_validate(struct nlatt
+  	return 0;
+  }
+  
+@@ -377,7 +377,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  static void ip6_tnl_netlink_parms(struct nlattr *data[],
+  				  struct __ip6_tnl_parm *parms)
+  {
+-@@ -2015,6 +2194,46 @@ static void ip6_tnl_netlink_parms(struct
++@@ -2016,6 +2195,46 @@ static void ip6_tnl_netlink_parms(struct
+  
+  	if (data[IFLA_IPTUN_FWMARK])
+  		parms->fwmark = nla_get_u32(data[IFLA_IPTUN_FWMARK]);
+@@ -424,7 +424,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  }
+  
+  static bool ip6_tnl_netlink_encap_parms(struct nlattr *data[],
+-@@ -2130,6 +2349,12 @@ static void ip6_tnl_dellink(struct net_d
++@@ -2131,6 +2350,12 @@ static void ip6_tnl_dellink(struct net_d
+  
+  static size_t ip6_tnl_get_size(const struct net_device *dev)
+  {
+@@ -437,7 +437,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	return
+  		/* IFLA_IPTUN_LINK */
+  		nla_total_size(4) +
+-@@ -2159,6 +2384,24 @@ static size_t ip6_tnl_get_size(const str
++@@ -2160,6 +2385,24 @@ static size_t ip6_tnl_get_size(const str
+  		nla_total_size(0) +
+  		/* IFLA_IPTUN_FWMARK */
+  		nla_total_size(4) +
+@@ -462,7 +462,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  		0;
+  }
+  
+-@@ -2166,6 +2409,9 @@ static int ip6_tnl_fill_info(struct sk_b
++@@ -2167,6 +2410,9 @@ static int ip6_tnl_fill_info(struct sk_b
+  {
+  	struct ip6_tnl *tunnel = netdev_priv(dev);
+  	struct __ip6_tnl_parm *parm = &tunnel->parms;
+@@ -472,7 +472,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  
+  	if (nla_put_u32(skb, IFLA_IPTUN_LINK, parm->link) ||
+  	    nla_put_in6_addr(skb, IFLA_IPTUN_LOCAL, &parm->laddr) ||
+-@@ -2175,9 +2421,27 @@ static int ip6_tnl_fill_info(struct sk_b
++@@ -2176,9 +2422,27 @@ static int ip6_tnl_fill_info(struct sk_b
+  	    nla_put_be32(skb, IFLA_IPTUN_FLOWINFO, parm->flowinfo) ||
+  	    nla_put_u32(skb, IFLA_IPTUN_FLAGS, parm->flags) ||
+  	    nla_put_u8(skb, IFLA_IPTUN_PROTO, parm->proto) ||
+@@ -501,7 +501,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	if (nla_put_u16(skb, IFLA_IPTUN_ENCAP_TYPE, tunnel->encap.type) ||
+  	    nla_put_be16(skb, IFLA_IPTUN_ENCAP_SPORT, tunnel->encap.sport) ||
+  	    nla_put_be16(skb, IFLA_IPTUN_ENCAP_DPORT, tunnel->encap.dport) ||
+-@@ -2217,6 +2481,7 @@ static const struct nla_policy ip6_tnl_p
++@@ -2218,6 +2482,7 @@ static const struct nla_policy ip6_tnl_p
+  	[IFLA_IPTUN_ENCAP_DPORT]	= { .type = NLA_U16 },
+  	[IFLA_IPTUN_COLLECT_METADATA]	= { .type = NLA_FLAG },
+  	[IFLA_IPTUN_FWMARK]		= { .type = NLA_U32 },
+diff --git a/target/linux/lantiq/patches-5.10/0028-NET-lantiq-various-etop-fixes.patch b/target/linux/lantiq/patches-5.10/0028-NET-lantiq-various-etop-fixes.patch
+index eb47010fa0628..e9f3ee473b494 100644
+--- a/target/linux/lantiq/patches-5.10/0028-NET-lantiq-various-etop-fixes.patch
++++ b/target/linux/lantiq/patches-5.10/0028-NET-lantiq-various-etop-fixes.patch
+@@ -625,7 +625,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	return 0;
+  }
+  
+-@@ -457,16 +651,16 @@ ltq_etop_tx(struct sk_buff *skb, struct
++@@ -457,15 +651,16 @@ ltq_etop_tx(struct sk_buff *skb, struct
+  	int queue = skb_get_queue_mapping(skb);
+  	struct netdev_queue *txq = netdev_get_tx_queue(dev, queue);
+  	struct ltq_etop_priv *priv = netdev_priv(dev);
+@@ -641,13 +641,12 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	len = skb->len < ETH_ZLEN ? ETH_ZLEN : skb->len;
+  
+ -	if ((desc->ctl & (LTQ_DMA_OWN | LTQ_DMA_C)) || ch->skb[ch->dma.desc]) {
+--		dev_kfree_skb_any(skb);
+ +	if ((desc->ctl & (LTQ_DMA_OWN | LTQ_DMA_C)) ||
+ +			priv->txch.skb[priv->txch.dma.desc]) {
+  		netdev_err(dev, "tx ring full\n");
+  		netif_tx_stop_queue(txq);
+  		return NETDEV_TX_BUSY;
+-@@ -474,7 +668,7 @@ ltq_etop_tx(struct sk_buff *skb, struct
++@@ -473,7 +668,7 @@ ltq_etop_tx(struct sk_buff *skb, struct
+  
+  	/* dma needs to start on a 16 byte aligned address */
+  	byte_offset = CPHYSADDR(skb->data) % 16;
+@@ -656,7 +655,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  
+  	netif_trans_update(dev);
+  
+-@@ -484,11 +678,11 @@ ltq_etop_tx(struct sk_buff *skb, struct
++@@ -483,11 +678,11 @@ ltq_etop_tx(struct sk_buff *skb, struct
+  	wmb();
+  	desc->ctl = LTQ_DMA_OWN | LTQ_DMA_SOP | LTQ_DMA_EOP |
+  		LTQ_DMA_TX_OFFSET(byte_offset) | (len & LTQ_DMA_SIZE_MASK);
+@@ -671,7 +670,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  		netif_tx_stop_queue(txq);
+  
+  	return NETDEV_TX_OK;
+-@@ -499,11 +693,14 @@ ltq_etop_change_mtu(struct net_device *d
++@@ -498,11 +693,14 @@ ltq_etop_change_mtu(struct net_device *d
+  {
+  	struct ltq_etop_priv *priv = netdev_priv(dev);
+  	unsigned long flags;
+@@ -687,7 +686,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	spin_unlock_irqrestore(&priv->lock, flags);
+  
+  	return 0;
+-@@ -556,6 +753,9 @@ ltq_etop_init(struct net_device *dev)
++@@ -555,6 +753,9 @@ ltq_etop_init(struct net_device *dev)
+  	if (err)
+  		goto err_hw;
+  	ltq_etop_change_mtu(dev, 1500);
+@@ -697,7 +696,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  
+  	memcpy(&mac, &priv->pldata->mac, sizeof(struct sockaddr));
+  	if (!is_valid_ether_addr(mac.sa_data)) {
+-@@ -573,9 +773,10 @@ ltq_etop_init(struct net_device *dev)
++@@ -572,9 +773,10 @@ ltq_etop_init(struct net_device *dev)
+  		dev->addr_assign_type = NET_ADDR_RANDOM;
+  
+  	ltq_etop_set_multicast_list(dev);
+@@ -711,7 +710,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	return 0;
+  
+  err_netdev:
+-@@ -595,6 +796,9 @@ ltq_etop_tx_timeout(struct net_device *d
++@@ -594,6 +796,9 @@ ltq_etop_tx_timeout(struct net_device *d
+  	err = ltq_etop_hw_init(dev);
+  	if (err)
+  		goto err_hw;
+@@ -721,7 +720,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  	netif_trans_update(dev);
+  	netif_wake_queue(dev);
+  	return;
+-@@ -618,14 +822,18 @@ static const struct net_device_ops ltq_e
++@@ -617,14 +822,18 @@ static const struct net_device_ops ltq_e
+  	.ndo_tx_timeout = ltq_etop_tx_timeout,
+  };
+  
+@@ -744,7 +743,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  
+  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+  	if (!res) {
+-@@ -651,31 +859,62 @@ ltq_etop_probe(struct platform_device *p
++@@ -650,31 +859,62 @@ ltq_etop_probe(struct platform_device *p
+  		goto err_out;
+  	}
+  
+@@ -822,7 +821,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  
+  	err = register_netdev(dev);
+  	if (err)
+-@@ -704,31 +943,22 @@ ltq_etop_remove(struct platform_device *
++@@ -703,31 +943,22 @@ ltq_etop_remove(struct platform_device *
+  	return 0;
+  }
+  
+diff --git a/target/linux/ramips/patches-5.10/830-mmc-MIPS-ralink-add-sdhci-for-mt7620a-SoC.patch b/target/linux/ramips/patches-5.10/830-mmc-MIPS-ralink-add-sdhci-for-mt7620a-SoC.patch
+index 77311c36de251..544b1d267e512 100644
+--- a/target/linux/ramips/patches-5.10/830-mmc-MIPS-ralink-add-sdhci-for-mt7620a-SoC.patch
++++ b/target/linux/ramips/patches-5.10/830-mmc-MIPS-ralink-add-sdhci-for-mt7620a-SoC.patch
+@@ -25,7 +25,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+ 
+ --- a/drivers/mmc/host/Kconfig
+ +++ b/drivers/mmc/host/Kconfig
+-@@ -1101,3 +1101,5 @@ config MMC_OWL
++@@ -1102,3 +1102,5 @@ config MMC_OWL
+  
+  config MMC_SDHCI_EXTERNAL_DMA
+  	bool
