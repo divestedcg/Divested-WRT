@@ -1,3 +1,7 @@
+20221114-00
+- update to c984fc762412f206ebeb3e873742988ff760fb90
+- [upstream] update to kernel 5.10.154 (security and bug fixes)
+
 20221104-00
 - update to 46fbe55971c0e42bc1603bca424f3ff5384f15a6
 - [cherrypick] #11159: update to kernel 5.10.153 (security and bug fixes)
