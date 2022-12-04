@@ -1,3 +1,11 @@
+20221203-00
+- update 8719f73fa2beddb259013801ca912b96fbc83543
+- [upstream] update to kernel 5.15.80
+- software flow offload appears broken
+  see https://github.com/openwrt/openwrt/issues/10628#issuecomment-1334507972
+- many of these devices appear to have broken switches regardless of version
+  see https://github.com/openwrt/openwrt/issues/11077
+
 20221124-00
 - update to c1d1202e67dc929e58c4d6d1f2698363cbf1b6f7
 - [upstream] update to kernel 5.10.155 (security and bug fixes)
