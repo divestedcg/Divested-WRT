@@ -1,5 +1,9 @@
+20221211-00
+- update to 9a1ab8aa0398f93360bf54d81bcd332cd413c03f
+- [upstream] update to kernel 5.15.82
+
 20221203-00
-- update 8719f73fa2beddb259013801ca912b96fbc83543
+- update to 8719f73fa2beddb259013801ca912b96fbc83543
 - [upstream] update to kernel 5.15.80
 - software flow offload appears broken
   see https://github.com/openwrt/openwrt/issues/10628#issuecomment-1334507972
