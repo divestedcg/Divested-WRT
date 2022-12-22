@@ -1,3 +1,9 @@
+20221222-00
+- update to bf06a7c865531cf20735cbdfac46d4947fcc18a6
+- [upstream] update to kernel 5.15.84
+- attended sysupgrade is now included as it is required by luci
+  please do NOT use it, you'll effectively switch over to vanilla builds
+
 20221211-00
 - update to 9a1ab8aa0398f93360bf54d81bcd332cd413c03f
 - [upstream] update to kernel 5.15.82
