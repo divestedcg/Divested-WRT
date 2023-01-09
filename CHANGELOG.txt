@@ -1,3 +1,7 @@
+20230109-00
+- update to 2a3283643ccf77b55d67c7a3f96d40576227499c
+- [upstream] update to kernel 5.15.86
+
 20221231-00
 - update to 55d176fd0bed76ec21ce6d5a763a74480e4446ae
 - [upstream] update to kernel 5.15.85
