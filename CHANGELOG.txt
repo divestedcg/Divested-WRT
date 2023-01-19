@@ -1,3 +1,8 @@
+20230119-00
+- update to 5dee5965012e788f06e4d095e8cfb73200d818cb
+- [cherrypick] #11827: update to kernel 5.15.89 (security and bug fixes)
+- [cherrypick] #11832: cortexa9: use renamed U-boot binaries (compile fix)
+
 20230109-00
 - update to 2a3283643ccf77b55d67c7a3f96d40576227499c
 - [upstream] update to kernel 5.15.86

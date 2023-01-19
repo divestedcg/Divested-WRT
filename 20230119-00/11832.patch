@@ -1,0 +1,48 @@
+From 414efa13a959cb4efa18067642e28ece269225b6 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Thu, 19 Jan 2023 09:10:41 +0100
+Subject: [PATCH] mvebu: cortexa9: use renamed U-boot binaries
+
+Due to upstream change in U-boot the binaries were renamed [1].
+
+[1] https://source.denx.de/u-boot/u-boot/-/commit/87ac4b4b4ca5f00e2ddcdac41c9dc691ab2aecf1
+
+Fixes: 2f83369e3e97de1e209b196820b05b47016c9df0 ("uboot-mvebu: update to
+version 2023.01")
+
+Signed-off-by: Josef Schlehofer <pepe.schlehofer@gmail.com>
+---
+ target/linux/mvebu/image/cortexa9.mk | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/target/linux/mvebu/image/cortexa9.mk b/target/linux/mvebu/image/cortexa9.mk
+index d9738903fb041..4b8884383a8a9 100644
+--- a/target/linux/mvebu/image/cortexa9.mk
++++ b/target/linux/mvebu/image/cortexa9.mk
+@@ -101,7 +101,7 @@ define Device/kobol_helios4
+   IMAGES := sdcard.img.gz
+   IMAGE/sdcard.img.gz := boot-scr | boot-img-ext4 | sdcard-img-ext4 | gzip | append-metadata
+   SOC := armada-388
+-  UBOOT := helios4-u-boot-spl.kwb
++  UBOOT := helios4-u-boot-with-spl.kwb
+   BOOT_SCRIPT := clearfog
+ endef
+ TARGET_DEVICES += kobol_helios4
+@@ -278,7 +278,7 @@ define Device/solidrun_clearfog-base-a1
+   IMAGES := sdcard.img.gz
+   IMAGE/sdcard.img.gz := boot-scr | boot-img-ext4 | sdcard-img-ext4 | gzip | append-metadata
+   DEVICE_DTS := armada-388-clearfog-base armada-388-clearfog-pro
+-  UBOOT := clearfog-u-boot-spl.kwb
++  UBOOT := clearfog-u-boot-with-spl.kwb
+   BOOT_SCRIPT := clearfog
+   SUPPORTED_DEVICES += armada-388-clearfog-base
+   DEVICE_COMPAT_VERSION := 1.1
+@@ -296,7 +296,7 @@ define Device/solidrun_clearfog-pro-a1
+   IMAGES := sdcard.img.gz
+   IMAGE/sdcard.img.gz := boot-scr | boot-img-ext4 | sdcard-img-ext4 | gzip | append-metadata
+   DEVICE_DTS := armada-388-clearfog-pro armada-388-clearfog-base
+-  UBOOT := clearfog-u-boot-spl.kwb
++  UBOOT := clearfog-u-boot-with-spl.kwb
+   BOOT_SCRIPT := clearfog
+   SUPPORTED_DEVICES += armada-388-clearfog armada-388-clearfog-pro
+ endef

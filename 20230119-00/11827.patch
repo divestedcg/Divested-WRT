@@ -1,0 +1,53 @@
+From df7d04a3f991169f76550ac01926e59a2c9ebbf4 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Wed, 18 Jan 2023 14:46:43 -0500
+Subject: [PATCH] kernel: bump 5.15 to 5.15.89
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod
+Run-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.15                                           | 4 ++--
+ .../020-v6.1-05-mm-multigenerational-lru-mm_struct-list.patch | 2 +-
+ target/linux/generic/hack-5.15/904-debloat_dma_buf.patch      | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/kernel-5.15 b/include/kernel-5.15
+index f31669f8c03b0..82d1c5a7bcddf 100644
+--- a/include/kernel-5.15
++++ b/include/kernel-5.15
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.15 = .88
+-LINUX_KERNEL_HASH-5.15.88 = 417539fdd96a3af97ef9ad2b51ca13967cb922f53970563b60290b935a81a181
++LINUX_VERSION-5.15 = .89
++LINUX_KERNEL_HASH-5.15.89 = e7311b874e014bb6d37c051319bd6a4a4e3d05a1c32546522deabbfd2d752fe8
+diff --git a/target/linux/generic/backport-5.15/020-v6.1-05-mm-multigenerational-lru-mm_struct-list.patch b/target/linux/generic/backport-5.15/020-v6.1-05-mm-multigenerational-lru-mm_struct-list.patch
+index e0b95cb76bb24..5b5cbe721e0b6 100644
+--- a/target/linux/generic/backport-5.15/020-v6.1-05-mm-multigenerational-lru-mm_struct-list.patch
++++ b/target/linux/generic/backport-5.15/020-v6.1-05-mm-multigenerational-lru-mm_struct-list.patch
+@@ -329,7 +329,7 @@ Change-Id: I25d9eda8c6bdc7c3653b9f210a159d6c247c81e8
+  	/* forking complete and child started to run, tell ptracer */
+ --- a/kernel/sched/core.c
+ +++ b/kernel/sched/core.c
+-@@ -4978,6 +4978,7 @@ context_switch(struct rq *rq, struct tas
++@@ -5007,6 +5007,7 @@ context_switch(struct rq *rq, struct tas
+  		 * finish_task_switch()'s mmdrop().
+  		 */
+  		switch_mm_irqs_off(prev->active_mm, next->mm, next);
+diff --git a/target/linux/generic/hack-5.15/904-debloat_dma_buf.patch b/target/linux/generic/hack-5.15/904-debloat_dma_buf.patch
+index 302c0007f2f8a..beb1e31d9331e 100644
+--- a/target/linux/generic/hack-5.15/904-debloat_dma_buf.patch
++++ b/target/linux/generic/hack-5.15/904-debloat_dma_buf.patch
+@@ -72,7 +72,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +MODULE_LICENSE("GPL");
+ --- a/kernel/sched/core.c
+ +++ b/kernel/sched/core.c
+-@@ -4184,6 +4184,7 @@ int wake_up_state(struct task_struct *p,
++@@ -4213,6 +4213,7 @@ int wake_up_state(struct task_struct *p,
+  {
+  	return try_to_wake_up(p, state, 0);
+  }
