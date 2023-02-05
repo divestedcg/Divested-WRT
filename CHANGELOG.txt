@@ -1,3 +1,9 @@
+20230205-00-BROKEN
+- does NOT boot: https://github.com/openwrt/openwrt/issues/11933
+- update to b5193291bdde00e91c58e59029d5c68b0bc605db
+- [upstream] update to kernel 5.15.91
+- switch to dnsmasq-full for dnssec support
+
 20230127-00
 - update to 1a47f19080e0c8edbf4a463020118bb9ccaa3ff0
 - [upstream] update to kernel 5.15.90
