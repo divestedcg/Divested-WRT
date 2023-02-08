@@ -1,3 +1,9 @@
+20230208-00
+- boot issue fixed upstream, thanks Robert Marko!:
+  https://github.com/openwrt/openwrt/commit/721206a1b14fc5eba7ba8e20d979b26baf934e0d
+- update to 721206a1b14fc5eba7ba8e20d979b26baf934e0d
+- [upstream] update to kernel 5.15.92
+
 20230205-00-BROKEN
 - does NOT boot: https://github.com/openwrt/openwrt/issues/11933
 - update to b5193291bdde00e91c58e59029d5c68b0bc605db
