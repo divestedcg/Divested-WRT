@@ -1,3 +1,8 @@
+20230216-00
+- update to 8c3bcc1989ac5fb596da86bfd82af6f8aafca1ab
+- [upstream] update to OpenSSL 1.1.1t (security fixes)
+- [cherrypick] #12015: update to kernel 5.15.94 (security and bug fixes)
+
 20230208-00
 - boot issue fixed upstream, thanks Robert Marko!:
   https://github.com/openwrt/openwrt/commit/721206a1b14fc5eba7ba8e20d979b26baf934e0d
