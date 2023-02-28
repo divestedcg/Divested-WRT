@@ -1,3 +1,7 @@
+20230228-01
+- update to fdd1af9a448c23fa4adb515f09b7d2848003fbf7
+- [cherrypick] #12071: update to kernel 5.15.96 (security and bug fixes)
+
 20230226-00-BROKEN
 - update to 107f7374c9ef3e3ea6d589b187671cd3e138e63c
 - kernel _not_ updated to 5.15.96

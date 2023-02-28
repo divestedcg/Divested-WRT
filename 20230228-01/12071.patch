@@ -1,0 +1,2469 @@
+From de8d5b50e2a300136c6d3c87d68955ce69cdee35 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 23 Feb 2023 06:16:52 -0500
+Subject: [PATCH 1/2] kernel: bump 5.15 to 5.15.95
+
+Removed upstreamed:
+	backport-5.15/807-v6.1-0003-nvmem-core-add-error-handling-for-dev_set_name.patch[1]
+	bcm47xx/patches-5.15/070-net-bgmac-fix-BCM5358-support-by-setting-correct-fla.patch[2]
+
+Added fix:
+	backport-5.15/883-0001-net-Remove-WARN_ON_ONCE-sk-sk_forward_alloc-from-sk_.patch[3]
+
+All other patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.15.95&id=14eea6449473c1f55e196cc104ba16d144465869
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.15.95&id=2603a5ca6223bb3a88814e2728335eec14f715ab
+3. https://lore.kernel.org/stable/20230227211548.13923-1-kuniyu@amazon.com
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod
+Run-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.15                           |   4 +-
+ .../910-unaligned_access_hacks.patch          |   2 +-
+ ...M5358-support-by-setting-correct-fla.patch |  46 -----
+ ...icro-stmmac-move-queue-reset-to-dedi.patch |  16 +-
+ ...icro-stmmac-first-disable-all-queues.patch |   4 +-
+ ...icro-stmmac-move-dma-conf-to-dedicat.patch | 194 +++++++++---------
+ ...icro-stmmac-generate-stmmac-dma-conf.patch | 114 +++++-----
+ ...icro-stmmac-permit-MTU-change-with-i.patch |   4 +-
+ ...-rework-nvmem-cell-instance-creation.patch |  28 +--
+ ...-nvmem-cell-post-processing-callback.patch |   4 +-
+ ...-Remove-unused-devm_nvmem_unregister.patch |   2 +-
+ ...em-core-Use-devm_add_action_or_reset.patch |   4 +-
+ ...-input-parameter-for-NULL-in-nvmem_u.patch |   2 +-
+ ...-add-error-handling-for-dev_set_name.patch |  47 -----
+ ...mem-core-fix-device-node-refcounting.patch |   2 +-
+ ...e-add-an-index-parameter-to-the-cell.patch |  18 +-
+ ...ON_ONCE-sk-sk_forward_alloc-from-sk_.patch |  98 +++++++++
+ .../103-pcengines_apu6_platform.patch         |   4 +-
+ 18 files changed, 299 insertions(+), 294 deletions(-)
+ delete mode 100644 target/linux/bcm47xx/patches-5.15/070-net-bgmac-fix-BCM5358-support-by-setting-correct-fla.patch
+ delete mode 100644 target/linux/generic/backport-5.15/807-v6.1-0003-nvmem-core-add-error-handling-for-dev_set_name.patch
+ create mode 100644 target/linux/generic/backport-5.15/883-0001-net-Remove-WARN_ON_ONCE-sk-sk_forward_alloc-from-sk_.patch
+
+diff --git a/include/kernel-5.15 b/include/kernel-5.15
+index 5240155ceeca4..a93da1e6a3011 100644
+--- a/include/kernel-5.15
++++ b/include/kernel-5.15
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.15 = .94
+-LINUX_KERNEL_HASH-5.15.94 = da9270dbe64ddf1db13c70470957ff6796eb996d867bb4aed7d14a70e1c65a72
++LINUX_VERSION-5.15 = .95
++LINUX_KERNEL_HASH-5.15.95 = ea71d1f0d28803679dfdc2278fd9f145f12cb566a796502182d719312756441b
+diff --git a/target/linux/ath79/patches-5.15/910-unaligned_access_hacks.patch b/target/linux/ath79/patches-5.15/910-unaligned_access_hacks.patch
+index 4fd06552e0d99..5b10dd62889de 100644
+--- a/target/linux/ath79/patches-5.15/910-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-5.15/910-unaligned_access_hacks.patch
+@@ -258,7 +258,7 @@ SVN-Revision: 35130
+  #include <linux/uaccess.h>
+  #include <linux/ipv6.h>
+  #include <linux/icmpv6.h>
+-@@ -943,10 +944,10 @@ static void tcp_v6_send_response(const s
++@@ -944,10 +945,10 @@ static void tcp_v6_send_response(const s
+  	topt = (__be32 *)(t1 + 1);
+  
+  	if (tsecr) {
+diff --git a/target/linux/bcm47xx/patches-5.15/070-net-bgmac-fix-BCM5358-support-by-setting-correct-fla.patch b/target/linux/bcm47xx/patches-5.15/070-net-bgmac-fix-BCM5358-support-by-setting-correct-fla.patch
+deleted file mode 100644
+index f93fc0cd8d036..0000000000000
+--- a/target/linux/bcm47xx/patches-5.15/070-net-bgmac-fix-BCM5358-support-by-setting-correct-fla.patch
++++ /dev/null
+@@ -1,46 +0,0 @@
+-From d61615c366a489646a1bfe5b33455f916762d5f4 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Wed, 8 Feb 2023 10:16:37 +0100
+-Subject: [PATCH] net: bgmac: fix BCM5358 support by setting correct flags
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Code blocks handling BCMA_CHIP_ID_BCM5357 and BCMA_CHIP_ID_BCM53572 were
+-incorrectly unified. Chip package values are not unique and cannot be
+-checked independently. They are meaningful only in a context of a given
+-chip.
+-
+-Packages BCM5358 and BCM47188 share the same value but then belong to
+-different chips. Code unification resulted in treating BCM5358 as
+-BCM47188 and broke its initialization.
+-
+-Link: https://github.com/openwrt/openwrt/issues/8278
+-Fixes: cb1b0f90acfe ("net: ethernet: bgmac: unify code of the same family")
+-Cc: Jon Mason <jdmason@kudzu.us>
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-Link: https://lore.kernel.org/r/20230208091637.16291-1-zajec5@gmail.com
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+----
+- drivers/net/ethernet/broadcom/bgmac-bcma.c | 6 +++---
+- 1 file changed, 3 insertions(+), 3 deletions(-)
+-
+---- a/drivers/net/ethernet/broadcom/bgmac-bcma.c
+-+++ b/drivers/net/ethernet/broadcom/bgmac-bcma.c
+-@@ -240,12 +240,12 @@ static int bgmac_probe(struct bcma_devic
+- 		bgmac->feature_flags |= BGMAC_FEAT_CLKCTLST;
+- 		bgmac->feature_flags |= BGMAC_FEAT_FLW_CTRL1;
+- 		bgmac->feature_flags |= BGMAC_FEAT_SW_TYPE_PHY;
+--		if (ci->pkg == BCMA_PKG_ID_BCM47188 ||
+--		    ci->pkg == BCMA_PKG_ID_BCM47186) {
+-+		if ((ci->id == BCMA_CHIP_ID_BCM5357 && ci->pkg == BCMA_PKG_ID_BCM47186) ||
+-+		    (ci->id == BCMA_CHIP_ID_BCM53572 && ci->pkg == BCMA_PKG_ID_BCM47188)) {
+- 			bgmac->feature_flags |= BGMAC_FEAT_SW_TYPE_RGMII;
+- 			bgmac->feature_flags |= BGMAC_FEAT_IOST_ATTACHED;
+- 		}
+--		if (ci->pkg == BCMA_PKG_ID_BCM5358)
+-+		if (ci->id == BCMA_CHIP_ID_BCM5357 && ci->pkg == BCMA_PKG_ID_BCM5358)
+- 			bgmac->feature_flags |= BGMAC_FEAT_SW_TYPE_EPHYRMII;
+- 		break;
+- 	case BCMA_CHIP_ID_BCM53573:
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch b/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
+index 92e08bb4e3ef5..3df9bb6210867 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static void stmmac_tx_timer_arm(struct stmmac_priv *priv, u32 queue);
+  static void stmmac_flush_tx_descriptors(struct stmmac_priv *priv, int queue);
+  
+-@@ -1710,9 +1713,6 @@ static int __init_dma_rx_desc_rings(stru
++@@ -1711,9 +1714,6 @@ static int __init_dma_rx_desc_rings(stru
+  			return -ENOMEM;
+  	}
+  
+@@ -37,7 +37,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	/* Setup the chained descriptor addresses */
+  	if (priv->mode == STMMAC_CHAIN_MODE) {
+  		if (priv->extend_desc)
+-@@ -1818,12 +1818,6 @@ static int __init_dma_tx_desc_rings(stru
++@@ -1819,12 +1819,6 @@ static int __init_dma_tx_desc_rings(stru
+  		tx_q->tx_skbuff[i] = NULL;
+  	}
+  
+@@ -50,7 +50,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	return 0;
+  }
+  
+-@@ -2692,10 +2686,7 @@ static void stmmac_tx_err(struct stmmac_
++@@ -2693,10 +2687,7 @@ static void stmmac_tx_err(struct stmmac_
+  	stmmac_stop_tx_dma(priv, chan);
+  	dma_free_tx_skbufs(priv, chan);
+  	stmmac_clear_tx_descriptors(priv, chan);
+@@ -62,7 +62,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  			    tx_q->dma_tx_phy, chan);
+  	stmmac_start_tx_dma(priv, chan);
+-@@ -3779,6 +3770,8 @@ static int stmmac_open(struct net_device
++@@ -3780,6 +3771,8 @@ static int stmmac_open(struct net_device
+  		}
+  	}
+  
+@@ -71,7 +71,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	ret = stmmac_hw_setup(dev, true);
+  	if (ret < 0) {
+  		netdev_err(priv->dev, "%s: Hw setup failed\n", __func__);
+-@@ -6422,6 +6415,7 @@ void stmmac_enable_rx_queue(struct stmma
++@@ -6423,6 +6416,7 @@ void stmmac_enable_rx_queue(struct stmma
+  		return;
+  	}
+  
+@@ -79,7 +79,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	stmmac_clear_rx_descriptors(priv, queue);
+  
+  	stmmac_init_rx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+-@@ -6483,6 +6477,7 @@ void stmmac_enable_tx_queue(struct stmma
++@@ -6484,6 +6478,7 @@ void stmmac_enable_tx_queue(struct stmma
+  		return;
+  	}
+  
+@@ -87,7 +87,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	stmmac_clear_tx_descriptors(priv, queue);
+  
+  	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+-@@ -7405,6 +7400,25 @@ int stmmac_suspend(struct device *dev)
++@@ -7406,6 +7401,25 @@ int stmmac_suspend(struct device *dev)
+  }
+  EXPORT_SYMBOL_GPL(stmmac_suspend);
+  
+@@ -113,7 +113,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  /**
+   * stmmac_reset_queues_param - reset queue parameters
+   * @priv: device pointer
+-@@ -7415,22 +7429,11 @@ static void stmmac_reset_queues_param(st
++@@ -7416,22 +7430,11 @@ static void stmmac_reset_queues_param(st
+  	u32 tx_cnt = priv->plat->tx_queues_to_use;
+  	u32 queue;
+  
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-02-net-ethernet-stmicro-stmmac-first-disable-all-queues.patch b/target/linux/generic/backport-5.15/775-v6.0-02-net-ethernet-stmicro-stmmac-first-disable-all-queues.patch
+index e3c15061b8d7d..5c033e9d524f4 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-02-net-ethernet-stmicro-stmmac-first-disable-all-queues.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-02-net-ethernet-stmicro-stmmac-first-disable-all-queues.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -3831,8 +3831,6 @@ static int stmmac_release(struct net_dev
++@@ -3832,8 +3832,6 @@ static int stmmac_release(struct net_dev
+  	struct stmmac_priv *priv = netdev_priv(dev);
+  	u32 chan;
+  
+@@ -26,7 +26,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	if (device_may_wakeup(priv->device))
+  		phylink_speed_down(priv->phylink, false);
+  	/* Stop and disconnect the PHY */
+-@@ -3844,6 +3842,8 @@ static int stmmac_release(struct net_dev
++@@ -3845,6 +3843,8 @@ static int stmmac_release(struct net_dev
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+  		hrtimer_cancel(&priv->tx_queue[chan].txtimer);
+  
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch b/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
+index 3903eb05650df..a717688125c24 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
+@@ -189,7 +189,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		if (tx_q->dirty_tx != tx_q->cur_tx)
+  			return -EBUSY; /* still unfinished work */
+-@@ -1307,7 +1307,7 @@ static void stmmac_display_rx_rings(stru
++@@ -1308,7 +1308,7 @@ static void stmmac_display_rx_rings(stru
+  
+  	/* Display RX rings */
+  	for (queue = 0; queue < rx_cnt; queue++) {
+@@ -198,7 +198,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		pr_info("\tRX Queue %u rings\n", queue);
+  
+-@@ -1320,7 +1320,7 @@ static void stmmac_display_rx_rings(stru
++@@ -1321,7 +1321,7 @@ static void stmmac_display_rx_rings(stru
+  		}
+  
+  		/* Display RX ring */
+@@ -207,7 +207,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				    rx_q->dma_rx_phy, desc_size);
+  	}
+  }
+-@@ -1334,7 +1334,7 @@ static void stmmac_display_tx_rings(stru
++@@ -1335,7 +1335,7 @@ static void stmmac_display_tx_rings(stru
+  
+  	/* Display TX rings */
+  	for (queue = 0; queue < tx_cnt; queue++) {
+@@ -216,7 +216,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		pr_info("\tTX Queue %d rings\n", queue);
+  
+-@@ -1349,7 +1349,7 @@ static void stmmac_display_tx_rings(stru
++@@ -1350,7 +1350,7 @@ static void stmmac_display_tx_rings(stru
+  			desc_size = sizeof(struct dma_desc);
+  		}
+  
+@@ -225,7 +225,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				    tx_q->dma_tx_phy, desc_size);
+  	}
+  }
+-@@ -1390,21 +1390,21 @@ static int stmmac_set_bfsize(int mtu, in
++@@ -1391,21 +1391,21 @@ static int stmmac_set_bfsize(int mtu, in
+   */
+  static void stmmac_clear_rx_descriptors(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -253,7 +253,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  /**
+-@@ -1416,12 +1416,12 @@ static void stmmac_clear_rx_descriptors(
++@@ -1417,12 +1417,12 @@ static void stmmac_clear_rx_descriptors(
+   */
+  static void stmmac_clear_tx_descriptors(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -269,7 +269,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  
+  		if (priv->extend_desc)
+-@@ -1469,7 +1469,7 @@ static void stmmac_clear_descriptors(str
++@@ -1470,7 +1470,7 @@ static void stmmac_clear_descriptors(str
+  static int stmmac_init_rx_buffers(struct stmmac_priv *priv, struct dma_desc *p,
+  				  int i, gfp_t flags, u32 queue)
+  {
+@@ -278,7 +278,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  	if (!buf->page) {
+-@@ -1494,7 +1494,7 @@ static int stmmac_init_rx_buffers(struct
++@@ -1495,7 +1495,7 @@ static int stmmac_init_rx_buffers(struct
+  	buf->addr = page_pool_get_dma_addr(buf->page) + buf->page_offset;
+  
+  	stmmac_set_desc_addr(priv, p, buf->addr);
+@@ -287,7 +287,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		stmmac_init_desc3(priv, p);
+  
+  	return 0;
+-@@ -1508,7 +1508,7 @@ static int stmmac_init_rx_buffers(struct
++@@ -1509,7 +1509,7 @@ static int stmmac_init_rx_buffers(struct
+   */
+  static void stmmac_free_rx_buffer(struct stmmac_priv *priv, u32 queue, int i)
+  {
+@@ -296,7 +296,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  	if (buf->page)
+-@@ -1528,7 +1528,7 @@ static void stmmac_free_rx_buffer(struct
++@@ -1529,7 +1529,7 @@ static void stmmac_free_rx_buffer(struct
+   */
+  static void stmmac_free_tx_buffer(struct stmmac_priv *priv, u32 queue, int i)
+  {
+@@ -305,7 +305,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (tx_q->tx_skbuff_dma[i].buf &&
+  	    tx_q->tx_skbuff_dma[i].buf_type != STMMAC_TXBUF_T_XDP_TX) {
+-@@ -1573,17 +1573,17 @@ static void dma_free_rx_skbufs(struct st
++@@ -1574,17 +1574,17 @@ static void dma_free_rx_skbufs(struct st
+  {
+  	int i;
+  
+@@ -326,7 +326,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  		int ret;
+  
+-@@ -1610,10 +1610,10 @@ static int stmmac_alloc_rx_buffers(struc
++@@ -1611,10 +1611,10 @@ static int stmmac_alloc_rx_buffers(struc
+   */
+  static void dma_free_rx_xskbufs(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -339,7 +339,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  		if (!buf->xdp)
+-@@ -1626,10 +1626,10 @@ static void dma_free_rx_xskbufs(struct s
++@@ -1627,10 +1627,10 @@ static void dma_free_rx_xskbufs(struct s
+  
+  static int stmmac_alloc_rx_buffers_zc(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -352,7 +352,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct stmmac_rx_buffer *buf;
+  		dma_addr_t dma_addr;
+  		struct dma_desc *p;
+-@@ -1672,7 +1672,7 @@ static struct xsk_buff_pool *stmmac_get_
++@@ -1673,7 +1673,7 @@ static struct xsk_buff_pool *stmmac_get_
+   */
+  static int __init_dma_rx_desc_rings(struct stmmac_priv *priv, u32 queue, gfp_t flags)
+  {
+@@ -361,7 +361,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	int ret;
+  
+  	netif_dbg(priv, probe, priv->dev,
+-@@ -1718,11 +1718,11 @@ static int __init_dma_rx_desc_rings(stru
++@@ -1719,11 +1719,11 @@ static int __init_dma_rx_desc_rings(stru
+  		if (priv->extend_desc)
+  			stmmac_mode_init(priv, rx_q->dma_erx,
+  					 rx_q->dma_rx_phy,
+@@ -375,7 +375,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	}
+  
+  	return 0;
+-@@ -1749,7 +1749,7 @@ static int init_dma_rx_desc_rings(struct
++@@ -1750,7 +1750,7 @@ static int init_dma_rx_desc_rings(struct
+  
+  err_init_rx_buffers:
+  	while (queue >= 0) {
+@@ -384,7 +384,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		if (rx_q->xsk_pool)
+  			dma_free_rx_xskbufs(priv, queue);
+-@@ -1778,7 +1778,7 @@ err_init_rx_buffers:
++@@ -1779,7 +1779,7 @@ err_init_rx_buffers:
+   */
+  static int __init_dma_tx_desc_rings(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -393,7 +393,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	int i;
+  
+  	netif_dbg(priv, probe, priv->dev,
+-@@ -1790,16 +1790,16 @@ static int __init_dma_tx_desc_rings(stru
++@@ -1791,16 +1791,16 @@ static int __init_dma_tx_desc_rings(stru
+  		if (priv->extend_desc)
+  			stmmac_mode_init(priv, tx_q->dma_etx,
+  					 tx_q->dma_tx_phy,
+@@ -413,7 +413,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  
+  		if (priv->extend_desc)
+-@@ -1869,12 +1869,12 @@ static int init_dma_desc_rings(struct ne
++@@ -1870,12 +1870,12 @@ static int init_dma_desc_rings(struct ne
+   */
+  static void dma_free_tx_skbufs(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -428,7 +428,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		stmmac_free_tx_buffer(priv, queue, i);
+  
+  	if (tx_q->xsk_pool && tx_q->xsk_frames_done) {
+-@@ -1904,7 +1904,7 @@ static void stmmac_free_tx_skbufs(struct
++@@ -1905,7 +1905,7 @@ static void stmmac_free_tx_skbufs(struct
+   */
+  static void __free_dma_rx_desc_resources(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -437,7 +437,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	/* Release the DMA RX socket buffers */
+  	if (rx_q->xsk_pool)
+-@@ -1917,11 +1917,11 @@ static void __free_dma_rx_desc_resources
++@@ -1918,11 +1918,11 @@ static void __free_dma_rx_desc_resources
+  
+  	/* Free DMA regions of consistent memory previously allocated */
+  	if (!priv->extend_desc)
+@@ -451,7 +451,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				  sizeof(struct dma_extended_desc),
+  				  rx_q->dma_erx, rx_q->dma_rx_phy);
+  
+-@@ -1950,7 +1950,7 @@ static void free_dma_rx_desc_resources(s
++@@ -1951,7 +1951,7 @@ static void free_dma_rx_desc_resources(s
+   */
+  static void __free_dma_tx_desc_resources(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -460,7 +460,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	size_t size;
+  	void *addr;
+  
+-@@ -1968,7 +1968,7 @@ static void __free_dma_tx_desc_resources
++@@ -1969,7 +1969,7 @@ static void __free_dma_tx_desc_resources
+  		addr = tx_q->dma_tx;
+  	}
+  
+@@ -469,7 +469,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	dma_free_coherent(priv->device, size, addr, tx_q->dma_tx_phy);
+  
+-@@ -1997,7 +1997,7 @@ static void free_dma_tx_desc_resources(s
++@@ -1998,7 +1998,7 @@ static void free_dma_tx_desc_resources(s
+   */
+  static int __alloc_dma_rx_desc_resources(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -478,7 +478,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[queue];
+  	bool xdp_prog = stmmac_xdp_is_enabled(priv);
+  	struct page_pool_params pp_params = { 0 };
+-@@ -2009,8 +2009,8 @@ static int __alloc_dma_rx_desc_resources
++@@ -2010,8 +2010,8 @@ static int __alloc_dma_rx_desc_resources
+  	rx_q->priv_data = priv;
+  
+  	pp_params.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV;
+@@ -489,7 +489,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	pp_params.order = ilog2(num_pages);
+  	pp_params.nid = dev_to_node(priv->device);
+  	pp_params.dev = priv->device;
+-@@ -2025,7 +2025,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2026,7 +2026,7 @@ static int __alloc_dma_rx_desc_resources
+  		return ret;
+  	}
+  
+@@ -498,7 +498,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				 sizeof(*rx_q->buf_pool),
+  				 GFP_KERNEL);
+  	if (!rx_q->buf_pool)
+-@@ -2033,7 +2033,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2034,7 +2034,7 @@ static int __alloc_dma_rx_desc_resources
+  
+  	if (priv->extend_desc) {
+  		rx_q->dma_erx = dma_alloc_coherent(priv->device,
+@@ -507,7 +507,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  						   sizeof(struct dma_extended_desc),
+  						   &rx_q->dma_rx_phy,
+  						   GFP_KERNEL);
+-@@ -2042,7 +2042,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2043,7 +2043,7 @@ static int __alloc_dma_rx_desc_resources
+  
+  	} else {
+  		rx_q->dma_rx = dma_alloc_coherent(priv->device,
+@@ -516,7 +516,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  						  sizeof(struct dma_desc),
+  						  &rx_q->dma_rx_phy,
+  						  GFP_KERNEL);
+-@@ -2099,20 +2099,20 @@ err_dma:
++@@ -2100,20 +2100,20 @@ err_dma:
+   */
+  static int __alloc_dma_tx_desc_resources(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -540,7 +540,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				  sizeof(struct sk_buff *),
+  				  GFP_KERNEL);
+  	if (!tx_q->tx_skbuff)
+-@@ -2125,7 +2125,7 @@ static int __alloc_dma_tx_desc_resources
++@@ -2126,7 +2126,7 @@ static int __alloc_dma_tx_desc_resources
+  	else
+  		size = sizeof(struct dma_desc);
+  
+@@ -549,7 +549,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	addr = dma_alloc_coherent(priv->device, size,
+  				  &tx_q->dma_tx_phy, GFP_KERNEL);
+-@@ -2369,7 +2369,7 @@ static void stmmac_dma_operation_mode(st
++@@ -2370,7 +2370,7 @@ static void stmmac_dma_operation_mode(st
+  
+  	/* configure all channels */
+  	for (chan = 0; chan < rx_channels_count; chan++) {
+@@ -558,7 +558,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		u32 buf_size;
+  
+  		qmode = priv->plat->rx_queues_cfg[chan].mode_to_use;
+-@@ -2384,7 +2384,7 @@ static void stmmac_dma_operation_mode(st
++@@ -2385,7 +2385,7 @@ static void stmmac_dma_operation_mode(st
+  					      chan);
+  		} else {
+  			stmmac_set_dma_bfsize(priv, priv->ioaddr,
+@@ -567,7 +567,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  					      chan);
+  		}
+  	}
+-@@ -2400,7 +2400,7 @@ static void stmmac_dma_operation_mode(st
++@@ -2401,7 +2401,7 @@ static void stmmac_dma_operation_mode(st
+  static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
+  {
+  	struct netdev_queue *nq = netdev_get_tx_queue(priv->dev, queue);
+@@ -576,7 +576,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct xsk_buff_pool *pool = tx_q->xsk_pool;
+  	unsigned int entry = tx_q->cur_tx;
+  	struct dma_desc *tx_desc = NULL;
+-@@ -2475,7 +2475,7 @@ static bool stmmac_xdp_xmit_zc(struct st
++@@ -2476,7 +2476,7 @@ static bool stmmac_xdp_xmit_zc(struct st
+  
+  		stmmac_enable_dma_transmission(priv, priv->ioaddr);
+  
+@@ -585,7 +585,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		entry = tx_q->cur_tx;
+  	}
+  
+-@@ -2501,7 +2501,7 @@ static bool stmmac_xdp_xmit_zc(struct st
++@@ -2502,7 +2502,7 @@ static bool stmmac_xdp_xmit_zc(struct st
+   */
+  static int stmmac_tx_clean(struct stmmac_priv *priv, int budget, u32 queue)
+  {
+@@ -594,7 +594,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	unsigned int bytes_compl = 0, pkts_compl = 0;
+  	unsigned int entry, xmits = 0, count = 0;
+  
+-@@ -2514,7 +2514,7 @@ static int stmmac_tx_clean(struct stmmac
++@@ -2515,7 +2515,7 @@ static int stmmac_tx_clean(struct stmmac
+  	entry = tx_q->dirty_tx;
+  
+  	/* Try to clean all TX complete frame in 1 shot */
+@@ -603,7 +603,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct xdp_frame *xdpf;
+  		struct sk_buff *skb;
+  		struct dma_desc *p;
+-@@ -2614,7 +2614,7 @@ static int stmmac_tx_clean(struct stmmac
++@@ -2615,7 +2615,7 @@ static int stmmac_tx_clean(struct stmmac
+  
+  		stmmac_release_tx_desc(priv, p, priv->mode);
+  
+@@ -612,7 +612,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	}
+  	tx_q->dirty_tx = entry;
+  
+-@@ -2679,7 +2679,7 @@ static int stmmac_tx_clean(struct stmmac
++@@ -2680,7 +2680,7 @@ static int stmmac_tx_clean(struct stmmac
+   */
+  static void stmmac_tx_err(struct stmmac_priv *priv, u32 chan)
+  {
+@@ -621,7 +621,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	netif_tx_stop_queue(netdev_get_tx_queue(priv->dev, chan));
+  
+-@@ -2746,8 +2746,8 @@ static int stmmac_napi_check(struct stmm
++@@ -2747,8 +2747,8 @@ static int stmmac_napi_check(struct stmm
+  {
+  	int status = stmmac_dma_interrupt_status(priv, priv->ioaddr,
+  						 &priv->xstats, chan, dir);
+@@ -632,7 +632,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[chan];
+  	struct napi_struct *rx_napi;
+  	struct napi_struct *tx_napi;
+-@@ -2923,7 +2923,7 @@ static int stmmac_init_dma_engine(struct
++@@ -2924,7 +2924,7 @@ static int stmmac_init_dma_engine(struct
+  
+  	/* DMA RX Channel Configuration */
+  	for (chan = 0; chan < rx_channels_count; chan++) {
+@@ -641,7 +641,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		stmmac_init_rx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  				    rx_q->dma_rx_phy, chan);
+-@@ -2937,7 +2937,7 @@ static int stmmac_init_dma_engine(struct
++@@ -2938,7 +2938,7 @@ static int stmmac_init_dma_engine(struct
+  
+  	/* DMA TX Channel Configuration */
+  	for (chan = 0; chan < tx_channels_count; chan++) {
+@@ -650,7 +650,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  				    tx_q->dma_tx_phy, chan);
+-@@ -2952,7 +2952,7 @@ static int stmmac_init_dma_engine(struct
++@@ -2953,7 +2953,7 @@ static int stmmac_init_dma_engine(struct
+  
+  static void stmmac_tx_timer_arm(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -659,7 +659,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	hrtimer_start(&tx_q->txtimer,
+  		      STMMAC_COAL_TIMER(priv->tx_coal_timer[queue]),
+-@@ -3002,7 +3002,7 @@ static void stmmac_init_coalesce(struct
++@@ -3003,7 +3003,7 @@ static void stmmac_init_coalesce(struct
+  	u32 chan;
+  
+  	for (chan = 0; chan < tx_channel_count; chan++) {
+@@ -668,7 +668,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		priv->tx_coal_frames[chan] = STMMAC_TX_FRAMES;
+  		priv->tx_coal_timer[chan] = STMMAC_COAL_TX_TIMER;
+-@@ -3024,12 +3024,12 @@ static void stmmac_set_rings_length(stru
++@@ -3025,12 +3025,12 @@ static void stmmac_set_rings_length(stru
+  	/* set TX ring length */
+  	for (chan = 0; chan < tx_channels_count; chan++)
+  		stmmac_set_tx_ring_len(priv, priv->ioaddr,
+@@ -683,7 +683,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  /**
+-@@ -3364,7 +3364,7 @@ static int stmmac_hw_setup(struct net_de
++@@ -3365,7 +3365,7 @@ static int stmmac_hw_setup(struct net_de
+  	/* Enable TSO */
+  	if (priv->tso) {
+  		for (chan = 0; chan < tx_cnt; chan++) {
+@@ -692,7 +692,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  			/* TSO and TBS cannot co-exist */
+  			if (tx_q->tbs & STMMAC_TBS_AVAIL)
+-@@ -3386,7 +3386,7 @@ static int stmmac_hw_setup(struct net_de
++@@ -3387,7 +3387,7 @@ static int stmmac_hw_setup(struct net_de
+  
+  	/* TBS */
+  	for (chan = 0; chan < tx_cnt; chan++) {
+@@ -701,7 +701,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		int enable = tx_q->tbs & STMMAC_TBS_AVAIL;
+  
+  		stmmac_enable_tbs(priv, priv->ioaddr, enable, chan);
+-@@ -3430,7 +3430,7 @@ static void stmmac_free_irq(struct net_d
++@@ -3431,7 +3431,7 @@ static void stmmac_free_irq(struct net_d
+  		for (j = irq_idx - 1; j >= 0; j--) {
+  			if (priv->tx_irq[j] > 0) {
+  				irq_set_affinity_hint(priv->tx_irq[j], NULL);
+@@ -710,7 +710,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  			}
+  		}
+  		irq_idx = priv->plat->rx_queues_to_use;
+-@@ -3439,7 +3439,7 @@ static void stmmac_free_irq(struct net_d
++@@ -3440,7 +3440,7 @@ static void stmmac_free_irq(struct net_d
+  		for (j = irq_idx - 1; j >= 0; j--) {
+  			if (priv->rx_irq[j] > 0) {
+  				irq_set_affinity_hint(priv->rx_irq[j], NULL);
+@@ -719,7 +719,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  			}
+  		}
+  
+-@@ -3572,7 +3572,7 @@ static int stmmac_request_irq_multi_msi(
++@@ -3573,7 +3573,7 @@ static int stmmac_request_irq_multi_msi(
+  		sprintf(int_name, "%s:%s-%d", dev->name, "rx", i);
+  		ret = request_irq(priv->rx_irq[i],
+  				  stmmac_msi_intr_rx,
+@@ -728,7 +728,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (unlikely(ret < 0)) {
+  			netdev_err(priv->dev,
+  				   "%s: alloc rx-%d  MSI %d (error: %d)\n",
+-@@ -3595,7 +3595,7 @@ static int stmmac_request_irq_multi_msi(
++@@ -3596,7 +3596,7 @@ static int stmmac_request_irq_multi_msi(
+  		sprintf(int_name, "%s:%s-%d", dev->name, "tx", i);
+  		ret = request_irq(priv->tx_irq[i],
+  				  stmmac_msi_intr_tx,
+@@ -737,7 +737,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (unlikely(ret < 0)) {
+  			netdev_err(priv->dev,
+  				   "%s: alloc tx-%d  MSI %d (error: %d)\n",
+-@@ -3726,21 +3726,21 @@ static int stmmac_open(struct net_device
++@@ -3727,21 +3727,21 @@ static int stmmac_open(struct net_device
+  		bfsize = 0;
+  
+  	if (bfsize < BUF_SIZE_16KiB)
+@@ -766,7 +766,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
+  
+  		/* Setup per-TXQ tbs flag before TX descriptor alloc */
+-@@ -3798,7 +3798,7 @@ irq_error:
++@@ -3799,7 +3799,7 @@ irq_error:
+  	phylink_stop(priv->phylink);
+  
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -775,7 +775,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	stmmac_hw_teardown(dev);
+  init_error:
+-@@ -3840,7 +3840,7 @@ static int stmmac_release(struct net_dev
++@@ -3841,7 +3841,7 @@ static int stmmac_release(struct net_dev
+  	stmmac_disable_all_queues(priv);
+  
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -784,7 +784,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	netif_tx_disable(dev);
+  
+-@@ -3904,7 +3904,7 @@ static bool stmmac_vlan_insert(struct st
++@@ -3905,7 +3905,7 @@ static bool stmmac_vlan_insert(struct st
+  		return false;
+  
+  	stmmac_set_tx_owner(priv, p);
+@@ -793,7 +793,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	return true;
+  }
+  
+-@@ -3922,7 +3922,7 @@ static bool stmmac_vlan_insert(struct st
++@@ -3923,7 +3923,7 @@ static bool stmmac_vlan_insert(struct st
+  static void stmmac_tso_allocator(struct stmmac_priv *priv, dma_addr_t des,
+  				 int total_len, bool last_segment, u32 queue)
+  {
+@@ -802,7 +802,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct dma_desc *desc;
+  	u32 buff_size;
+  	int tmp_len;
+-@@ -3933,7 +3933,7 @@ static void stmmac_tso_allocator(struct
++@@ -3934,7 +3934,7 @@ static void stmmac_tso_allocator(struct
+  		dma_addr_t curr_addr;
+  
+  		tx_q->cur_tx = STMMAC_GET_ENTRY(tx_q->cur_tx,
+@@ -811,7 +811,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		WARN_ON(tx_q->tx_skbuff[tx_q->cur_tx]);
+  
+  		if (tx_q->tbs & STMMAC_TBS_AVAIL)
+-@@ -3961,7 +3961,7 @@ static void stmmac_tso_allocator(struct
++@@ -3962,7 +3962,7 @@ static void stmmac_tso_allocator(struct
+  
+  static void stmmac_flush_tx_descriptors(struct stmmac_priv *priv, int queue)
+  {
+@@ -820,7 +820,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	int desc_size;
+  
+  	if (likely(priv->extend_desc))
+-@@ -4023,7 +4023,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
++@@ -4024,7 +4024,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
+  	dma_addr_t des;
+  	int i;
+  
+@@ -829,7 +829,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	first_tx = tx_q->cur_tx;
+  
+  	/* Compute header lengths */
+-@@ -4063,7 +4063,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
++@@ -4064,7 +4064,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
+  		stmmac_set_mss(priv, mss_desc, mss);
+  		tx_q->mss = mss;
+  		tx_q->cur_tx = STMMAC_GET_ENTRY(tx_q->cur_tx,
+@@ -838,7 +838,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		WARN_ON(tx_q->tx_skbuff[tx_q->cur_tx]);
+  	}
+  
+-@@ -4175,7 +4175,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
++@@ -4176,7 +4176,7 @@ static netdev_tx_t stmmac_tso_xmit(struc
+  	 * ndo_start_xmit will fill this descriptor the next time it's
+  	 * called and stmmac_tx_clean may clean up to this descriptor.
+  	 */
+@@ -847,7 +847,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (unlikely(stmmac_tx_avail(priv, queue) <= (MAX_SKB_FRAGS + 1))) {
+  		netif_dbg(priv, hw, priv->dev, "%s: stop transmitted packets\n",
+-@@ -4263,7 +4263,7 @@ static netdev_tx_t stmmac_xmit(struct sk
++@@ -4264,7 +4264,7 @@ static netdev_tx_t stmmac_xmit(struct sk
+  	int entry, first_tx;
+  	dma_addr_t des;
+  
+@@ -856,7 +856,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	first_tx = tx_q->cur_tx;
+  
+  	if (priv->tx_path_in_lpi_mode && priv->eee_sw_timer_en)
+-@@ -4326,7 +4326,7 @@ static netdev_tx_t stmmac_xmit(struct sk
++@@ -4327,7 +4327,7 @@ static netdev_tx_t stmmac_xmit(struct sk
+  		int len = skb_frag_size(frag);
+  		bool last_segment = (i == (nfrags - 1));
+  
+@@ -865,7 +865,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		WARN_ON(tx_q->tx_skbuff[entry]);
+  
+  		if (likely(priv->extend_desc))
+-@@ -4397,7 +4397,7 @@ static netdev_tx_t stmmac_xmit(struct sk
++@@ -4398,7 +4398,7 @@ static netdev_tx_t stmmac_xmit(struct sk
+  	 * ndo_start_xmit will fill this descriptor the next time it's
+  	 * called and stmmac_tx_clean may clean up to this descriptor.
+  	 */
+@@ -874,7 +874,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	tx_q->cur_tx = entry;
+  
+  	if (netif_msg_pktdata(priv)) {
+-@@ -4512,7 +4512,7 @@ static void stmmac_rx_vlan(struct net_de
++@@ -4513,7 +4513,7 @@ static void stmmac_rx_vlan(struct net_de
+   */
+  static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -883,7 +883,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	int dirty = stmmac_rx_dirty(priv, queue);
+  	unsigned int entry = rx_q->dirty_rx;
+  
+-@@ -4562,7 +4562,7 @@ static inline void stmmac_rx_refill(stru
++@@ -4563,7 +4563,7 @@ static inline void stmmac_rx_refill(stru
+  		dma_wmb();
+  		stmmac_set_rx_owner(priv, p, use_rx_wd);
+  
+@@ -892,7 +892,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	}
+  	rx_q->dirty_rx = entry;
+  	rx_q->rx_tail_addr = rx_q->dma_rx_phy +
+-@@ -4590,12 +4590,12 @@ static unsigned int stmmac_rx_buf1_len(s
++@@ -4591,12 +4591,12 @@ static unsigned int stmmac_rx_buf1_len(s
+  
+  	/* First descriptor, not last descriptor and not split header */
+  	if (status & rx_not_ls)
+@@ -907,7 +907,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  static unsigned int stmmac_rx_buf2_len(struct stmmac_priv *priv,
+-@@ -4611,7 +4611,7 @@ static unsigned int stmmac_rx_buf2_len(s
++@@ -4612,7 +4612,7 @@ static unsigned int stmmac_rx_buf2_len(s
+  
+  	/* Not last descriptor */
+  	if (status & rx_not_ls)
+@@ -916,7 +916,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	plen = stmmac_get_rx_frame_len(priv, p, coe);
+  
+-@@ -4622,7 +4622,7 @@ static unsigned int stmmac_rx_buf2_len(s
++@@ -4623,7 +4623,7 @@ static unsigned int stmmac_rx_buf2_len(s
+  static int stmmac_xdp_xmit_xdpf(struct stmmac_priv *priv, int queue,
+  				struct xdp_frame *xdpf, bool dma_map)
+  {
+@@ -925,7 +925,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	unsigned int entry = tx_q->cur_tx;
+  	struct dma_desc *tx_desc;
+  	dma_addr_t dma_addr;
+-@@ -4685,7 +4685,7 @@ static int stmmac_xdp_xmit_xdpf(struct s
++@@ -4686,7 +4686,7 @@ static int stmmac_xdp_xmit_xdpf(struct s
+  
+  	stmmac_enable_dma_transmission(priv, priv->ioaddr);
+  
+@@ -934,7 +934,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	tx_q->cur_tx = entry;
+  
+  	return STMMAC_XDP_TX;
+-@@ -4859,7 +4859,7 @@ static void stmmac_dispatch_skb_zc(struc
++@@ -4860,7 +4860,7 @@ static void stmmac_dispatch_skb_zc(struc
+  
+  static bool stmmac_rx_refill_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
+  {
+@@ -943,7 +943,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	unsigned int entry = rx_q->dirty_rx;
+  	struct dma_desc *rx_desc = NULL;
+  	bool ret = true;
+-@@ -4902,7 +4902,7 @@ static bool stmmac_rx_refill_zc(struct s
++@@ -4903,7 +4903,7 @@ static bool stmmac_rx_refill_zc(struct s
+  		dma_wmb();
+  		stmmac_set_rx_owner(priv, rx_desc, use_rx_wd);
+  
+@@ -952,7 +952,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	}
+  
+  	if (rx_desc) {
+-@@ -4917,7 +4917,7 @@ static bool stmmac_rx_refill_zc(struct s
++@@ -4918,7 +4918,7 @@ static bool stmmac_rx_refill_zc(struct s
+  
+  static int stmmac_rx_zc(struct stmmac_priv *priv, int limit, u32 queue)
+  {
+@@ -961,7 +961,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	unsigned int count = 0, error = 0, len = 0;
+  	int dirty = stmmac_rx_dirty(priv, queue);
+  	unsigned int next_entry = rx_q->cur_rx;
+-@@ -4939,7 +4939,7 @@ static int stmmac_rx_zc(struct stmmac_pr
++@@ -4940,7 +4940,7 @@ static int stmmac_rx_zc(struct stmmac_pr
+  			desc_size = sizeof(struct dma_desc);
+  		}
+  
+@@ -970,7 +970,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				    rx_q->dma_rx_phy, desc_size);
+  	}
+  	while (count < limit) {
+-@@ -4986,7 +4986,7 @@ read_again:
++@@ -4987,7 +4987,7 @@ read_again:
+  
+  		/* Prefetch the next RX descriptor */
+  		rx_q->cur_rx = STMMAC_GET_ENTRY(rx_q->cur_rx,
+@@ -979,7 +979,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		next_entry = rx_q->cur_rx;
+  
+  		if (priv->extend_desc)
+-@@ -5107,7 +5107,7 @@ read_again:
++@@ -5108,7 +5108,7 @@ read_again:
+   */
+  static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+  {
+@@ -988,7 +988,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[queue];
+  	unsigned int count = 0, error = 0, len = 0;
+  	int status = 0, coe = priv->hw->rx_csum;
+-@@ -5120,7 +5120,7 @@ static int stmmac_rx(struct stmmac_priv
++@@ -5121,7 +5121,7 @@ static int stmmac_rx(struct stmmac_priv
+  	int buf_sz;
+  
+  	dma_dir = page_pool_get_dma_dir(rx_q->page_pool);
+@@ -997,7 +997,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (netif_msg_rx_status(priv)) {
+  		void *rx_head;
+-@@ -5134,7 +5134,7 @@ static int stmmac_rx(struct stmmac_priv
++@@ -5135,7 +5135,7 @@ static int stmmac_rx(struct stmmac_priv
+  			desc_size = sizeof(struct dma_desc);
+  		}
+  
+@@ -1006,7 +1006,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				    rx_q->dma_rx_phy, desc_size);
+  	}
+  	while (count < limit) {
+-@@ -5178,7 +5178,7 @@ read_again:
++@@ -5179,7 +5179,7 @@ read_again:
+  			break;
+  
+  		rx_q->cur_rx = STMMAC_GET_ENTRY(rx_q->cur_rx,
+@@ -1015,7 +1015,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		next_entry = rx_q->cur_rx;
+  
+  		if (priv->extend_desc)
+-@@ -5312,7 +5312,7 @@ read_again:
++@@ -5313,7 +5313,7 @@ read_again:
+  						buf1_len, dma_dir);
+  			skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+  					buf->page, buf->page_offset, buf1_len,
+@@ -1024,7 +1024,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  			/* Data payload appended into SKB */
+  			page_pool_release_page(rx_q->page_pool, buf->page);
+-@@ -5324,7 +5324,7 @@ read_again:
++@@ -5325,7 +5325,7 @@ read_again:
+  						buf2_len, dma_dir);
+  			skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+  					buf->sec_page, 0, buf2_len,
+@@ -1033,7 +1033,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  			/* Data payload appended into SKB */
+  			page_pool_release_page(rx_q->page_pool, buf->sec_page);
+-@@ -5766,11 +5766,13 @@ static irqreturn_t stmmac_safety_interru
++@@ -5767,11 +5767,13 @@ static irqreturn_t stmmac_safety_interru
+  static irqreturn_t stmmac_msi_intr_tx(int irq, void *data)
+  {
+  	struct stmmac_tx_queue *tx_q = (struct stmmac_tx_queue *)data;
+@@ -1048,7 +1048,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (unlikely(!data)) {
+  		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+-@@ -5810,10 +5812,12 @@ static irqreturn_t stmmac_msi_intr_tx(in
++@@ -5811,10 +5813,12 @@ static irqreturn_t stmmac_msi_intr_tx(in
+  static irqreturn_t stmmac_msi_intr_rx(int irq, void *data)
+  {
+  	struct stmmac_rx_queue *rx_q = (struct stmmac_rx_queue *)data;
+@@ -1062,7 +1062,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (unlikely(!data)) {
+  		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+-@@ -5844,10 +5848,10 @@ static void stmmac_poll_controller(struc
++@@ -5845,10 +5849,10 @@ static void stmmac_poll_controller(struc
+  
+  	if (priv->plat->multi_msi_en) {
+  		for (i = 0; i < priv->plat->rx_queues_to_use; i++)
+@@ -1075,7 +1075,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	} else {
+  		disable_irq(dev->irq);
+  		stmmac_interrupt(dev->irq, dev);
+-@@ -6028,34 +6032,34 @@ static int stmmac_rings_status_show(stru
++@@ -6029,34 +6033,34 @@ static int stmmac_rings_status_show(stru
+  		return 0;
+  
+  	for (queue = 0; queue < rx_count; queue++) {
+@@ -1116,7 +1116,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		}
+  	}
+  
+-@@ -6396,7 +6400,7 @@ void stmmac_disable_rx_queue(struct stmm
++@@ -6397,7 +6401,7 @@ void stmmac_disable_rx_queue(struct stmm
+  
+  void stmmac_enable_rx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -1125,7 +1125,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[queue];
+  	unsigned long flags;
+  	u32 buf_size;
+-@@ -6433,7 +6437,7 @@ void stmmac_enable_rx_queue(struct stmma
++@@ -6434,7 +6438,7 @@ void stmmac_enable_rx_queue(struct stmma
+  				      rx_q->queue_index);
+  	} else {
+  		stmmac_set_dma_bfsize(priv, priv->ioaddr,
+@@ -1134,7 +1134,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				      rx_q->queue_index);
+  	}
+  
+-@@ -6459,7 +6463,7 @@ void stmmac_disable_tx_queue(struct stmm
++@@ -6460,7 +6464,7 @@ void stmmac_disable_tx_queue(struct stmm
+  
+  void stmmac_enable_tx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -1143,7 +1143,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[queue];
+  	unsigned long flags;
+  	int ret;
+-@@ -6509,7 +6513,7 @@ void stmmac_xdp_release(struct net_devic
++@@ -6510,7 +6514,7 @@ void stmmac_xdp_release(struct net_devic
+  	stmmac_disable_all_queues(priv);
+  
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -1152,7 +1152,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	/* Free the IRQ lines */
+  	stmmac_free_irq(dev, REQ_IRQ_ERR_ALL, 0);
+-@@ -6568,7 +6572,7 @@ int stmmac_xdp_open(struct net_device *d
++@@ -6569,7 +6573,7 @@ int stmmac_xdp_open(struct net_device *d
+  
+  	/* DMA RX Channel Configuration */
+  	for (chan = 0; chan < rx_cnt; chan++) {
+@@ -1161,7 +1161,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		stmmac_init_rx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  				    rx_q->dma_rx_phy, chan);
+-@@ -6586,7 +6590,7 @@ int stmmac_xdp_open(struct net_device *d
++@@ -6587,7 +6591,7 @@ int stmmac_xdp_open(struct net_device *d
+  					      rx_q->queue_index);
+  		} else {
+  			stmmac_set_dma_bfsize(priv, priv->ioaddr,
+@@ -1170,7 +1170,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  					      rx_q->queue_index);
+  		}
+  
+-@@ -6595,7 +6599,7 @@ int stmmac_xdp_open(struct net_device *d
++@@ -6596,7 +6600,7 @@ int stmmac_xdp_open(struct net_device *d
+  
+  	/* DMA TX Channel Configuration */
+  	for (chan = 0; chan < tx_cnt; chan++) {
+@@ -1179,7 +1179,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  				    tx_q->dma_tx_phy, chan);
+-@@ -6628,7 +6632,7 @@ int stmmac_xdp_open(struct net_device *d
++@@ -6629,7 +6633,7 @@ int stmmac_xdp_open(struct net_device *d
+  
+  irq_error:
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -1188,7 +1188,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	stmmac_hw_teardown(dev);
+  init_error:
+-@@ -6655,8 +6659,8 @@ int stmmac_xsk_wakeup(struct net_device
++@@ -6656,8 +6660,8 @@ int stmmac_xsk_wakeup(struct net_device
+  	    queue >= priv->plat->tx_queues_to_use)
+  		return -EINVAL;
+  
+@@ -1199,7 +1199,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	ch = &priv->channel[queue];
+  
+  	if (!rx_q->xsk_pool && !tx_q->xsk_pool)
+-@@ -6912,8 +6916,8 @@ int stmmac_reinit_ringparam(struct net_d
++@@ -6913,8 +6917,8 @@ int stmmac_reinit_ringparam(struct net_d
+  	if (netif_running(dev))
+  		stmmac_release(dev);
+  
+@@ -1210,7 +1210,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (netif_running(dev))
+  		ret = stmmac_open(dev);
+-@@ -7351,7 +7355,7 @@ int stmmac_suspend(struct device *dev)
++@@ -7352,7 +7356,7 @@ int stmmac_suspend(struct device *dev)
+  	stmmac_disable_all_queues(priv);
+  
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -1219,7 +1219,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (priv->eee_enabled) {
+  		priv->tx_path_in_lpi_mode = false;
+-@@ -7402,7 +7406,7 @@ EXPORT_SYMBOL_GPL(stmmac_suspend);
++@@ -7403,7 +7407,7 @@ EXPORT_SYMBOL_GPL(stmmac_suspend);
+  
+  static void stmmac_reset_rx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -1228,7 +1228,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	rx_q->cur_rx = 0;
+  	rx_q->dirty_rx = 0;
+-@@ -7410,7 +7414,7 @@ static void stmmac_reset_rx_queue(struct
++@@ -7411,7 +7415,7 @@ static void stmmac_reset_rx_queue(struct
+  
+  static void stmmac_reset_tx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch b/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
+index 3dc5297f6599b..8ad6f208cbd32 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -1298,7 +1298,8 @@ static int stmmac_phy_setup(struct stmma
++@@ -1299,7 +1299,8 @@ static int stmmac_phy_setup(struct stmma
+  	return 0;
+  }
+  
+@@ -27,7 +27,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	u32 rx_cnt = priv->plat->rx_queues_to_use;
+  	unsigned int desc_size;
+-@@ -1307,7 +1308,7 @@ static void stmmac_display_rx_rings(stru
++@@ -1308,7 +1309,7 @@ static void stmmac_display_rx_rings(stru
+  
+  	/* Display RX rings */
+  	for (queue = 0; queue < rx_cnt; queue++) {
+@@ -36,7 +36,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		pr_info("\tRX Queue %u rings\n", queue);
+  
+-@@ -1320,12 +1321,13 @@ static void stmmac_display_rx_rings(stru
++@@ -1321,12 +1322,13 @@ static void stmmac_display_rx_rings(stru
+  		}
+  
+  		/* Display RX ring */
+@@ -52,7 +52,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	u32 tx_cnt = priv->plat->tx_queues_to_use;
+  	unsigned int desc_size;
+-@@ -1334,7 +1336,7 @@ static void stmmac_display_tx_rings(stru
++@@ -1335,7 +1337,7 @@ static void stmmac_display_tx_rings(stru
+  
+  	/* Display TX rings */
+  	for (queue = 0; queue < tx_cnt; queue++) {
+@@ -61,7 +61,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		pr_info("\tTX Queue %d rings\n", queue);
+  
+-@@ -1349,18 +1351,19 @@ static void stmmac_display_tx_rings(stru
++@@ -1350,18 +1352,19 @@ static void stmmac_display_tx_rings(stru
+  			desc_size = sizeof(struct dma_desc);
+  		}
+  
+@@ -85,7 +85,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  static int stmmac_set_bfsize(int mtu, int bufsize)
+-@@ -1384,44 +1387,50 @@ static int stmmac_set_bfsize(int mtu, in
++@@ -1385,44 +1388,50 @@ static int stmmac_set_bfsize(int mtu, in
+  /**
+   * stmmac_clear_rx_descriptors - clear RX descriptors
+   * @priv: driver private structure
+@@ -147,7 +147,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  
+  		if (priv->extend_desc)
+-@@ -1438,10 +1447,12 @@ static void stmmac_clear_tx_descriptors(
++@@ -1439,10 +1448,12 @@ static void stmmac_clear_tx_descriptors(
+  /**
+   * stmmac_clear_descriptors - clear descriptors
+   * @priv: driver private structure
+@@ -161,7 +161,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	u32 rx_queue_cnt = priv->plat->rx_queues_to_use;
+  	u32 tx_queue_cnt = priv->plat->tx_queues_to_use;
+-@@ -1449,16 +1460,17 @@ static void stmmac_clear_descriptors(str
++@@ -1450,16 +1461,17 @@ static void stmmac_clear_descriptors(str
+  
+  	/* Clear the RX descriptors */
+  	for (queue = 0; queue < rx_queue_cnt; queue++)
+@@ -181,7 +181,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+   * @p: descriptor pointer
+   * @i: descriptor index
+   * @flags: gfp flag
+-@@ -1466,10 +1478,12 @@ static void stmmac_clear_descriptors(str
++@@ -1467,10 +1479,12 @@ static void stmmac_clear_descriptors(str
+   * Description: this function is called to allocate a receive buffer, perform
+   * the DMA mapping and init the descriptor.
+   */
+@@ -196,7 +196,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  	if (!buf->page) {
+-@@ -1494,7 +1508,7 @@ static int stmmac_init_rx_buffers(struct
++@@ -1495,7 +1509,7 @@ static int stmmac_init_rx_buffers(struct
+  	buf->addr = page_pool_get_dma_addr(buf->page) + buf->page_offset;
+  
+  	stmmac_set_desc_addr(priv, p, buf->addr);
+@@ -205,7 +205,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		stmmac_init_desc3(priv, p);
+  
+  	return 0;
+-@@ -1503,12 +1517,13 @@ static int stmmac_init_rx_buffers(struct
++@@ -1504,12 +1518,13 @@ static int stmmac_init_rx_buffers(struct
+  /**
+   * stmmac_free_rx_buffer - free RX dma buffers
+   * @priv: private structure
+@@ -222,7 +222,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  	if (buf->page)
+-@@ -1523,12 +1538,15 @@ static void stmmac_free_rx_buffer(struct
++@@ -1524,12 +1539,15 @@ static void stmmac_free_rx_buffer(struct
+  /**
+   * stmmac_free_tx_buffer - free RX dma buffers
+   * @priv: private structure
+@@ -240,7 +240,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (tx_q->tx_skbuff_dma[i].buf &&
+  	    tx_q->tx_skbuff_dma[i].buf_type != STMMAC_TXBUF_T_XDP_TX) {
+-@@ -1567,23 +1585,28 @@ static void stmmac_free_tx_buffer(struct
++@@ -1568,23 +1586,28 @@ static void stmmac_free_tx_buffer(struct
+  /**
+   * dma_free_rx_skbufs - free RX dma buffers
+   * @priv: private structure
+@@ -276,7 +276,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  		int ret;
+  
+-@@ -1592,7 +1615,7 @@ static int stmmac_alloc_rx_buffers(struc
++@@ -1593,7 +1616,7 @@ static int stmmac_alloc_rx_buffers(struc
+  		else
+  			p = rx_q->dma_rx + i;
+  
+@@ -285,7 +285,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  					     queue);
+  		if (ret)
+  			return ret;
+-@@ -1606,14 +1629,17 @@ static int stmmac_alloc_rx_buffers(struc
++@@ -1607,14 +1630,17 @@ static int stmmac_alloc_rx_buffers(struc
+  /**
+   * dma_free_rx_xskbufs - free RX dma buffers from XSK pool
+   * @priv: private structure
+@@ -306,7 +306,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+  
+  		if (!buf->xdp)
+-@@ -1624,12 +1650,14 @@ static void dma_free_rx_xskbufs(struct s
++@@ -1625,12 +1651,14 @@ static void dma_free_rx_xskbufs(struct s
+  	}
+  }
+  
+@@ -324,7 +324,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct stmmac_rx_buffer *buf;
+  		dma_addr_t dma_addr;
+  		struct dma_desc *p;
+-@@ -1664,22 +1692,25 @@ static struct xsk_buff_pool *stmmac_get_
++@@ -1665,22 +1693,25 @@ static struct xsk_buff_pool *stmmac_get_
+  /**
+   * __init_dma_rx_desc_rings - init the RX descriptor ring (per queue)
+   * @priv: driver private structure
+@@ -353,7 +353,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	xdp_rxq_info_unreg_mem_model(&rx_q->xdp_rxq);
+  
+-@@ -1706,9 +1737,9 @@ static int __init_dma_rx_desc_rings(stru
++@@ -1707,9 +1738,9 @@ static int __init_dma_rx_desc_rings(stru
+  		/* RX XDP ZC buffer pool may not be populated, e.g.
+  		 * xdpsock TX-only.
+  		 */
+@@ -365,7 +365,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (ret < 0)
+  			return -ENOMEM;
+  	}
+-@@ -1718,17 +1749,19 @@ static int __init_dma_rx_desc_rings(stru
++@@ -1719,17 +1750,19 @@ static int __init_dma_rx_desc_rings(stru
+  		if (priv->extend_desc)
+  			stmmac_mode_init(priv, rx_q->dma_erx,
+  					 rx_q->dma_rx_phy,
+@@ -388,7 +388,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	struct stmmac_priv *priv = netdev_priv(dev);
+  	u32 rx_count = priv->plat->rx_queues_to_use;
+-@@ -1740,7 +1773,7 @@ static int init_dma_rx_desc_rings(struct
++@@ -1741,7 +1774,7 @@ static int init_dma_rx_desc_rings(struct
+  		  "SKB addresses:\nskb\t\tskb data\tdma data\n");
+  
+  	for (queue = 0; queue < rx_count; queue++) {
+@@ -397,7 +397,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (ret)
+  			goto err_init_rx_buffers;
+  	}
+-@@ -1749,12 +1782,12 @@ static int init_dma_rx_desc_rings(struct
++@@ -1750,12 +1783,12 @@ static int init_dma_rx_desc_rings(struct
+  
+  err_init_rx_buffers:
+  	while (queue >= 0) {
+@@ -413,7 +413,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  		rx_q->buf_alloc_num = 0;
+  		rx_q->xsk_pool = NULL;
+-@@ -1771,14 +1804,17 @@ err_init_rx_buffers:
++@@ -1772,14 +1805,17 @@ err_init_rx_buffers:
+  /**
+   * __init_dma_tx_desc_rings - init the TX descriptor ring (per queue)
+   * @priv: driver private structure
+@@ -434,7 +434,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	int i;
+  
+  	netif_dbg(priv, probe, priv->dev,
+-@@ -1790,16 +1826,16 @@ static int __init_dma_tx_desc_rings(stru
++@@ -1791,16 +1827,16 @@ static int __init_dma_tx_desc_rings(stru
+  		if (priv->extend_desc)
+  			stmmac_mode_init(priv, tx_q->dma_etx,
+  					 tx_q->dma_tx_phy,
+@@ -454,7 +454,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		struct dma_desc *p;
+  
+  		if (priv->extend_desc)
+-@@ -1821,7 +1857,8 @@ static int __init_dma_tx_desc_rings(stru
++@@ -1822,7 +1858,8 @@ static int __init_dma_tx_desc_rings(stru
+  	return 0;
+  }
+  
+@@ -464,7 +464,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	struct stmmac_priv *priv = netdev_priv(dev);
+  	u32 tx_queue_cnt;
+-@@ -1830,7 +1867,7 @@ static int init_dma_tx_desc_rings(struct
++@@ -1831,7 +1868,7 @@ static int init_dma_tx_desc_rings(struct
+  	tx_queue_cnt = priv->plat->tx_queues_to_use;
+  
+  	for (queue = 0; queue < tx_queue_cnt; queue++)
+@@ -473,7 +473,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	return 0;
+  }
+-@@ -1838,26 +1875,29 @@ static int init_dma_tx_desc_rings(struct
++@@ -1839,26 +1876,29 @@ static int init_dma_tx_desc_rings(struct
+  /**
+   * init_dma_desc_rings - init the RX/TX descriptor rings
+   * @dev: net device structure
+@@ -508,7 +508,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	return ret;
+  }
+-@@ -1865,17 +1905,20 @@ static int init_dma_desc_rings(struct ne
++@@ -1866,17 +1906,20 @@ static int init_dma_desc_rings(struct ne
+  /**
+   * dma_free_tx_skbufs - free TX dma buffers
+   * @priv: private structure
+@@ -533,7 +533,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (tx_q->xsk_pool && tx_q->xsk_frames_done) {
+  		xsk_tx_completed(tx_q->xsk_pool, tx_q->xsk_frames_done);
+-@@ -1894,34 +1937,37 @@ static void stmmac_free_tx_skbufs(struct
++@@ -1895,34 +1938,37 @@ static void stmmac_free_tx_skbufs(struct
+  	u32 queue;
+  
+  	for (queue = 0; queue < tx_queue_cnt; queue++)
+@@ -578,7 +578,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				  sizeof(struct dma_extended_desc),
+  				  rx_q->dma_erx, rx_q->dma_rx_phy);
+  
+-@@ -1933,29 +1979,33 @@ static void __free_dma_rx_desc_resources
++@@ -1934,29 +1980,33 @@ static void __free_dma_rx_desc_resources
+  		page_pool_destroy(rx_q->page_pool);
+  }
+  
+@@ -617,7 +617,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (priv->extend_desc) {
+  		size = sizeof(struct dma_extended_desc);
+-@@ -1968,7 +2018,7 @@ static void __free_dma_tx_desc_resources
++@@ -1969,7 +2019,7 @@ static void __free_dma_tx_desc_resources
+  		addr = tx_q->dma_tx;
+  	}
+  
+@@ -626,7 +626,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	dma_free_coherent(priv->device, size, addr, tx_q->dma_tx_phy);
+  
+-@@ -1976,28 +2026,32 @@ static void __free_dma_tx_desc_resources
++@@ -1977,28 +2027,32 @@ static void __free_dma_tx_desc_resources
+  	kfree(tx_q->tx_skbuff);
+  }
+  
+@@ -663,7 +663,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	struct stmmac_channel *ch = &priv->channel[queue];
+  	bool xdp_prog = stmmac_xdp_is_enabled(priv);
+  	struct page_pool_params pp_params = { 0 };
+-@@ -2009,8 +2063,8 @@ static int __alloc_dma_rx_desc_resources
++@@ -2010,8 +2064,8 @@ static int __alloc_dma_rx_desc_resources
+  	rx_q->priv_data = priv;
+  
+  	pp_params.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV;
+@@ -674,7 +674,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	pp_params.order = ilog2(num_pages);
+  	pp_params.nid = dev_to_node(priv->device);
+  	pp_params.dev = priv->device;
+-@@ -2025,7 +2079,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2026,7 +2080,7 @@ static int __alloc_dma_rx_desc_resources
+  		return ret;
+  	}
+  
+@@ -683,7 +683,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				 sizeof(*rx_q->buf_pool),
+  				 GFP_KERNEL);
+  	if (!rx_q->buf_pool)
+-@@ -2033,7 +2087,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2034,7 +2088,7 @@ static int __alloc_dma_rx_desc_resources
+  
+  	if (priv->extend_desc) {
+  		rx_q->dma_erx = dma_alloc_coherent(priv->device,
+@@ -692,7 +692,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  						   sizeof(struct dma_extended_desc),
+  						   &rx_q->dma_rx_phy,
+  						   GFP_KERNEL);
+-@@ -2042,7 +2096,7 @@ static int __alloc_dma_rx_desc_resources
++@@ -2043,7 +2097,7 @@ static int __alloc_dma_rx_desc_resources
+  
+  	} else {
+  		rx_q->dma_rx = dma_alloc_coherent(priv->device,
+@@ -701,7 +701,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  						  sizeof(struct dma_desc),
+  						  &rx_q->dma_rx_phy,
+  						  GFP_KERNEL);
+-@@ -2067,7 +2121,8 @@ static int __alloc_dma_rx_desc_resources
++@@ -2068,7 +2122,8 @@ static int __alloc_dma_rx_desc_resources
+  	return 0;
+  }
+  
+@@ -711,7 +711,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	u32 rx_count = priv->plat->rx_queues_to_use;
+  	u32 queue;
+-@@ -2075,7 +2130,7 @@ static int alloc_dma_rx_desc_resources(s
++@@ -2076,7 +2131,7 @@ static int alloc_dma_rx_desc_resources(s
+  
+  	/* RX queues buffers and DMA */
+  	for (queue = 0; queue < rx_count; queue++) {
+@@ -720,7 +720,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (ret)
+  			goto err_dma;
+  	}
+-@@ -2083,7 +2138,7 @@ static int alloc_dma_rx_desc_resources(s
++@@ -2084,7 +2139,7 @@ static int alloc_dma_rx_desc_resources(s
+  	return 0;
+  
+  err_dma:
+@@ -729,7 +729,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	return ret;
+  }
+-@@ -2091,28 +2146,31 @@ err_dma:
++@@ -2092,28 +2147,31 @@ err_dma:
+  /**
+   * __alloc_dma_tx_desc_resources - alloc TX resources (per queue).
+   * @priv: private structure
+@@ -765,7 +765,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  				  sizeof(struct sk_buff *),
+  				  GFP_KERNEL);
+  	if (!tx_q->tx_skbuff)
+-@@ -2125,7 +2183,7 @@ static int __alloc_dma_tx_desc_resources
++@@ -2126,7 +2184,7 @@ static int __alloc_dma_tx_desc_resources
+  	else
+  		size = sizeof(struct dma_desc);
+  
+@@ -774,7 +774,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	addr = dma_alloc_coherent(priv->device, size,
+  				  &tx_q->dma_tx_phy, GFP_KERNEL);
+-@@ -2142,7 +2200,8 @@ static int __alloc_dma_tx_desc_resources
++@@ -2143,7 +2201,8 @@ static int __alloc_dma_tx_desc_resources
+  	return 0;
+  }
+  
+@@ -784,7 +784,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  {
+  	u32 tx_count = priv->plat->tx_queues_to_use;
+  	u32 queue;
+-@@ -2150,7 +2209,7 @@ static int alloc_dma_tx_desc_resources(s
++@@ -2151,7 +2210,7 @@ static int alloc_dma_tx_desc_resources(s
+  
+  	/* TX queues buffers and DMA */
+  	for (queue = 0; queue < tx_count; queue++) {
+@@ -793,7 +793,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		if (ret)
+  			goto err_dma;
+  	}
+-@@ -2158,27 +2217,29 @@ static int alloc_dma_tx_desc_resources(s
++@@ -2159,27 +2218,29 @@ static int alloc_dma_tx_desc_resources(s
+  	return 0;
+  
+  err_dma:
+@@ -827,7 +827,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	return ret;
+  }
+-@@ -2186,16 +2247,18 @@ static int alloc_dma_desc_resources(stru
++@@ -2187,16 +2248,18 @@ static int alloc_dma_desc_resources(stru
+  /**
+   * free_dma_desc_resources - free dma desc resources
+   * @priv: private structure
+@@ -849,7 +849,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  /**
+-@@ -2684,8 +2747,8 @@ static void stmmac_tx_err(struct stmmac_
++@@ -2685,8 +2748,8 @@ static void stmmac_tx_err(struct stmmac_
+  	netif_tx_stop_queue(netdev_get_tx_queue(priv->dev, chan));
+  
+  	stmmac_stop_tx_dma(priv, chan);
+@@ -860,7 +860,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	stmmac_reset_tx_queue(priv, chan);
+  	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  			    tx_q->dma_tx_phy, chan);
+-@@ -3682,19 +3745,93 @@ static int stmmac_request_irq(struct net
++@@ -3683,19 +3746,93 @@ static int stmmac_request_irq(struct net
+  }
+  
+  /**
+@@ -957,7 +957,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	u32 chan;
+  	int ret;
+  
+-@@ -3721,45 +3858,10 @@ static int stmmac_open(struct net_device
++@@ -3722,45 +3859,10 @@ static int stmmac_open(struct net_device
+  	memset(&priv->xstats, 0, sizeof(struct stmmac_extra_stats));
+  	priv->xstats.threshold = tc;
+  
+@@ -1005,7 +1005,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (priv->plat->serdes_powerup) {
+  		ret = priv->plat->serdes_powerup(dev, priv->plat->bsp_priv);
+-@@ -3802,14 +3904,28 @@ irq_error:
++@@ -3803,14 +3905,28 @@ irq_error:
+  
+  	stmmac_hw_teardown(dev);
+  init_error:
+@@ -1036,7 +1036,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static void stmmac_fpe_stop_wq(struct stmmac_priv *priv)
+  {
+  	set_bit(__FPE_REMOVING, &priv->fpe_task_state);
+-@@ -3856,7 +3972,7 @@ static int stmmac_release(struct net_dev
++@@ -3857,7 +3973,7 @@ static int stmmac_release(struct net_dev
+  	stmmac_stop_all_dma(priv);
+  
+  	/* Release and free the Rx/Tx resources */
+@@ -1045,7 +1045,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	/* Disable the MAC Rx/Tx */
+  	stmmac_mac_set(priv, priv->ioaddr, false);
+-@@ -6395,7 +6511,7 @@ void stmmac_disable_rx_queue(struct stmm
++@@ -6396,7 +6512,7 @@ void stmmac_disable_rx_queue(struct stmm
+  	spin_unlock_irqrestore(&ch->lock, flags);
+  
+  	stmmac_stop_rx_dma(priv, queue);
+@@ -1054,7 +1054,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  void stmmac_enable_rx_queue(struct stmmac_priv *priv, u32 queue)
+-@@ -6406,21 +6522,21 @@ void stmmac_enable_rx_queue(struct stmma
++@@ -6407,21 +6523,21 @@ void stmmac_enable_rx_queue(struct stmma
+  	u32 buf_size;
+  	int ret;
+  
+@@ -1080,7 +1080,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	stmmac_init_rx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  			    rx_q->dma_rx_phy, rx_q->queue_index);
+-@@ -6458,7 +6574,7 @@ void stmmac_disable_tx_queue(struct stmm
++@@ -6459,7 +6575,7 @@ void stmmac_disable_tx_queue(struct stmm
+  	spin_unlock_irqrestore(&ch->lock, flags);
+  
+  	stmmac_stop_tx_dma(priv, queue);
+@@ -1089,7 +1089,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  void stmmac_enable_tx_queue(struct stmmac_priv *priv, u32 queue)
+-@@ -6468,21 +6584,21 @@ void stmmac_enable_tx_queue(struct stmma
++@@ -6469,21 +6585,21 @@ void stmmac_enable_tx_queue(struct stmma
+  	unsigned long flags;
+  	int ret;
+  
+@@ -1115,7 +1115,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+  			    tx_q->dma_tx_phy, tx_q->queue_index);
+-@@ -6522,7 +6638,7 @@ void stmmac_xdp_release(struct net_devic
++@@ -6523,7 +6639,7 @@ void stmmac_xdp_release(struct net_devic
+  	stmmac_stop_all_dma(priv);
+  
+  	/* Release and free the Rx/Tx resources */
+@@ -1124,7 +1124,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	/* Disable the MAC Rx/Tx */
+  	stmmac_mac_set(priv, priv->ioaddr, false);
+-@@ -6547,14 +6663,14 @@ int stmmac_xdp_open(struct net_device *d
++@@ -6548,14 +6664,14 @@ int stmmac_xdp_open(struct net_device *d
+  	u32 chan;
+  	int ret;
+  
+@@ -1141,7 +1141,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	if (ret < 0) {
+  		netdev_err(dev, "%s: DMA descriptors initialization failed\n",
+  			   __func__);
+-@@ -6636,7 +6752,7 @@ irq_error:
++@@ -6637,7 +6753,7 @@ irq_error:
+  
+  	stmmac_hw_teardown(dev);
+  init_error:
+@@ -1150,7 +1150,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  dma_desc_error:
+  	return ret;
+  }
+-@@ -7497,7 +7613,7 @@ int stmmac_resume(struct device *dev)
++@@ -7498,7 +7614,7 @@ int stmmac_resume(struct device *dev)
+  	stmmac_reset_queues_param(priv);
+  
+  	stmmac_free_tx_skbufs(priv);
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-05-net-ethernet-stmicro-stmmac-permit-MTU-change-with-i.patch b/target/linux/generic/backport-5.15/775-v6.0-05-net-ethernet-stmicro-stmmac-permit-MTU-change-with-i.patch
+index 6ebb527726e44..2576df45224db 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-05-net-ethernet-stmicro-stmmac-permit-MTU-change-with-i.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-05-net-ethernet-stmicro-stmmac-permit-MTU-change-with-i.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -5624,18 +5624,15 @@ static int stmmac_change_mtu(struct net_
++@@ -5625,18 +5625,15 @@ static int stmmac_change_mtu(struct net_
+  {
+  	struct stmmac_priv *priv = netdev_priv(dev);
+  	int txfifosz = priv->plat->tx_fifo_size;
+@@ -40,7 +40,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	if (stmmac_xdp_is_enabled(priv) && new_mtu > ETH_DATA_LEN) {
+  		netdev_dbg(priv->dev, "Jumbo frames not supported for XDP\n");
+  		return -EINVAL;
+-@@ -5647,8 +5644,29 @@ static int stmmac_change_mtu(struct net_
++@@ -5648,8 +5645,29 @@ static int stmmac_change_mtu(struct net_
+  	if ((txfifosz < new_mtu) || (new_mtu > BUF_SIZE_16KiB))
+  		return -EINVAL;
+  
+diff --git a/target/linux/generic/backport-5.15/802-v5.16-0001-nvmem-core-rework-nvmem-cell-instance-creation.patch b/target/linux/generic/backport-5.15/802-v5.16-0001-nvmem-core-rework-nvmem-cell-instance-creation.patch
+index 71d9f109a742c..ebab8c7c736dd 100644
+--- a/target/linux/generic/backport-5.15/802-v5.16-0001-nvmem-core-rework-nvmem-cell-instance-creation.patch
++++ b/target/linux/generic/backport-5.15/802-v5.16-0001-nvmem-core-rework-nvmem-cell-instance-creation.patch
+@@ -206,7 +206,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	}
+  
+  	return 0;
+-@@ -1139,9 +1141,33 @@ struct nvmem_device *devm_nvmem_device_g
++@@ -1142,9 +1144,33 @@ struct nvmem_device *devm_nvmem_device_g
+  }
+  EXPORT_SYMBOL_GPL(devm_nvmem_device_get);
+  
+@@ -240,7 +240,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	struct nvmem_cell *cell = ERR_PTR(-ENOENT);
+  	struct nvmem_cell_lookup *lookup;
+  	struct nvmem_device *nvmem;
+-@@ -1166,11 +1192,15 @@ nvmem_cell_get_from_lookup(struct device
++@@ -1169,11 +1195,15 @@ nvmem_cell_get_from_lookup(struct device
+  				break;
+  			}
+  
+@@ -259,7 +259,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  			}
+  			break;
+  		}
+-@@ -1181,10 +1211,10 @@ nvmem_cell_get_from_lookup(struct device
++@@ -1184,10 +1214,10 @@ nvmem_cell_get_from_lookup(struct device
+  }
+  
+  #if IS_ENABLED(CONFIG_OF)
+@@ -273,7 +273,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  
+  	mutex_lock(&nvmem_mutex);
+  	list_for_each_entry(iter, &nvmem->cells, node) {
+-@@ -1214,6 +1244,7 @@ struct nvmem_cell *of_nvmem_cell_get(str
++@@ -1217,6 +1247,7 @@ struct nvmem_cell *of_nvmem_cell_get(str
+  {
+  	struct device_node *cell_np, *nvmem_np;
+  	struct nvmem_device *nvmem;
+@@ -281,7 +281,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	struct nvmem_cell *cell;
+  	int index = 0;
+  
+-@@ -1234,12 +1265,16 @@ struct nvmem_cell *of_nvmem_cell_get(str
++@@ -1237,12 +1268,16 @@ struct nvmem_cell *of_nvmem_cell_get(str
+  	if (IS_ERR(nvmem))
+  		return ERR_CAST(nvmem);
+  
+@@ -300,7 +300,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	return cell;
+  }
+  EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
+-@@ -1345,13 +1380,17 @@ EXPORT_SYMBOL(devm_nvmem_cell_put);
++@@ -1348,13 +1383,17 @@ EXPORT_SYMBOL(devm_nvmem_cell_put);
+   */
+  void nvmem_cell_put(struct nvmem_cell *cell)
+  {
+@@ -320,7 +320,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  {
+  	u8 *p, *b;
+  	int i, extra, bit_offset = cell->bit_offset;
+-@@ -1385,8 +1424,8 @@ static void nvmem_shift_read_buffer_in_p
++@@ -1388,8 +1427,8 @@ static void nvmem_shift_read_buffer_in_p
+  }
+  
+  static int __nvmem_cell_read(struct nvmem_device *nvmem,
+@@ -331,7 +331,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  {
+  	int rc;
+  
+-@@ -1417,18 +1456,18 @@ static int __nvmem_cell_read(struct nvme
++@@ -1420,18 +1459,18 @@ static int __nvmem_cell_read(struct nvme
+   */
+  void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
+  {
+@@ -353,7 +353,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	if (rc) {
+  		kfree(buf);
+  		return ERR_PTR(rc);
+-@@ -1438,7 +1477,7 @@ void *nvmem_cell_read(struct nvmem_cell
++@@ -1441,7 +1480,7 @@ void *nvmem_cell_read(struct nvmem_cell
+  }
+  EXPORT_SYMBOL_GPL(nvmem_cell_read);
+  
+@@ -362,7 +362,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  					     u8 *_buf, int len)
+  {
+  	struct nvmem_device *nvmem = cell->nvmem;
+-@@ -1491,16 +1530,7 @@ err:
++@@ -1494,16 +1533,7 @@ err:
+  	return ERR_PTR(rc);
+  }
+  
+@@ -380,7 +380,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  {
+  	struct nvmem_device *nvmem = cell->nvmem;
+  	int rc;
+-@@ -1526,6 +1556,21 @@ int nvmem_cell_write(struct nvmem_cell *
++@@ -1529,6 +1559,21 @@ int nvmem_cell_write(struct nvmem_cell *
+  
+  	return len;
+  }
+@@ -402,7 +402,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  EXPORT_SYMBOL_GPL(nvmem_cell_write);
+  
+  static int nvmem_cell_read_common(struct device *dev, const char *cell_id,
+-@@ -1628,7 +1673,7 @@ static const void *nvmem_cell_read_varia
++@@ -1631,7 +1676,7 @@ static const void *nvmem_cell_read_varia
+  	if (IS_ERR(cell))
+  		return cell;
+  
+@@ -411,7 +411,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	buf = nvmem_cell_read(cell, len);
+  	nvmem_cell_put(cell);
+  	if (IS_ERR(buf))
+-@@ -1724,18 +1769,18 @@ EXPORT_SYMBOL_GPL(nvmem_cell_read_variab
++@@ -1727,18 +1772,18 @@ EXPORT_SYMBOL_GPL(nvmem_cell_read_variab
+  ssize_t nvmem_device_cell_read(struct nvmem_device *nvmem,
+  			   struct nvmem_cell_info *info, void *buf)
+  {
+@@ -433,7 +433,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	if (rc)
+  		return rc;
+  
+-@@ -1755,17 +1800,17 @@ EXPORT_SYMBOL_GPL(nvmem_device_cell_read
++@@ -1758,17 +1803,17 @@ EXPORT_SYMBOL_GPL(nvmem_device_cell_read
+  int nvmem_device_cell_write(struct nvmem_device *nvmem,
+  			    struct nvmem_cell_info *info, void *buf)
+  {
+diff --git a/target/linux/generic/backport-5.15/802-v5.16-0002-nvmem-core-add-nvmem-cell-post-processing-callback.patch b/target/linux/generic/backport-5.15/802-v5.16-0002-nvmem-core-add-nvmem-cell-post-processing-callback.patch
+index 420d2a5d7ec17..df264add24524 100644
+--- a/target/linux/generic/backport-5.15/802-v5.16-0002-nvmem-core-add-nvmem-cell-post-processing-callback.patch
++++ b/target/linux/generic/backport-5.15/802-v5.16-0002-nvmem-core-add-nvmem-cell-post-processing-callback.patch
+@@ -30,7 +30,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	struct gpio_desc	*wp_gpio;
+  	void *priv;
+  };
+-@@ -797,6 +798,7 @@ struct nvmem_device *nvmem_register(cons
++@@ -799,6 +800,7 @@ struct nvmem_device *nvmem_register(cons
+  	nvmem->type = config->type;
+  	nvmem->reg_read = config->reg_read;
+  	nvmem->reg_write = config->reg_write;
+@@ -38,7 +38,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	nvmem->keepout = config->keepout;
+  	nvmem->nkeepout = config->nkeepout;
+  	if (config->of_node)
+-@@ -1438,6 +1440,13 @@ static int __nvmem_cell_read(struct nvme
++@@ -1441,6 +1443,13 @@ static int __nvmem_cell_read(struct nvme
+  	if (cell->bit_offset || cell->nbits)
+  		nvmem_shift_read_buffer_in_place(cell, buf);
+  
+diff --git a/target/linux/generic/backport-5.15/804-v5.18-0001-nvmem-core-Remove-unused-devm_nvmem_unregister.patch b/target/linux/generic/backport-5.15/804-v5.18-0001-nvmem-core-Remove-unused-devm_nvmem_unregister.patch
+index c049e2a1aefc1..ca5357c8d9886 100644
+--- a/target/linux/generic/backport-5.15/804-v5.18-0001-nvmem-core-Remove-unused-devm_nvmem_unregister.patch
++++ b/target/linux/generic/backport-5.15/804-v5.18-0001-nvmem-core-Remove-unused-devm_nvmem_unregister.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/nvmem/core.c
+ +++ b/drivers/nvmem/core.c
+-@@ -940,28 +940,6 @@ struct nvmem_device *devm_nvmem_register
++@@ -943,28 +943,6 @@ struct nvmem_device *devm_nvmem_register
+  }
+  EXPORT_SYMBOL_GPL(devm_nvmem_register);
+  
+diff --git a/target/linux/generic/backport-5.15/804-v5.18-0002-nvmem-core-Use-devm_add_action_or_reset.patch b/target/linux/generic/backport-5.15/804-v5.18-0002-nvmem-core-Use-devm_add_action_or_reset.patch
+index c714fa1a16b1f..b71a0a365b216 100644
+--- a/target/linux/generic/backport-5.15/804-v5.18-0002-nvmem-core-Use-devm_add_action_or_reset.patch
++++ b/target/linux/generic/backport-5.15/804-v5.18-0002-nvmem-core-Use-devm_add_action_or_reset.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/nvmem/core.c
+ +++ b/drivers/nvmem/core.c
+-@@ -902,9 +902,9 @@ void nvmem_unregister(struct nvmem_devic
++@@ -905,9 +905,9 @@ void nvmem_unregister(struct nvmem_devic
+  }
+  EXPORT_SYMBOL_GPL(nvmem_unregister);
+  
+@@ -28,7 +28,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  }
+  
+  /**
+-@@ -921,20 +921,16 @@ static void devm_nvmem_release(struct de
++@@ -924,20 +924,16 @@ static void devm_nvmem_release(struct de
+  struct nvmem_device *devm_nvmem_register(struct device *dev,
+  					 const struct nvmem_config *config)
+  {
+diff --git a/target/linux/generic/backport-5.15/804-v5.18-0003-nvmem-core-Check-input-parameter-for-NULL-in-nvmem_u.patch b/target/linux/generic/backport-5.15/804-v5.18-0003-nvmem-core-Check-input-parameter-for-NULL-in-nvmem_u.patch
+index dc96a9b88c259..4f471f266738b 100644
+--- a/target/linux/generic/backport-5.15/804-v5.18-0003-nvmem-core-Check-input-parameter-for-NULL-in-nvmem_u.patch
++++ b/target/linux/generic/backport-5.15/804-v5.18-0003-nvmem-core-Check-input-parameter-for-NULL-in-nvmem_u.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/nvmem/core.c
+ +++ b/drivers/nvmem/core.c
+-@@ -898,7 +898,8 @@ static void nvmem_device_release(struct
++@@ -901,7 +901,8 @@ static void nvmem_device_release(struct
+   */
+  void nvmem_unregister(struct nvmem_device *nvmem)
+  {
+diff --git a/target/linux/generic/backport-5.15/807-v6.1-0003-nvmem-core-add-error-handling-for-dev_set_name.patch b/target/linux/generic/backport-5.15/807-v6.1-0003-nvmem-core-add-error-handling-for-dev_set_name.patch
+deleted file mode 100644
+index e2089e7b05a12..0000000000000
+--- a/target/linux/generic/backport-5.15/807-v6.1-0003-nvmem-core-add-error-handling-for-dev_set_name.patch
++++ /dev/null
+@@ -1,47 +0,0 @@
+-From 5544e90c81261e82e02bbf7c6015a4b9c8c825ef Mon Sep 17 00:00:00 2001
+-From: Gaosheng Cui <cuigaosheng1@huawei.com>
+-Date: Fri, 16 Sep 2022 13:20:50 +0100
+-Subject: [PATCH] nvmem: core: add error handling for dev_set_name
+-
+-The type of return value of dev_set_name is int, which may return
+-wrong result, so we add error handling for it to reclaim memory
+-of nvmem resource, and return early when an error occurs.
+-
+-Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+-Link: https://lore.kernel.org/r/20220916122100.170016-4-srinivas.kandagatla@linaro.org
+-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+----
+- drivers/nvmem/core.c | 12 +++++++++---
+- 1 file changed, 9 insertions(+), 3 deletions(-)
+-
+---- a/drivers/nvmem/core.c
+-+++ b/drivers/nvmem/core.c
+-@@ -809,18 +809,24 @@ struct nvmem_device *nvmem_register(cons
+- 
+- 	switch (config->id) {
+- 	case NVMEM_DEVID_NONE:
+--		dev_set_name(&nvmem->dev, "%s", config->name);
+-+		rval = dev_set_name(&nvmem->dev, "%s", config->name);
+- 		break;
+- 	case NVMEM_DEVID_AUTO:
+--		dev_set_name(&nvmem->dev, "%s%d", config->name, nvmem->id);
+-+		rval = dev_set_name(&nvmem->dev, "%s%d", config->name, nvmem->id);
+- 		break;
+- 	default:
+--		dev_set_name(&nvmem->dev, "%s%d",
+-+		rval = dev_set_name(&nvmem->dev, "%s%d",
+- 			     config->name ? : "nvmem",
+- 			     config->name ? config->id : nvmem->id);
+- 		break;
+- 	}
+- 
+-+	if (rval) {
+-+		ida_free(&nvmem_ida, nvmem->id);
+-+		kfree(nvmem);
+-+		return ERR_PTR(rval);
+-+	}
+-+
+- 	nvmem->read_only = device_property_present(config->dev, "read-only") ||
+- 			   config->read_only || !nvmem->reg_write;
+- 
+diff --git a/target/linux/generic/backport-5.15/808-v6.2-0013-nvmem-core-fix-device-node-refcounting.patch b/target/linux/generic/backport-5.15/808-v6.2-0013-nvmem-core-fix-device-node-refcounting.patch
+index 99a9907f6fd3d..a229c303ad0f8 100644
+--- a/target/linux/generic/backport-5.15/808-v6.2-0013-nvmem-core-fix-device-node-refcounting.patch
++++ b/target/linux/generic/backport-5.15/808-v6.2-0013-nvmem-core-fix-device-node-refcounting.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/nvmem/core.c
+ +++ b/drivers/nvmem/core.c
+-@@ -1240,16 +1240,21 @@ struct nvmem_cell *of_nvmem_cell_get(str
++@@ -1237,16 +1237,21 @@ struct nvmem_cell *of_nvmem_cell_get(str
+  	if (!cell_np)
+  		return ERR_PTR(-ENOENT);
+  
+diff --git a/target/linux/generic/backport-5.15/809-v6.3-0002-nvmem-core-add-an-index-parameter-to-the-cell.patch b/target/linux/generic/backport-5.15/809-v6.3-0002-nvmem-core-add-an-index-parameter-to-the-cell.patch
+index cefc4c89c7cd5..454d3bf0ed1a4 100644
+--- a/target/linux/generic/backport-5.15/809-v6.3-0002-nvmem-core-add-an-index-parameter-to-the-cell.patch
++++ b/target/linux/generic/backport-5.15/809-v6.3-0002-nvmem-core-add-an-index-parameter-to-the-cell.patch
+@@ -47,7 +47,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  };
+  
+  static DEFINE_MUTEX(nvmem_mutex);
+-@@ -1125,7 +1126,8 @@ struct nvmem_device *devm_nvmem_device_g
++@@ -1122,7 +1123,8 @@ struct nvmem_device *devm_nvmem_device_g
+  }
+  EXPORT_SYMBOL_GPL(devm_nvmem_device_get);
+  
+@@ -57,7 +57,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  {
+  	struct nvmem_cell *cell;
+  	const char *name = NULL;
+-@@ -1144,6 +1146,7 @@ static struct nvmem_cell *nvmem_create_c
++@@ -1141,6 +1143,7 @@ static struct nvmem_cell *nvmem_create_c
+  
+  	cell->id = name;
+  	cell->entry = entry;
+@@ -65,7 +65,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  
+  	return cell;
+  }
+-@@ -1182,7 +1185,7 @@ nvmem_cell_get_from_lookup(struct device
++@@ -1179,7 +1182,7 @@ nvmem_cell_get_from_lookup(struct device
+  				__nvmem_device_put(nvmem);
+  				cell = ERR_PTR(-ENOENT);
+  			} else {
+@@ -74,7 +74,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  				if (IS_ERR(cell))
+  					__nvmem_device_put(nvmem);
+  			}
+-@@ -1230,15 +1233,27 @@ struct nvmem_cell *of_nvmem_cell_get(str
++@@ -1227,15 +1230,27 @@ struct nvmem_cell *of_nvmem_cell_get(str
+  	struct nvmem_device *nvmem;
+  	struct nvmem_cell_entry *cell_entry;
+  	struct nvmem_cell *cell;
+@@ -105,7 +105,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  
+  	nvmem_np = of_get_parent(cell_np);
+  	if (!nvmem_np) {
+-@@ -1260,7 +1275,7 @@ struct nvmem_cell *of_nvmem_cell_get(str
++@@ -1257,7 +1272,7 @@ struct nvmem_cell *of_nvmem_cell_get(str
+  		return ERR_PTR(-ENOENT);
+  	}
+  
+@@ -114,7 +114,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	if (IS_ERR(cell))
+  		__nvmem_device_put(nvmem);
+  
+-@@ -1413,8 +1428,8 @@ static void nvmem_shift_read_buffer_in_p
++@@ -1410,8 +1425,8 @@ static void nvmem_shift_read_buffer_in_p
+  }
+  
+  static int __nvmem_cell_read(struct nvmem_device *nvmem,
+@@ -125,7 +125,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  {
+  	int rc;
+  
+-@@ -1428,7 +1443,7 @@ static int __nvmem_cell_read(struct nvme
++@@ -1425,7 +1440,7 @@ static int __nvmem_cell_read(struct nvme
+  		nvmem_shift_read_buffer_in_place(cell, buf);
+  
+  	if (nvmem->cell_post_process) {
+@@ -134,7 +134,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  					      cell->offset, buf, cell->bytes);
+  		if (rc)
+  			return rc;
+-@@ -1463,7 +1478,7 @@ void *nvmem_cell_read(struct nvmem_cell
++@@ -1460,7 +1475,7 @@ void *nvmem_cell_read(struct nvmem_cell
+  	if (!buf)
+  		return ERR_PTR(-ENOMEM);
+  
+@@ -143,7 +143,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  	if (rc) {
+  		kfree(buf);
+  		return ERR_PTR(rc);
+-@@ -1776,7 +1791,7 @@ ssize_t nvmem_device_cell_read(struct nv
++@@ -1773,7 +1788,7 @@ ssize_t nvmem_device_cell_read(struct nv
+  	if (rc)
+  		return rc;
+  
+diff --git a/target/linux/generic/backport-5.15/883-0001-net-Remove-WARN_ON_ONCE-sk-sk_forward_alloc-from-sk_.patch b/target/linux/generic/backport-5.15/883-0001-net-Remove-WARN_ON_ONCE-sk-sk_forward_alloc-from-sk_.patch
+new file mode 100644
+index 0000000000000..0d4fe819f0446
+--- /dev/null
++++ b/target/linux/generic/backport-5.15/883-0001-net-Remove-WARN_ON_ONCE-sk-sk_forward_alloc-from-sk_.patch
+@@ -0,0 +1,98 @@
++From a621c4fdc7e1ef6b9aabe083d57bf6a637fdaf76 Mon Sep 17 00:00:00 2001
++From: Kuniyuki Iwashima <kuniyu@amazon.com>
++Date: Mon, 27 Feb 2023 13:15:48 -0800
++Subject: [PATCH] net: Remove WARN_ON_ONCE(sk->sk_forward_alloc) from
++ sk_stream_kill_queues().
++
++commit 62ec33b44e0f7168ff2886520fec6fb62d03b5a3 upstream.
++
++Christoph Paasch reported that commit b5fc29233d28 ("inet6: Remove
++inet6_destroy_sock() in sk->sk_prot->destroy().") started triggering
++WARN_ON_ONCE(sk->sk_forward_alloc) in sk_stream_kill_queues().  [0 - 2]
++Also, we can reproduce it by a program in [3].
++
++In the commit, we delay freeing ipv6_pinfo.pktoptions from sk->destroy()
++to sk->sk_destruct(), so sk->sk_forward_alloc is no longer zero in
++inet_csk_destroy_sock().
++
++The same check has been in inet_sock_destruct() from at least v2.6,
++we can just remove the WARN_ON_ONCE().  However, among the users of
++sk_stream_kill_queues(), only CAIF is not calling inet_sock_destruct().
++Thus, we add the same WARN_ON_ONCE() to caif_sock_destructor().
++
++[0]: https://lore.kernel.org/netdev/39725AB4-88F1-41B3-B07F-949C5CAEFF4F@icloud.com/
++[1]: https://github.com/multipath-tcp/mptcp_net-next/issues/341
++[2]:
++WARNING: CPU: 0 PID: 3232 at net/core/stream.c:212 sk_stream_kill_queues+0x2f9/0x3e0
++Modules linked in:
++CPU: 0 PID: 3232 Comm: syz-executor.0 Not tainted 6.2.0-rc5ab24eb4698afbe147b424149c529e2a43ec24eb5 #2
++Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
++RIP: 0010:sk_stream_kill_queues+0x2f9/0x3e0
++Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e ec 00 00 00 8b ab 08 01 00 00 e9 60 ff ff ff e8 d0 5f b6 fe 0f 0b eb 97 e8 c7 5f b6 fe <0f> 0b eb a0 e8 be 5f b6 fe 0f 0b e9 6a fe ff ff e8 02 07 e3 fe e9
++RSP: 0018:ffff88810570fc68 EFLAGS: 00010293
++RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
++RDX: ffff888101f38f40 RSI: ffffffff8285e529 RDI: 0000000000000005
++RBP: 0000000000000ce0 R08: 0000000000000005 R09: 0000000000000000
++R10: 0000000000000ce0 R11: 0000000000000001 R12: ffff8881009e9488
++R13: ffffffff84af2cc0 R14: 0000000000000000 R15: ffff8881009e9458
++FS:  00007f7fdfbd5800(0000) GS:ffff88811b600000(0000) knlGS:0000000000000000
++CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
++CR2: 0000001b32923000 CR3: 00000001062fc006 CR4: 0000000000170ef0
++Call Trace:
++ <TASK>
++ inet_csk_destroy_sock+0x1a1/0x320
++ __tcp_close+0xab6/0xe90
++ tcp_close+0x30/0xc0
++ inet_release+0xe9/0x1f0
++ inet6_release+0x4c/0x70
++ __sock_release+0xd2/0x280
++ sock_close+0x15/0x20
++ __fput+0x252/0xa20
++ task_work_run+0x169/0x250
++ exit_to_user_mode_prepare+0x113/0x120
++ syscall_exit_to_user_mode+0x1d/0x40
++ do_syscall_64+0x48/0x90
++ entry_SYSCALL_64_after_hwframe+0x72/0xdc
++RIP: 0033:0x7f7fdf7ae28d
++Code: c1 20 00 00 75 10 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ee fb ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 37 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
++RSP: 002b:00000000007dfbb0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
++RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00007f7fdf7ae28d
++RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000003
++RBP: 0000000000000000 R08: 000000007f338e0f R09: 0000000000000e0f
++R10: 000000007f338e13 R11: 0000000000000293 R12: 00007f7fdefff000
++R13: 00007f7fdefffcd8 R14: 00007f7fdefffce0 R15: 00007f7fdefffcd8
++ </TASK>
++
++[3]: https://lore.kernel.org/netdev/20230208004245.83497-1-kuniyu@amazon.com/
++
++Fixes: b5fc29233d28 ("inet6: Remove inet6_destroy_sock() in sk->sk_prot->destroy().")
++Reported-by: syzbot <syzkaller@googlegroups.com>
++Reported-by: Christoph Paasch <christophpaasch@icloud.com>
++Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
++Reviewed-by: Eric Dumazet <edumazet@google.com>
++Signed-off-by: Jakub Kicinski <kuba@kernel.org>
++---
++ net/caif/caif_socket.c | 1 +
++ net/core/stream.c      | 1 -
++ 2 files changed, 1 insertion(+), 1 deletion(-)
++
++--- a/net/caif/caif_socket.c
+++++ b/net/caif/caif_socket.c
++@@ -1020,6 +1020,7 @@ static void caif_sock_destructor(struct
++ 		return;
++ 	}
++ 	sk_stream_kill_queues(&cf_sk->sk);
+++	WARN_ON(sk->sk_forward_alloc);
++ 	caif_free_client(&cf_sk->layer);
++ }
++ 
++--- a/net/core/stream.c
+++++ b/net/core/stream.c
++@@ -209,7 +209,6 @@ void sk_stream_kill_queues(struct sock *
++ 	sk_mem_reclaim(sk);
++ 
++ 	WARN_ON(sk->sk_wmem_queued);
++-	WARN_ON(sk->sk_forward_alloc);
++ 
++ 	/* It is _impossible_ for the backlog to contain anything
++ 	 * when we get here.  All user references to this socket
+diff --git a/target/linux/x86/patches-5.15/103-pcengines_apu6_platform.patch b/target/linux/x86/patches-5.15/103-pcengines_apu6_platform.patch
+index 0ef3c0c087c0d..03cb33acbf734 100644
+--- a/target/linux/x86/patches-5.15/103-pcengines_apu6_platform.patch
++++ b/target/linux/x86/patches-5.15/103-pcengines_apu6_platform.patch
+@@ -63,7 +63,7 @@ Sighed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
+  
+ --- a/drivers/platform/x86/Kconfig
+ +++ b/drivers/platform/x86/Kconfig
+-@@ -700,7 +700,7 @@ config XO1_RFKILL
++@@ -701,7 +701,7 @@ config XO1_RFKILL
+  	  laptop.
+  
+  config PCENGINES_APU2
+@@ -72,7 +72,7 @@ Sighed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
+  	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
+  	depends on LEDS_CLASS
+  	select GPIO_AMD_FCH
+-@@ -708,7 +708,7 @@ config PCENGINES_APU2
++@@ -709,7 +709,7 @@ config PCENGINES_APU2
+  	select LEDS_GPIO
+  	help
+  	  This driver provides support for the front button and LEDs on
+
+From 736257141f7e2b4cc13c3fe297ecca0b21bcea4b Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Mon, 27 Feb 2023 17:54:37 -0500
+Subject: [PATCH 2/2] kernel: bump 5.15 to 5.15.96
+
+All patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+Run-tested: bcm2711/RPi4B, filogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.15                                           | 4 ++--
+ ...0127-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch | 2 +-
+ ...media-dt-bindings-media-Add-binding-for-the-Raspberr.patch | 2 +-
+ ...media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch | 2 +-
+ ...media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch | 2 +-
+ ...950-0281-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch | 2 +-
+ ...staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch | 2 +-
+ ...Documentation-devicetree-Add-documentation-for-imx37.patch | 2 +-
+ ...dt-bindings-media-i2c-Add-IMX519-CMOS-sensor-binding.patch | 2 +-
+ ...drm-edid-Rename-drm_hdmi_avi_infoframe_colorspace-to.patch | 4 ++--
+ ...950-0795-drm-tiny-Add-MIPI-DBI-compatible-SPI-driver.patch | 2 +-
+ ...awnand-brcmnand-Add-platform-data-structure-for-BCMA.patch | 2 +-
+ ...-dt-bindings-pinctrl-Add-binding-for-BCM4908-pinctrl.patch | 2 +-
+ ...v5.18-0002-pinctrl-bcm-add-driver-for-BCM4908-pinmux.patch | 2 +-
+ .../050-v5.16-05-mips-bpf-Enable-eBPF-JITs.patch              | 2 +-
+ ...18-0009-nvmem-Add-driver-for-OCOTP-in-Sunplus-SP7021.patch | 2 +-
+ .../806-v6.0-0001-nvmem-microchip-otpc-add-support.patch      | 2 +-
+ target/linux/generic/hack-5.15/204-module_strip.patch         | 2 +-
+ target/linux/generic/hack-5.15/253-ksmbd-config.patch         | 2 +-
+ .../generic/pending-5.15/203-kallsyms_uncompressed.patch      | 2 +-
+ target/linux/generic/pending-5.15/920-mangle_bootargs.patch   | 2 +-
+ .../patches-5.15/701-staging-add-fsl_ppfe-driver.patch        | 2 +-
+ ...MAINTAINERS-Add-an-entry-for-the-IEI-WT61P803-PUZZLE.patch | 2 +-
+ .../008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch   | 2 +-
+ 24 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/include/kernel-5.15 b/include/kernel-5.15
+index a93da1e6a3011..5c90c189c4f71 100644
+--- a/include/kernel-5.15
++++ b/include/kernel-5.15
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.15 = .95
+-LINUX_KERNEL_HASH-5.15.95 = ea71d1f0d28803679dfdc2278fd9f145f12cb566a796502182d719312756441b
++LINUX_VERSION-5.15 = .96
++LINUX_KERNEL_HASH-5.15.96 = 348d974c143fdef8517ec703fdaa24bade12a49047848be92cb9e3253b19ef98
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0127-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch b/target/linux/bcm27xx/patches-5.15/950-0127-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
+index f030bb33ed3ea..3913ddda2dfea 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0127-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0127-MAINTAINERS-Add-entry-for-BCM2835-Unicam-driver.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3554,6 +3554,13 @@ N:	bcm113*
++@@ -3555,6 +3555,13 @@ N:	bcm113*
+  N:	bcm216*
+  N:	kona
+  
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0202-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch b/target/linux/bcm27xx/patches-5.15/950-0202-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
+index 9833d5312da7b..375d488a92eb0 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0202-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0202-media-dt-bindings-media-Add-binding-for-the-Raspberr.patch
+@@ -90,7 +90,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3554,6 +3554,13 @@ N:	bcm113*
++@@ -3555,6 +3555,13 @@ N:	bcm113*
+  N:	bcm216*
+  N:	kona
+  
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0210-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch b/target/linux/bcm27xx/patches-5.15/950-0210-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+index d1f115d9bea96..b7bb1474ecf6f 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0210-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0210-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+@@ -28,7 +28,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3562,7 +3562,7 @@ F:	Documentation/devicetree/bindings/med
++@@ -3563,7 +3563,7 @@ F:	Documentation/devicetree/bindings/med
+  F:	drivers/staging/media/rpivid
+  
+  BROADCOM BCM2835 CAMERA DRIVER
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0246-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch b/target/linux/bcm27xx/patches-5.15/950-0246-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+index aece1d6229eeb..9f4a0f33ec741 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0246-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0246-media-bcm2835-unicam-Driver-for-CCP2-CSI2-camera-int.patch
+@@ -31,7 +31,7 @@ Reported-by: kbuild test robot <lkp@intel.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3566,7 +3566,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -3567,7 +3567,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  F:	drivers/media/platform/bcm2835/
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0281-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-5.15/950-0281-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+index 2727d476d94b6..7690153d3db3a 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0281-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0281-media-i2c-Add-driver-for-Sony-IMX477-sensor.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17529,6 +17529,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -17530,6 +17530,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/sony,imx412.yaml
+  F:	drivers/media/i2c/imx412.c
+  
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0303-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch b/target/linux/bcm27xx/patches-5.15/950-0303-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
+index 3f9149ed1575d..d1dc2613b9cbd 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0303-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0303-staging-vc04_services-ISP-Add-a-more-complex-ISP-pro.patch
+@@ -35,7 +35,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3568,6 +3568,15 @@ S:	Maintained
++@@ -3569,6 +3569,15 @@ S:	Maintained
+  F:	drivers/media/platform/bcm2835/
+  F:	Documentation/devicetree/bindings/media/brcm,bcm2835-unicam.yaml
+  
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0413-Documentation-devicetree-Add-documentation-for-imx37.patch b/target/linux/bcm27xx/patches-5.15/950-0413-Documentation-devicetree-Add-documentation-for-imx37.patch
+index f21349769cdf7..d60c0f372cc50 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0413-Documentation-devicetree-Add-documentation-for-imx37.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0413-Documentation-devicetree-Add-documentation-for-imx37.patch
+@@ -132,7 +132,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17543,6 +17543,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -17544,6 +17544,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0520-dt-bindings-media-i2c-Add-IMX519-CMOS-sensor-binding.patch b/target/linux/bcm27xx/patches-5.15/950-0520-dt-bindings-media-i2c-Add-IMX519-CMOS-sensor-binding.patch
+index 0107f0dc0e603..b1af6872fbfda 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0520-dt-bindings-media-i2c-Add-IMX519-CMOS-sensor-binding.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0520-dt-bindings-media-i2c-Add-IMX519-CMOS-sensor-binding.patch
+@@ -132,7 +132,7 @@ Signed-off-by: Lee Jackson <info@arducam.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17547,6 +17547,14 @@ F:	Documentation/devicetree/bindings/med
++@@ -17548,6 +17548,14 @@ F:	Documentation/devicetree/bindings/med
+  F:	Documentation/devicetree/bindings/media/i2c/imx477.yaml
+  F:	drivers/media/i2c/imx477.c
+  
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0623-drm-edid-Rename-drm_hdmi_avi_infoframe_colorspace-to.patch b/target/linux/bcm27xx/patches-5.15/950-0623-drm-edid-Rename-drm_hdmi_avi_infoframe_colorspace-to.patch
+index a0f4963c414a2..de80fe4628f23 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0623-drm-edid-Rename-drm_hdmi_avi_infoframe_colorspace-to.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0623-drm-edid-Rename-drm_hdmi_avi_infoframe_colorspace-to.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/gpu/drm/drm_edid.c
+ +++ b/drivers/gpu/drm/drm_edid.c
+-@@ -5742,13 +5742,13 @@ static const u32 hdmi_colorimetry_val[]
++@@ -5743,13 +5743,13 @@ static const u32 hdmi_colorimetry_val[]
+  #undef ACE
+  
+  /**
+@@ -43,7 +43,7 @@ Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+  				  const struct drm_connector_state *conn_state)
+  {
+  	u32 colorimetry_val;
+-@@ -5767,7 +5767,7 @@ drm_hdmi_avi_infoframe_colorspace(struct
++@@ -5768,7 +5768,7 @@ drm_hdmi_avi_infoframe_colorspace(struct
+  	frame->extended_colorimetry = (colorimetry_val >> 2) &
+  					EXTENDED_COLORIMETRY_MASK;
+  }
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0795-drm-tiny-Add-MIPI-DBI-compatible-SPI-driver.patch b/target/linux/bcm27xx/patches-5.15/950-0795-drm-tiny-Add-MIPI-DBI-compatible-SPI-driver.patch
+index 442e10add259f..8f5d167b4c8c3 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0795-drm-tiny-Add-MIPI-DBI-compatible-SPI-driver.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0795-drm-tiny-Add-MIPI-DBI-compatible-SPI-driver.patch
+@@ -63,7 +63,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20220227124713.39766-6-noral
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -5980,6 +5980,14 @@ T:	git git://anongit.freedesktop.org/drm
++@@ -5981,6 +5981,14 @@ T:	git git://anongit.freedesktop.org/drm
+  F:	Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt
+  F:	drivers/gpu/drm/tiny/mi0283qt.c
+  
+diff --git a/target/linux/bcm47xx/patches-5.15/105-v5.18-mtd-rawnand-brcmnand-Add-platform-data-structure-for-BCMA.patch b/target/linux/bcm47xx/patches-5.15/105-v5.18-mtd-rawnand-brcmnand-Add-platform-data-structure-for-BCMA.patch
+index ab53cfd6e9f32..56c686f3083b6 100644
+--- a/target/linux/bcm47xx/patches-5.15/105-v5.18-mtd-rawnand-brcmnand-Add-platform-data-structure-for-BCMA.patch
++++ b/target/linux/bcm47xx/patches-5.15/105-v5.18-mtd-rawnand-brcmnand-Add-platform-data-structure-for-BCMA.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3900,6 +3900,7 @@ L:	linux-mtd@lists.infradead.org
++@@ -3901,6 +3901,7 @@ L:	linux-mtd@lists.infradead.org
+  L:	bcm-kernel-feedback-list@broadcom.com
+  S:	Maintained
+  F:	drivers/mtd/nand/raw/brcmnand/
+diff --git a/target/linux/bcm4908/patches-5.15/080-v5.18-0001-dt-bindings-pinctrl-Add-binding-for-BCM4908-pinctrl.patch b/target/linux/bcm4908/patches-5.15/080-v5.18-0001-dt-bindings-pinctrl-Add-binding-for-BCM4908-pinctrl.patch
+index 946bc79b60323..adc7d6bb0c5cd 100644
+--- a/target/linux/bcm4908/patches-5.15/080-v5.18-0001-dt-bindings-pinctrl-Add-binding-for-BCM4908-pinctrl.patch
++++ b/target/linux/bcm4908/patches-5.15/080-v5.18-0001-dt-bindings-pinctrl-Add-binding-for-BCM4908-pinctrl.patch
+@@ -95,7 +95,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+ +    };
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3572,6 +3572,13 @@ F:	Documentation/devicetree/bindings/net
++@@ -3573,6 +3573,13 @@ F:	Documentation/devicetree/bindings/net
+  F:	drivers/net/ethernet/broadcom/bcm4908_enet.*
+  F:	drivers/net/ethernet/broadcom/unimac.h
+  
+diff --git a/target/linux/bcm4908/patches-5.15/080-v5.18-0002-pinctrl-bcm-add-driver-for-BCM4908-pinmux.patch b/target/linux/bcm4908/patches-5.15/080-v5.18-0002-pinctrl-bcm-add-driver-for-BCM4908-pinmux.patch
+index 5bd380f67a6e6..7e7dccb6f6edc 100644
+--- a/target/linux/bcm4908/patches-5.15/080-v5.18-0002-pinctrl-bcm-add-driver-for-BCM4908-pinmux.patch
++++ b/target/linux/bcm4908/patches-5.15/080-v5.18-0002-pinctrl-bcm-add-driver-for-BCM4908-pinmux.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3578,6 +3578,7 @@ M:	bcm-kernel-feedback-list@broadcom.com
++@@ -3579,6 +3579,7 @@ M:	bcm-kernel-feedback-list@broadcom.com
+  L:	linux-gpio@vger.kernel.org
+  S:	Maintained
+  F:	Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.yaml
+diff --git a/target/linux/generic/backport-5.15/050-v5.16-05-mips-bpf-Enable-eBPF-JITs.patch b/target/linux/generic/backport-5.15/050-v5.16-05-mips-bpf-Enable-eBPF-JITs.patch
+index 41b3d8139fd3c..14763c1211ea5 100644
+--- a/target/linux/generic/backport-5.15/050-v5.16-05-mips-bpf-Enable-eBPF-JITs.patch
++++ b/target/linux/generic/backport-5.15/050-v5.16-05-mips-bpf-Enable-eBPF-JITs.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Johan Almbladh <johan.almbladh@anyfinetworks.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -3430,6 +3430,7 @@ S:	Supported
++@@ -3431,6 +3431,7 @@ S:	Supported
+  F:	arch/arm64/net/
+  
+  BPF JIT for MIPS (32-BIT AND 64-BIT)
+diff --git a/target/linux/generic/backport-5.15/804-v5.18-0009-nvmem-Add-driver-for-OCOTP-in-Sunplus-SP7021.patch b/target/linux/generic/backport-5.15/804-v5.18-0009-nvmem-Add-driver-for-OCOTP-in-Sunplus-SP7021.patch
+index 07c5808403b7e..a4c1b66c9e3ec 100644
+--- a/target/linux/generic/backport-5.15/804-v5.18-0009-nvmem-Add-driver-for-OCOTP-in-Sunplus-SP7021.patch
++++ b/target/linux/generic/backport-5.15/804-v5.18-0009-nvmem-Add-driver-for-OCOTP-in-Sunplus-SP7021.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17953,6 +17953,11 @@ L:	netdev@vger.kernel.org
++@@ -17954,6 +17954,11 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	drivers/net/ethernet/dlink/sundance.c
+  
+diff --git a/target/linux/generic/backport-5.15/806-v6.0-0001-nvmem-microchip-otpc-add-support.patch b/target/linux/generic/backport-5.15/806-v6.0-0001-nvmem-microchip-otpc-add-support.patch
+index eeffbdaf5274b..6503c7aa3b143 100644
+--- a/target/linux/generic/backport-5.15/806-v6.0-0001-nvmem-microchip-otpc-add-support.patch
++++ b/target/linux/generic/backport-5.15/806-v6.0-0001-nvmem-microchip-otpc-add-support.patch
+@@ -57,7 +57,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -12353,6 +12353,14 @@ S:	Supported
++@@ -12354,6 +12354,14 @@ S:	Supported
+  F:	Documentation/devicetree/bindings/mtd/atmel-nand.txt
+  F:	drivers/mtd/nand/raw/atmel/*
+  
+diff --git a/target/linux/generic/hack-5.15/204-module_strip.patch b/target/linux/generic/hack-5.15/204-module_strip.patch
+index 979daa4727eb8..dd5d93e22673e 100644
+--- a/target/linux/generic/hack-5.15/204-module_strip.patch
++++ b/target/linux/generic/hack-5.15/204-module_strip.patch
+@@ -88,7 +88,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -2352,6 +2352,13 @@ config UNUSED_KSYMS_WHITELIST
++@@ -2356,6 +2356,13 @@ config UNUSED_KSYMS_WHITELIST
+  	  one per line. The path can be absolute, or relative to the kernel
+  	  source tree.
+  
+diff --git a/target/linux/generic/hack-5.15/253-ksmbd-config.patch b/target/linux/generic/hack-5.15/253-ksmbd-config.patch
+index a29cf3bf617ca..b8cb94f62bc0a 100644
+--- a/target/linux/generic/hack-5.15/253-ksmbd-config.patch
++++ b/target/linux/generic/hack-5.15/253-ksmbd-config.patch
+@@ -10,7 +10,7 @@ Subject: [PATCH] Kconfig: add tristate for OID and ASNI string
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -2384,7 +2384,7 @@ config PADATA
++@@ -2388,7 +2388,7 @@ config PADATA
+  	bool
+  
+  config ASN1
+diff --git a/target/linux/generic/pending-5.15/203-kallsyms_uncompressed.patch b/target/linux/generic/pending-5.15/203-kallsyms_uncompressed.patch
+index b525976fc9635..930d0ff0fe426 100644
+--- a/target/linux/generic/pending-5.15/203-kallsyms_uncompressed.patch
++++ b/target/linux/generic/pending-5.15/203-kallsyms_uncompressed.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1443,6 +1443,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
++@@ -1447,6 +1447,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
+  	  the unaligned access emulation.
+  	  see arch/parisc/kernel/unaligned.c for reference
+  
+diff --git a/target/linux/generic/pending-5.15/920-mangle_bootargs.patch b/target/linux/generic/pending-5.15/920-mangle_bootargs.patch
+index 2a02efe0aa989..5f0a106ae4e9d 100644
+--- a/target/linux/generic/pending-5.15/920-mangle_bootargs.patch
++++ b/target/linux/generic/pending-5.15/920-mangle_bootargs.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1810,6 +1810,15 @@ config EMBEDDED
++@@ -1814,6 +1814,15 @@ config EMBEDDED
+  	  an embedded system so certain expert options are available
+  	  for configuration.
+  
+diff --git a/target/linux/layerscape/patches-5.15/701-staging-add-fsl_ppfe-driver.patch b/target/linux/layerscape/patches-5.15/701-staging-add-fsl_ppfe-driver.patch
+index 00c8e869beb5a..784c13085d7f9 100644
+--- a/target/linux/layerscape/patches-5.15/701-staging-add-fsl_ppfe-driver.patch
++++ b/target/linux/layerscape/patches-5.15/701-staging-add-fsl_ppfe-driver.patch
+@@ -854,7 +854,7 @@ Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+ +};
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -7526,6 +7526,14 @@ F:	drivers/ptp/ptp_qoriq.c
++@@ -7527,6 +7527,14 @@ F:	drivers/ptp/ptp_qoriq.c
+  F:	drivers/ptp/ptp_qoriq_debugfs.c
+  F:	include/linux/fsl/ptp_qoriq.h
+  
+diff --git a/target/linux/mvebu/patches-5.15/907-MAINTAINERS-Add-an-entry-for-the-IEI-WT61P803-PUZZLE.patch b/target/linux/mvebu/patches-5.15/907-MAINTAINERS-Add-an-entry-for-the-IEI-WT61P803-PUZZLE.patch
+index b8accf180bb00..7d27ae2e997e6 100644
+--- a/target/linux/mvebu/patches-5.15/907-MAINTAINERS-Add-an-entry-for-the-IEI-WT61P803-PUZZLE.patch
++++ b/target/linux/mvebu/patches-5.15/907-MAINTAINERS-Add-an-entry-for-the-IEI-WT61P803-PUZZLE.patch
+@@ -16,7 +16,7 @@ Cc: Robert Marko <robert.marko@sartura.hr>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -9063,6 +9063,22 @@ F:	include/net/nl802154.h
++@@ -9064,6 +9064,22 @@ F:	include/net/nl802154.h
+  F:	net/ieee802154/
+  F:	net/mac802154/
+  
+diff --git a/target/linux/realtek/patches-5.15/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch b/target/linux/realtek/patches-5.15/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
+index 794cdfa37a134..93f0fe5cf475d 100644
+--- a/target/linux/realtek/patches-5.15/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
++++ b/target/linux/realtek/patches-5.15/008-5.17-watchdog-add-realtek-otto-watchdog-timer.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -15890,6 +15890,13 @@ S:	Maintained
++@@ -15891,6 +15891,13 @@ S:	Maintained
+  F:	include/sound/rt*.h
+  F:	sound/soc/codecs/rt*
+  
