@@ -1,11 +1,11 @@
 20230330-00
 - update to 75e78bcaab847557ce1782eb2dea9dff9a029171
-- [upstream] mitigations for CVE-2022-47522
+- [upstream] mitigations for CVE-2022-47522, see https://github.com/vanhoefm/macstealer
 - [cherrypick] #12293: update to kernel 5.15.105 (security and bug fixes)
 - [cherrypick] #12268: fix sysupgrade on select devices, original #11692
 - dropped previous reverts
   if you get a compile failure for openssl, install perl-IPC-Cmd
-- reinitialized workspaces (sanity)
+- reinitialized workspace (sanity)
 
 20230320-00
 - update to cff40ef1226eeb9900622941c51c9c9c6b0a732f
