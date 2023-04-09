@@ -1,3 +1,7 @@
+20230409-00
+- update to 32f134fbdf027afc342caea17200728033747333
+- [upstream] update to kernel 5.15.106
+
 20230330-00
 - update to 75e78bcaab847557ce1782eb2dea9dff9a029171
 - [upstream] mitigations for CVE-2022-47522, see https://github.com/vanhoefm/macstealer
