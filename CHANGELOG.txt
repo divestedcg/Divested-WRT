@@ -1,3 +1,9 @@
+20230416-00
+- update to 72780e3eac98610bfeacd1e5862a655740899f23
+- [cherrypick] #12387: update to kernel 5.15.107 (security and bug fixes)
+- adds back banip now that it is stable with fw4
+  I recommend enabling it with at least the firehol_level1 list
+
 20230409-00
 - update to 32f134fbdf027afc342caea17200728033747333
 - [upstream] update to kernel 5.15.106

@@ -1,0 +1,260 @@
+From e1648c1a694794e5c5368d4c16cb18b3e3fef3a5 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 13 Apr 2023 13:28:17 -0400
+Subject: [PATCH 1/2] kernel: bump 5.15 to 5.15.107
+
+All  patches automatically rebased.
+
+Build system: x86_64
+Build-tested: bcm2711/RPi4B, ramips/tplink_archer-a6-v3, filogic/xiaomi_redmi-router-ax6000-ubootmod
+Run-tested: bcm2711/RPi4B, ramips/tplink_archer-a6-v3, filogic/xiaomi_redmi-router-ax6000-ubootmod
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-5.15                                       | 4 ++--
+ ...-implement-xhci_fixup_endpoint-for-interval-adju.patch | 4 ++--
+ ...-refactor-out-TRBS_PER_SEGMENT-define-in-runtime.patch | 4 ++--
+ ...sb-xhci-add-support-for-performing-fake-doorbell.patch | 6 +++---
+ .../020-v6.1-05-mm-multi-gen-LRU-groundwork.patch         | 4 ++--
+ .../020-v6.3-19-mm-add-vma_has_recency.patch              | 2 +-
+ ...ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch | 4 ++--
+ ...ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch | 8 ++++----
+ ...ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch | 2 +-
+ target/linux/generic/hack-5.15/902-debloat_proc.patch     | 2 +-
+ 10 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/include/kernel-5.15 b/include/kernel-5.15
+index 28c840bb8701e..6d79b70eab24f 100644
+--- a/include/kernel-5.15
++++ b/include/kernel-5.15
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-5.15 = .106
+-LINUX_KERNEL_HASH-5.15.106 = 84e6934f828033570966e2a56fe8b72dc6e1409be296c66f4bf3c8ca6e3c8fe4
++LINUX_VERSION-5.15 = .107
++LINUX_KERNEL_HASH-5.15.107 = 19370e769045681f52cceedb14ecda97e89b1b058133a0c8ad45d35ffbc5afa8
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0152-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch b/target/linux/bcm27xx/patches-5.15/950-0152-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+index bedeb04227797..f832fa126c319 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0152-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0152-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+ 
+ --- a/drivers/usb/host/xhci.c
+ +++ b/drivers/usb/host/xhci.c
+-@@ -1618,6 +1618,109 @@ command_cleanup:
++@@ -1622,6 +1622,109 @@ command_cleanup:
+  }
+  
+  /*
+@@ -125,7 +125,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+   * non-error returns are a promise to giveback() the urb later
+   * we drop ownership so next owner (or urb unlink) can get it
+   */
+-@@ -5457,6 +5560,7 @@ static const struct hc_driver xhci_hc_dr
++@@ -5461,6 +5564,7 @@ static const struct hc_driver xhci_hc_dr
+  	.endpoint_reset =	xhci_endpoint_reset,
+  	.check_bandwidth =	xhci_check_bandwidth,
+  	.reset_bandwidth =	xhci_reset_bandwidth,
+diff --git a/target/linux/bcm27xx/patches-5.15/950-0605-xhci-refactor-out-TRBS_PER_SEGMENT-define-in-runtime.patch b/target/linux/bcm27xx/patches-5.15/950-0605-xhci-refactor-out-TRBS_PER_SEGMENT-define-in-runtime.patch
+index 7c1c96fa92177..a26619d1cca77 100644
+--- a/target/linux/bcm27xx/patches-5.15/950-0605-xhci-refactor-out-TRBS_PER_SEGMENT-define-in-runtime.patch
++++ b/target/linux/bcm27xx/patches-5.15/950-0605-xhci-refactor-out-TRBS_PER_SEGMENT-define-in-runtime.patch
+@@ -226,7 +226,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	}
+ --- a/drivers/usb/host/xhci.c
+ +++ b/drivers/usb/host/xhci.c
+-@@ -876,8 +876,8 @@ static void xhci_clear_command_ring(stru
++@@ -880,8 +880,8 @@ static void xhci_clear_command_ring(stru
+  	seg = ring->deq_seg;
+  	do {
+  		memset(seg->trbs, 0,
+@@ -237,7 +237,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  			cpu_to_le32(~TRB_CYCLE);
+  		seg = seg->next;
+  	} while (seg != ring->deq_seg);
+-@@ -888,7 +888,7 @@ static void xhci_clear_command_ring(stru
++@@ -892,7 +892,7 @@ static void xhci_clear_command_ring(stru
+  	ring->enq_seg = ring->deq_seg;
+  	ring->enqueue = ring->dequeue;
+  
+diff --git a/target/linux/bcm53xx/patches-5.15/180-usb-xhci-add-support-for-performing-fake-doorbell.patch b/target/linux/bcm53xx/patches-5.15/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+index 81a9f0c0cbc9b..bcf4776c12a9e 100644
+--- a/target/linux/bcm53xx/patches-5.15/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
++++ b/target/linux/bcm53xx/patches-5.15/180-usb-xhci-add-support-for-performing-fake-doorbell.patch
+@@ -40,7 +40,7 @@ it on BCM4708 family.
+  /* called during probe() after chip reset completes */
+ --- a/drivers/usb/host/xhci.c
+ +++ b/drivers/usb/host/xhci.c
+-@@ -157,6 +157,49 @@ int xhci_start(struct xhci_hcd *xhci)
++@@ -158,6 +158,49 @@ int xhci_start(struct xhci_hcd *xhci)
+  	return ret;
+  }
+  
+@@ -90,7 +90,7 @@ it on BCM4708 family.
+  /*
+   * Reset a halted HC.
+   *
+-@@ -607,10 +650,20 @@ static int xhci_init(struct usb_hcd *hcd
++@@ -611,10 +654,20 @@ static int xhci_init(struct usb_hcd *hcd
+  
+  static int xhci_run_finished(struct xhci_hcd *xhci)
+  {
+@@ -114,7 +114,7 @@ it on BCM4708 family.
+  	xhci->shared_hcd->state = HC_STATE_RUNNING;
+  	xhci->cmd_ring_state = CMD_RING_STATE_RUNNING;
+  
+-@@ -620,6 +673,10 @@ static int xhci_run_finished(struct xhci
++@@ -624,6 +677,10 @@ static int xhci_run_finished(struct xhci
+  	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+  			"Finished xhci_run for USB3 roothub");
+  	return 0;
+diff --git a/target/linux/generic/backport-5.15/020-v6.1-05-mm-multi-gen-LRU-groundwork.patch b/target/linux/generic/backport-5.15/020-v6.1-05-mm-multi-gen-LRU-groundwork.patch
+index 577c2817daaa9..237bd84875dbc 100644
+--- a/target/linux/generic/backport-5.15/020-v6.1-05-mm-multi-gen-LRU-groundwork.patch
++++ b/target/linux/generic/backport-5.15/020-v6.1-05-mm-multi-gen-LRU-groundwork.patch
+@@ -612,7 +612,7 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+  	mem_cgroup_id_remove(memcg);
+ --- a/mm/memory.c
+ +++ b/mm/memory.c
+-@@ -4778,6 +4778,27 @@ static inline void mm_account_fault(stru
++@@ -4792,6 +4792,27 @@ static inline void mm_account_fault(stru
+  		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+  }
+  
+@@ -640,7 +640,7 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+  /*
+   * By the time we get here, we already hold the mm semaphore
+   *
+-@@ -4809,11 +4830,15 @@ vm_fault_t handle_mm_fault(struct vm_are
++@@ -4823,11 +4844,15 @@ vm_fault_t handle_mm_fault(struct vm_are
+  	if (flags & FAULT_FLAG_USER)
+  		mem_cgroup_enter_user_fault();
+  
+diff --git a/target/linux/generic/backport-5.15/020-v6.3-19-mm-add-vma_has_recency.patch b/target/linux/generic/backport-5.15/020-v6.3-19-mm-add-vma_has_recency.patch
+index 6154bbe352899..d740c5bd1d518 100644
+--- a/target/linux/generic/backport-5.15/020-v6.3-19-mm-add-vma_has_recency.patch
++++ b/target/linux/generic/backport-5.15/020-v6.3-19-mm-add-vma_has_recency.patch
+@@ -92,7 +92,7 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+  					mark_page_accessed(page);
+  			}
+  			rss[mm_counter(page)]--;
+-@@ -4781,8 +4781,8 @@ static inline void mm_account_fault(stru
++@@ -4795,8 +4795,8 @@ static inline void mm_account_fault(stru
+  #ifdef CONFIG_LRU_GEN
+  static void lru_gen_enter_fault(struct vm_area_struct *vma)
+  {
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch b/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
+index c8a3c96f376c2..7155109cd9744 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-01-net-ethernet-stmicro-stmmac-move-queue-reset-to-dedi.patch
+@@ -87,7 +87,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	stmmac_clear_tx_descriptors(priv, queue);
+  
+  	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
+-@@ -7407,6 +7402,25 @@ int stmmac_suspend(struct device *dev)
++@@ -7411,6 +7406,25 @@ int stmmac_suspend(struct device *dev)
+  }
+  EXPORT_SYMBOL_GPL(stmmac_suspend);
+  
+@@ -113,7 +113,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  /**
+   * stmmac_reset_queues_param - reset queue parameters
+   * @priv: device pointer
+-@@ -7417,22 +7431,11 @@ static void stmmac_reset_queues_param(st
++@@ -7421,22 +7435,11 @@ static void stmmac_reset_queues_param(st
+  	u32 tx_cnt = priv->plat->tx_queues_to_use;
+  	u32 queue;
+  
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch b/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
+index de1add41a502a..dd8316c985c36 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-03-net-ethernet-stmicro-stmmac-move-dma-conf-to-dedicat.patch
+@@ -1199,7 +1199,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	ch = &priv->channel[queue];
+  
+  	if (!rx_q->xsk_pool && !tx_q->xsk_pool)
+-@@ -6914,8 +6918,8 @@ int stmmac_reinit_ringparam(struct net_d
++@@ -6918,8 +6922,8 @@ int stmmac_reinit_ringparam(struct net_d
+  	if (netif_running(dev))
+  		stmmac_release(dev);
+  
+@@ -1210,7 +1210,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (netif_running(dev))
+  		ret = stmmac_open(dev);
+-@@ -7353,7 +7357,7 @@ int stmmac_suspend(struct device *dev)
++@@ -7357,7 +7361,7 @@ int stmmac_suspend(struct device *dev)
+  	stmmac_disable_all_queues(priv);
+  
+  	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
+@@ -1219,7 +1219,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	if (priv->eee_enabled) {
+  		priv->tx_path_in_lpi_mode = false;
+-@@ -7404,7 +7408,7 @@ EXPORT_SYMBOL_GPL(stmmac_suspend);
++@@ -7408,7 +7412,7 @@ EXPORT_SYMBOL_GPL(stmmac_suspend);
+  
+  static void stmmac_reset_rx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+@@ -1228,7 +1228,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  
+  	rx_q->cur_rx = 0;
+  	rx_q->dirty_rx = 0;
+-@@ -7412,7 +7416,7 @@ static void stmmac_reset_rx_queue(struct
++@@ -7416,7 +7420,7 @@ static void stmmac_reset_rx_queue(struct
+  
+  static void stmmac_reset_tx_queue(struct stmmac_priv *priv, u32 queue)
+  {
+diff --git a/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch b/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
+index a8f7bdb7d15df..e50a1f4f07700 100644
+--- a/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
++++ b/target/linux/generic/backport-5.15/775-v6.0-04-net-ethernet-stmicro-stmmac-generate-stmmac-dma-conf.patch
+@@ -1150,7 +1150,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  dma_desc_error:
+  	return ret;
+  }
+-@@ -7499,7 +7615,7 @@ int stmmac_resume(struct device *dev)
++@@ -7503,7 +7619,7 @@ int stmmac_resume(struct device *dev)
+  	stmmac_reset_queues_param(priv);
+  
+  	stmmac_free_tx_skbufs(priv);
+diff --git a/target/linux/generic/hack-5.15/902-debloat_proc.patch b/target/linux/generic/hack-5.15/902-debloat_proc.patch
+index a7a73cc885f8a..12e9928028915 100644
+--- a/target/linux/generic/hack-5.15/902-debloat_proc.patch
++++ b/target/linux/generic/hack-5.15/902-debloat_proc.patch
+@@ -235,7 +235,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (!pe)
+ --- a/mm/vmalloc.c
+ +++ b/mm/vmalloc.c
+-@@ -3962,6 +3962,8 @@ static const struct seq_operations vmall
++@@ -3964,6 +3964,8 @@ static const struct seq_operations vmall
+  
+  static int __init proc_vmalloc_init(void)
+  {
+
+From 95c762cefe2f30e4dfdf4c44b1ce7b4a3a8a3ca0 Mon Sep 17 00:00:00 2001
+From: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Date: Sun, 16 Apr 2023 05:57:42 -0400
+Subject: [PATCH 2/2] v5.15.107: fix up qrtr packaging
+
+qrtr/ns.ko is now merged into qrtr/qrtr.ko, so drop the individual module packaging.
+
+Signed-off-by: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Tested-by: Stefan Lippers-Hollmann <s.l-h@gmx.de> #ipq807x/ax3600, x86_64/FW-7543B, mt7621/dap-x1860
+---
+ package/kernel/linux/modules/netsupport.mk | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/package/kernel/linux/modules/netsupport.mk b/package/kernel/linux/modules/netsupport.mk
+index 1f4f43632471f..d9d6a98ed245d 100644
+--- a/package/kernel/linux/modules/netsupport.mk
++++ b/package/kernel/linux/modules/netsupport.mk
+@@ -1446,8 +1446,7 @@ define KernelPackage/qrtr
+   DEPENDS:=@!LINUX_5_10
+   KCONFIG:=CONFIG_QRTR
+   FILES:= \
+-  $(LINUX_DIR)/net/qrtr/qrtr.ko \
+-  $(LINUX_DIR)/net/qrtr/ns.ko
++  $(LINUX_DIR)/net/qrtr/qrtr.ko
+   AUTOLOAD:=$(call AutoProbe,qrtr)
+ endef
+ 
