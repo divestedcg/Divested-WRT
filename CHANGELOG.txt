@@ -1,3 +1,9 @@
+20230427-00
+- update to 9a2666951051f8072ba83f0535e1534ea0dbf6aa
+- [upstream] update to kernel 5.15.108
+- reverted ab3f151aa874837ae1ac56d5b1cc31bb6cd68681
+  due reports of worse stability
+
 20230416-00
 - update to 72780e3eac98610bfeacd1e5862a655740899f23
 - [cherrypick] #12387: update to kernel 5.15.107 (security and bug fixes)
