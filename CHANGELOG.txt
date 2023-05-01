@@ -1,3 +1,9 @@
+20230430-00
+- update to cf8d861978dbfdb572a25db460db464b50d9e809
+- [upstream] update to kernel 5.15.109
+- [cherrypick] #12500: mwlwifi: update to version 10.3.9.1-20230429
+- drops amsdu patch
+
 20230427-00
 - update to 9a2666951051f8072ba83f0535e1534ea0dbf6aa
 - [upstream] update to kernel 5.15.108
