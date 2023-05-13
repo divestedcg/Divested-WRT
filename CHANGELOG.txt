@@ -1,3 +1,10 @@
+20230512-00
+- update to 4e5aac472935ce3ba3abc9bd72b880951843092b
+- [cherrypick] #12581: update to kernel 5.15.111 (security and bug fixes)
+- new mwlwifi, take 2
+  if latency really is still worse, it'll be reverted for next build
+- reinitialized workspace (sanity)
+
 20230502-00
 - update to 6c9b526e84e73880eaf72cb656b5908bc5c3f792
 - downgrades mwlwifi to 20200206-3 due to increased latency
