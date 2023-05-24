@@ -1,3 +1,7 @@
+20230524-00
+- update to 5636ffc22d784a2a4acc5e406e54f8a5858f1435
+- [upstream] update to kernel 5.15.112
+
 20230514-00
 - update to 7ad1fa12efd99dd2a4e4ffa01365280f63e99e55
 - downgrades mwlwifi to 20200206-3 due to increased latency (again)
