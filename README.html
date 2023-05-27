@@ -103,6 +103,15 @@ If somethings breaks, you get to keep both pieces!
 	<li>$ make -j16</li>
 </ul>
 
+<p id="divblock">What is this included divblock? Why is this website blocked?<a href="#divblock">^</a></p>
+<ul>
+	<li>A simple content blocking script is included that adds our blocklist config to dnsmasq from <a href="https://divested.dev/pages/dnsbl" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
+	<li>This is a much more efficient approach than downloading & processing the lists on device and has the benefit of supporting wildcards for greater efficiency and increased blocking.</li>
+	<li>This blocker can be permanently disabled via <code>/etc/init.d/divblock disable</code> if you don't want it or want another blocker package.</li>
+	<li>You can exclude a domain by adding it (one per line) to <code>/etc/config/divblock-exclusions</code> as so <code>/www\.example\.com/</code> then restart via <code>/etc/init.d/divblock restart</code></li>
+	<li>Please report any wrongly blocked domains in the <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522" target="_blank" rel="nofollow noopener noreferrer">forum thread</a> or on <a href="https://github.com/divestedcg/dnsrm" target="_blank" rel="nofollow noopener noreferrer">GitHub</a> or on <a href="https://gitlab.com/divested/dnsrm" target="_blank" rel="nofollow noopener noreferrer">GitLab</a>.</li>
+</ul>
+
 <p id="postInstall">Anything to change after install?<a href="#postInstall">^</a></p>
 <ul>
 	<li>Change 'enabled' from '0' to '1' in '/etc/config/irqbalance' for improved Wi-Fi performance.</li>
