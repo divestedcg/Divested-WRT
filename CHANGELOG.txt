@@ -1,3 +1,8 @@
+20230611-00
+- update to 9519a625499a963508755b7fc08fb825b3d8cfde
+- [upstream] update to openssl 3.0.9
+- [cherrypick] #12823: update to kernel 5.15.116 (security and bug fixes)
+
 20230601-00
 - update to edb3a4162c0763ecc9d5e7660700a68a25bf28e3
 - [upstream] update to kernel 5.15.114
