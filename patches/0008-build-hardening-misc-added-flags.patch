@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 2 Jul 2021 13:03:00 -0400
-Subject: [PATCH] build: hardening: misc added flags
+Subject: [PATCH 08/12] build: hardening: misc added flags
 
 Signed-off-by: Tad <tad@spotco.us>
 ---

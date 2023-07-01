@@ -1,7 +1,8 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
-Subject: [PATCH] arm/aarch64: Set -O2 as default for Cortex-A processor cores
+Subject: [PATCH 06/12] arm/aarch64: Set -O2 as default for Cortex-A processor
+ cores
 
 Platforms using Cortex-A processor cores aren't constrained in
 terms of storage as much as other supported platforms such as MIPS.
@@ -17,7 +18,7 @@ Tested-by: Tad <tad@spotco.us>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/include/target.mk b/include/target.mk
-index a2c8b7bdbf..de5038c17c 100644
+index b5e3e7ff6f..c283392dc3 100644
 --- a/include/target.mk
 +++ b/include/target.mk
 @@ -208,7 +208,11 @@ LINUX_RECONF_DIFF = $(SCRIPT_DIR)/kconfig.pl - '>' $(call __linux_confcmd,$(filt

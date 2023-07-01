@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:47:56 -0500
-Subject: [PATCH] dnsmasq: only listen on br-lan interface
+Subject: [PATCH 04/12] dnsmasq: only listen on br-lan interface
 
 dnsmasq should not listen on all interfaces, restrict it to br-lan.
 

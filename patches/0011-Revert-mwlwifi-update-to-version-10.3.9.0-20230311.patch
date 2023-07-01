@@ -1,0 +1,317 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tad <tad@spotco.us>
+Date: Sun, 14 May 2023 12:24:45 -0400
+Subject: [PATCH 11/12] Revert "mwlwifi: update to version 10.3.9.0-20230311"
+
+This reverts commit ab3f151aa874837ae1ac56d5b1cc31bb6cd68681.
+---
+ package/kernel/mwlwifi/Makefile               |  8 ++--
+ ...compile-with-mac80211-backports-5_3+.patch | 35 +++++++++++++++++
+ ...lwifi-remove-MODULE_SUPPORTED_DEVICE.patch | 32 +++++++++++++++
+ ...003-mwlwifi-replace-get-set_fs-calls.patch | 39 +++++++++++++++++++
+ ...CIe-DT-node-null-pointer-dereference.patch |  2 +-
+ .../mwlwifi/patches/005-mac80211_update.patch | 36 ++++++++++-------
+ 6 files changed, 133 insertions(+), 19 deletions(-)
+ create mode 100644 package/kernel/mwlwifi/patches/001-Fix-compile-with-mac80211-backports-5_3+.patch
+ create mode 100644 package/kernel/mwlwifi/patches/002-mwlwifi-remove-MODULE_SUPPORTED_DEVICE.patch
+ create mode 100644 package/kernel/mwlwifi/patches/003-mwlwifi-replace-get-set_fs-calls.patch
+
+diff --git a/package/kernel/mwlwifi/Makefile b/package/kernel/mwlwifi/Makefile
+index 34dceabf59..c806f917aa 100644
+--- a/package/kernel/mwlwifi/Makefile
++++ b/package/kernel/mwlwifi/Makefile
+@@ -8,16 +8,16 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=mwlwifi
+-PKG_RELEASE=1
++PKG_RELEASE=3
+ 
+ PKG_LICENSE:=ISC
+ PKG_LICENSE_FILES:=
+ 
+ PKG_SOURCE_URL:=https://github.com/kaloz/mwlwifi
+ PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_DATE:=2023-03-11
+-PKG_SOURCE_VERSION:=c916ac13376d1b0801f3f787277fa47ce6b694eb
+-PKG_MIRROR_HASH:=b95001b60fe5c28f08be5a52b65276d99877be57e567ad7afab95860f6aff57d
++PKG_SOURCE_DATE:=2020-02-06
++PKG_SOURCE_VERSION:=a2fd00bb74c35820dfe233d762690c0433a87ef5
++PKG_MIRROR_HASH:=0eda0e774a87e58e611d6436350e1cf2be3de50fddde334909a07a15b0c9862b
+ 
+ PKG_MAINTAINER:=Imre Kaloz <kaloz@openwrt.org>
+ PKG_BUILD_PARALLEL:=1
+diff --git a/package/kernel/mwlwifi/patches/001-Fix-compile-with-mac80211-backports-5_3+.patch b/package/kernel/mwlwifi/patches/001-Fix-compile-with-mac80211-backports-5_3+.patch
+new file mode 100644
+index 0000000000..fdba575f04
+--- /dev/null
++++ b/package/kernel/mwlwifi/patches/001-Fix-compile-with-mac80211-backports-5_3+.patch
+@@ -0,0 +1,35 @@
++From 182391a3c96ff6ad79bbba0758338a16a66abbd8 Mon Sep 17 00:00:00 2001
++From: DENG Qingfang <dengqf6@mail2.sysu.edu.cn>
++Date: Wed, 12 Feb 2020 14:18:58 +0800
++Subject: [PATCH] Fix driver loading with backports 5.3+
++
++Commit 747796b2f126 did not solve the issue that it crashes when an older kernel
++with a newer backport tries loading it, because it only detects kernel version.
++
++As net/cfg80211.h in 5.3+ defines VENDOR_CMD_RAW_DATA, use it as a condition.
++
++Signed-off-by: DENG Qingfang <dqfext@gmail.com>
++---
++ vendor_cmd.c | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++--- a/vendor_cmd.c
+++++ b/vendor_cmd.c
++@@ -92,7 +92,7 @@ static const struct wiphy_vendor_command
++ 			  .subcmd = MWL_VENDOR_CMD_SET_BF_TYPE},
++ 		.flags = WIPHY_VENDOR_CMD_NEED_NETDEV,
++ 		.doit = mwl_vendor_cmd_set_bf_type,
++-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,3,0))
+++#ifdef VENDOR_CMD_RAW_DATA
++ 		.policy = mwl_vendor_attr_policy,
++ #endif
++ 	},
++@@ -101,7 +101,7 @@ static const struct wiphy_vendor_command
++ 			  .subcmd = MWL_VENDOR_CMD_GET_BF_TYPE},
++ 		.flags = WIPHY_VENDOR_CMD_NEED_NETDEV,
++ 		.doit = mwl_vendor_cmd_get_bf_type,
++-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,3,0))
+++#ifdef VENDOR_CMD_RAW_DATA
++ 		.policy = mwl_vendor_attr_policy,
++ #endif
++ 	}
+diff --git a/package/kernel/mwlwifi/patches/002-mwlwifi-remove-MODULE_SUPPORTED_DEVICE.patch b/package/kernel/mwlwifi/patches/002-mwlwifi-remove-MODULE_SUPPORTED_DEVICE.patch
+new file mode 100644
+index 0000000000..23b4ef7541
+--- /dev/null
++++ b/package/kernel/mwlwifi/patches/002-mwlwifi-remove-MODULE_SUPPORTED_DEVICE.patch
+@@ -0,0 +1,32 @@
++From 392f8e9d798acff3079e753dd881e272f6150d74 Mon Sep 17 00:00:00 2001
++From: Robert Marko <robert.marko@sartura.hr>
++Date: Wed, 30 Mar 2022 19:32:38 +0200
++Subject: [PATCH] mwlwifi: remove MODULE_SUPPORTED_DEVICE
++
++Kernel 5.12 finally removed all MODULE_SUPPORTED_DEVICE references and
++support for it as it was never actually implemented and was safe to
++drop it completely.
++
++So, do the same in order to compile in 5.12 and newer.
++
++Signed-off-by: Robert Marko <robert.marko@sartura.hr>
++---
++ hif/pcie/pcie.c | 2 --
++ 1 file changed, 2 deletions(-)
++
++--- a/hif/pcie/pcie.c
+++++ b/hif/pcie/pcie.c
++@@ -31,7 +31,6 @@
++ #include "hif/pcie/rx_ndp.h"
++ 
++ #define PCIE_DRV_DESC "Marvell Mac80211 Wireless PCIE Network Driver"
++-#define PCIE_DEV_NAME "Marvell 802.11ac PCIE Adapter"
++ 
++ #define MAX_WAIT_FW_COMPLETE_ITERATIONS 10000
++ #define CHECK_BA_TRAFFIC_TIME           300 /* msec */
++@@ -1641,5 +1640,4 @@ MODULE_DESCRIPTION(PCIE_DRV_DESC);
++ MODULE_VERSION(PCIE_DRV_VERSION);
++ MODULE_AUTHOR("Marvell Semiconductor, Inc.");
++ MODULE_LICENSE("GPL v2");
++-MODULE_SUPPORTED_DEVICE(PCIE_DEV_NAME);
++ MODULE_DEVICE_TABLE(pci, pcie_id_tbl);
+diff --git a/package/kernel/mwlwifi/patches/003-mwlwifi-replace-get-set_fs-calls.patch b/package/kernel/mwlwifi/patches/003-mwlwifi-replace-get-set_fs-calls.patch
+new file mode 100644
+index 0000000000..725a41c9ac
+--- /dev/null
++++ b/package/kernel/mwlwifi/patches/003-mwlwifi-replace-get-set_fs-calls.patch
+@@ -0,0 +1,39 @@
++From 16e51cb83f9fa1717383c9d67f5531df7348347c Mon Sep 17 00:00:00 2001
++From: Robert Marko <robert.marko@sartura.hr>
++Date: Wed, 30 Mar 2022 19:51:56 +0200
++Subject: [PATCH] mwlwifi: replace get/set_fs() calls
++
++Since kernel 5.9 the get/set_fs() call implementation have started to get
++dropped from individual architectures, ARM64 one got dropped in 5.11.
++
++Replace the get/set_fs() calls with force_uaccess_begin/end() to allow
++compiling on newer kernels.
++There is no need to add kernel version checks as the replacement functions
++are available since kernel 5.9.
++
++Signed-off-by: Robert Marko <robert.marko@sartura.hr>
++---
++ hif/pcie/pcie.c | 5 ++---
++ 1 file changed, 2 insertions(+), 3 deletions(-)
++
++--- a/hif/pcie/pcie.c
+++++ b/hif/pcie/pcie.c
++@@ -1293,8 +1293,7 @@ static void pcie_bf_mimo_ctrl_decode(str
++ 	char *buf = &str_buf[0];
++ 	mm_segment_t oldfs;
++ 
++-	oldfs = get_fs();
++-	set_fs(KERNEL_DS);
+++	oldfs = force_uaccess_begin();
++ 
++ 	buf += sprintf(buf, "\nMAC: %pM\n", bf_mimo_ctrl->rec_mac);
++ 	buf += sprintf(buf, "SU_0_MU_1: %d\n", bf_mimo_ctrl->type);
++@@ -1314,7 +1313,7 @@ static void pcie_bf_mimo_ctrl_decode(str
++ 			  filename, (unsigned int)fp_data);
++ 	}
++ 
++-	set_fs(oldfs);
+++	force_uaccess_end(oldfs);
++ }
++ 
++ static void pcie_process_account(struct ieee80211_hw *hw)
+diff --git a/package/kernel/mwlwifi/patches/004-mwlwifi-fix-PCIe-DT-node-null-pointer-dereference.patch b/package/kernel/mwlwifi/patches/004-mwlwifi-fix-PCIe-DT-node-null-pointer-dereference.patch
+index 3d9ec4dcfb..9b9e49b66a 100644
+--- a/package/kernel/mwlwifi/patches/004-mwlwifi-fix-PCIe-DT-node-null-pointer-dereference.patch
++++ b/package/kernel/mwlwifi/patches/004-mwlwifi-fix-PCIe-DT-node-null-pointer-dereference.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+ 
+ --- a/hif/pcie/pcie.c
+ +++ b/hif/pcie/pcie.c
+-@@ -573,7 +573,8 @@ static struct device_node *pcie_get_devi
++@@ -570,7 +570,8 @@ static struct device_node *pcie_get_devi
+  	struct device_node *dev_node;
+  
+  	dev_node = pci_bus_to_OF_node(pcie_priv->pdev->bus);
+diff --git a/package/kernel/mwlwifi/patches/005-mac80211_update.patch b/package/kernel/mwlwifi/patches/005-mac80211_update.patch
+index c11cf8c946..d0dacabd8a 100644
+--- a/package/kernel/mwlwifi/patches/005-mac80211_update.patch
++++ b/package/kernel/mwlwifi/patches/005-mac80211_update.patch
+@@ -1,6 +1,6 @@
+ --- a/core.c
+ +++ b/core.c
+-@@ -706,7 +706,7 @@ static void mwl_chnl_switch_event(struct
++@@ -692,7 +692,7 @@ static void mwl_chnl_switch_event(struct
+  		vif = container_of((void *)mwl_vif, struct ieee80211_vif,
+  				   drv_priv);
+  
+@@ -11,7 +11,7 @@
+  	spin_unlock_bh(&priv->vif_lock);
+ --- a/debugfs.c
+ +++ b/debugfs.c
+-@@ -455,9 +455,9 @@ static ssize_t mwl_debugfs_vif_read(stru
++@@ -462,9 +462,9 @@ static ssize_t mwl_debugfs_vif_read(stru
+  		switch (vif->type) {
+  		case NL80211_IFTYPE_AP:
+  			len += scnprintf(p + len, size - len, "type: ap\n");
+@@ -24,7 +24,7 @@
+  			len += scnprintf(p + len, size - len,
+  					 "ssid: %s\n", ssid);
+  			len += scnprintf(p + len, size - len,
+-@@ -479,8 +479,8 @@ static ssize_t mwl_debugfs_vif_read(stru
++@@ -486,8 +486,8 @@ static ssize_t mwl_debugfs_vif_read(stru
+  					 "type: unknown\n");
+  			break;
+  		}
+@@ -35,7 +35,7 @@
+  			len += scnprintf(p + len, size - len,
+  					 "channel: %d: width: %d\n",
+  					 chan_def->chan->hw_value,
+-@@ -564,28 +564,28 @@ static ssize_t mwl_debugfs_sta_read(stru
++@@ -573,28 +573,28 @@ static ssize_t mwl_debugfs_sta_read(stru
+  					 "amsdu cap: 0x%02x\n",
+  					 sta_info->amsdu_ctrl.cap);
+  		}
+@@ -99,7 +99,7 @@
+  	if (priv->chip_type == MWL8997)
+  		ether_addr_copy(pcmd->start_cmd.bssid, mwl_vif->bssid);
+  	pcmd->start_cmd.bss_type = 1;
+-@@ -2091,7 +2092,7 @@ int mwl_fwcmd_set_beacon(struct ieee8021
++@@ -2085,7 +2086,7 @@ int mwl_fwcmd_set_beacon(struct ieee8021
+  	if (mwl_fwcmd_set_wsc_ie(hw, b_inf->ie_wsc_len, b_inf->ie_wsc_ptr))
+  		goto err;
+  
+@@ -108,7 +108,7 @@
+  		goto err;
+  
+  	if (b_inf->cap_info & WLAN_CAPABILITY_SPECTRUM_MGMT)
+-@@ -2153,38 +2154,38 @@ int mwl_fwcmd_set_new_stn_add(struct iee
++@@ -2147,38 +2148,38 @@ int mwl_fwcmd_set_new_stn_add(struct iee
+  	ether_addr_copy(pcmd->mac_addr, sta->addr);
+  
+  	if (hw->conf.chandef.chan->band == NL80211_BAND_2GHZ)
+@@ -161,7 +161,7 @@
+  	}
+  
+  	pcmd->is_qos_sta = sta->wme;
+-@@ -2240,38 +2241,38 @@ int mwl_fwcmd_set_new_stn_add_sc4(struct
++@@ -2234,38 +2235,38 @@ int mwl_fwcmd_set_new_stn_add_sc4(struct
+  	ether_addr_copy(pcmd->mac_addr, sta->addr);
+  
+  	if (hw->conf.chandef.chan->band == NL80211_BAND_2GHZ)
+@@ -214,7 +214,7 @@
+  	}
+  
+  	pcmd->is_qos_sta = sta->wme;
+-@@ -2788,9 +2789,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
++@@ -2782,9 +2783,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
+  	pcmd->ba_info.create_params.flags = cpu_to_le32(ba_flags);
+  	pcmd->ba_info.create_params.queue_id = stream->idx;
+  	pcmd->ba_info.create_params.param_info =
+@@ -226,7 +226,7 @@
+  		 IEEE80211_HT_AMPDU_PARM_DENSITY);
+  	if (direction == BA_FLAG_DIRECTION_UP) {
+  		pcmd->ba_info.create_params.reset_seq_no = 0;
+-@@ -2800,9 +2801,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
++@@ -2794,9 +2795,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
+  		pcmd->ba_info.create_params.current_seq = cpu_to_le16(0);
+  	}
+  	if (priv->chip_type == MWL8964 &&
+@@ -288,7 +288,7 @@
+  {
+  	switch (vif->type) {
+  	case NL80211_IFTYPE_AP:
+-@@ -584,10 +584,10 @@ static int mwl_mac80211_sta_add(struct i
++@@ -583,10 +583,10 @@ static int mwl_mac80211_sta_add(struct i
+  	if (vif->type == NL80211_IFTYPE_MESH_POINT)
+  		sta_info->is_mesh_node = true;
+  
+@@ -301,7 +301,7 @@
+  			sta_info->amsdu_ctrl.cap = MWL_AMSDU_SIZE_8K;
+  		else
+  			sta_info->amsdu_ctrl.cap = MWL_AMSDU_SIZE_4K;
+-@@ -669,7 +669,7 @@ static int mwl_mac80211_sta_remove(struc
++@@ -668,7 +668,7 @@ static int mwl_mac80211_sta_remove(struc
+  
+  static int mwl_mac80211_conf_tx(struct ieee80211_hw *hw,
+  				struct ieee80211_vif *vif,
+@@ -310,7 +310,15 @@
+  				const struct ieee80211_tx_queue_params *params)
+  {
+  	struct mwl_priv *priv = hw->priv;
+-@@ -928,4 +928,5 @@ const struct ieee80211_ops mwl_mac80211_
++@@ -768,6 +768,7 @@ static int mwl_mac80211_ampdu_action(str
++ 			spin_lock_bh(&priv->stream_lock);
++ 			break;
++ 		}
+++		break;
++ 	case IEEE80211_AMPDU_RX_STOP:
++ 		if (priv->chip_type == MWL8964) {
++ 			struct mwl_ampdu_stream tmp;
++@@ -930,4 +931,5 @@ const struct ieee80211_ops mwl_mac80211_
+  	.pre_channel_switch = mwl_mac80211_chnl_switch,
+  	.sw_scan_start      = mwl_mac80211_sw_scan_start,
+  	.sw_scan_complete   = mwl_mac80211_sw_scan_complete,
+@@ -362,7 +370,7 @@
+  	case TX_RATE_FORMAT_LEGACY:
+ --- a/hif/pcie/tx.c
+ +++ b/hif/pcie/tx.c
+-@@ -153,7 +153,7 @@ static int pcie_txbd_ring_create(struct
++@@ -157,7 +157,7 @@ static int pcie_txbd_ring_create(struct
+  	wiphy_info(priv->hw->wiphy,
+  		   "TX ring: - base: %p, pbase: 0x%x, len: %d\n",
+  		   pcie_priv->txbd_ring_vbase,
+@@ -371,7 +379,7 @@
+  		   pcie_priv->txbd_ring_size);
+  
+  	for (num = 0; num < PCIE_MAX_TXRX_BD; num++) {
+-@@ -1091,7 +1091,7 @@ void pcie_tx_xmit(struct ieee80211_hw *h
++@@ -1153,7 +1153,7 @@ void pcie_tx_xmit(struct ieee80211_hw *h
+  	index = SYSADPT_TX_WMM_QUEUES - index - 1;
+  	txpriority = index;
+  

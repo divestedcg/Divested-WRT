@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 1 Dec 2020 03:57:45 -0500
-Subject: [PATCH] mwlwifi: Disable tx_amsdu
+Subject: [PATCH 05/12] mwlwifi: Disable tx_amsdu
 
 This fixes the high latencies.
 Unsure who figured this out.
