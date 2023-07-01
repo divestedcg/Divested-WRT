@@ -1,3 +1,8 @@
+20230701-00
+- update to f24c9b9d863c2635e472e83028d28cc8d0a7c7c6
+- [upstream] update to kernel 5.15.119
+- refresh patches
+
 20230626-00
 - update to 539cb5389d9514c99ec1f87bd4465f77c7ed9b93
 
