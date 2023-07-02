@@ -2,28 +2,34 @@
 - update to f24c9b9d863c2635e472e83028d28cc8d0a7c7c6
 - [upstream] update to kernel 5.15.119
 - refresh patches
+- full changes: https://github.com/openwrt/openwrt/compare/539cb538...f24c9b9d
 
 20230626-00
 - update to 539cb5389d9514c99ec1f87bd4465f77c7ed9b93
+- full changes: https://github.com/openwrt/openwrt/compare/984786a2...539cb538
 
 20230621-00
 - update to 984786a2f7ec622c99e8c9cdada65d0ea0cf4e0b
 - [cherrypick] #12957: update to kernel 5.15.118 (security and bug fixes)
+- full changes: https://github.com/openwrt/openwrt/compare/9519a625...984786a2
 
 20230611-00
 - update to 9519a625499a963508755b7fc08fb825b3d8cfde
 - [upstream] update to openssl 3.0.9
 - [cherrypick] #12823: update to kernel 5.15.116 (security and bug fixes)
+- full changes: https://github.com/openwrt/openwrt/compare/edb3a416...9519a625
 
 20230601-00
 - update to edb3a4162c0763ecc9d5e7660700a68a25bf28e3
 - [upstream] update to kernel 5.15.114
 - openssl: fix moderate-severity CVE-2023-2650
   https://www.openssl.org/news/secadv/20230530.txt
+- full changes: https://github.com/openwrt/openwrt/compare/5636ffc2...edb3a416
 
 20230524-00
 - update to 5636ffc22d784a2a4acc5e406e54f8a5858f1435
 - [upstream] update to kernel 5.15.112
+- full changes: https://github.com/openwrt/openwrt/compare/7ad1fa12...5636ffc2
 
 20230514-00
 - update to 7ad1fa12efd99dd2a4e4ffa01365280f63e99e55
@@ -31,6 +37,7 @@
   2 days on new mwlwifi, it is not good, latency is always 20-25ms higher
   will need to be bisected
   git revert --no-edit b2d1eb71 08cc6bc6 ab3f151a
+- full changes: https://github.com/openwrt/openwrt/compare/4e5aac47...7ad1fa12
 
 20230512-00
 - update to 4e5aac472935ce3ba3abc9bd72b880951843092b
@@ -38,6 +45,7 @@
 - new mwlwifi, take 2
   if latency really is still worse, it'll be reverted for next build
 - reinitialized workspace (sanity)
+- full changes: https://github.com/openwrt/openwrt/compare/6c9b526e...4e5aac47
 
 20230502-00
 - update to 6c9b526e84e73880eaf72cb656b5908bc5c3f792
