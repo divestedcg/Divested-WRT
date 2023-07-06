@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
-Subject: [PATCH 07/12] ARM Cortex-A9: build the userspace with Thumb-2
+Subject: [PATCH 07/11] ARM Cortex-A9: build the userspace with Thumb-2
  instructions
 
 Thumb-2 code is denser than pure ARM, reducing RAM usage and improving

@@ -1,3 +1,9 @@
+20230705-00
+- update to a20735da211930a50330725d5f0b29f81b2a0b9c
+  https://github.com/openwrt/openwrt/compare/f24c9b9d...a20735da
+- [cherrypick] #13057: update to kernel 5.15.120 (security and bug fixes)
+- refresh patches
+
 20230701-00
 - update to f24c9b9d863c2635e472e83028d28cc8d0a7c7c6
   https://github.com/openwrt/openwrt/compare/539cb538...f24c9b9d

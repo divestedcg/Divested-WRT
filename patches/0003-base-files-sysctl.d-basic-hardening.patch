@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Fri, 27 Nov 2020 13:49:59 -0500
-Subject: [PATCH 03/12] base-files: sysctl.d: basic hardening
+Subject: [PATCH 03/11] base-files: sysctl.d: basic hardening
 
 Set some sysctls that increase security.
 

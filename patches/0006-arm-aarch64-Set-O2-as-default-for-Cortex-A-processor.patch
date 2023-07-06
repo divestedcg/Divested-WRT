@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Engberg <daniel.engberg.lists@pyret.net>
 Date: Thu, 28 Mar 2019 12:57:45 +0000
-Subject: [PATCH 06/12] arm/aarch64: Set -O2 as default for Cortex-A processor
+Subject: [PATCH 06/11] arm/aarch64: Set -O2 as default for Cortex-A processor
  cores
 
 Platforms using Cortex-A processor cores aren't constrained in
