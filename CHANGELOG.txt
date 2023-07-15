@@ -1,3 +1,7 @@
+20230715-00
+- update to e9911f10e482f3174f745a36c0c9fd7964758caf
+  https://github.com/openwrt/openwrt/compare/a20735da...e9911f10
+
 20230705-00
 - update to a20735da211930a50330725d5f0b29f81b2a0b9c
   https://github.com/openwrt/openwrt/compare/f24c9b9d...a20735da
