@@ -1,3 +1,7 @@
+20230725-00
+- update to c74b5e09e692839b39c8325b5f8dc5f2a3b3896c
+  https://github.com/openwrt/openwrt/compare/e9911f10...c74b5e09
+
 20230715-00
 - update to e9911f10e482f3174f745a36c0c9fd7964758caf
   https://github.com/openwrt/openwrt/compare/a20735da...e9911f10
