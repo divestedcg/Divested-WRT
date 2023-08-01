@@ -1,6 +1,10 @@
+20230801-00
+- update to 4a4e0c636fa3e1feb4e2d7af77ff23b097d9d33a
+  https://github.com/openwrt/openwrt/compare/ca8868a5...4a4e0c63
+
 20230729-00
 - update to ca8868a51127f6081a524d47eab937b90af0bf05
-    https://github.com/openwrt/openwrt/compare/c74b5e09...ca8868a5
+  https://github.com/openwrt/openwrt/compare/c74b5e09...ca8868a5
 - [cherrypick] #13172: update to kernel 5.15.123 (security and bug fixes)
 
 20230725-00
