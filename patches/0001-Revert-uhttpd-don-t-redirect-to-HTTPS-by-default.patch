@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 2 Feb 2021 06:14:22 -0500
-Subject: [PATCH 01/11] Revert "uhttpd: don't redirect to HTTPS by default"
+Subject: [PATCH 01/12] Revert "uhttpd: don't redirect to HTTPS by default"
 
 This reverts commit 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015.
 

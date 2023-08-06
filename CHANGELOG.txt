@@ -1,3 +1,11 @@
+20230806-00
+- update to 7e7eb5312d7810084547bb54a4b6867c2da08182
+  https://github.com/openwrt/openwrt/compare/4a4e0c63...7e7eb531
+- switch to newly added 6.1.42 testing kernel by @stklcode
+- [cherrypick] #12940: mwlwifi: fix 6.1 Kernel support
+- new mwlwifi take 3, latency issues appear resolved somehow on 6.1
+- refresh patches
+
 20230801-00
 - update to 4a4e0c636fa3e1feb4e2d7af77ff23b097d9d33a
   https://github.com/openwrt/openwrt/compare/ca8868a5...4a4e0c63
