@@ -1,0 +1,118 @@
+From 7ac25b76a21fe6ce1aabcd5b13ffa4e0a3da300f Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Wed, 16 Aug 2023 14:17:57 -0400
+Subject: [PATCH] kernel: bump 6.1 to 6.1.46
+
+Changelog: https://lore.kernel.org/stable/2023081610-repurpose-upstate-0b62@gregkh/
+
+All patches automatically rebased.
+
+Build system: x86/64
+Build-tested: x86/64/AMD Cezanne, filogic/xiaomi_redmi-router-ax6000-ubootmod
+Run-tested: x86/64/AMD Cezanne, filogic/xiaomi_redmi-router-ax6000-ubootmod
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.1                               |  4 ++--
+ .../pending-6.1/630-packet_socket_type.patch     | 16 ++++++++--------
+ ..._flow_offload-handle-netdevice-events-f.patch |  2 +-
+ 3 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/include/kernel-6.1 b/include/kernel-6.1
+index 8b6629001c647..580219c70f84f 100644
+--- a/include/kernel-6.1
++++ b/include/kernel-6.1
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.1 = .45
+-LINUX_KERNEL_HASH-6.1.45 = bd2343396e7ddad8974f3689a5a067ec931f4ade793e72b1070a85cd19f1f192
++LINUX_VERSION-6.1 = .46
++LINUX_KERNEL_HASH-6.1.46 = f5f67bcfccd47f8d9db2d5ba24e33af7778f40a777577d1fba424f4a1712a296
+diff --git a/target/linux/generic/pending-6.1/630-packet_socket_type.patch b/target/linux/generic/pending-6.1/630-packet_socket_type.patch
+index 8e667fb4dde27..c40c709635203 100644
+--- a/target/linux/generic/pending-6.1/630-packet_socket_type.patch
++++ b/target/linux/generic/pending-6.1/630-packet_socket_type.patch
+@@ -30,7 +30,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  #define PACKET_FANOUT_LB		1
+ --- a/net/packet/af_packet.c
+ +++ b/net/packet/af_packet.c
+-@@ -1862,6 +1862,7 @@ static int packet_rcv_spkt(struct sk_buf
++@@ -1866,6 +1866,7 @@ static int packet_rcv_spkt(struct sk_buf
+  {
+  	struct sock *sk;
+  	struct sockaddr_pkt *spkt;
+@@ -38,7 +38,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  	/*
+  	 *	When we registered the protocol we saved the socket in the data
+-@@ -1869,6 +1870,7 @@ static int packet_rcv_spkt(struct sk_buf
++@@ -1873,6 +1874,7 @@ static int packet_rcv_spkt(struct sk_buf
+  	 */
+  
+  	sk = pt->af_packet_priv;
+@@ -46,7 +46,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  	/*
+  	 *	Yank back the headers [hope the device set this
+-@@ -1881,7 +1883,7 @@ static int packet_rcv_spkt(struct sk_buf
++@@ -1885,7 +1887,7 @@ static int packet_rcv_spkt(struct sk_buf
+  	 *	so that this procedure is noop.
+  	 */
+  
+@@ -55,7 +55,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		goto out;
+  
+  	if (!net_eq(dev_net(dev), sock_net(sk)))
+-@@ -2127,12 +2129,12 @@ static int packet_rcv(struct sk_buff *sk
++@@ -2131,12 +2133,12 @@ static int packet_rcv(struct sk_buff *sk
+  	unsigned int snaplen, res;
+  	bool is_drop_n_account = false;
+  
+@@ -71,7 +71,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (!net_eq(dev_net(dev), sock_net(sk)))
+  		goto drop;
+  
+-@@ -2259,12 +2261,12 @@ static int tpacket_rcv(struct sk_buff *s
++@@ -2263,12 +2265,12 @@ static int tpacket_rcv(struct sk_buff *s
+  	BUILD_BUG_ON(TPACKET_ALIGN(sizeof(*h.h2)) != 32);
+  	BUILD_BUG_ON(TPACKET_ALIGN(sizeof(*h.h3)) != 48);
+  
+@@ -87,7 +87,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (!net_eq(dev_net(dev), sock_net(sk)))
+  		goto drop;
+  
+-@@ -3374,6 +3376,7 @@ static int packet_create(struct net *net
++@@ -3378,6 +3380,7 @@ static int packet_create(struct net *net
+  	mutex_init(&po->pg_vec_lock);
+  	po->rollover = NULL;
+  	po->prot_hook.func = packet_rcv;
+@@ -95,7 +95,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  	if (sock->type == SOCK_PACKET)
+  		po->prot_hook.func = packet_rcv_spkt;
+-@@ -4009,6 +4012,16 @@ packet_setsockopt(struct socket *sock, i
++@@ -4013,6 +4016,16 @@ packet_setsockopt(struct socket *sock, i
+  		WRITE_ONCE(po->xmit, val ? packet_direct_xmit : dev_queue_xmit);
+  		return 0;
+  	}
+@@ -112,7 +112,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	default:
+  		return -ENOPROTOOPT;
+  	}
+-@@ -4065,6 +4078,13 @@ static int packet_getsockopt(struct sock
++@@ -4069,6 +4082,13 @@ static int packet_getsockopt(struct sock
+  	case PACKET_VNET_HDR:
+  		val = po->has_vnet_hdr;
+  		break;
+diff --git a/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch b/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
+index 182a0cbc6a76b..6050db3f5b7fb 100644
+--- a/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
++++ b/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
+@@ -59,7 +59,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  }
+ --- a/net/netfilter/nft_flow_offload.c
+ +++ b/net/netfilter/nft_flow_offload.c
+-@@ -468,47 +468,14 @@ static struct nft_expr_type nft_flow_off
++@@ -470,47 +470,14 @@ static struct nft_expr_type nft_flow_off
+  	.owner		= THIS_MODULE,
+  };
+  

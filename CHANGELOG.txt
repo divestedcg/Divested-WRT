@@ -1,3 +1,9 @@
+20230816-00
+- update to 46ed38adeb76b376e34056c755e0c8ffa5acf29f
+  https://github.com/openwrt/openwrt/compare/7e7eb531...46ed38ad
+- [cherrypick] #13302: update to kernel 6.1.46 (security and bug fixes)
+- revert 9db03300, compile failure
+
 20230806-00
 - update to 7e7eb5312d7810084547bb54a4b6867c2da08182
   https://github.com/openwrt/openwrt/compare/4a4e0c63...7e7eb531
