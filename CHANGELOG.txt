@@ -1,3 +1,9 @@
+20230826-00
+- update to 53c2f174ad79397b53db0e52d43f44a0702a93da
+  https://github.com/openwrt/openwrt/compare/46ed38ad...53c2f174
+- [cherrypick] #13355: update to kernel 6.1.48 (security and bug fixes)
+- include kmod-sched-ctinfo
+
 20230816-00
 - update to 46ed38adeb76b376e34056c755e0c8ffa5acf29f
   https://github.com/openwrt/openwrt/compare/7e7eb531...46ed38ad
