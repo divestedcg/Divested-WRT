@@ -1,3 +1,8 @@
+20230905-00
+- update to 703d667a0cdf6dfa402c08e72d0c77a257ca5009
+  https://github.com/openwrt/openwrt/compare/53c2f174...703d667a
+- [upstream] update to kernel 6.1.51
+
 20230826-00
 - update to 53c2f174ad79397b53db0e52d43f44a0702a93da
   https://github.com/openwrt/openwrt/compare/46ed38ad...53c2f174
