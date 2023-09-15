@@ -1,0 +1,996 @@
+From 79e25618d8f1ddf55795ea146d221041d89fc991 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Wed, 13 Sep 2023 16:01:32 -0400
+Subject: [PATCH] kernel: bump 6.1 to 6.1.53
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.53
+
+Removed upstreamed:
+	bcm53xx/patches-6.1/032-v6.6-0005-ARM-dts-BCM53573-Drop-nonexistent-usb-cells.patch[1]
+	bcm53xx/patches-6.1/032-v6.6-0006-ARM-dts-BCM53573-Add-cells-sizes-to-PCIe-node.patch[2]
+	bcm53xx/patches-6.1/032-v6.6-0007-ARM-dts-BCM53573-Use-updated-spi-gpio-binding-proper.patch[3]
+	bcm53xx/patches-6.1/032-v6.6-0011-ARM-dts-BCM53573-Fix-Tenda-AC9-switch-CPU-port.patch[4]
+
+All other patches automatically rebased.
+
+Build system: x86/64
+Build-tested: x86/64/AMD Cezanne
+Run-tested: x86/64/AMD Cezanne
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.53&id=ee1d740374aa73fb32857685eb05167ad87458cf
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.53&id=ab5154ae26c446136827451e907db45d7b92a76f
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.53&id=f5ff6897094fa161be55786cb9e5d5b1bf7a9049
+4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.53&id=0ef736fec61422794c4a991d46c4ec212b01d8d1
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.1                            |  4 +-
+ ...per-force-gzip-as-mkimage-s-compress.patch |  2 +-
+ .../370-MIPS-ath79-sanitize-symbols.patch     |  2 +-
+ ...or-support-mtd-name-from-device-tree.patch |  2 +-
+ .../900-unaligned_access_hacks.patch          |  2 +-
+ .../950-0106-Add-dwc_otg-driver.patch         |  4 +-
+ ...10-dmaengine-Add-support-for-BCM2708.patch |  2 +-
+ ...all-the-downstream-rpi-sound-card-dr.patch |  6 +--
+ ...is7xx-Don-t-spin-if-no-data-received.patch |  2 +-
+ ...rng-iproc-rng200-Add-BCM2838-support.patch |  6 +--
+ ...-for-updating-interrupt-endpoint-int.patch |  4 +-
+ ...7-Support-for-the-Sony-IMX477-sensor.patch |  2 +-
+ ...9-Support-for-the-Sony-IMX519-sensor.patch |  2 +-
+ ...driver-for-the-Infineon-IRS1125-dept.patch |  2 +-
+ ...950-0312-media-i2c-add-ov9281-driver.patch |  2 +-
+ ...-Add-a-timing-for-the-Raspberry-Pi-7.patch |  4 +-
+ ...nel-simple-add-Geekworm-MZP280-Panel.patch |  4 +-
+ ...i2c-Add-driver-for-Omnivision-OV2311.patch |  2 +-
+ ...dd-driver-for-AD5398-VCM-lens-driver.patch |  2 +-
+ ...iver-of-Arducam-Pivariety-series-cam.patch |  2 +-
+ ...edia-i2c-Update-ov2311-Kconfig-entry.patch |  2 +-
+ ...edia-i2c-Update-ov9281-Kconfig-entry.patch |  2 +-
+ ...dia-i2c-Update-irs1125-Kconfig-entry.patch |  2 +-
+ ...2c-Add-driver-of-Arducam-64MP-camera.patch |  2 +-
+ ...mple-Add-Innolux-AT056tN53V1-5.6-VGA.patch |  4 +-
+ ...driver-for-the-Sony-IMX708-image-sen.patch |  2 +-
+ ...edia-i2c-IMX296-camera-sensor-driver.patch |  2 +-
+ .../960-hwrng-iproc-set-quality-to-1000.patch |  2 +-
+ ...-BCM53573-Drop-nonexistent-usb-cells.patch | 32 --------------
+ ...CM53573-Add-cells-sizes-to-PCIe-node.patch | 37 ----------------
+ ...-Use-updated-spi-gpio-binding-proper.patch | 44 -------------------
+ ...-Fix-Ethernet-info-for-Luxul-devices.patch |  4 +-
+ ...M53573-Fix-Tenda-AC9-switch-CPU-port.patch | 31 -------------
+ ...-Disable-second-Ethernet-on-Luxul-de.patch |  4 +-
+ ...202-mips-bmips-tweak-Kconfig-options.patch |  4 +-
+ .../600-mips-bmips-add-pci-support.patch      |  2 +-
+ ...i-gen-LRU-per-node-lru_gen_folio-lis.patch |  4 +-
+ ...ke-.-cells-optional-for-simple-props.patch |  2 +-
+ ...operty-add-nvmem-cell-cells-property.patch |  2 +-
+ .../generic/hack-6.1/253-ksmbd-config.patch   |  2 +-
+ .../hack-6.1/901-debloat_sock_diag.patch      |  4 +-
+ .../generic/hack-6.1/902-debloat_proc.patch   |  4 +-
+ .../203-kallsyms_uncompressed.patch           |  2 +-
+ .../300-mips_expose_boot_raw.patch            |  4 +-
+ ...support-for-minor-aligned-partitions.patch |  8 ++--
+ .../479-mtd-spi-nor-add-xtx-xt25f128b.patch   |  2 +-
+ .../pending-6.1/920-mangle_bootargs.patch     |  2 +-
+ ...nor-Add-calibration-support-for-spi-.patch |  4 +-
+ .../patches-6.1/102-pseudo-random-mac.patch   |  2 +-
+ 49 files changed, 66 insertions(+), 210 deletions(-)
+ delete mode 100644 target/linux/bcm53xx/patches-6.1/032-v6.6-0005-ARM-dts-BCM53573-Drop-nonexistent-usb-cells.patch
+ delete mode 100644 target/linux/bcm53xx/patches-6.1/032-v6.6-0006-ARM-dts-BCM53573-Add-cells-sizes-to-PCIe-node.patch
+ delete mode 100644 target/linux/bcm53xx/patches-6.1/032-v6.6-0007-ARM-dts-BCM53573-Use-updated-spi-gpio-binding-proper.patch
+ delete mode 100644 target/linux/bcm53xx/patches-6.1/032-v6.6-0011-ARM-dts-BCM53573-Fix-Tenda-AC9-switch-CPU-port.patch
+
+diff --git a/include/kernel-6.1 b/include/kernel-6.1
+index cc106e2572f4a..561612fd177aa 100644
+--- a/include/kernel-6.1
++++ b/include/kernel-6.1
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.1 = .52
+-LINUX_KERNEL_HASH-6.1.52 = 567737990dbc9265966a0786392821a9fa559fd346494fd1eff050dbeb383a52
++LINUX_VERSION-6.1 = .53
++LINUX_KERNEL_HASH-6.1.53 = 5f57e0a04810d24f2b1a8fc95451241f80530e678717eda0f45104c6dc78ed7e
+diff --git a/target/linux/apm821xx/patches-6.1/900-powerpc-bootwrapper-force-gzip-as-mkimage-s-compress.patch b/target/linux/apm821xx/patches-6.1/900-powerpc-bootwrapper-force-gzip-as-mkimage-s-compress.patch
+index 2e2bda7c60fd3..292a252a2ef41 100644
+--- a/target/linux/apm821xx/patches-6.1/900-powerpc-bootwrapper-force-gzip-as-mkimage-s-compress.patch
++++ b/target/linux/apm821xx/patches-6.1/900-powerpc-bootwrapper-force-gzip-as-mkimage-s-compress.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+ 
+ --- a/arch/powerpc/boot/Makefile
+ +++ b/arch/powerpc/boot/Makefile
+-@@ -272,7 +272,7 @@ compressor-$(CONFIG_KERNEL_LZO) := lzo
++@@ -274,7 +274,7 @@ compressor-$(CONFIG_KERNEL_LZO) := lzo
+  
+  # args (to if_changed): 1 = (this rule), 2 = platform, 3 = dts 4=dtb 5=initrd
+  quiet_cmd_wrap	= WRAP    $@
+diff --git a/target/linux/ath79/patches-6.1/370-MIPS-ath79-sanitize-symbols.patch b/target/linux/ath79/patches-6.1/370-MIPS-ath79-sanitize-symbols.patch
+index 67dc54725a97b..eac17c2b507be 100644
+--- a/target/linux/ath79/patches-6.1/370-MIPS-ath79-sanitize-symbols.patch
++++ b/target/linux/ath79/patches-6.1/370-MIPS-ath79-sanitize-symbols.patch
+@@ -15,7 +15,7 @@ Signed-off-by: John Crispin <john@phrozen.org>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -258,6 +258,8 @@ config ATH79
++@@ -257,6 +257,8 @@ config ATH79
+  	select SYS_SUPPORTS_BIG_ENDIAN
+  	select SYS_SUPPORTS_MIPS16
+  	select SYS_SUPPORTS_ZBOOT_UART_PROM
+diff --git a/target/linux/ath79/patches-6.1/400-mtd-nor-support-mtd-name-from-device-tree.patch b/target/linux/ath79/patches-6.1/400-mtd-nor-support-mtd-name-from-device-tree.patch
+index 2f83b23e80967..3546696a23a5d 100644
+--- a/target/linux/ath79/patches-6.1/400-mtd-nor-support-mtd-name-from-device-tree.patch
++++ b/target/linux/ath79/patches-6.1/400-mtd-nor-support-mtd-name-from-device-tree.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+ 
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -2941,12 +2941,19 @@ static void spi_nor_set_mtd_info(struct
++@@ -2942,12 +2942,19 @@ static void spi_nor_set_mtd_info(struct
+  {
+  	struct mtd_info *mtd = &nor->mtd;
+  	struct device *dev = nor->dev;
+diff --git a/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
+index 6e4b2848c83ed..1e67d03ce85f2 100644
+--- a/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
+@@ -750,7 +750,7 @@ SVN-Revision: 35130
+  EXPORT_SYMBOL(xfrm_parse_spi);
+ --- a/net/ipv4/tcp_input.c
+ +++ b/net/ipv4/tcp_input.c
+-@@ -4166,14 +4166,16 @@ static bool tcp_parse_aligned_timestamp(
++@@ -4165,14 +4165,16 @@ static bool tcp_parse_aligned_timestamp(
+  {
+  	const __be32 *ptr = (const __be32 *)(th + 1);
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0106-Add-dwc_otg-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0106-Add-dwc_otg-driver.patch
+index a3d861ec2f8b8..7eadf3f50962c 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0106-Add-dwc_otg-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0106-Add-dwc_otg-driver.patch
+@@ -1185,7 +1185,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  }
+ --- a/drivers/usb/core/hub.c
+ +++ b/drivers/usb/core/hub.c
+-@@ -5580,7 +5580,7 @@ static void port_event(struct usb_hub *h
++@@ -5636,7 +5636,7 @@ static void port_event(struct usb_hub *h
+  		port_dev->over_current_count++;
+  		port_over_current_notify(port_dev);
+  
+@@ -1196,7 +1196,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  				USB_PORT_FEAT_C_OVER_CURRENT);
+ --- a/drivers/usb/core/message.c
+ +++ b/drivers/usb/core/message.c
+-@@ -2140,6 +2140,85 @@ free_interfaces:
++@@ -2135,6 +2135,85 @@ free_interfaces:
+  	if (cp->string == NULL &&
+  			!(dev->quirks & USB_QUIRK_CONFIG_INTF_STRINGS))
+  		cp->string = usb_cache_string(dev, cp->desc.iConfiguration);
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0110-dmaengine-Add-support-for-BCM2708.patch b/target/linux/bcm27xx/patches-6.1/950-0110-dmaengine-Add-support-for-BCM2708.patch
+index 7bf10b85ed3f5..0400fbfe7fef7 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0110-dmaengine-Add-support-for-BCM2708.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0110-dmaengine-Add-support-for-BCM2708.patch
+@@ -199,7 +199,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	select DMA_ENGINE
+  	select DMA_VIRTUAL_CHANNELS
+  
+-@@ -703,6 +703,10 @@ config UNIPHIER_XDMAC
++@@ -705,6 +705,10 @@ config UNIPHIER_XDMAC
+  	  UniPhier platform. This DMA controller can transfer data from
+  	  memory to memory, memory to peripheral and peripheral to memory.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0124-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch b/target/linux/bcm27xx/patches-6.1/950-0124-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
+index 72ab99d62e5e7..79c281ade2ebb 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0124-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0124-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
+@@ -14974,7 +14974,7 @@ Signed-off-by: Ashish Vara <ashishhvara@gmail.com>
+  config SND_SOC_RT5631
+  	tristate "Realtek ALC5631/RT5631 CODEC"
+  	depends on I2C
+-@@ -1622,6 +1637,9 @@ config SND_SOC_TFA9879
++@@ -1623,6 +1638,9 @@ config SND_SOC_TFA9879
+  	tristate "NXP Semiconductors TFA9879 amplifier"
+  	depends on I2C
+  
+@@ -14984,7 +14984,7 @@ Signed-off-by: Ashish Vara <ashishhvara@gmail.com>
+  config SND_SOC_TFA989X
+  	tristate "NXP/Goodix TFA989X (TFA1) amplifiers"
+  	depends on I2C
+-@@ -2168,4 +2186,8 @@ config SND_SOC_LPASS_TX_MACRO
++@@ -2169,4 +2187,8 @@ config SND_SOC_LPASS_TX_MACRO
+  	select SND_SOC_LPASS_MACRO_COMMON
+  	tristate "Qualcomm TX Macro in LPASS(Low Power Audio SubSystem)"
+  
+@@ -17615,7 +17615,7 @@ Signed-off-by: Ashish Vara <ashishhvara@gmail.com>
+  	 * For devices with more than one control interface, we assume the
+ --- a/sound/usb/quirks.c
+ +++ b/sound/usb/quirks.c
+-@@ -2156,6 +2156,8 @@ static const struct usb_audio_quirk_flag
++@@ -2171,6 +2171,8 @@ static const struct usb_audio_quirk_flag
+  		   QUIRK_FLAG_FIXED_RATE),
+  	DEVICE_FLG(0x0ecb, 0x2069, /* JBL Quantum810 Wireless */
+  		   QUIRK_FLAG_FIXED_RATE),
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0146-sc16is7xx-Don-t-spin-if-no-data-received.patch b/target/linux/bcm27xx/patches-6.1/950-0146-sc16is7xx-Don-t-spin-if-no-data-received.patch
+index 0e9255b0f2d8a..4c2741eb25dc9 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0146-sc16is7xx-Don-t-spin-if-no-data-received.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0146-sc16is7xx-Don-t-spin-if-no-data-received.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/tty/serial/sc16is7xx.c
+ +++ b/drivers/tty/serial/sc16is7xx.c
+-@@ -772,6 +772,8 @@ static bool sc16is7xx_port_irq(struct sc
++@@ -770,6 +770,8 @@ static bool sc16is7xx_port_irq(struct sc
+  			rxlen = sc16is7xx_port_read(port, SC16IS7XX_RXLVL_REG);
+  			if (rxlen)
+  				sc16is7xx_handle_rx(port, rxlen, iir);
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0177-hwrng-iproc-rng200-Add-BCM2838-support.patch b/target/linux/bcm27xx/patches-6.1/950-0177-hwrng-iproc-rng200-Add-BCM2838-support.patch
+index 89b7fabe2a700..9a36dd1bcde8c 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0177-hwrng-iproc-rng200-Add-BCM2838-support.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0177-hwrng-iproc-rng200-Add-BCM2838-support.patch
+@@ -130,9 +130,9 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  static void iproc_rng200_cleanup(struct hwrng *rng)
+  {
+  	struct iproc_rng200_dev *priv = to_rng_priv(rng);
+-@@ -182,11 +248,17 @@ static int iproc_rng200_probe(struct pla
+- 		return PTR_ERR(priv->base);
+- 	}
++@@ -184,11 +250,17 @@ static int iproc_rng200_probe(struct pla
++ 
++ 	dev_set_drvdata(dev, priv);
+  
+ -	priv->rng.name = "iproc-rng200";
+ -	priv->rng.read = iproc_rng200_read;
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0181-usb-add-plumbing-for-updating-interrupt-endpoint-int.patch b/target/linux/bcm27xx/patches-6.1/950-0181-usb-add-plumbing-for-updating-interrupt-endpoint-int.patch
+index 8f302fda045a3..34b923fb235ca 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0181-usb-add-plumbing-for-updating-interrupt-endpoint-int.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0181-usb-add-plumbing-for-updating-interrupt-endpoint-int.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+ 
+ --- a/drivers/usb/core/hcd.c
+ +++ b/drivers/usb/core/hcd.c
+-@@ -1973,6 +1973,16 @@ reset:
++@@ -1977,6 +1977,16 @@ reset:
+  	return ret;
+  }
+  
+@@ -46,7 +46,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+   * have been called previously.  Use for set_configuration, set_interface,
+ --- a/drivers/usb/core/message.c
+ +++ b/drivers/usb/core/message.c
+-@@ -1268,6 +1268,21 @@ static void remove_intf_ep_devs(struct u
++@@ -1263,6 +1263,21 @@ static void remove_intf_ep_devs(struct u
+  	intf->ep_devs_created = 0;
+  }
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+index 91d8f295a2c07..dc2e539f3a229 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+@@ -360,7 +360,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+  M:	Alex Dubov <oakad@yahoo.com>
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -1023,6 +1023,17 @@ config VIDEO_UDA1342
++@@ -1030,6 +1030,17 @@ config VIDEO_UDA1342
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called uda1342.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch b/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+index 3aecaa17576bc..8ba6f7e5fc1e3 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+@@ -194,7 +194,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  M:	Alex Dubov <oakad@yahoo.com>
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -228,6 +228,17 @@ config VIDEO_IMX412
++@@ -235,6 +235,17 @@ config VIDEO_IMX412
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called imx412.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0204-media-i2c-Add-a-driver-for-the-Infineon-IRS1125-dept.patch b/target/linux/bcm27xx/patches-6.1/950-0204-media-i2c-Add-a-driver-for-the-Infineon-IRS1125-dept.patch
+index ea1df61b7d83d..ddd62a9dc47a3 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0204-media-i2c-Add-a-driver-for-the-Infineon-IRS1125-dept.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0204-media-i2c-Add-a-driver-for-the-Infineon-IRS1125-dept.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Markus Proeller <markus.proeller@pieye.org>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -1366,6 +1366,18 @@ config VIDEO_TW9910
++@@ -1373,6 +1373,18 @@ config VIDEO_TW9910
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called tw9910.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0312-media-i2c-add-ov9281-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0312-media-i2c-add-ov9281-driver.patch
+index e89e6a98eb11d..58c5997e83c1f 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0312-media-i2c-add-ov9281-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0312-media-i2c-add-ov9281-driver.patch
+@@ -105,7 +105,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -1336,6 +1336,17 @@ config VIDEO_TW2804
++@@ -1343,6 +1343,17 @@ config VIDEO_TW2804
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called tw2804.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0332-drm-panel-simple-Add-a-timing-for-the-Raspberry-Pi-7.patch b/target/linux/bcm27xx/patches-6.1/950-0332-drm-panel-simple-Add-a-timing-for-the-Raspberry-Pi-7.patch
+index 4ce71a86aa752..5046dff024e47 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0332-drm-panel-simple-Add-a-timing-for-the-Raspberry-Pi-7.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0332-drm-panel-simple-Add-a-timing-for-the-Raspberry-Pi-7.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/gpu/drm/panel/panel-simple.c
+ +++ b/drivers/gpu/drm/panel/panel-simple.c
+-@@ -3190,6 +3190,31 @@ static const struct panel_desc qishenglo
++@@ -3192,6 +3192,31 @@ static const struct panel_desc qishenglo
+  	.connector_type = DRM_MODE_CONNECTOR_DPI,
+  };
+  
+@@ -47,7 +47,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  static const struct display_timing rocktech_rk070er9427_timing = {
+  	.pixelclock = { 26400000, 33300000, 46800000 },
+  	.hactive = { 800, 800, 800 },
+-@@ -4221,6 +4246,9 @@ static const struct of_device_id platfor
++@@ -4223,6 +4248,9 @@ static const struct of_device_id platfor
+  		.compatible = "qishenglong,gopher2b-lcd",
+  		.data = &qishenglong_gopher2b_lcd,
+  	}, {
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0383-drm-panel-simple-add-Geekworm-MZP280-Panel.patch b/target/linux/bcm27xx/patches-6.1/950-0383-drm-panel-simple-add-Geekworm-MZP280-Panel.patch
+index 5b7d4cb218d7c..83ba935113213 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0383-drm-panel-simple-add-Geekworm-MZP280-Panel.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0383-drm-panel-simple-add-Geekworm-MZP280-Panel.patch
+@@ -13,7 +13,7 @@ Acked-by: Maxime Ripard <maxime@cerno.tech>
+ 
+ --- a/drivers/gpu/drm/panel/panel-simple.c
+ +++ b/drivers/gpu/drm/panel/panel-simple.c
+-@@ -1944,6 +1944,32 @@ static const struct panel_desc friendlya
++@@ -1946,6 +1946,32 @@ static const struct panel_desc friendlya
+  	},
+  };
+  
+@@ -46,7 +46,7 @@ Acked-by: Maxime Ripard <maxime@cerno.tech>
+  static const struct drm_display_mode giantplus_gpg482739qs5_mode = {
+  	.clock = 9000,
+  	.hdisplay = 480,
+-@@ -4105,6 +4131,9 @@ static const struct of_device_id platfor
++@@ -4107,6 +4133,9 @@ static const struct of_device_id platfor
+  		.compatible = "friendlyarm,hd702e",
+  		.data = &friendlyarm_hd702e,
+  	}, {
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0393-media-i2c-Add-driver-for-Omnivision-OV2311.patch b/target/linux/bcm27xx/patches-6.1/950-0393-media-i2c-Add-driver-for-Omnivision-OV2311.patch
+index 5db533297defd..cff524e2f1b07 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0393-media-i2c-Add-driver-for-Omnivision-OV2311.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0393-media-i2c-Add-driver-for-Omnivision-OV2311.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -395,6 +395,17 @@ config VIDEO_OV13B10
++@@ -402,6 +402,17 @@ config VIDEO_OV13B10
+  	  This is a Video4Linux2 sensor driver for the OmniVision
+  	  OV13B10 camera.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0397-media-i2c-Add-driver-for-AD5398-VCM-lens-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0397-media-i2c-Add-driver-for-AD5398-VCM-lens-driver.patch
+index e5b20d2d1eff8..00420b044c5d4 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0397-media-i2c-Add-driver-for-AD5398-VCM-lens-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0397-media-i2c-Add-driver-for-AD5398-VCM-lens-driver.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -810,6 +810,13 @@ endmenu
++@@ -817,6 +817,13 @@ endif
+  menu "Lens drivers"
+  	visible if MEDIA_CAMERA_SUPPORT
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0410-media-i2c-Add-driver-of-Arducam-Pivariety-series-cam.patch b/target/linux/bcm27xx/patches-6.1/950-0410-media-i2c-Add-driver-of-Arducam-Pivariety-series-cam.patch
+index 443f5b0c4f08b..04c69d186a603 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0410-media-i2c-Add-driver-of-Arducam-Pivariety-series-cam.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0410-media-i2c-Add-driver-of-Arducam-Pivariety-series-cam.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -47,6 +47,17 @@ config VIDEO_AR0521
++@@ -54,6 +54,17 @@ config VIDEO_AR0521
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called ar0521.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0414-media-i2c-Update-ov2311-Kconfig-entry.patch b/target/linux/bcm27xx/patches-6.1/950-0414-media-i2c-Update-ov2311-Kconfig-entry.patch
+index e998a44aaea60..f874c934da9fc 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0414-media-i2c-Update-ov2311-Kconfig-entry.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0414-media-i2c-Update-ov2311-Kconfig-entry.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -409,7 +409,6 @@ config VIDEO_OV13B10
++@@ -416,7 +416,6 @@ config VIDEO_OV13B10
+  config VIDEO_OV2311
+  	tristate "OmniVision OV2311 sensor support"
+  	depends on I2C && VIDEO_DEV
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0415-media-i2c-Update-ov9281-Kconfig-entry.patch b/target/linux/bcm27xx/patches-6.1/950-0415-media-i2c-Update-ov9281-Kconfig-entry.patch
+index 00aa8dd4c56d2..b6e0e800701fc 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0415-media-i2c-Update-ov9281-Kconfig-entry.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0415-media-i2c-Update-ov9281-Kconfig-entry.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -1367,7 +1367,6 @@ config VIDEO_TW2804
++@@ -1374,7 +1374,6 @@ config VIDEO_TW2804
+  config VIDEO_OV9281
+  	tristate "OmniVision OV9281 sensor support"
+  	depends on I2C && VIDEO_DEV
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0416-media-i2c-Update-irs1125-Kconfig-entry.patch b/target/linux/bcm27xx/patches-6.1/950-0416-media-i2c-Update-irs1125-Kconfig-entry.patch
+index 85634b9997cce..6f27e4be3757c 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0416-media-i2c-Update-irs1125-Kconfig-entry.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0416-media-i2c-Update-irs1125-Kconfig-entry.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -1406,8 +1406,8 @@ config VIDEO_TW9910
++@@ -1413,8 +1413,8 @@ config VIDEO_TW9910
+  
+  config VIDEO_IRS1125
+  	tristate "Infineon IRS1125 sensor support"
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0424-media-i2c-Add-driver-of-Arducam-64MP-camera.patch b/target/linux/bcm27xx/patches-6.1/950-0424-media-i2c-Add-driver-of-Arducam-64MP-camera.patch
+index 9c34715236aa9..faf453206c392 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0424-media-i2c-Add-driver-of-Arducam-64MP-camera.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0424-media-i2c-Add-driver-of-Arducam-64MP-camera.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Lee Jackson <info@arducam.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -47,6 +47,17 @@ config VIDEO_AR0521
++@@ -54,6 +54,17 @@ config VIDEO_AR0521
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called ar0521.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0521-drm-panel-simple-Add-Innolux-AT056tN53V1-5.6-VGA.patch b/target/linux/bcm27xx/patches-6.1/950-0521-drm-panel-simple-Add-Innolux-AT056tN53V1-5.6-VGA.patch
+index 411c9c7c109f3..09324871aaff5 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0521-drm-panel-simple-Add-Innolux-AT056tN53V1-5.6-VGA.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0521-drm-panel-simple-Add-Innolux-AT056tN53V1-5.6-VGA.patch
+@@ -126,7 +126,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+        - MEDIA_BUS_FMT_RGB666_1X24_CPADHI
+ --- a/drivers/gpu/drm/panel/panel-simple.c
+ +++ b/drivers/gpu/drm/panel/panel-simple.c
+-@@ -2136,6 +2136,38 @@ static const struct panel_desc innolux_a
++@@ -2138,6 +2138,38 @@ static const struct panel_desc innolux_a
+  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+  };
+  
+@@ -165,7 +165,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  static const struct drm_display_mode innolux_at070tn92_mode = {
+  	.clock = 33333,
+  	.hdisplay = 800,
+-@@ -4141,6 +4173,9 @@ static const struct of_device_id platfor
++@@ -4143,6 +4175,9 @@ static const struct of_device_id platfor
+  		.compatible = "innolux,at043tn24",
+  		.data = &innolux_at043tn24,
+  	}, {
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0529-media-i2c-Add-a-driver-for-the-Sony-IMX708-image-sen.patch b/target/linux/bcm27xx/patches-6.1/950-0529-media-i2c-Add-a-driver-for-the-Sony-IMX708-image-sen.patch
+index 1f8cda317893e..b4154c9cca85b 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0529-media-i2c-Add-a-driver-for-the-Sony-IMX708-image-sen.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0529-media-i2c-Add-a-driver-for-the-Sony-IMX708-image-sen.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -261,6 +261,19 @@ config VIDEO_IMX519
++@@ -268,6 +268,19 @@ config VIDEO_IMX519
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called IMX519.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
+index 2581db2823515..94ddb850c32a1 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
+@@ -33,7 +33,7 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+  M:	Bingbu Cao <bingbu.cao@intel.com>
+ --- a/drivers/media/i2c/Kconfig
+ +++ b/drivers/media/i2c/Kconfig
+-@@ -184,6 +184,19 @@ config VIDEO_IMX290
++@@ -191,6 +191,19 @@ config VIDEO_IMX290
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called imx290.
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/960-hwrng-iproc-set-quality-to-1000.patch b/target/linux/bcm27xx/patches-6.1/960-hwrng-iproc-set-quality-to-1000.patch
+index b23d63f75c7c1..c1b4879a7c8cf 100644
+--- a/target/linux/bcm27xx/patches-6.1/960-hwrng-iproc-set-quality-to-1000.patch
++++ b/target/linux/bcm27xx/patches-6.1/960-hwrng-iproc-set-quality-to-1000.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+ 
+ --- a/drivers/char/hw_random/iproc-rng200.c
+ +++ b/drivers/char/hw_random/iproc-rng200.c
+-@@ -250,6 +250,7 @@ static int iproc_rng200_probe(struct pla
++@@ -252,6 +252,7 @@ static int iproc_rng200_probe(struct pla
+  
+  	priv->rng.name = pdev->name;
+  	priv->rng.cleanup = iproc_rng200_cleanup;
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0005-ARM-dts-BCM53573-Drop-nonexistent-usb-cells.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0005-ARM-dts-BCM53573-Drop-nonexistent-usb-cells.patch
+deleted file mode 100644
+index 7836d560a1696..0000000000000
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0005-ARM-dts-BCM53573-Drop-nonexistent-usb-cells.patch
++++ /dev/null
+@@ -1,32 +0,0 @@
+-From 05d2c3d552b8c92fc397377d9d1112fc58e2cd59 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Fri, 7 Jul 2023 13:40:02 +0200
+-Subject: [PATCH] ARM: dts: BCM53573: Drop nonexistent #usb-cells
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Such property simply doesn't exist (is not documented or used anywhere).
+-
+-This fixes:
+-arch/arm/boot/dts/broadcom/bcm47189-luxul-xap-1440.dtb: usb@d000: Unevaluated properties are not allowed ('#usb-cells' was unexpected)
+-        From schema: Documentation/devicetree/bindings/usb/generic-ohci.yaml
+-
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Link: https://lore.kernel.org/r/20230707114004.2740-2-zajec5@gmail.com
+-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+----
+- arch/arm/boot/dts/broadcom/bcm53573.dtsi | 2 --
+- 1 file changed, 2 deletions(-)
+-
+---- a/arch/arm/boot/dts/bcm53573.dtsi
+-+++ b/arch/arm/boot/dts/bcm53573.dtsi
+-@@ -156,8 +156,6 @@
+- 			};
+- 
+- 			ohci: usb@d000 {
+--				#usb-cells = <0>;
+--
+- 				compatible = "generic-ohci";
+- 				reg = <0xd000 0x1000>;
+- 				interrupt-parent = <&gic>;
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0006-ARM-dts-BCM53573-Add-cells-sizes-to-PCIe-node.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0006-ARM-dts-BCM53573-Add-cells-sizes-to-PCIe-node.patch
+deleted file mode 100644
+index 86a52aa505724..0000000000000
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0006-ARM-dts-BCM53573-Add-cells-sizes-to-PCIe-node.patch
++++ /dev/null
+@@ -1,37 +0,0 @@
+-From 3392ef368d9b04622fe758b1079b512664b6110a Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Fri, 7 Jul 2023 13:40:03 +0200
+-Subject: [PATCH] ARM: dts: BCM53573: Add cells sizes to PCIe node
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-This fixes:
+-arch/arm/boot/dts/broadcom/bcm47189-luxul-xap-1440.dtb: pcie@2000: '#address-cells' is a required property
+-        From schema: /lib/python3.10/site-packages/dtschema/schemas/pci/pci-bus.yaml
+-arch/arm/boot/dts/broadcom/bcm47189-luxul-xap-1440.dtb: pcie@2000: '#size-cells' is a required property
+-        From schema: /lib/python3.10/site-packages/dtschema/schemas/pci/pci-bus.yaml
+-
+-Two properties that need to be added later are "device_type" and
+-"ranges". Adding "device_type" on its own causes a new warning and the
+-value of "ranges" needs to be determined yet.
+-
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Link: https://lore.kernel.org/r/20230707114004.2740-3-zajec5@gmail.com
+-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+----
+- arch/arm/boot/dts/broadcom/bcm53573.dtsi | 3 +++
+- 1 file changed, 3 insertions(+)
+-
+---- a/arch/arm/boot/dts/bcm53573.dtsi
+-+++ b/arch/arm/boot/dts/bcm53573.dtsi
+-@@ -127,6 +127,9 @@
+- 
+- 		pcie0: pcie@2000 {
+- 			reg = <0x00002000 0x1000>;
+-+
+-+			#address-cells = <3>;
+-+			#size-cells = <2>;
+- 		};
+- 
+- 		usb2: usb2@4000 {
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0007-ARM-dts-BCM53573-Use-updated-spi-gpio-binding-proper.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0007-ARM-dts-BCM53573-Use-updated-spi-gpio-binding-proper.patch
+deleted file mode 100644
+index 28d89949e4644..0000000000000
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0007-ARM-dts-BCM53573-Use-updated-spi-gpio-binding-proper.patch
++++ /dev/null
+@@ -1,44 +0,0 @@
+-From 2c0fd6b3d0778ceab40205315ccef74568490f17 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Fri, 7 Jul 2023 13:40:04 +0200
+-Subject: [PATCH] ARM: dts: BCM53573: Use updated "spi-gpio" binding properties
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Switch away from deprecated properties.
+-
+-This fixes:
+-arch/arm/boot/dts/broadcom/bcm947189acdbmr.dtb: spi: gpio-sck: False schema does not allow [[3, 21, 0]]
+-        From schema: Documentation/devicetree/bindings/spi/spi-gpio.yaml
+-arch/arm/boot/dts/broadcom/bcm947189acdbmr.dtb: spi: gpio-miso: False schema does not allow [[3, 22, 0]]
+-        From schema: Documentation/devicetree/bindings/spi/spi-gpio.yaml
+-arch/arm/boot/dts/broadcom/bcm947189acdbmr.dtb: spi: gpio-mosi: False schema does not allow [[3, 23, 0]]
+-        From schema: Documentation/devicetree/bindings/spi/spi-gpio.yaml
+-arch/arm/boot/dts/broadcom/bcm947189acdbmr.dtb: spi: 'sck-gpios' is a required property
+-        From schema: Documentation/devicetree/bindings/spi/spi-gpio.yaml
+-arch/arm/boot/dts/broadcom/bcm947189acdbmr.dtb: spi: Unevaluated properties are not allowed ('gpio-miso', 'gpio-mosi', 'gpio-sck' were unexpected)
+-        From schema: Documentation/devicetree/bindings/spi/spi-gpio.yaml
+-
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Link: https://lore.kernel.org/r/20230707114004.2740-4-zajec5@gmail.com
+-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+----
+- arch/arm/boot/dts/broadcom/bcm947189acdbmr.dts | 6 +++---
+- 1 file changed, 3 insertions(+), 3 deletions(-)
+-
+---- a/arch/arm/boot/dts/bcm947189acdbmr.dts
+-+++ b/arch/arm/boot/dts/bcm947189acdbmr.dts
+-@@ -60,9 +60,9 @@
+- 	spi {
+- 		compatible = "spi-gpio";
+- 		num-chipselects = <1>;
+--		gpio-sck = <&chipcommon 21 0>;
+--		gpio-miso = <&chipcommon 22 0>;
+--		gpio-mosi = <&chipcommon 23 0>;
+-+		sck-gpios = <&chipcommon 21 0>;
+-+		miso-gpios = <&chipcommon 22 0>;
+-+		mosi-gpios = <&chipcommon 23 0>;
+- 		cs-gpios = <&chipcommon 24 0>;
+- 		#address-cells = <1>;
+- 		#size-cells = <0>;
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0009-ARM-dts-BCM53573-Fix-Ethernet-info-for-Luxul-devices.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0009-ARM-dts-BCM53573-Fix-Ethernet-info-for-Luxul-devices.patch
+index 07dd9296b6935..7930c52b162ab 100644
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0009-ARM-dts-BCM53573-Fix-Ethernet-info-for-Luxul-devices.patch
++++ b/target/linux/bcm53xx/patches-6.1/032-v6.6-0009-ARM-dts-BCM53573-Fix-Ethernet-info-for-Luxul-devices.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ 
+ --- a/arch/arm/boot/dts/bcm47189-luxul-xap-1440.dts
+ +++ b/arch/arm/boot/dts/bcm47189-luxul-xap-1440.dts
+-@@ -45,3 +45,16 @@
++@@ -58,3 +58,16 @@
+  		};
+  	};
+  };
+@@ -56,7 +56,7 @@ Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ +};
+ --- a/arch/arm/boot/dts/bcm47189-luxul-xap-810.dts
+ +++ b/arch/arm/boot/dts/bcm47189-luxul-xap-810.dts
+-@@ -81,3 +81,16 @@
++@@ -94,3 +94,16 @@
+  		};
+  	};
+  };
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0011-ARM-dts-BCM53573-Fix-Tenda-AC9-switch-CPU-port.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0011-ARM-dts-BCM53573-Fix-Tenda-AC9-switch-CPU-port.patch
+deleted file mode 100644
+index d5cb817e8e246..0000000000000
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0011-ARM-dts-BCM53573-Fix-Tenda-AC9-switch-CPU-port.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-From 7141209db9c335ab261a17933809a3e660ebdc12 Mon Sep 17 00:00:00 2001
+-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+-Date: Sun, 23 Jul 2023 21:54:14 +0200
+-Subject: [PATCH] ARM: dts: BCM53573: Fix Tenda AC9 switch CPU port
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-Primary Ethernet interface is connected to the port 8 (not 5).
+-
+-Fixes: 64612828628c ("ARM: dts: BCM53573: Add Tenda AC9 switch ports")
+-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+-Link: https://lore.kernel.org/r/20230723195416.7831-1-zajec5@gmail.com
+-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+----
+- arch/arm/boot/dts/broadcom/bcm47189-tenda-ac9.dts | 4 ++--
+- 1 file changed, 2 insertions(+), 2 deletions(-)
+-
+---- a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+-+++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+-@@ -135,8 +135,8 @@
+- 			label = "lan4";
+- 		};
+- 
+--		port@5 {
+--			reg = <5>;
+-+		port@8 {
+-+			reg = <8>;
+- 			label = "cpu";
+- 			ethernet = <&gmac0>;
+- 		};
+diff --git a/target/linux/bcm53xx/patches-6.1/032-v6.6-0015-ARM-dts-BCM53573-Disable-second-Ethernet-on-Luxul-de.patch b/target/linux/bcm53xx/patches-6.1/032-v6.6-0015-ARM-dts-BCM53573-Disable-second-Ethernet-on-Luxul-de.patch
+index 166f602452a90..e9e347075d7a7 100644
+--- a/target/linux/bcm53xx/patches-6.1/032-v6.6-0015-ARM-dts-BCM53573-Disable-second-Ethernet-on-Luxul-de.patch
++++ b/target/linux/bcm53xx/patches-6.1/032-v6.6-0015-ARM-dts-BCM53573-Disable-second-Ethernet-on-Luxul-de.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ 
+ --- a/arch/arm/boot/dts/bcm47189-luxul-xap-1440.dts
+ +++ b/arch/arm/boot/dts/bcm47189-luxul-xap-1440.dts
+-@@ -60,3 +60,7 @@
++@@ -73,3 +73,7 @@
+  		};
+  	};
+  };
+@@ -29,7 +29,7 @@ Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ +};
+ --- a/arch/arm/boot/dts/bcm47189-luxul-xap-810.dts
+ +++ b/arch/arm/boot/dts/bcm47189-luxul-xap-810.dts
+-@@ -96,3 +96,7 @@
++@@ -109,3 +109,7 @@
+  		};
+  	};
+  };
+diff --git a/target/linux/bmips/patches-6.1/202-mips-bmips-tweak-Kconfig-options.patch b/target/linux/bmips/patches-6.1/202-mips-bmips-tweak-Kconfig-options.patch
+index 99d9947c96241..36f8beb89f151 100644
+--- a/target/linux/bmips/patches-6.1/202-mips-bmips-tweak-Kconfig-options.patch
++++ b/target/linux/bmips/patches-6.1/202-mips-bmips-tweak-Kconfig-options.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -275,19 +275,13 @@ config BMIPS_GENERIC
++@@ -274,19 +274,13 @@ config BMIPS_GENERIC
+  	select SYNC_R4K
+  	select COMMON_CLK
+  	select BCM6345_L1_IRQ
+@@ -33,7 +33,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+  	select SWAP_IO_SPACE
+  	select USB_EHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+  	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+-@@ -297,6 +291,7 @@ config BMIPS_GENERIC
++@@ -296,6 +290,7 @@ config BMIPS_GENERIC
+  	select HAVE_PCI
+  	select PCI_DRIVERS_GENERIC
+  	select FW_CFE
+diff --git a/target/linux/bmips/patches-6.1/600-mips-bmips-add-pci-support.patch b/target/linux/bmips/patches-6.1/600-mips-bmips-add-pci-support.patch
+index d45a7a82393bb..e5c22bb17fda1 100644
+--- a/target/linux/bmips/patches-6.1/600-mips-bmips-add-pci-support.patch
++++ b/target/linux/bmips/patches-6.1/600-mips-bmips-add-pci-support.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+ 
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -289,7 +289,6 @@ config BMIPS_GENERIC
++@@ -288,7 +288,6 @@ config BMIPS_GENERIC
+  	select USB_OHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+  	select HARDIRQS_SW_RESEND
+  	select HAVE_PCI
+diff --git a/target/linux/generic/backport-6.1/020-v6.3-06-BACKPORT-mm-multi-gen-LRU-per-node-lru_gen_folio-lis.patch b/target/linux/generic/backport-6.1/020-v6.3-06-BACKPORT-mm-multi-gen-LRU-per-node-lru_gen_folio-lis.patch
+index 87e7c49a766fd..bfba00ac023d5 100644
+--- a/target/linux/generic/backport-6.1/020-v6.3-06-BACKPORT-mm-multi-gen-LRU-per-node-lru_gen_folio-lis.patch
++++ b/target/linux/generic/backport-6.1/020-v6.3-06-BACKPORT-mm-multi-gen-LRU-per-node-lru_gen_folio-lis.patch
+@@ -76,7 +76,7 @@ Signed-off-by: T.J. Mercier <tjmercier@google.com>
+ 
+ --- a/include/linux/memcontrol.h
+ +++ b/include/linux/memcontrol.h
+-@@ -790,6 +790,11 @@ static inline void obj_cgroup_put(struct
++@@ -795,6 +795,11 @@ static inline void obj_cgroup_put(struct
+  	percpu_ref_put(&objcg->refcnt);
+  }
+  
+@@ -88,7 +88,7 @@ Signed-off-by: T.J. Mercier <tjmercier@google.com>
+  static inline void mem_cgroup_put(struct mem_cgroup *memcg)
+  {
+  	if (memcg)
+-@@ -1290,6 +1295,11 @@ static inline void obj_cgroup_put(struct
++@@ -1295,6 +1300,11 @@ static inline void obj_cgroup_put(struct
+  {
+  }
+  
+diff --git a/target/linux/generic/backport-6.1/827-v6.3-0002-of-property-make-.-cells-optional-for-simple-props.patch b/target/linux/generic/backport-6.1/827-v6.3-0002-of-property-make-.-cells-optional-for-simple-props.patch
+index c4f44b87a4d39..3af514c42dfd5 100644
+--- a/target/linux/generic/backport-6.1/827-v6.3-0002-of-property-make-.-cells-optional-for-simple-props.patch
++++ b/target/linux/generic/backport-6.1/827-v6.3-0002-of-property-make-.-cells-optional-for-simple-props.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/of/property.c
+ +++ b/drivers/of/property.c
+-@@ -1202,8 +1202,8 @@ static struct device_node *parse_prop_ce
++@@ -1144,8 +1144,8 @@ static struct device_node *parse_prop_ce
+  	if (strcmp(prop_name, list_name))
+  		return NULL;
+  
+diff --git a/target/linux/generic/backport-6.1/827-v6.3-0003-of-property-add-nvmem-cell-cells-property.patch b/target/linux/generic/backport-6.1/827-v6.3-0003-of-property-add-nvmem-cell-cells-property.patch
+index c2b86de9b97dd..025f094987a68 100644
+--- a/target/linux/generic/backport-6.1/827-v6.3-0003-of-property-add-nvmem-cell-cells-property.patch
++++ b/target/linux/generic/backport-6.1/827-v6.3-0003-of-property-add-nvmem-cell-cells-property.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 
+ --- a/drivers/of/property.c
+ +++ b/drivers/of/property.c
+-@@ -1307,7 +1307,7 @@ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-c
++@@ -1249,7 +1249,7 @@ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-c
+  DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
+  DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
+  DEFINE_SIMPLE_PROP(extcon, "extcon", NULL)
+diff --git a/target/linux/generic/hack-6.1/253-ksmbd-config.patch b/target/linux/generic/hack-6.1/253-ksmbd-config.patch
+index b0c379657e3b2..4bb5eb9a6c5b7 100644
+--- a/target/linux/generic/hack-6.1/253-ksmbd-config.patch
++++ b/target/linux/generic/hack-6.1/253-ksmbd-config.patch
+@@ -10,7 +10,7 @@ Subject: [PATCH] Kconfig: add tristate for OID and ASNI string
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -2003,7 +2003,7 @@ config PADATA
++@@ -2004,7 +2004,7 @@ config PADATA
+  	bool
+  
+  config ASN1
+diff --git a/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch b/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
+index 6cd30813a5d4e..1c977c4d3a0e3 100644
+--- a/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
++++ b/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
+@@ -60,7 +60,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  static void sock_def_write_space_wfree(struct sock *sk);
+  static void sock_def_write_space(struct sock *sk);
+-@@ -582,6 +584,18 @@ discard_and_relse:
++@@ -584,6 +586,18 @@ discard_and_relse:
+  }
+  EXPORT_SYMBOL(__sk_receive_skb);
+  
+@@ -79,7 +79,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ip6_dst_check(struct dst_entry *,
+  							  u32));
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ipv4_dst_check(struct dst_entry *,
+-@@ -2175,9 +2189,11 @@ static void __sk_free(struct sock *sk)
++@@ -2179,9 +2193,11 @@ static void __sk_free(struct sock *sk)
+  	if (likely(sk->sk_net_refcnt))
+  		sock_inuse_add(sock_net(sk), -1);
+  
+diff --git a/target/linux/generic/hack-6.1/902-debloat_proc.patch b/target/linux/generic/hack-6.1/902-debloat_proc.patch
+index abf588f12fc37..755c5c1218724 100644
+--- a/target/linux/generic/hack-6.1/902-debloat_proc.patch
++++ b/target/linux/generic/hack-6.1/902-debloat_proc.patch
+@@ -235,7 +235,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (!pe)
+ --- a/mm/vmalloc.c
+ +++ b/mm/vmalloc.c
+-@@ -4187,6 +4187,8 @@ static const struct seq_operations vmall
++@@ -4205,6 +4205,8 @@ static const struct seq_operations vmall
+  
+  static int __init proc_vmalloc_init(void)
+  {
+@@ -330,7 +330,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -4100,6 +4100,8 @@ static __net_initdata struct pernet_oper
++@@ -4104,6 +4104,8 @@ static __net_initdata struct pernet_oper
+  
+  static int __init proto_init(void)
+  {
+diff --git a/target/linux/generic/pending-6.1/203-kallsyms_uncompressed.patch b/target/linux/generic/pending-6.1/203-kallsyms_uncompressed.patch
+index e066ad3cf3048..1b577ec3bb5d2 100644
+--- a/target/linux/generic/pending-6.1/203-kallsyms_uncompressed.patch
++++ b/target/linux/generic/pending-6.1/203-kallsyms_uncompressed.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1481,6 +1481,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
++@@ -1482,6 +1482,17 @@ config SYSCTL_ARCH_UNALIGN_ALLOW
+  	  the unaligned access emulation.
+  	  see arch/parisc/kernel/unaligned.c for reference
+  
+diff --git a/target/linux/generic/pending-6.1/300-mips_expose_boot_raw.patch b/target/linux/generic/pending-6.1/300-mips_expose_boot_raw.patch
+index 15d94f4d3c19a..9e571a6d875b1 100644
+--- a/target/linux/generic/pending-6.1/300-mips_expose_boot_raw.patch
++++ b/target/linux/generic/pending-6.1/300-mips_expose_boot_raw.patch
+@@ -9,7 +9,7 @@ Acked-by: Rob Landley <rob@landley.net>
+ ---
+ --- a/arch/mips/Kconfig
+ +++ b/arch/mips/Kconfig
+-@@ -1035,9 +1035,6 @@ config FW_ARC
++@@ -1034,9 +1034,6 @@ config FW_ARC
+  config ARCH_MAY_HAVE_PC_FDC
+  	bool
+  
+@@ -19,7 +19,7 @@ Acked-by: Rob Landley <rob@landley.net>
+  config CEVT_BCM1480
+  	bool
+  
+-@@ -3092,6 +3089,18 @@ choice
++@@ -3091,6 +3088,18 @@ choice
+  		bool "Extend builtin kernel arguments with bootloader arguments"
+  endchoice
+  
+diff --git a/target/linux/generic/pending-6.1/402-mtd-spi-nor-write-support-for-minor-aligned-partitions.patch b/target/linux/generic/pending-6.1/402-mtd-spi-nor-write-support-for-minor-aligned-partitions.patch
+index f04da4000ccb8..c7da2f883435f 100644
+--- a/target/linux/generic/pending-6.1/402-mtd-spi-nor-write-support-for-minor-aligned-partitions.patch
++++ b/target/linux/generic/pending-6.1/402-mtd-spi-nor-write-support-for-minor-aligned-partitions.patch
+@@ -193,7 +193,7 @@ Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  	default y
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -1049,6 +1049,8 @@ static u8 spi_nor_convert_3to4_erase(u8
++@@ -1050,6 +1050,8 @@ static u8 spi_nor_convert_3to4_erase(u8
+  
+  static bool spi_nor_has_uniform_erase(const struct spi_nor *nor)
+  {
+@@ -202,7 +202,7 @@ Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  	return !!nor->params->erase_map.uniform_erase_type;
+  }
+  
+-@@ -2157,6 +2159,7 @@ static int spi_nor_select_erase(struct s
++@@ -2158,6 +2160,7 @@ static int spi_nor_select_erase(struct s
+  {
+  	struct spi_nor_erase_map *map = &nor->params->erase_map;
+  	const struct spi_nor_erase_type *erase = NULL;
+@@ -210,7 +210,7 @@ Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  	struct mtd_info *mtd = &nor->mtd;
+  	u32 wanted_size = nor->info->sector_size;
+  	int i;
+-@@ -2189,8 +2192,9 @@ static int spi_nor_select_erase(struct s
++@@ -2190,8 +2193,9 @@ static int spi_nor_select_erase(struct s
+  	 */
+  	for (i = SNOR_ERASE_TYPE_MAX - 1; i >= 0; i--) {
+  		if (map->erase_type[i].size) {
+@@ -222,7 +222,7 @@ Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  		}
+  	}
+  
+-@@ -2198,6 +2202,9 @@ static int spi_nor_select_erase(struct s
++@@ -2199,6 +2203,9 @@ static int spi_nor_select_erase(struct s
+  		return -EINVAL;
+  
+  	mtd->erasesize = erase->size;
+diff --git a/target/linux/generic/pending-6.1/479-mtd-spi-nor-add-xtx-xt25f128b.patch b/target/linux/generic/pending-6.1/479-mtd-spi-nor-add-xtx-xt25f128b.patch
+index 0ec6aa7fb6505..d2a9fb34365d7 100644
+--- a/target/linux/generic/pending-6.1/479-mtd-spi-nor-add-xtx-xt25f128b.patch
++++ b/target/linux/generic/pending-6.1/479-mtd-spi-nor-add-xtx-xt25f128b.patch
+@@ -61,7 +61,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +};
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -1635,6 +1635,7 @@ static const struct spi_nor_manufacturer
++@@ -1636,6 +1636,7 @@ static const struct spi_nor_manufacturer
+  	&spi_nor_winbond,
+  	&spi_nor_xilinx,
+  	&spi_nor_xmc,
+diff --git a/target/linux/generic/pending-6.1/920-mangle_bootargs.patch b/target/linux/generic/pending-6.1/920-mangle_bootargs.patch
+index 2017f04d0f37f..1015266084e2a 100644
+--- a/target/linux/generic/pending-6.1/920-mangle_bootargs.patch
++++ b/target/linux/generic/pending-6.1/920-mangle_bootargs.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -1826,6 +1826,15 @@ config EMBEDDED
++@@ -1827,6 +1827,15 @@ config EMBEDDED
+  	  an embedded system so certain expert options are available
+  	  for configuration.
+  
+diff --git a/target/linux/mediatek/patches-6.1/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch b/target/linux/mediatek/patches-6.1/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
+index 704b81654af7d..1f747d1f4fd69 100644
+--- a/target/linux/mediatek/patches-6.1/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
++++ b/target/linux/mediatek/patches-6.1/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
+@@ -26,7 +26,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+  
+ --- a/drivers/mtd/spi-nor/core.c
+ +++ b/drivers/mtd/spi-nor/core.c
+-@@ -2899,6 +2899,18 @@ static const struct flash_info *spi_nor_
++@@ -2900,6 +2900,18 @@ static const struct flash_info *spi_nor_
+  	return NULL;
+  }
+  
+@@ -45,7 +45,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+  static const struct flash_info *spi_nor_get_flash_info(struct spi_nor *nor,
+  						       const char *name)
+  {
+-@@ -3002,6 +3014,9 @@ int spi_nor_scan(struct spi_nor *nor, co
++@@ -3003,6 +3015,9 @@ int spi_nor_scan(struct spi_nor *nor, co
+  	if (!nor->bouncebuf)
+  		return -ENOMEM;
+  
+diff --git a/target/linux/uml/patches-6.1/102-pseudo-random-mac.patch b/target/linux/uml/patches-6.1/102-pseudo-random-mac.patch
+index a752e1d2779da..d2dc7516e6610 100644
+--- a/target/linux/uml/patches-6.1/102-pseudo-random-mac.patch
++++ b/target/linux/uml/patches-6.1/102-pseudo-random-mac.patch
+@@ -11,7 +11,7 @@ Applies to vanilla kernel 3.9.4.
+ ===============================================================================
+ --- a/arch/um/drivers/Kconfig
+ +++ b/arch/um/drivers/Kconfig
+-@@ -153,6 +153,20 @@ config UML_NET
++@@ -143,6 +143,20 @@ config UML_NET
+  	  enable at least one of the following transport options to actually
+  	  make use of UML networking.
+  

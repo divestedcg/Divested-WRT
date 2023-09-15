@@ -1,13 +1,18 @@
+20230915-00
+- update to c1206675a4c23e3ec93599a705becc141c71c675
+  https://github.com/openwrt/openwrt/compare/53c2f174...703d667a
+- [cherrypick] #13446: update to kernel 6.1.43 (security and bug fixes)
+
 20230905-00
 - update to 703d667a0cdf6dfa402c08e72d0c77a257ca5009
-  https://github.com/openwrt/openwrt/compare/53c2f174...703d667a
-- [upstream] update to kernel 6.1.51
+  https://github.com/openwrt/openwrt/compare/703d667a...53c2f174
+- [upstream] update to kernel 6.1.51 (security and bug fixes)
 
 20230826-00
 - update to 53c2f174ad79397b53db0e52d43f44a0702a93da
   https://github.com/openwrt/openwrt/compare/46ed38ad...53c2f174
 - [cherrypick] #13355: update to kernel 6.1.48 (security and bug fixes)
-- include kmod-sched-ctinfo
+- adds kmod-sched-ctinfo
 
 20230816-00
 - update to 46ed38adeb76b376e34056c755e0c8ffa5acf29f
@@ -49,7 +54,7 @@
 20230701-00
 - update to f24c9b9d863c2635e472e83028d28cc8d0a7c7c6
   https://github.com/openwrt/openwrt/compare/539cb538...f24c9b9d
-- [upstream] update to kernel 5.15.119
+- [upstream] update to kernel 5.15.119 (security and bug fixes)
 - refresh patches
 
 20230626-00
@@ -64,20 +69,20 @@
 20230611-00
 - update to 9519a625499a963508755b7fc08fb825b3d8cfde
   https://github.com/openwrt/openwrt/compare/edb3a416...9519a625
-- [upstream] update to openssl 3.0.9
+- [upstream] update to openssl 3.0.9 (security and bug fixes)
 - [cherrypick] #12823: update to kernel 5.15.116 (security and bug fixes)
 
 20230601-00
 - update to edb3a4162c0763ecc9d5e7660700a68a25bf28e3
   https://github.com/openwrt/openwrt/compare/5636ffc2...edb3a416
-- [upstream] update to kernel 5.15.114
+- [upstream] update to kernel 5.15.114 (security and bug fixes)
 - openssl: fix moderate-severity CVE-2023-2650
   https://www.openssl.org/news/secadv/20230530.txt
 
 20230524-00
 - update to 5636ffc22d784a2a4acc5e406e54f8a5858f1435
   https://github.com/openwrt/openwrt/compare/7ad1fa12...5636ffc2
-- [upstream] update to kernel 5.15.112
+- [upstream] update to kernel 5.15.112 (security and bug fixes)
 
 20230514-00
 - update to 7ad1fa12efd99dd2a4e4ffa01365280f63e99e55
@@ -102,13 +107,13 @@
 
 20230430-00
 - update to cf8d861978dbfdb572a25db460db464b50d9e809
-- [upstream] update to kernel 5.15.109
+- [upstream] update to kernel 5.15.109 (security and bug fixes)
 - [cherrypick] #12500: mwlwifi: update to version 10.3.9.1-20230429
 - drops amsdu patch
 
 20230427-00
 - update to 9a2666951051f8072ba83f0535e1534ea0dbf6aa
-- [upstream] update to kernel 5.15.108
+- [upstream] update to kernel 5.15.108 (security and bug fixes)
 - reverted ab3f151aa874837ae1ac56d5b1cc31bb6cd68681
   due reports of worse stability
 
@@ -120,7 +125,7 @@
 
 20230409-00
 - update to 32f134fbdf027afc342caea17200728033747333
-- [upstream] update to kernel 5.15.106
+- [upstream] update to kernel 5.15.106 (security and bug fixes)
 
 20230330-00
 - update to 75e78bcaab847557ce1782eb2dea9dff9a029171
@@ -137,7 +142,7 @@
 
 20230310-01
 - update to 166ab6f90eef9e08b1d5f45fe5464ecd2194b2e3
-- [upstream] update to kernel 5.15.98
+- [upstream] update to kernel 5.15.98 (security and bug fixes)
 - reverted c75cd5f6028da6ceb1fb3438da93e2305cd720b1 387c2df15cbd7bfa3917209541e1cd94ddc885d0
   to allow successful build
 
@@ -162,17 +167,17 @@
 - boot issue fixed upstream, thanks Robert Marko!:
   https://github.com/openwrt/openwrt/commit/721206a1b14fc5eba7ba8e20d979b26baf934e0d
 - update to 721206a1b14fc5eba7ba8e20d979b26baf934e0d
-- [upstream] update to kernel 5.15.92
+- [upstream] update to kernel 5.15.92 (security and bug fixes)
 
 20230205-00-BROKEN
 - does NOT boot: https://github.com/openwrt/openwrt/issues/11933
 - update to b5193291bdde00e91c58e59029d5c68b0bc605db
-- [upstream] update to kernel 5.15.91
+- [upstream] update to kernel 5.15.91 (security and bug fixes)
 - switch to dnsmasq-full for dnssec support
 
 20230127-00
 - update to 1a47f19080e0c8edbf4a463020118bb9ccaa3ff0
-- [upstream] update to kernel 5.15.90
+- [upstream] update to kernel 5.15.90 (security and bug fixes)
 
 20230119-00
 - update to 5dee5965012e788f06e4d095e8cfb73200d818cb
@@ -181,25 +186,25 @@
 
 20230109-00
 - update to 2a3283643ccf77b55d67c7a3f96d40576227499c
-- [upstream] update to kernel 5.15.86
+- [upstream] update to kernel 5.15.86 (security and bug fixes)
 
 20221231-00
 - update to 55d176fd0bed76ec21ce6d5a763a74480e4446ae
-- [upstream] update to kernel 5.15.85
+- [upstream] update to kernel 5.15.85 (security and bug fixes)
 
 20221222-00
 - update to bf06a7c865531cf20735cbdfac46d4947fcc18a6
-- [upstream] update to kernel 5.15.84
+- [upstream] update to kernel 5.15.84 (security and bug fixes)
 - attended sysupgrade is now included as it is required by luci
   please do NOT use it, you'll effectively switch over to vanilla builds
 
 20221211-00
 - update to 9a1ab8aa0398f93360bf54d81bcd332cd413c03f
-- [upstream] update to kernel 5.15.82
+- [upstream] update to kernel 5.15.82 (security and bug fixes)
 
 20221203-00
 - update to 8719f73fa2beddb259013801ca912b96fbc83543
-- [upstream] update to kernel 5.15.80
+- [upstream] update to kernel 5.15.80 (security and bug fixes)
 - software flow offload appears broken
   see https://github.com/openwrt/openwrt/issues/10628#issuecomment-1334507972
 - many of these devices appear to have broken switches regardless of version
