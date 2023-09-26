@@ -1,7 +1,12 @@
+20230925-00
+- update to 74e7f8ebbdc19c58ac59c792154041a6b3c124f5
+  https://github.com/openwrt/openwrt/compare/703d667a...74e7f8eb
+- [upstream] update to kernel 6.1.55 (security and bug fixes)
+
 20230915-00
 - update to c1206675a4c23e3ec93599a705becc141c71c675
   https://github.com/openwrt/openwrt/compare/53c2f174...703d667a
-- [cherrypick] #13446: update to kernel 6.1.43 (security and bug fixes)
+- [cherrypick] #13446: update to kernel 6.1.53 (security and bug fixes)
 
 20230905-00
 - update to 703d667a0cdf6dfa402c08e72d0c77a257ca5009
