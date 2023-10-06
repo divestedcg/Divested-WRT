@@ -1,3 +1,7 @@
+20231005-00
+- update to 2e3ea6d2066fdbb7955df61711c7a0c372c6626b
+  https://github.com/openwrt/openwrt/compare/74e7f8eb...2e3ea6d2
+
 20230925-00
 - update to 74e7f8ebbdc19c58ac59c792154041a6b3c124f5
   https://github.com/openwrt/openwrt/compare/703d667a...74e7f8eb
