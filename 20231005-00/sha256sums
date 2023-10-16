@@ -1,6 +1,9 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
+- -----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
 60224716883eb8904b28d9ba578ded82b61d34e4c5b36ca66a9f392fba7b7beb *config.buildinfo
 4751eab4ebd0f5bf16b55c170109f20a98685d6c8a3b83fcc5c4eccac2326881 *divested-wrt-snapshot-r24088+10-2e3ea6d206-mvebu-cortexa9-buffalo_ls421de-initramfs-kernel.bin
 ca375e0e39b9ec6206e16e358eb6f1059b9256b248d6812bb1fcb9d2a6957946 *divested-wrt-snapshot-r24088+10-2e3ea6d206-mvebu-cortexa9-buffalo_ls421de-squashfs-sysupgrade.bin
@@ -60,7 +63,7 @@ e764b16d13ff0553e5512cba96c8f78736a31265dffd66945def4ef6bb6487e9 *divested-wrt-s
 6646fef94b6f14abc7b7b01fa380ba409b2ad9351230ff34d3df23b223c6f27d *feeds.buildinfo
 d91b83b3428a32f6c0ca03aab18f5c4d989ccfe481ea09a34fd9f7035d37a6e8 *profiles.json
 80f3236f4ffc6715f96f0b04d9ddbb65ac136ebb110a21718c63e676d25a1a5c *version.buildinfo
------BEGIN PGP SIGNATURE-----
+- -----BEGIN PGP SIGNATURE-----
 
 iQIzBAEBCAAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAmUfgX8ACgkQut/Kvdv1
 tpRcAQ//StdwkUL59kzQtoEeZQKKGy3NW+PqAXqa2526c7KYBXXbZBOIL4XA+419
@@ -75,4 +78,20 @@ s+alXzWH4zoBpSdv0tPtEyXzEUqcg5Kbv+GHv6k3VIKDlSULWNBVljU3Z86fFvfm
 nWHfR6WEb6ZAV71tpTWFqbLk3WhEgz1ile81iFhPq6TXRMSQ1XI+rQv5vkAuYTp7
 i7rwZDxyN8ugkyrMUDCUCLyyaNE8TTlOeMV0LJm/vEAaxa1e07w=
 =57HS
+- -----END PGP SIGNATURE-----
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAmUskHUACgkQut/Kvdv1
+tpSj+hAAqE6iUUN0/qgmtr/4pzW4HAjmEyc4XKo1rzgOWgojW2c/637udop5ClVn
+3XgA6Wtzb8lQBXVDBx8pvDNhTPiqIB2lGJKfEupWdR7UqjkCEjc85KNix9lhekzO
+G6vp3e6VoPwu6GNQlFKUx3wJ0YrvKOAt8jUzJto8SJRCZScKQ4/pRV+41Ja0yfAL
+A9O420gIAW63Y0Nru5jipk0ZWzPXt9q52cJhni6eNssRHmEan135uD+gGO6p6sP4
+GQskxmZTI0IoxV+HWC2z1bHNlVb2Y2Fuo+uWnTz0oxvq6P3jTC4XgizPCjj26Ph9
+u8oSTbHUO6GZFzlTqNYNy/1r79YGTrtQb/KyRHio5Z6B817dTFwBoOrxUGfBpd+/
+azuhuSk8rl9Rb5hCUkOd5kjikBafFFrD+Go2kOzXlZeG4DcDdN7QdyXXDbRlv8EI
+zHXHKKj+ku6xiqMBHVZhrffn8fPoIQaseM8bL7LIzwWOZQ2AAq3sSyzMIuBsO2/Y
+d797x7+T72esG1BW5lYNsbl7tBRR3By90TOr7Pf7Y3K8ljiL6+P+fHFcfb5Euovw
+BKKgkYq7sXW9S9U1bPxq7rb4oXhxSuiopzMOCykIBBtiqwg6+9alM0k22zxK+BDr
+poQtJwBJfGTxXI5gXyJVMQ/6QeDEnPG2tBI9Urjw6sfyEROmY/w=
+=j4BY
 -----END PGP SIGNATURE-----
