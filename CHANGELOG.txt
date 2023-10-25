@@ -1,3 +1,9 @@
+20231025-00
+- update to e4ebc7b5662d6436fcc84b8e1583204b96fb0503
+  https://github.com/openwrt/openwrt/compare/2e570284...e4ebc7b5
+- [upstream] update to openssl 3.0.12 (security and bug fixes)
+- [cherrypick] #13790: update to kernel 6.1.60 (security and bug fixes)
+
 20231015-00
 - update to 2e57028424d0e914490a80178cd729adb17ba09b
   https://github.com/openwrt/openwrt/compare/2e3ea6d2...2e570284
