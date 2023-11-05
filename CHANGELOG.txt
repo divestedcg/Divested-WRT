@@ -1,3 +1,9 @@
+20231104-00
+- update to ae500e62e2938e112ae1fc6aa7389e8c7b784b13
+  https://github.com/openwrt/openwrt/compare/e4ebc7b5...ae500e62
+- [upstream] update to kernel 6.1.61 (security and bug fixes)
+- if you get a feeds failure, install perl-Time-Piece perl-JSON-PP
+
 20231025-00
 - update to e4ebc7b5662d6436fcc84b8e1583204b96fb0503
   https://github.com/openwrt/openwrt/compare/2e570284...e4ebc7b5
