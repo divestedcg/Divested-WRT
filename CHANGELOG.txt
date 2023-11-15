@@ -1,3 +1,8 @@
+20231114-00
+- update to 4d9108e0bfcac0380cfa9379f906b0a8f9842762
+  https://github.com/openwrt/openwrt/compare/ae500e62...4d9108e0
+- [upstream] update to kernel 6.1.62 (security and bug fixes)
+
 20231104-00
 - update to ae500e62e2938e112ae1fc6aa7389e8c7b784b13
   https://github.com/openwrt/openwrt/compare/e4ebc7b5...ae500e62
