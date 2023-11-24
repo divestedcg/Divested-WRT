@@ -1,3 +1,12 @@
+20231124-01
+- drops amsdu patch
+
+20231124-00
+- update to 6f5c301eab71e07b1fe4b57ce6a2662dca4c66de
+  https://github.com/openwrt/openwrt/compare/4d9108e0...6f5c301e
+- [upstream] update to kernel 6.1.63 (security and bug fixes)
+- [cherrypick] #14044: mwlwifi: update to version 10.4.10-20231120
+
 20231114-00
 - update to 4d9108e0bfcac0380cfa9379f906b0a8f9842762
   https://github.com/openwrt/openwrt/compare/ae500e62...4d9108e0
