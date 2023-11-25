@@ -6,6 +6,8 @@
   https://github.com/openwrt/openwrt/compare/4d9108e0...6f5c301e
 - [upstream] update to kernel 6.1.63 (security and bug fixes)
 - [cherrypick] #14044: mwlwifi: update to version 10.4.10-20231120
+  huge mwlwifi update thanks to @jbsky
+  fixes amsdu and wpa3 + many other improvements
 
 20231114-00
 - update to 4d9108e0bfcac0380cfa9379f906b0a8f9842762
