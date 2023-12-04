@@ -1,3 +1,8 @@
+20231204-00
+- update to 62277c485e79f6fe453a8a1bd54f271ae17c7490
+  https://github.com/openwrt/openwrt/compare/6f5c301e...62277c48
+- [upstream] update to kernel 6.1.65 (security and bug fixes)
+
 20231124-01
 - drops amsdu patch
 
