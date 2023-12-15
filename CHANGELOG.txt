@@ -1,3 +1,8 @@
+20231214-00
+- update to c22aa0be3e2df4d46010fa57a1004c17c1288781
+  https://github.com/openwrt/openwrt/compare/62277c48...c22aa0be
+- [cherrypick] #14216: update to kernel 6.1.68 (security and bug fixes)
+
 20231204-00
 - update to 62277c485e79f6fe453a8a1bd54f271ae17c7490
   https://github.com/openwrt/openwrt/compare/6f5c301e...62277c48
