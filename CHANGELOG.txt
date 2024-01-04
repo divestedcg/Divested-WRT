@@ -1,3 +1,8 @@
+20240103-00
+- update to 7ddd3abd278e6105fb00794fe0d3b2c25f969c49
+  https://github.com/openwrt/openwrt/compare/f024f4b1...7ddd3abd
+- [upstream] update to kernel 6.1.70 (security and bug fixes)
+
 20231224-00
 - update to f024f4b1b0380b3b2e18115bd8e4f35393fccc70
   https://github.com/openwrt/openwrt/compare/c22aa0be...f024f4b1
