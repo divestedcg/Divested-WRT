@@ -1,3 +1,8 @@
+20240113-00
+- update to 735efbfb7c1d2b29bb53d833a9ddd16cc29355e6
+  https://github.com/openwrt/openwrt/compare/7ddd3abd...735efbfb
+- [cherrypick] #14383: update to kernel 6.1.72 (security and bug fixes)
+
 20240103-00
 - update to 7ddd3abd278e6105fb00794fe0d3b2c25f969c49
   https://github.com/openwrt/openwrt/compare/f024f4b1...7ddd3abd

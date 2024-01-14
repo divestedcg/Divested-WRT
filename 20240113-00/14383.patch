@@ -1,0 +1,757 @@
+From a31b3be85d278181d26b1bac3d579ec8d856402d Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Wed, 10 Jan 2024 15:54:42 -0500
+Subject: [PATCH] kernel: bump 6.1 to 6.1.72
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.72
+
+Manually rebased:
+	generic/hack-6.1/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+
+All other patches automatically rebased.
+
+Build system: x86/64
+Build-tested: x86/64/AMD Cezanne
+Run-tested: x86/64/AMD Cezanne
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.1                            |  4 +--
+ ...a2-eth-don-t-use-ENOTSUPP-error-code.patch |  2 +-
+ ...sorb-phylink_start-call-into-dpaa2_m.patch |  4 +--
+ ...sign-priv-mac-after-dpaa2_mac_connec.patch |  6 ++---
+ ...nnect-to-MAC-before-requesting-the-e.patch | 10 +++----
+ ...rialize-changes-to-priv-mac-with-a-m.patch | 26 +++++++++----------
+ ...c-move-rtnl_lock-only-around-phylink.patch |  6 ++---
+ .../900-unaligned_access_hacks.patch          |  2 +-
+ ...111-MMC-added-alternative-MMC-driver.patch |  6 ++---
+ ...Better-coalescing-parameter-defaults.patch |  4 +--
+ ...t-Workaround-2-for-Pi4-Ethernet-fail.patch |  2 +-
+ ...7-Support-for-the-Sony-IMX477-sensor.patch |  2 +-
+ ...9-Support-for-the-Sony-IMX519-sensor.patch |  2 +-
+ ...vicetree-Add-documentation-for-imx37.patch |  2 +-
+ ...et-bcmgenet-Reset-RBUF-on-first-open.patch |  8 +++---
+ ...do-single-sector-reads-during-recove.patch |  2 +-
+ ...et-bcmgenet-Add-eee-module-parameter.patch |  2 +-
+ ...a-i2c-Add-IMX708-CMOS-sensor-binding.patch |  2 +-
+ ...a-i2c-Add-IMX296-CMOS-sensor-binding.patch |  2 +-
+ ...edia-i2c-IMX296-camera-sensor-driver.patch |  2 +-
+ ...-bindings-Convert-imx290.txt-to-YAML.patch |  2 +-
+ ...a-i2c-Replace-IMX708-sensor-binding-.patch |  2 +-
+ ...cs-add-driver-for-MediaTek-SGMII-PCS.patch |  2 +-
+ ...t7530-introduce-separate-MDIO-driver.patch |  2 +-
+ ...ntroduce-driver-for-MT7988-built-in-.patch |  2 +-
+ ...or-Motorcomm-yt8521-gigabit-ethernet.patch |  2 +-
+ ...-netfilter-add-xt_FLOWOFFLOAD-target.patch |  6 ++---
+ .../hack-6.1/901-debloat_sock_diag.patch      |  2 +-
+ .../generic/hack-6.1/902-debloat_proc.patch   |  2 +-
+ ...ow_offload-handle-netdevice-events-f.patch |  6 ++---
+ ...introduce-the-Qualcomm-IPQESS-driver.patch |  2 +-
+ ...dsa-add-out-of-band-tagging-protocol.patch |  2 +-
+ ...er-for-MediaTek-SoC-built-in-GE-PHYs.patch |  2 +-
+ 33 files changed, 65 insertions(+), 65 deletions(-)
+
+diff --git a/include/kernel-6.1 b/include/kernel-6.1
+index c52b94712fbd3..836cecf7deffa 100644
+--- a/include/kernel-6.1
++++ b/include/kernel-6.1
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.1 = .71
+-LINUX_KERNEL_HASH-6.1.71 = 2df774dd53f9ffd4e57ebf804cf597709295df6a304fe261d25220a134b7f041
++LINUX_VERSION-6.1 = .72
++LINUX_KERNEL_HASH-6.1.72 = 98dce69077c35cffca799dcdbbd32a02242aad6b0950eb931936bb2ef69f0926
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0001-net-dpaa2-eth-don-t-use-ENOTSUPP-error-code.patch b/target/linux/armsr/patches-6.1/701-v6.2-0001-net-dpaa2-eth-don-t-use-ENOTSUPP-error-code.patch
+index 2c70b44f4b321..ec72f91d0f8f7 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0001-net-dpaa2-eth-don-t-use-ENOTSUPP-error-code.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0001-net-dpaa2-eth-don-t-use-ENOTSUPP-error-code.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -3611,7 +3611,7 @@ static int dpaa2_eth_setup_dpni(struct f
++@@ -3614,7 +3614,7 @@ static int dpaa2_eth_setup_dpni(struct f
+  		dev_err(dev, "DPNI version %u.%u not supported, need >= %u.%u\n",
+  			priv->dpni_ver_major, priv->dpni_ver_minor,
+  			DPNI_VER_MAJOR, DPNI_VER_MINOR);
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0003-net-dpaa2-mac-absorb-phylink_start-call-into-dpaa2_m.patch b/target/linux/armsr/patches-6.1/701-v6.2-0003-net-dpaa2-mac-absorb-phylink_start-call-into-dpaa2_m.patch
+index c47598749cd09..af5ff2aea6046 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0003-net-dpaa2-mac-absorb-phylink_start-call-into-dpaa2_m.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0003-net-dpaa2-mac-absorb-phylink_start-call-into-dpaa2_m.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -2080,10 +2080,8 @@ static int dpaa2_eth_open(struct net_dev
++@@ -2083,10 +2083,8 @@ static int dpaa2_eth_open(struct net_dev
+  		goto enable_err;
+  	}
+  
+@@ -33,7 +33,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	return 0;
+  
+-@@ -2157,7 +2155,6 @@ static int dpaa2_eth_stop(struct net_dev
++@@ -2160,7 +2158,6 @@ static int dpaa2_eth_stop(struct net_dev
+  	int retries = 10;
+  
+  	if (dpaa2_eth_is_type_phy(priv)) {
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0005-net-dpaa2-eth-assign-priv-mac-after-dpaa2_mac_connec.patch b/target/linux/armsr/patches-6.1/701-v6.2-0005-net-dpaa2-eth-assign-priv-mac-after-dpaa2_mac_connec.patch
+index 45f07decc91b0..c31a47018245e 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0005-net-dpaa2-eth-assign-priv-mac-after-dpaa2_mac_connec.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0005-net-dpaa2-eth-assign-priv-mac-after-dpaa2_mac_connec.patch
+@@ -49,7 +49,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -4441,9 +4441,8 @@ static int dpaa2_eth_connect_mac(struct
++@@ -4444,9 +4444,8 @@ static int dpaa2_eth_connect_mac(struct
+  	err = dpaa2_mac_open(mac);
+  	if (err)
+  		goto err_free_mac;
+@@ -60,7 +60,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  		err = dpaa2_mac_connect(mac);
+  		if (err && err != -EPROBE_DEFER)
+  			netdev_err(priv->net_dev, "Error connecting to the MAC endpoint: %pe",
+-@@ -4452,11 +4451,12 @@ static int dpaa2_eth_connect_mac(struct
++@@ -4455,11 +4454,12 @@ static int dpaa2_eth_connect_mac(struct
+  			goto err_close_mac;
+  	}
+  
+@@ -74,7 +74,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  err_free_mac:
+  	kfree(mac);
+  	return err;
+-@@ -4464,15 +4464,18 @@ err_free_mac:
++@@ -4467,15 +4467,18 @@ err_free_mac:
+  
+  static void dpaa2_eth_disconnect_mac(struct dpaa2_eth_priv *priv)
+  {
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0009-net-dpaa2-eth-connect-to-MAC-before-requesting-the-e.patch b/target/linux/armsr/patches-6.1/701-v6.2-0009-net-dpaa2-eth-connect-to-MAC-before-requesting-the-e.patch
+index 7c394c55db1f4..4e39e9a0ac03b 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0009-net-dpaa2-eth-connect-to-MAC-before-requesting-the-e.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0009-net-dpaa2-eth-connect-to-MAC-before-requesting-the-e.patch
+@@ -33,7 +33,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -4708,6 +4708,10 @@ static int dpaa2_eth_probe(struct fsl_mc
++@@ -4711,6 +4711,10 @@ static int dpaa2_eth_probe(struct fsl_mc
+  	}
+  #endif
+  
+@@ -44,7 +44,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	err = dpaa2_eth_setup_irqs(dpni_dev);
+  	if (err) {
+  		netdev_warn(net_dev, "Failed to set link interrupt, fall back to polling\n");
+-@@ -4720,10 +4724,6 @@ static int dpaa2_eth_probe(struct fsl_mc
++@@ -4723,10 +4727,6 @@ static int dpaa2_eth_probe(struct fsl_mc
+  		priv->do_link_poll = true;
+  	}
+  
+@@ -55,7 +55,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	err = dpaa2_eth_dl_alloc(priv);
+  	if (err)
+  		goto err_dl_register;
+-@@ -4759,13 +4759,13 @@ err_dl_port_add:
++@@ -4762,13 +4762,13 @@ err_dl_port_add:
+  err_dl_trap_register:
+  	dpaa2_eth_dl_free(priv);
+  err_dl_register:
+@@ -71,7 +71,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	dpaa2_eth_free_rings(priv);
+  err_alloc_rings:
+  err_csum:
+-@@ -4813,9 +4813,6 @@ static int dpaa2_eth_remove(struct fsl_m
++@@ -4816,9 +4816,6 @@ static int dpaa2_eth_remove(struct fsl_m
+  #endif
+  
+  	unregister_netdev(net_dev);
+@@ -81,7 +81,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	dpaa2_eth_dl_port_del(priv);
+  	dpaa2_eth_dl_traps_unregister(priv);
+-@@ -4826,6 +4823,9 @@ static int dpaa2_eth_remove(struct fsl_m
++@@ -4829,6 +4826,9 @@ static int dpaa2_eth_remove(struct fsl_m
+  	else
+  		fsl_mc_free_irqs(ls_dev);
+  
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0010-net-dpaa2-eth-serialize-changes-to-priv-mac-with-a-m.patch b/target/linux/armsr/patches-6.1/701-v6.2-0010-net-dpaa2-eth-serialize-changes-to-priv-mac-with-a-m.patch
+index 28ffe2288c94c..9b068ce8f5ce6 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0010-net-dpaa2-eth-serialize-changes-to-priv-mac-with-a-m.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0010-net-dpaa2-eth-serialize-changes-to-priv-mac-with-a-m.patch
+@@ -41,7 +41,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -2018,8 +2018,11 @@ static int dpaa2_eth_link_state_update(s
++@@ -2021,8 +2021,11 @@ static int dpaa2_eth_link_state_update(s
+  
+  	/* When we manage the MAC/PHY using phylink there is no need
+  	 * to manually update the netif_carrier.
+@@ -54,7 +54,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  		goto out;
+  
+  	/* Chech link state; speed / duplex changes are not treated yet */
+-@@ -2058,6 +2061,8 @@ static int dpaa2_eth_open(struct net_dev
++@@ -2061,6 +2064,8 @@ static int dpaa2_eth_open(struct net_dev
+  			   priv->dpbp_dev->obj_desc.id, priv->bpid);
+  	}
+  
+@@ -63,7 +63,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	if (!dpaa2_eth_is_type_phy(priv)) {
+  		/* We'll only start the txqs when the link is actually ready;
+  		 * make sure we don't race against the link up notification,
+-@@ -2076,6 +2081,7 @@ static int dpaa2_eth_open(struct net_dev
++@@ -2079,6 +2084,7 @@ static int dpaa2_eth_open(struct net_dev
+  
+  	err = dpni_enable(priv->mc_io, 0, priv->mc_token);
+  	if (err < 0) {
+@@ -71,7 +71,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  		netdev_err(net_dev, "dpni_enable() failed\n");
+  		goto enable_err;
+  	}
+-@@ -2083,6 +2089,8 @@ static int dpaa2_eth_open(struct net_dev
++@@ -2086,6 +2092,8 @@ static int dpaa2_eth_open(struct net_dev
+  	if (dpaa2_eth_is_type_phy(priv))
+  		dpaa2_mac_start(priv->mac);
+  
+@@ -80,7 +80,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	return 0;
+  
+  enable_err:
+-@@ -2154,6 +2162,8 @@ static int dpaa2_eth_stop(struct net_dev
++@@ -2157,6 +2165,8 @@ static int dpaa2_eth_stop(struct net_dev
+  	int dpni_enabled = 0;
+  	int retries = 10;
+  
+@@ -89,7 +89,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	if (dpaa2_eth_is_type_phy(priv)) {
+  		dpaa2_mac_stop(priv->mac);
+  	} else {
+-@@ -2161,6 +2171,8 @@ static int dpaa2_eth_stop(struct net_dev
++@@ -2164,6 +2174,8 @@ static int dpaa2_eth_stop(struct net_dev
+  		netif_carrier_off(net_dev);
+  	}
+  
+@@ -98,7 +98,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	/* On dpni_disable(), the MC firmware will:
+  	 * - stop MAC Rx and wait for all Rx frames to be enqueued to software
+  	 * - cut off WRIOP dequeues from egress FQs and wait until transmission
+-@@ -2486,12 +2498,20 @@ static int dpaa2_eth_ts_ioctl(struct net
++@@ -2489,12 +2501,20 @@ static int dpaa2_eth_ts_ioctl(struct net
+  static int dpaa2_eth_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+  {
+  	struct dpaa2_eth_priv *priv = netdev_priv(dev);
+@@ -121,7 +121,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	return -EOPNOTSUPP;
+  }
+-@@ -4451,7 +4471,9 @@ static int dpaa2_eth_connect_mac(struct
++@@ -4454,7 +4474,9 @@ static int dpaa2_eth_connect_mac(struct
+  			goto err_close_mac;
+  	}
+  
+@@ -131,7 +131,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	return 0;
+  
+-@@ -4464,9 +4486,12 @@ err_free_mac:
++@@ -4467,9 +4489,12 @@ err_free_mac:
+  
+  static void dpaa2_eth_disconnect_mac(struct dpaa2_eth_priv *priv)
+  {
+@@ -145,7 +145,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	if (!mac)
+  		return;
+-@@ -4485,6 +4510,7 @@ static irqreturn_t dpni_irq0_handler_thr
++@@ -4488,6 +4513,7 @@ static irqreturn_t dpni_irq0_handler_thr
+  	struct fsl_mc_device *dpni_dev = to_fsl_mc_device(dev);
+  	struct net_device *net_dev = dev_get_drvdata(dev);
+  	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+@@ -153,7 +153,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	int err;
+  
+  	err = dpni_get_irq_status(dpni_dev->mc_io, 0, dpni_dev->mc_handle,
+-@@ -4502,7 +4528,12 @@ static irqreturn_t dpni_irq0_handler_thr
++@@ -4505,7 +4531,12 @@ static irqreturn_t dpni_irq0_handler_thr
+  		dpaa2_eth_update_tx_fqids(priv);
+  
+  		rtnl_lock();
+@@ -167,7 +167,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  			dpaa2_eth_disconnect_mac(priv);
+  		else
+  			dpaa2_eth_connect_mac(priv);
+-@@ -4603,6 +4634,8 @@ static int dpaa2_eth_probe(struct fsl_mc
++@@ -4606,6 +4637,8 @@ static int dpaa2_eth_probe(struct fsl_mc
+  	priv = netdev_priv(net_dev);
+  	priv->net_dev = net_dev;
+  
+@@ -305,7 +305,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	if (pause->autoneg)
+  		return -EOPNOTSUPP;
+  
+-@@ -309,8 +341,12 @@ static void dpaa2_eth_get_ethtool_stats(
++@@ -307,8 +339,12 @@ static void dpaa2_eth_get_ethtool_stats(
+  	}
+  	*(data + i++) = buf_cnt;
+  
+diff --git a/target/linux/armsr/patches-6.1/701-v6.2-0012-net-dpaa2-mac-move-rtnl_lock-only-around-phylink.patch b/target/linux/armsr/patches-6.1/701-v6.2-0012-net-dpaa2-mac-move-rtnl_lock-only-around-phylink.patch
+index f72f9e3a43cc5..521c9d4a54d13 100644
+--- a/target/linux/armsr/patches-6.1/701-v6.2-0012-net-dpaa2-mac-move-rtnl_lock-only-around-phylink.patch
++++ b/target/linux/armsr/patches-6.1/701-v6.2-0012-net-dpaa2-mac-move-rtnl_lock-only-around-phylink.patch
+@@ -34,7 +34,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+ +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+-@@ -4527,7 +4527,6 @@ static irqreturn_t dpni_irq0_handler_thr
++@@ -4530,7 +4530,6 @@ static irqreturn_t dpni_irq0_handler_thr
+  		dpaa2_eth_set_mac_addr(netdev_priv(net_dev));
+  		dpaa2_eth_update_tx_fqids(priv);
+  
+@@ -42,7 +42,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  		/* We can avoid locking because the "endpoint changed" IRQ
+  		 * handler is the only one who changes priv->mac at runtime,
+  		 * so we are not racing with anyone.
+-@@ -4537,7 +4536,6 @@ static irqreturn_t dpni_irq0_handler_thr
++@@ -4540,7 +4539,6 @@ static irqreturn_t dpni_irq0_handler_thr
+  			dpaa2_eth_disconnect_mac(priv);
+  		else
+  			dpaa2_eth_connect_mac(priv);
+@@ -50,7 +50,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	}
+  
+  	return IRQ_HANDLED;
+-@@ -4856,9 +4854,7 @@ static int dpaa2_eth_remove(struct fsl_m
++@@ -4859,9 +4857,7 @@ static int dpaa2_eth_remove(struct fsl_m
+  	else
+  		fsl_mc_free_irqs(ls_dev);
+  
+diff --git a/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
+index 1a2d4426abe8d..2235c28fd96ad 100644
+--- a/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.1/900-unaligned_access_hacks.patch
+@@ -336,7 +336,7 @@ SVN-Revision: 35130
+  #endif /* _LINUX_TYPES_H */
+ --- a/net/ipv4/af_inet.c
+ +++ b/net/ipv4/af_inet.c
+-@@ -1494,8 +1494,8 @@ struct sk_buff *inet_gro_receive(struct
++@@ -1512,8 +1512,8 @@ struct sk_buff *inet_gro_receive(struct
+  	if (unlikely(ip_fast_csum((u8 *)iph, 5)))
+  		goto out;
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0111-MMC-added-alternative-MMC-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0111-MMC-added-alternative-MMC-driver.patch
+index a74b2cd62fa07..09402fbc351d4 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0111-MMC-added-alternative-MMC-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0111-MMC-added-alternative-MMC-driver.patch
+@@ -266,7 +266,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  static inline int mmc_blk_part_switch(struct mmc_card *card,
+  				      unsigned int part_type);
+  static void mmc_blk_rw_rq_prep(struct mmc_queue_req *mqrq,
+-@@ -2998,6 +3005,8 @@ static int mmc_blk_probe(struct mmc_card
++@@ -3000,6 +3007,8 @@ static int mmc_blk_probe(struct mmc_card
+  {
+  	struct mmc_blk_data *md;
+  	int ret = 0;
+@@ -275,7 +275,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  
+  	/*
+  	 * Check that the card supports the command class(es) we need.
+-@@ -3005,7 +3014,16 @@ static int mmc_blk_probe(struct mmc_card
++@@ -3007,7 +3016,16 @@ static int mmc_blk_probe(struct mmc_card
+  	if (!(card->csd.cmdclass & CCC_BLOCK_READ))
+  		return -ENODEV;
+  
+@@ -293,7 +293,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  
+  	card->complete_wq = alloc_workqueue("mmc_complete",
+  					WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
+-@@ -3020,6 +3038,17 @@ static int mmc_blk_probe(struct mmc_card
++@@ -3022,6 +3040,17 @@ static int mmc_blk_probe(struct mmc_card
+  		goto out_free;
+  	}
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0179-bcmgenet-Better-coalescing-parameter-defaults.patch b/target/linux/bcm27xx/patches-6.1/950-0179-bcmgenet-Better-coalescing-parameter-defaults.patch
+index 4fc97de544603..b805f1df30df3 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0179-bcmgenet-Better-coalescing-parameter-defaults.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0179-bcmgenet-Better-coalescing-parameter-defaults.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+ +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+-@@ -2657,7 +2657,7 @@ static void bcmgenet_init_tx_ring(struct
++@@ -2659,7 +2659,7 @@ static void bcmgenet_init_tx_ring(struct
+  
+  	bcmgenet_tdma_ring_writel(priv, index, 0, TDMA_PROD_INDEX);
+  	bcmgenet_tdma_ring_writel(priv, index, 0, TDMA_CONS_INDEX);
+@@ -27,7 +27,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	/* Disable rate control for now */
+  	bcmgenet_tdma_ring_writel(priv, index, flow_period_val,
+  				  TDMA_FLOW_PERIOD);
+-@@ -4138,9 +4138,12 @@ static int bcmgenet_probe(struct platfor
++@@ -4140,9 +4140,12 @@ static int bcmgenet_probe(struct platfor
+  	netif_set_real_num_rx_queues(priv->dev, priv->hw_params->rx_queues + 1);
+  
+  	/* Set default coalescing parameters */
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0189-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch b/target/linux/bcm27xx/patches-6.1/950-0189-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
+index ba1baac7d0c41..da60efe07fca8 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0189-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0189-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -2488,6 +2491,11 @@ static void reset_umac(struct bcmgenet_p
++@@ -2490,6 +2493,11 @@ static void reset_umac(struct bcmgenet_p
+  	bcmgenet_rbuf_ctrl_set(priv, 0);
+  	udelay(10);
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+index dc2e539f3a229..89d7b4eea98ac 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0195-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+@@ -343,7 +343,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19279,6 +19279,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -19281,6 +19281,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/sony,imx412.yaml
+  F:	drivers/media/i2c/imx412.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch b/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+index 8ba6f7e5fc1e3..a7cf1bb1f2478 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0196-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+@@ -177,7 +177,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19287,6 +19287,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -19289,6 +19289,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/imx477.yaml
+  F:	drivers/media/i2c/imx477.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0197-Documentation-devicetree-Add-documentation-for-imx37.patch b/target/linux/bcm27xx/patches-6.1/950-0197-Documentation-devicetree-Add-documentation-for-imx37.patch
+index e564af578ee97..03628b3e9fcf4 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0197-Documentation-devicetree-Add-documentation-for-imx37.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0197-Documentation-devicetree-Add-documentation-for-imx37.patch
+@@ -132,7 +132,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19284,6 +19284,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -19286,6 +19286,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0270-net-bcmgenet-Reset-RBUF-on-first-open.patch b/target/linux/bcm27xx/patches-6.1/950-0270-net-bcmgenet-Reset-RBUF-on-first-open.patch
+index 0c71db2d00ffb..e21de6f79f315 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0270-net-bcmgenet-Reset-RBUF-on-first-open.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0270-net-bcmgenet-Reset-RBUF-on-first-open.patch
+@@ -24,7 +24,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+ +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+-@@ -3304,7 +3304,7 @@ static void bcmgenet_get_hw_addr(struct
++@@ -3306,7 +3306,7 @@ static void bcmgenet_get_hw_addr(struct
+  }
+  
+  /* Returns a reusable dma control register value */
+@@ -33,7 +33,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  {
+  	unsigned int i;
+  	u32 reg;
+-@@ -3329,6 +3329,14 @@ static u32 bcmgenet_dma_disable(struct b
++@@ -3331,6 +3331,14 @@ static u32 bcmgenet_dma_disable(struct b
+  	udelay(10);
+  	bcmgenet_umac_writel(priv, 0, UMAC_TX_FLUSH);
+  
+@@ -48,7 +48,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	return dma_ctrl;
+  }
+  
+-@@ -3392,8 +3400,8 @@ static int bcmgenet_open(struct net_devi
++@@ -3394,8 +3402,8 @@ static int bcmgenet_open(struct net_devi
+  
+  	bcmgenet_set_hw_addr(priv, dev->dev_addr);
+  
+@@ -59,7 +59,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  
+  	/* Reinitialize TDMA and RDMA and SW housekeeping */
+  	ret = bcmgenet_init_dma(priv);
+-@@ -4267,7 +4275,7 @@ static int bcmgenet_resume(struct device
++@@ -4269,7 +4277,7 @@ static int bcmgenet_resume(struct device
+  			bcmgenet_hfb_create_rxnfc_filter(priv, rule);
+  
+  	/* Disable RX/TX DMA and flush TX queues */
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0418-mmc-block-Don-t-do-single-sector-reads-during-recove.patch b/target/linux/bcm27xx/patches-6.1/950-0418-mmc-block-Don-t-do-single-sector-reads-during-recove.patch
+index de9378f79ad78..0335f0019824f 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0418-mmc-block-Don-t-do-single-sector-reads-during-recove.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0418-mmc-block-Don-t-do-single-sector-reads-during-recove.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/mmc/core/block.c
+ +++ b/drivers/mmc/core/block.c
+-@@ -1928,7 +1928,7 @@ static void mmc_blk_mq_rw_recovery(struc
++@@ -1930,7 +1930,7 @@ static void mmc_blk_mq_rw_recovery(struc
+  		return;
+  	}
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0513-net-bcmgenet-Add-eee-module-parameter.patch b/target/linux/bcm27xx/patches-6.1/950-0513-net-bcmgenet-Add-eee-module-parameter.patch
+index a145f6c48f07c..cd9820fc9d6d8 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0513-net-bcmgenet-Add-eee-module-parameter.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0513-net-bcmgenet-Add-eee-module-parameter.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -3438,6 +3441,17 @@ static int bcmgenet_open(struct net_devi
++@@ -3440,6 +3443,17 @@ static int bcmgenet_open(struct net_devi
+  
+  	bcmgenet_phy_pause_set(dev, priv->rx_pause, priv->tx_pause);
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0528-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch b/target/linux/bcm27xx/patches-6.1/950-0528-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
+index 2e6188af4bb61..6e51500140322 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0528-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0528-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
+@@ -138,7 +138,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19328,6 +19328,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -19330,6 +19330,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/imx519.yaml
+  F:	drivers/media/i2c/imx519.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0593-dt-bindings-media-i2c-Add-IMX296-CMOS-sensor-binding.patch b/target/linux/bcm27xx/patches-6.1/950-0593-dt-bindings-media-i2c-Add-IMX296-CMOS-sensor-binding.patch
+index cfdeef78abad5..4d6227a3781a4 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0593-dt-bindings-media-i2c-Add-IMX296-CMOS-sensor-binding.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0593-dt-bindings-media-i2c-Add-IMX296-CMOS-sensor-binding.patch
+@@ -128,7 +128,7 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19270,6 +19270,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -19272,6 +19272,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/imx290.txt
+  F:	drivers/media/i2c/imx290.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch b/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
+index 94ddb850c32a1..de983ddb158fa 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0594-media-i2c-IMX296-camera-sensor-driver.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19277,6 +19277,7 @@ L:	linux-media@vger.kernel.org
++@@ -19279,6 +19279,7 @@ L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/sony,imx296.yaml
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0649-media-dt-bindings-Convert-imx290.txt-to-YAML.patch b/target/linux/bcm27xx/patches-6.1/950-0649-media-dt-bindings-Convert-imx290.txt-to-YAML.patch
+index 14a8a4a029b2a..374069eca5641 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0649-media-dt-bindings-Convert-imx290.txt-to-YAML.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0649-media-dt-bindings-Convert-imx290.txt-to-YAML.patch
+@@ -219,7 +219,7 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19267,7 +19267,7 @@ M:	Manivannan Sadhasivam <manivannan.sad
++@@ -19269,7 +19269,7 @@ M:	Manivannan Sadhasivam <manivannan.sad
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0676-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch b/target/linux/bcm27xx/patches-6.1/950-0676-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
+index 35efa5413f338..098e6b611d71d 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0676-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0676-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
+@@ -271,7 +271,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -19342,7 +19342,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -19344,7 +19344,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/generic/backport-6.1/707-v6.3-net-pcs-add-driver-for-MediaTek-SGMII-PCS.patch b/target/linux/generic/backport-6.1/707-v6.3-net-pcs-add-driver-for-MediaTek-SGMII-PCS.patch
+index 980cb0f9147a6..d56a142451cd8 100644
+--- a/target/linux/generic/backport-6.1/707-v6.3-net-pcs-add-driver-for-MediaTek-SGMII-PCS.patch
++++ b/target/linux/generic/backport-6.1/707-v6.3-net-pcs-add-driver-for-MediaTek-SGMII-PCS.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -12926,6 +12926,14 @@ L:	netdev@vger.kernel.org
++@@ -12928,6 +12928,14 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	drivers/net/ethernet/mediatek/
+  
+diff --git a/target/linux/generic/backport-6.1/790-v6.4-0010-net-dsa-mt7530-introduce-separate-MDIO-driver.patch b/target/linux/generic/backport-6.1/790-v6.4-0010-net-dsa-mt7530-introduce-separate-MDIO-driver.patch
+index b75710ba572da..d2037118849b2 100644
+--- a/target/linux/generic/backport-6.1/790-v6.4-0010-net-dsa-mt7530-introduce-separate-MDIO-driver.patch
++++ b/target/linux/generic/backport-6.1/790-v6.4-0010-net-dsa-mt7530-introduce-separate-MDIO-driver.patch
+@@ -25,7 +25,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -13060,6 +13060,7 @@ M:	Landen Chao <Landen.Chao@mediatek.com
++@@ -13062,6 +13062,7 @@ M:	Landen Chao <Landen.Chao@mediatek.com
+  M:	DENG Qingfang <dqfext@gmail.com>
+  L:	netdev@vger.kernel.org
+  S:	Maintained
+diff --git a/target/linux/generic/backport-6.1/790-v6.4-0012-net-dsa-mt7530-introduce-driver-for-MT7988-built-in-.patch b/target/linux/generic/backport-6.1/790-v6.4-0012-net-dsa-mt7530-introduce-driver-for-MT7988-built-in-.patch
+index 934af995cd16c..63bf0e77fab48 100644
+--- a/target/linux/generic/backport-6.1/790-v6.4-0012-net-dsa-mt7530-introduce-driver-for-MT7988-built-in-.patch
++++ b/target/linux/generic/backport-6.1/790-v6.4-0012-net-dsa-mt7530-introduce-driver-for-MT7988-built-in-.patch
+@@ -28,7 +28,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -13058,9 +13058,11 @@ MEDIATEK SWITCH DRIVER
++@@ -13060,9 +13060,11 @@ MEDIATEK SWITCH DRIVER
+  M:	Sean Wang <sean.wang@mediatek.com>
+  M:	Landen Chao <Landen.Chao@mediatek.com>
+  M:	DENG Qingfang <dqfext@gmail.com>
+diff --git a/target/linux/generic/backport-6.1/791-v6.2-01-net-phy-Add-driver-for-Motorcomm-yt8521-gigabit-ethernet.patch b/target/linux/generic/backport-6.1/791-v6.2-01-net-phy-Add-driver-for-Motorcomm-yt8521-gigabit-ethernet.patch
+index 06dddffcaa5e0..4cdd67cdcccf5 100644
+--- a/target/linux/generic/backport-6.1/791-v6.2-01-net-phy-Add-driver-for-Motorcomm-yt8521-gigabit-ethernet.patch
++++ b/target/linux/generic/backport-6.1/791-v6.2-01-net-phy-Add-driver-for-Motorcomm-yt8521-gigabit-ethernet.patch
+@@ -21,7 +21,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -13962,6 +13962,7 @@ F:	include/uapi/linux/meye.h
++@@ -13964,6 +13964,7 @@ F:	include/uapi/linux/meye.h
+  
+  MOTORCOMM PHY DRIVER
+  M:	Peter Geis <pgwipeout@gmail.com>
+diff --git a/target/linux/generic/hack-6.1/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.1/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+index 386291bfe816a..9ff45a414ee0b 100644
+--- a/target/linux/generic/hack-6.1/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
++++ b/target/linux/generic/hack-6.1/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+@@ -654,7 +654,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +};
+ +
+ +static int nf_flow_rule_route_inet(struct net *net,
+-+				   const struct flow_offload *flow,
+++				   struct flow_offload *flow,
+ +				   enum flow_offload_tuple_dir dir,
+ +				   struct nf_flow_rule *flow_rule)
+ +{
+@@ -755,7 +755,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		      void (*iter)(struct nf_flowtable *flowtable,
+  				   struct flow_offload *flow, void *data),
+  		      void *data)
+-@@ -436,6 +434,7 @@ static void nf_flow_offload_gc_step(stru
++@@ -443,6 +441,7 @@ static void nf_flow_offload_gc_step(stru
+  		nf_flow_offload_stats(flow_table, flow);
+  	}
+  }
+@@ -785,7 +785,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +#endif /* _XT_FLOWOFFLOAD_H */
+ --- a/include/net/netfilter/nf_flow_table.h
+ +++ b/include/net/netfilter/nf_flow_table.h
+-@@ -280,6 +280,11 @@ void nf_flow_table_free(struct nf_flowta
++@@ -293,6 +293,11 @@ void nf_flow_table_free(struct nf_flowta
+  
+  void flow_offload_teardown(struct flow_offload *flow);
+  
+diff --git a/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch b/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
+index b4403e82c8a62..ffa6e8ac60dbe 100644
+--- a/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
++++ b/target/linux/generic/hack-6.1/901-debloat_sock_diag.patch
+@@ -79,7 +79,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ip6_dst_check(struct dst_entry *,
+  							  u32));
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ipv4_dst_check(struct dst_entry *,
+-@@ -2180,9 +2194,11 @@ static void __sk_free(struct sock *sk)
++@@ -2187,9 +2201,11 @@ static void __sk_free(struct sock *sk)
+  	if (likely(sk->sk_net_refcnt))
+  		sock_inuse_add(sock_net(sk), -1);
+  
+diff --git a/target/linux/generic/hack-6.1/902-debloat_proc.patch b/target/linux/generic/hack-6.1/902-debloat_proc.patch
+index a5db9b21c1beb..0d844994aaed8 100644
+--- a/target/linux/generic/hack-6.1/902-debloat_proc.patch
++++ b/target/linux/generic/hack-6.1/902-debloat_proc.patch
+@@ -330,7 +330,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -4105,6 +4105,8 @@ static __net_initdata struct pernet_oper
++@@ -4113,6 +4113,8 @@ static __net_initdata struct pernet_oper
+  
+  static int __init proto_init(void)
+  {
+diff --git a/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch b/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
+index 6050db3f5b7fb..47c742cff0689 100644
+--- a/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
++++ b/target/linux/generic/pending-6.1/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+ 
+ --- a/net/netfilter/nf_flow_table_core.c
+ +++ b/net/netfilter/nf_flow_table_core.c
+-@@ -659,6 +659,23 @@ static struct pernet_operations nf_flow_
++@@ -666,6 +666,23 @@ static struct pernet_operations nf_flow_
+  	.exit_batch = nf_flow_table_pernet_exit,
+  };
+  
+@@ -34,7 +34,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  static int __init nf_flow_table_module_init(void)
+  {
+  	int ret;
+-@@ -671,8 +688,14 @@ static int __init nf_flow_table_module_i
++@@ -678,8 +695,14 @@ static int __init nf_flow_table_module_i
+  	if (ret)
+  		goto out_offload;
+  
+@@ -49,7 +49,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  out_offload:
+  	unregister_pernet_subsys(&nf_flow_table_net_ops);
+  	return ret;
+-@@ -680,6 +703,7 @@ out_offload:
++@@ -687,6 +710,7 @@ out_offload:
+  
+  static void __exit nf_flow_table_module_exit(void)
+  {
+diff --git a/target/linux/ipq40xx/patches-6.1/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch b/target/linux/ipq40xx/patches-6.1/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
+index ccc56d115e07a..a3d8bf0488699 100644
+--- a/target/linux/ipq40xx/patches-6.1/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
++++ b/target/linux/ipq40xx/patches-6.1/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
+@@ -32,7 +32,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17064,6 +17064,13 @@ L:	netdev@vger.kernel.org
++@@ -17066,6 +17066,13 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	drivers/net/ethernet/qualcomm/emac/
+  
+diff --git a/target/linux/ipq40xx/patches-6.1/701-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/ipq40xx/patches-6.1/701-net-dsa-add-out-of-band-tagging-protocol.patch
+index ecf1a05896fac..7961c9978b466 100644
+--- a/target/linux/ipq40xx/patches-6.1/701-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/ipq40xx/patches-6.1/701-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -64,7 +64,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+  
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -17070,6 +17070,7 @@ L:	netdev@vger.kernel.org
++@@ -17072,6 +17072,7 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	Documentation/devicetree/bindings/net/qcom,ipq4019-ess-edma.yaml
+  F:	drivers/net/ethernet/qualcomm/ipqess/
+diff --git a/target/linux/mediatek/patches-6.1/730-v6.5-net-phy-add-driver-for-MediaTek-SoC-built-in-GE-PHYs.patch b/target/linux/mediatek/patches-6.1/730-v6.5-net-phy-add-driver-for-MediaTek-SoC-built-in-GE-PHYs.patch
+index 389b2e4c99d68..f4e972f658829 100644
+--- a/target/linux/mediatek/patches-6.1/730-v6.5-net-phy-add-driver-for-MediaTek-SoC-built-in-GE-PHYs.patch
++++ b/target/linux/mediatek/patches-6.1/730-v6.5-net-phy-add-driver-for-MediaTek-SoC-built-in-GE-PHYs.patch
+@@ -24,7 +24,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -12934,6 +12934,15 @@ S:	Maintained
++@@ -12936,6 +12936,15 @@ S:	Maintained
+  F:	drivers/net/pcs/pcs-mtk-lynxi.c
+  F:	include/linux/pcs/pcs-mtk-lynxi.h
+  
