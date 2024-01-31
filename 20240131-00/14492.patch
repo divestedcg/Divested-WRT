@@ -1,0 +1,450 @@
+From 31cbcc9caa0ee95e8eba282ded125189865c8e50 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 26 Jan 2024 16:09:33 -0500
+Subject: [PATCH] kernel: bump 6.1 to 6.1.75
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.75
+
+Removed upstreamed:
+	generic/hack-6.1/321-powerpc_crtsavres_prereq.patch[1]
+	bcm27xx/patches-6.1/950-0670-fbdev-Don-t-cancel-deferred-work-if-pagelist-empty.patch[2,3]
+
+All patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.75&id=16b88e68b85d5520c28498bb847358ff6300cb90
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.75&id=81f444f22816a82ada2cc787a2845cffc8c584a6
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.75&id=ccbee2843edd60bde3104d919b0a586bac631258
+Build system: x86/64
+Build-tested: x86/64/AMD Cezanne
+Run-tested: x86/64/AMD Cezanne
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.1                            |  4 +-
+ ...ds-add-reset-controller-based-driver.patch |  2 +-
+ ...835-Support-setting-reboot-partition.patch |  6 +--
+ ...50-bcm2835aux-defer-if-clock-is-zero.patch |  2 +-
+ ...-Ignore-params-after-the-partition-n.patch |  2 +-
+ ...ncel-deferred-work-if-pagelist-empty.patch | 36 ------------------
+ ...7xx-Read-modem-line-state-at-startup.patch |  2 +-
+ ...wc3-Set-DMA-and-coherent-masks-early.patch | 14 +++----
+ ...rt-for-Sercomm-MSP430-LED-controller.patch |  2 +-
+ ...c-move-TX-timer-arm-after-DMA-enable.patch |  8 ++--
+ ...a-Support-HW-controlled-mode-via-pri.patch |  2 +-
+ .../321-powerpc_crtsavres_prereq.patch        | 38 -------------------
+ ...-only-v2-leases-handle-the-directory.patch |  6 +--
+ ...les-ignore-EOPNOTSUPP-on-flowtable-d.patch |  2 +-
+ ...ert-PERST-for-100ms-for-power-and-cl.patch |  2 +-
+ ...1-pcie-mediatek-gen3-PERST-for-100ms.patch |  2 +-
+ ...ediatek-add-support-for-coherent-DMA.patch |  2 +-
+ .../950-smartrg-i2c-led-driver.patch          |  2 +-
+ ...d-the-IEI-WT61P803-PUZZLE-LED-driver.patch |  2 +-
+ 19 files changed, 31 insertions(+), 105 deletions(-)
+ delete mode 100644 target/linux/bcm27xx/patches-6.1/950-0670-fbdev-Don-t-cancel-deferred-work-if-pagelist-empty.patch
+ delete mode 100644 target/linux/generic/hack-6.1/321-powerpc_crtsavres_prereq.patch
+
+diff --git a/include/kernel-6.1 b/include/kernel-6.1
+index 87c6bf50977fe..b6c55613b654a 100644
+--- a/include/kernel-6.1
++++ b/include/kernel-6.1
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.1 = .74
+-LINUX_KERNEL_HASH-6.1.74 = b7fbd1d79faed2ce3570ef79dc1223e4e19c868b86326b14a435db56ebbb2022
++LINUX_VERSION-6.1 = .75
++LINUX_KERNEL_HASH-6.1.75 = 6cd19410330c13ec4c18fd28a83d3e40fc12a152815fb7c3e1b0764329093a56
+diff --git a/target/linux/ath79/patches-6.1/800-leds-add-reset-controller-based-driver.patch b/target/linux/ath79/patches-6.1/800-leds-add-reset-controller-based-driver.patch
+index e9349b4f8c7ee..0002b9b95b002 100644
+--- a/target/linux/ath79/patches-6.1/800-leds-add-reset-controller-based-driver.patch
++++ b/target/linux/ath79/patches-6.1/800-leds-add-reset-controller-based-driver.patch
+@@ -13,7 +13,7 @@ Signed-off-by: John Crispin <john@phrozen.org>
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -873,6 +873,17 @@ source "drivers/leds/flash/Kconfig"
++@@ -874,6 +874,17 @@ source "drivers/leds/flash/Kconfig"
+  comment "RGB LED drivers"
+  source "drivers/leds/rgb/Kconfig"
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0092-watchdog-bcm2835-Support-setting-reboot-partition.patch b/target/linux/bcm27xx/patches-6.1/950-0092-watchdog-bcm2835-Support-setting-reboot-partition.patch
+index b1ba4ae6b8995..1fa6d6d75a824 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0092-watchdog-bcm2835-Support-setting-reboot-partition.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0092-watchdog-bcm2835-Support-setting-reboot-partition.patch
+@@ -36,7 +36,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  
+  #define SECS_TO_WDOG_TICKS(x) ((x) << 16)
+  #define WDOG_TICKS_TO_SECS(x) ((x) >> 16)
+-@@ -97,9 +91,24 @@ static unsigned int bcm2835_wdt_get_time
++@@ -98,9 +92,24 @@ static unsigned int bcm2835_wdt_get_time
+  	return WDOG_TICKS_TO_SECS(ret & PM_WDOG_TIME_SET);
+  }
+  
+@@ -63,7 +63,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  
+  	/* use a timeout of 10 ticks (~150us) */
+  	writel_relaxed(10 | PM_PASSWORD, wdt->base + PM_WDOG);
+-@@ -117,7 +126,13 @@ static int bcm2835_restart(struct watchd
++@@ -118,7 +127,13 @@ static int bcm2835_restart(struct watchd
+  {
+  	struct bcm2835_wdt *wdt = watchdog_get_drvdata(wdog);
+  
+@@ -78,7 +78,7 @@ Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+  
+  	return 0;
+  }
+-@@ -152,19 +167,9 @@ static struct watchdog_device bcm2835_wd
++@@ -153,19 +168,9 @@ static struct watchdog_device bcm2835_wd
+  static void bcm2835_power_off(void)
+  {
+  	struct bcm2835_wdt *wdt = bcm2835_power_off_wdt;
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0249-serial-8250-bcm2835aux-defer-if-clock-is-zero.patch b/target/linux/bcm27xx/patches-6.1/950-0249-serial-8250-bcm2835aux-defer-if-clock-is-zero.patch
+index 5013109566706..656defb3c7a35 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0249-serial-8250-bcm2835aux-defer-if-clock-is-zero.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0249-serial-8250-bcm2835aux-defer-if-clock-is-zero.patch
+@@ -12,7 +12,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
+ +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+-@@ -180,6 +180,13 @@ static int bcm2835aux_serial_probe(struc
++@@ -182,6 +182,13 @@ static int bcm2835aux_serial_probe(struc
+  	 */
+  	up.port.uartclk = uartclk * 2;
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0284-watchdog-bcm2835-Ignore-params-after-the-partition-n.patch b/target/linux/bcm27xx/patches-6.1/950-0284-watchdog-bcm2835-Ignore-params-after-the-partition-n.patch
+index bf3ba2153e4d7..a7614795dfbe6 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0284-watchdog-bcm2835-Ignore-params-after-the-partition-n.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0284-watchdog-bcm2835-Ignore-params-after-the-partition-n.patch
+@@ -12,7 +12,7 @@ which are only relevant to other reboot notifiers.
+ 
+ --- a/drivers/watchdog/bcm2835_wdt.c
+ +++ b/drivers/watchdog/bcm2835_wdt.c
+-@@ -126,10 +126,12 @@ static int bcm2835_restart(struct watchd
++@@ -127,10 +127,12 @@ static int bcm2835_restart(struct watchd
+  {
+  	struct bcm2835_wdt *wdt = watchdog_get_drvdata(wdog);
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0670-fbdev-Don-t-cancel-deferred-work-if-pagelist-empty.patch b/target/linux/bcm27xx/patches-6.1/950-0670-fbdev-Don-t-cancel-deferred-work-if-pagelist-empty.patch
+deleted file mode 100644
+index 35441799dd536..0000000000000
+--- a/target/linux/bcm27xx/patches-6.1/950-0670-fbdev-Don-t-cancel-deferred-work-if-pagelist-empty.patch
++++ /dev/null
+@@ -1,36 +0,0 @@
+-From a25b0ea78e73b699e89c6d5589ba43cd0a22f97e Mon Sep 17 00:00:00 2001
+-From: Phil Elwell <phil@raspberrypi.com>
+-Date: Wed, 29 Mar 2023 09:49:36 +0100
+-Subject: [PATCH] fbdev: Don't cancel deferred work if pagelist empty
+-
+-Since [1], the fbdev deferred IO framework is careful to cancel
+-pending updates on close to prevent dirty pages being accessed after
+-they may have been reused. However, this is not necessary in the case
+-that the pagelist is empty, and drivers that don't make use of the
+-pagelist may have wanted updates cancelled for no good reason.
+-
+-Avoid penalising fbdev drivers that don't make use of the pagelist by
+-making the cancelling of deferred IO on close conditional on there
+-being a non-empty pagelist.
+-
+-See: https://github.com/raspberrypi/linux/issues/5398
+-
+-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+-
+-[1] 3efc61d95259 ("fbdev: Fix invalid page access after closing deferred I/O devices")
+----
+- drivers/video/fbdev/core/fb_defio.c | 3 ++-
+- 1 file changed, 2 insertions(+), 1 deletion(-)
+-
+---- a/drivers/video/fbdev/core/fb_defio.c
+-+++ b/drivers/video/fbdev/core/fb_defio.c
+-@@ -321,7 +321,8 @@ static void fb_deferred_io_lastclose(str
+- 	struct page *page;
+- 	int i;
+- 
+--	cancel_delayed_work_sync(&info->deferred_work);
+-+	if (!list_empty(&info->fbdefio->pagereflist))
+-+		cancel_delayed_work_sync(&info->deferred_work);
+- 
+- 	/* clear out the mapping that we setup */
+- 	for (i = 0 ; i < info->fix.smem_len; i += PAGE_SIZE) {
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0791-serial-sc16is7xx-Read-modem-line-state-at-startup.patch b/target/linux/bcm27xx/patches-6.1/950-0791-serial-sc16is7xx-Read-modem-line-state-at-startup.patch
+index c93ebf3e7e6b8..148134f0a22a0 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0791-serial-sc16is7xx-Read-modem-line-state-at-startup.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0791-serial-sc16is7xx-Read-modem-line-state-at-startup.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/tty/serial/sc16is7xx.c
+ +++ b/drivers/tty/serial/sc16is7xx.c
+-@@ -1221,6 +1221,9 @@ static int sc16is7xx_startup(struct uart
++@@ -1222,6 +1222,9 @@ static int sc16is7xx_startup(struct uart
+  	      SC16IS7XX_IER_MSI_BIT;
+  	sc16is7xx_port_write(port, SC16IS7XX_IER_REG, val);
+  
+diff --git a/target/linux/bcm27xx/patches-6.1/950-0865-usb-dwc3-Set-DMA-and-coherent-masks-early.patch b/target/linux/bcm27xx/patches-6.1/950-0865-usb-dwc3-Set-DMA-and-coherent-masks-early.patch
+index f6944e226f000..2c09524dfd6b1 100644
+--- a/target/linux/bcm27xx/patches-6.1/950-0865-usb-dwc3-Set-DMA-and-coherent-masks-early.patch
++++ b/target/linux/bcm27xx/patches-6.1/950-0865-usb-dwc3-Set-DMA-and-coherent-masks-early.patch
+@@ -212,7 +212,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	},
+ --- a/drivers/usb/dwc3/core.c
+ +++ b/drivers/usb/dwc3/core.c
+-@@ -1216,6 +1216,24 @@ static void dwc3_config_threshold(struct
++@@ -1179,6 +1179,24 @@ static void dwc3_config_threshold(struct
+  	}
+  }
+  
+@@ -237,7 +237,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  /**
+   * dwc3_core_init - Low-level initialization of DWC3 Core
+   * @dwc: Pointer to our controller context structure
+-@@ -1308,6 +1326,8 @@ static int dwc3_core_init(struct dwc3 *d
++@@ -1271,6 +1289,8 @@ static int dwc3_core_init(struct dwc3 *d
+  
+  	dwc3_set_incr_burst_type(dwc);
+  
+@@ -246,7 +246,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	usb_phy_set_suspend(dwc->usb2_phy, 0);
+  	usb_phy_set_suspend(dwc->usb3_phy, 0);
+  	ret = phy_power_on(dwc->usb2_generic_phy);
+-@@ -1541,6 +1561,7 @@ static void dwc3_get_properties(struct d
++@@ -1504,6 +1524,7 @@ static void dwc3_get_properties(struct d
+  	u8			tx_thr_num_pkt_prd = 0;
+  	u8			tx_max_burst_prd = 0;
+  	u8			tx_fifo_resize_max_num;
+@@ -254,7 +254,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	const char		*usb_psy_name;
+  	int			ret;
+  
+-@@ -1563,6 +1584,9 @@ static void dwc3_get_properties(struct d
++@@ -1526,6 +1547,9 @@ static void dwc3_get_properties(struct d
+  	 */
+  	tx_fifo_resize_max_num = 6;
+  
+@@ -264,7 +264,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	dwc->maximum_speed = usb_get_maximum_speed(dev);
+  	dwc->max_ssp_rate = usb_get_maximum_ssp_rate(dev);
+  	dwc->dr_mode = usb_get_dr_mode(dev);
+-@@ -1678,6 +1702,9 @@ static void dwc3_get_properties(struct d
++@@ -1641,6 +1665,9 @@ static void dwc3_get_properties(struct d
+  	dwc->dis_split_quirk = device_property_read_bool(dev,
+  				"snps,dis-split-quirk");
+  
+@@ -274,7 +274,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+  	dwc->tx_de_emphasis = tx_de_emphasis;
+  
+-@@ -1695,6 +1722,8 @@ static void dwc3_get_properties(struct d
++@@ -1658,6 +1685,8 @@ static void dwc3_get_properties(struct d
+  	dwc->tx_thr_num_pkt_prd = tx_thr_num_pkt_prd;
+  	dwc->tx_max_burst_prd = tx_max_burst_prd;
+  
+@@ -283,7 +283,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	dwc->imod_interval = 0;
+  
+  	dwc->tx_fifo_resize_max_num = tx_fifo_resize_max_num;
+-@@ -1903,6 +1932,12 @@ static int dwc3_probe(struct platform_de
++@@ -1866,6 +1895,12 @@ static int dwc3_probe(struct platform_de
+  
+  	dwc3_get_properties(dwc);
+  
+diff --git a/target/linux/bmips/patches-6.1/700-leds-add-support-for-Sercomm-MSP430-LED-controller.patch b/target/linux/bmips/patches-6.1/700-leds-add-support-for-Sercomm-MSP430-LED-controller.patch
+index adcb01ec295f9..763e25ba03c8c 100644
+--- a/target/linux/bmips/patches-6.1/700-leds-add-support-for-Sercomm-MSP430-LED-controller.patch
++++ b/target/linux/bmips/patches-6.1/700-leds-add-support-for-Sercomm-MSP430-LED-controller.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -282,6 +282,15 @@ config LEDS_COBALT_RAQ
++@@ -283,6 +283,15 @@ config LEDS_COBALT_RAQ
+  	help
+  	  This option enables support for the Cobalt Raq series LEDs.
+  
+diff --git a/target/linux/generic/backport-6.1/771-v6.7-02-net-stmmac-move-TX-timer-arm-after-DMA-enable.patch b/target/linux/generic/backport-6.1/771-v6.7-02-net-stmmac-move-TX-timer-arm-after-DMA-enable.patch
+index d1e04e9069f3f..e94a2ca819d66 100644
+--- a/target/linux/generic/backport-6.1/771-v6.7-02-net-stmmac-move-TX-timer-arm-after-DMA-enable.patch
++++ b/target/linux/generic/backport-6.1/771-v6.7-02-net-stmmac-move-TX-timer-arm-after-DMA-enable.patch
+@@ -42,7 +42,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	__netif_tx_unlock_bh(netdev_get_tx_queue(priv->dev, queue));
+  
+-@@ -5485,12 +5489,13 @@ static int stmmac_napi_poll_tx(struct na
++@@ -5486,12 +5490,13 @@ static int stmmac_napi_poll_tx(struct na
+  	struct stmmac_channel *ch =
+  		container_of(napi, struct stmmac_channel, tx_napi);
+  	struct stmmac_priv *priv = ch->priv_data;
+@@ -57,7 +57,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	work_done = min(work_done, budget);
+  
+  	if (work_done < budget && napi_complete_done(napi, work_done)) {
+-@@ -5501,6 +5506,10 @@ static int stmmac_napi_poll_tx(struct na
++@@ -5502,6 +5507,10 @@ static int stmmac_napi_poll_tx(struct na
+  		spin_unlock_irqrestore(&ch->lock, flags);
+  	}
+  
+@@ -68,7 +68,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	return work_done;
+  }
+  
+-@@ -5509,12 +5518,13 @@ static int stmmac_napi_poll_rxtx(struct
++@@ -5510,12 +5519,13 @@ static int stmmac_napi_poll_rxtx(struct
+  	struct stmmac_channel *ch =
+  		container_of(napi, struct stmmac_channel, rxtx_napi);
+  	struct stmmac_priv *priv = ch->priv_data;
+@@ -83,7 +83,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	tx_done = min(tx_done, budget);
+  
+  	rx_done = stmmac_rx_zc(priv, budget, chan);
+-@@ -5539,6 +5549,10 @@ static int stmmac_napi_poll_rxtx(struct
++@@ -5540,6 +5550,10 @@ static int stmmac_napi_poll_rxtx(struct
+  		spin_unlock_irqrestore(&ch->lock, flags);
+  	}
+  
+diff --git a/target/linux/generic/backport-6.1/815-v6.7-3-leds-turris-omnia-Support-HW-controlled-mode-via-pri.patch b/target/linux/generic/backport-6.1/815-v6.7-3-leds-turris-omnia-Support-HW-controlled-mode-via-pri.patch
+index f64bbc7782772..00773ab0f6329 100644
+--- a/target/linux/generic/backport-6.1/815-v6.7-3-leds-turris-omnia-Support-HW-controlled-mode-via-pri.patch
++++ b/target/linux/generic/backport-6.1/815-v6.7-3-leds-turris-omnia-Support-HW-controlled-mode-via-pri.patch
+@@ -49,7 +49,7 @@ Signed-off-by: Lee Jones <lee@kernel.org>
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -163,6 +163,7 @@ config LEDS_TURRIS_OMNIA
++@@ -164,6 +164,7 @@ config LEDS_TURRIS_OMNIA
+  	depends on I2C
+  	depends on MACH_ARMADA_38X || COMPILE_TEST
+  	depends on OF
+diff --git a/target/linux/generic/hack-6.1/321-powerpc_crtsavres_prereq.patch b/target/linux/generic/hack-6.1/321-powerpc_crtsavres_prereq.patch
+deleted file mode 100644
+index 17eba0b354eb8..0000000000000
+--- a/target/linux/generic/hack-6.1/321-powerpc_crtsavres_prereq.patch
++++ /dev/null
+@@ -1,38 +0,0 @@
+-From 107c0964cb8db7ca28ac5199426414fdab3c274d Mon Sep 17 00:00:00 2001
+-From: "Alexandros C. Couloumbis" <alex@ozo.com>
+-Date: Fri, 7 Jul 2017 17:14:51 +0200
+-Subject: hack: arch: powerpc: drop register save/restore library from modules
+-
+-Upstream GCC uses a libgcc function for saving/restoring registers. This
+-makes the code bigger, and upstream kernels need to carry that function
+-for every single kernel module. Our GCC is patched to avoid those
+-references, so we can drop the extra bloat for modules.
+-
+-lede-commit: e8e1084654f50904e6bf77b70b2de3f137d7b3ec
+-Signed-off-by: Alexandros C. Couloumbis <alex@ozo.com>
+----
+- arch/powerpc/Makefile | 1 -
+- 1 file changed, 1 deletion(-)
+-
+---- a/arch/powerpc/Makefile
+-+++ b/arch/powerpc/Makefile
+-@@ -42,19 +42,6 @@ machine-$(CONFIG_PPC64) += 64
+- machine-$(CONFIG_CPU_LITTLE_ENDIAN) += le
+- UTS_MACHINE := $(subst $(space),,$(machine-y))
+- 
+--# XXX This needs to be before we override LD below
+--ifdef CONFIG_PPC32
+--KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
+--else
+--ifeq ($(call ld-ifversion, -ge, 22500, y),y)
+--# Have the linker provide sfpr if possible.
+--# There is a corresponding test in arch/powerpc/lib/Makefile
+--KBUILD_LDFLAGS_MODULE += --save-restore-funcs
+--else
+--KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
+--endif
+--endif
+--
+- ifdef CONFIG_CPU_LITTLE_ENDIAN
+- KBUILD_CFLAGS	+= -mlittle-endian
+- KBUILD_LDFLAGS	+= -EL
+diff --git a/target/linux/generic/pending-6.1/540-ksmbd-only-v2-leases-handle-the-directory.patch b/target/linux/generic/pending-6.1/540-ksmbd-only-v2-leases-handle-the-directory.patch
+index b565fbd5b9721..43d7535372804 100644
+--- a/target/linux/generic/pending-6.1/540-ksmbd-only-v2-leases-handle-the-directory.patch
++++ b/target/linux/generic/pending-6.1/540-ksmbd-only-v2-leases-handle-the-directory.patch
+@@ -17,9 +17,9 @@ Signed-off-by: Steve French <stfrench@microsoft.com>
+ 
+ --- a/fs/smb/server/oplock.c
+ +++ b/fs/smb/server/oplock.c
+-@@ -1191,6 +1191,12 @@ int smb_grant_oplock(struct ksmbd_work *
+- 	bool prev_op_has_lease;
+- 	__le32 prev_op_state = 0;
++@@ -1197,6 +1197,12 @@ int smb_grant_oplock(struct ksmbd_work *
++ 			return 0;
++ 	}
+  
+ +	/* Only v2 leases handle the directory */
+ +	if (S_ISDIR(file_inode(fp->filp)->i_mode)) {
+diff --git a/target/linux/generic/pending-6.1/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch b/target/linux/generic/pending-6.1/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch
+index 307ddce761fc1..683df4df83293 100644
+--- a/target/linux/generic/pending-6.1/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch
++++ b/target/linux/generic/pending-6.1/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/net/netfilter/nf_tables_api.c
+ +++ b/net/netfilter/nf_tables_api.c
+-@@ -7884,7 +7884,7 @@ static int nft_register_flowtable_net_ho
++@@ -7900,7 +7900,7 @@ static int nft_register_flowtable_net_ho
+  		err = flowtable->data.type->setup(&flowtable->data,
+  						  hook->ops.dev,
+  						  FLOW_BLOCK_BIND);
+diff --git a/target/linux/mediatek/patches-6.1/601-PCI-mediatek-Assert-PERST-for-100ms-for-power-and-cl.patch b/target/linux/mediatek/patches-6.1/601-PCI-mediatek-Assert-PERST-for-100ms-for-power-and-cl.patch
+index 05a6ff0fdb08d..983fde707f244 100644
+--- a/target/linux/mediatek/patches-6.1/601-PCI-mediatek-Assert-PERST-for-100ms-for-power-and-cl.patch
++++ b/target/linux/mediatek/patches-6.1/601-PCI-mediatek-Assert-PERST-for-100ms-for-power-and-cl.patch
+@@ -18,7 +18,7 @@ Acked-by: Pali Rohár <pali@kernel.org>
+ 
+ --- a/drivers/pci/controller/pcie-mediatek.c
+ +++ b/drivers/pci/controller/pcie-mediatek.c
+-@@ -702,6 +702,13 @@ static int mtk_pcie_startup_port_v2(stru
++@@ -708,6 +708,13 @@ static int mtk_pcie_startup_port_v2(stru
+  	 */
+  	msleep(100);
+  
+diff --git a/target/linux/mediatek/patches-6.1/611-pcie-mediatek-gen3-PERST-for-100ms.patch b/target/linux/mediatek/patches-6.1/611-pcie-mediatek-gen3-PERST-for-100ms.patch
+index 5e343d01ccef1..32b4237d822cc 100644
+--- a/target/linux/mediatek/patches-6.1/611-pcie-mediatek-gen3-PERST-for-100ms.patch
++++ b/target/linux/mediatek/patches-6.1/611-pcie-mediatek-gen3-PERST-for-100ms.patch
+@@ -1,6 +1,6 @@
+ --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+ +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+-@@ -350,7 +350,13 @@ static int mtk_pcie_startup_port(struct
++@@ -375,7 +375,13 @@ static int mtk_pcie_startup_port(struct
+  	msleep(100);
+  
+  	/* De-assert reset signals */
+diff --git a/target/linux/mediatek/patches-6.1/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch b/target/linux/mediatek/patches-6.1/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+index de64eda8277d5..76ee2fc89abda 100644
+--- a/target/linux/mediatek/patches-6.1/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
++++ b/target/linux/mediatek/patches-6.1/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+@@ -52,7 +52,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  struct mtk_pcie_port;
+  
+  /**
+-@@ -1054,6 +1060,27 @@ static int mtk_pcie_setup(struct mtk_pci
++@@ -1060,6 +1066,27 @@ static int mtk_pcie_setup(struct mtk_pci
+  	struct mtk_pcie_port *port, *tmp;
+  	int err, slot;
+  
+diff --git a/target/linux/mediatek/patches-6.1/950-smartrg-i2c-led-driver.patch b/target/linux/mediatek/patches-6.1/950-smartrg-i2c-led-driver.patch
+index a98cca19a56fb..8b86c5042972d 100644
+--- a/target/linux/mediatek/patches-6.1/950-smartrg-i2c-led-driver.patch
++++ b/target/linux/mediatek/patches-6.1/950-smartrg-i2c-led-driver.patch
+@@ -5,7 +5,7 @@
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -873,6 +873,16 @@ source "drivers/leds/flash/Kconfig"
++@@ -874,6 +874,16 @@ source "drivers/leds/flash/Kconfig"
+  comment "RGB LED drivers"
+  source "drivers/leds/rgb/Kconfig"
+  
+diff --git a/target/linux/mvebu/patches-6.1/904-drivers-leds-Add-the-IEI-WT61P803-PUZZLE-LED-driver.patch b/target/linux/mvebu/patches-6.1/904-drivers-leds-Add-the-IEI-WT61P803-PUZZLE-LED-driver.patch
+index ec783256e3255..1abb1b94166be 100644
+--- a/target/linux/mvebu/patches-6.1/904-drivers-leds-Add-the-IEI-WT61P803-PUZZLE-LED-driver.patch
++++ b/target/linux/mvebu/patches-6.1/904-drivers-leds-Add-the-IEI-WT61P803-PUZZLE-LED-driver.patch
+@@ -30,7 +30,7 @@ Cc: Robert Marko <robert.marko@sartura.hr>
+ 
+ --- a/drivers/leds/Kconfig
+ +++ b/drivers/leds/Kconfig
+-@@ -299,6 +299,14 @@ config LEDS_IPAQ_MICRO
++@@ -300,6 +300,14 @@ config LEDS_IPAQ_MICRO
+  	  Choose this option if you want to use the notification LED on
+  	  Compaq/HP iPAQ h3100 and h3600.
+  
