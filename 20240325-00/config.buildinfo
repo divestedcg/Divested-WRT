@@ -24,6 +24,7 @@ CONFIG_TARGET_DEVICE_mvebu_cortexa9_DEVICE_solidrun_clearfog-base-a1=y
 CONFIG_TARGET_DEVICE_mvebu_cortexa9_DEVICE_solidrun_clearfog-pro-a1=y
 # CONFIG_ATH9K_HWRNG is not set
 CONFIG_BUSYBOX_DEFAULT_PIE=y
+# CONFIG_DRIVER_11AX_SUPPORT is not set
 CONFIG_FEED_telephony=m
 CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB=y
 CONFIG_IMAGEOPT=y
@@ -38,9 +39,9 @@ CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG=y
 # CONFIG_KERNEL_KALLSYMS is not set
 # CONFIG_KERNEL_KEXEC is not set
 # CONFIG_KERNEL_MAGIC_SYSRQ is not set
+# CONFIG_KERNEL_PAGE_POOL is not set
 CONFIG_KERNEL_STACKPROTECTOR_STRONG=y
 # CONFIG_KERNEL_SWAP is not set
-CONFIG_LINUX_6_1=y
 # CONFIG_LUA_ECO_MBEDTLS is not set
 CONFIG_LUA_ECO_OPENSSL=y
 CONFIG_LUCI_LANG_ar=y
@@ -132,6 +133,8 @@ CONFIG_PACKAGE_kmod-ipt-ipopt=y
 CONFIG_PACKAGE_kmod-ipt-ipset=y
 CONFIG_PACKAGE_kmod-lib-zlib-deflate=m
 CONFIG_PACKAGE_kmod-lib-zlib-inflate=m
+# CONFIG_PACKAGE_kmod-mt7915-firmware is not set
+# CONFIG_PACKAGE_kmod-mt7915e is not set
 CONFIG_PACKAGE_kmod-nf-conncount=y
 CONFIG_PACKAGE_kmod-nf-conntrack-netlink=y
 CONFIG_PACKAGE_kmod-nf-ipt=y
@@ -145,6 +148,7 @@ CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_kmod-udptunnel4=y
 CONFIG_PACKAGE_kmod-udptunnel6=y
 CONFIG_PACKAGE_kmod-wireguard=y
+# CONFIG_PACKAGE_knot-resolver_dnstap is not set
 CONFIG_PACKAGE_libatomic=y
 CONFIG_PACKAGE_libbpf=y
 CONFIG_PACKAGE_libcap-ng=y
@@ -465,7 +469,6 @@ CONFIG_PKG_FORTIFY_SOURCE_2=y
 CONFIG_REPRODUCIBLE_DEBUG_INFO=y
 CONFIG_STRIP_KERNEL_EXPORTS=y
 # CONFIG_TARGET_ROOTFS_TARGZ is not set
-CONFIG_TESTING_KERNEL=y
 CONFIG_VERSIONOPT=y
 CONFIG_VERSION_BUG_URL="https://gitlab.com/divested/Divested-WRT/-/issues"
 CONFIG_VERSION_CODE=""
@@ -480,7 +483,6 @@ CONFIG_VERSION_NUMBER=""
 CONFIG_VERSION_PRODUCT=""
 CONFIG_VERSION_REPO="https://downloads.openwrt.org/snapshots"
 CONFIG_VERSION_SUPPORT_URL="https://forum.openwrt.org/t/divested-wrt-no-nonsense-linksys-wrt-builds/80522"
-CONFIG_WPA_MBO_SUPPORT=y
 # CONFIG_OPENSSL_WITH_IDEA is not set
 # CONFIG_OPENSSL_WITH_MDC2 is not set
 # CONFIG_OPENSSL_WITH_SEED is not set
