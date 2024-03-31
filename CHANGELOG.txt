@@ -1,3 +1,7 @@
+20240331-00
+- update to 0cb3e86557fe17824283224b711fe7394590c680
+  https://github.com/openwrt/openwrt/compare/004eac14...0cb3e865
+
 20240325-00
 - update to 004eac14ab5418cd72f5dfb365e0e04a73eca03e
   https://github.com/openwrt/openwrt/compare/af860c4d...004eac14
