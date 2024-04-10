@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Thu, 3 Dec 2020 04:31:48 -0500
-Subject: [PATCH 02/12] kernel: generic 5.15: config hardening
+Subject: [PATCH 2/9] kernel: generic 5.15: config hardening
 
 Enables various security options.
 Disables various high-risk bits.
@@ -12,10 +12,10 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 164 insertions(+)
 
 diff --git a/target/linux/generic/config-5.15 b/target/linux/generic/config-5.15
-index d7e4742d63..41dbe48b42 100644
+index cf162543a8..a62331bda1 100644
 --- a/target/linux/generic/config-5.15
 +++ b/target/linux/generic/config-5.15
-@@ -7606,3 +7606,167 @@ CONFIG_ZONE_DMA=y
+@@ -7613,3 +7613,167 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZRAM_MEMORY_TRACKING is not set
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZX_TDM is not set
