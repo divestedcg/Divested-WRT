@@ -1,3 +1,8 @@
+20240511-00
+- update to 61e8728d86d7c11e1a5adab4bd37dae6b3b6cf2b
+  https://github.com/openwrt/openwrt/compare/a8bfdf2e...61e8728d
+- this will likely be the last release with 6.1.x
+
 20240501-00
 - update to a8bfdf2ed4d930ca5a31b5c4bc7061ad5ef11ba3
   https://github.com/openwrt/openwrt/compare/e0363233...a8bfdf2e
