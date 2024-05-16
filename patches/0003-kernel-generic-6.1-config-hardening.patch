@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Sun, 6 Aug 2023 17:08:13 -0400
-Subject: [PATCH 3/9] kernel: generic 6.1: config hardening
+Subject: [PATCH 03/10] kernel: generic 6.1: config hardening
 
 Enables various security options.
 Disables various high-risk bits.
@@ -12,10 +12,10 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 164 insertions(+)
 
 diff --git a/target/linux/generic/config-6.1 b/target/linux/generic/config-6.1
-index 7487ade308..11ce643812 100644
+index 70e87665b7..e4e69fd099 100644
 --- a/target/linux/generic/config-6.1
 +++ b/target/linux/generic/config-6.1
-@@ -7942,3 +7942,167 @@ CONFIG_ZONE_DMA=y
+@@ -7945,3 +7945,167 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZSMALLOC is not set
  # CONFIG_ZSWAP is not set
  # CONFIG_ZX_TDM is not set
