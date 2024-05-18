@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
 a22f178ecbe79593deabc1fbeb0f5908d1d6d655acb76d32048c18e1f5a5b6c9 *config.buildinfo
 024df01705608edb5ce1aecf80f5017b20e932cde769157c9071338a8ca42400 *divested-wrt-snapshot-r26335+10-96e402aef7-mvebu-cortexa9-buffalo_ls421de-initramfs-kernel.bin
 c71ff03e23864c5997b98347320e7e36e1618e1247ea760563117419837fb845 *divested-wrt-snapshot-r26335+10-96e402aef7-mvebu-cortexa9-buffalo_ls421de-squashfs-sysupgrade.bin
@@ -57,3 +60,19 @@ fdd2c2d5d4deb19a62a5889442acdbfe3ff171ecd8ce19d0e8fc91c48a964b58 *divested-wrt-s
 86bbc284216a90e0942a6e9653031cdd70110d02294ce9a77f850e29b72671ca *feeds.buildinfo
 881c0464795084911a6f1fd4aa6f7c5da153e63b81310550208d6c4b5b3f3971 *profiles.json
 5f18eb68dabacb78a26052d53d0fa51ee3b5a8f73ba35c8db8b855eba5a932f2 *version.buildinfo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAmZI6IcACgkQut/Kvdv1
+tpRY2RAAtaOTtcrzvOJJb4nrJlmyFnf23G9NjTVv8a8bylgb6D7z6xOTh3Z/11eM
+/hE72UnQngtfO4I/qDo1TaSlxoUBRD9UIKzUuL+S10TQMKpayjE53bQgNiS9M9k5
+cg4OL+ls8M/Ln9GOLX+MZG7drU17niy9zI1FPJ4PQMgW+hFtIoYorkPI6s15M9bQ
+Q1AmzS2leRh8T3bzbl06esMgK0vdYovQ+9GGADal3xm3rQhagTonsE1DujneZwuX
+xBFa2zXhYyH5dDJbVt/13VucZL3Ky0v+AcQ2aejg2H8Ha4kZ/2oHKif8CYoLhrsy
+YlkRBRZSAzWWZgZMNmnqhd8Pi5y7qzO2od5noJNFhPgO8efmdlCHMsCiGHWNy1qB
+ckO1yW7WoPd1R/4UevUKDsFpVN8oMYcUHDQrKuAu35JFlY+rYYW9KJmeQHoAly9h
+uy5nPL0gAMzBmYAjDyAt3uGtiGR8PgumpgvpwUeOzG4RJ1uj55fgBGUZq/J/TbNk
+B6mgLg3CduiDinJCmNCaaD0JzXAdMFBkrL6NULJzXyHqhiT1N1xDGYSyMIHwaNlh
+ofBE3fyKR7PhDrd/EjFdO3JmuUUIXfB3lqLKSrkVkr/FgmqHUZTO/oNydlqfrlmC
+uR5W7lBv1ggg8C/sQ5LQw8GZevWiHtzotSGhxTApaL/BqRRw1OY=
+=AU+h
+-----END PGP SIGNATURE-----
