@@ -8,17 +8,18 @@ Disables various high-risk bits.
 
 Signed-off-by: Tad <tad@spotco.us>
 ---
- target/linux/generic/config-6.6 | 164 ++++++++++++++++++++++++++++++++
- 1 file changed, 164 insertions(+)
+ target/linux/generic/config-6.6 | 165 ++++++++++++++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
 
 diff --git a/target/linux/generic/config-6.6 b/target/linux/generic/config-6.6
-index d6836ebfb8..aa009b39dc 100644
+index c51cc3b0ce..821e0853bc 100644
 --- a/target/linux/generic/config-6.6
 +++ b/target/linux/generic/config-6.6
-@@ -8150,3 +8150,167 @@ CONFIG_ZONE_DMA=y
+@@ -7521,3 +7521,168 @@ CONFIG_ZONE_DMA=y
+ # CONFIG_ZSMALLOC is not set
  CONFIG_ZSMALLOC_CHAIN_SIZE=8
  # CONFIG_ZSWAP is not set
- # CONFIG_ZX_TDM is not set
++# CONFIG_ZX_TDM is not set
 +CONFIG_ARM64_BTI_KERNEL=y
 +CONFIG_ARM64_EPAN=y
 +CONFIG_ARM64_MTE=y
