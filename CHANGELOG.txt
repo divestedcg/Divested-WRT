@@ -1,3 +1,9 @@
+20240625-00
+- update to 646ebbd32ca4d776c64c31e85c08dc72fec25d7d
+  https://github.com/openwrt/openwrt/compare/70088a7e...646ebbd3
+- [upstream] update to kernel 6.6.35 (security and bug fixes)
+- fixes banip oom regression introduced in previous build
+
 20240617-00
 - update to 70088a7e4c766fb57473b63f187997cae11a1488
   https://github.com/openwrt/openwrt/compare/84a52741...70088a7e
