@@ -1,0 +1,360 @@
+From f8e779c5b7d3c20130dba33a8396e2d7c2bd1b49 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 11 Jul 2024 16:00:56 -0400
+Subject: [PATCH] kernel: bump 6.6 to 6.6.39
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.6.39
+
+Manually rebased:
+	generic/backport-6.6/0080-v6.9-smp-Avoid-setup_max_cpus_namespace_collision_shadowing.patch
+
+Removed upstreamed:
+	generic/backport-6.6/801-v6.11-gpio-mmio-do-not-calculate-bgpio_bits-via-ngpios.patch[1]
+	generic/backport-6.6/0081-v6.10-cpu-Fix-broken-cmdline-nosmp-and-maxcpus-0.patch[2]
+
+All other patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.6.39&id=dee87316b5f5f167a201491a774bbd6e10c8dd94
+2. https://github.com/gregkh/linux/commit/69787793e7f0673465c89714d1522fde978bbfa8
+
+Build system: x86/64
+Build-tested: x86/64/AMD Cezanne, flogic/glinet_gl-mt6000, flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+Run-tested: x86/64/AMD Cezanne, flogic/glinet_gl-mt6000, flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+Co-authored-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ include/kernel-6.6                            |  4 +-
+ ...5-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch |  6 +--
+ ...x_cpus_namespace_collision_shadowing.patch |  6 ++-
+ ...x-broken-cmdline-nosmp-and-maxcpus-0.patch | 38 -----------------
+ ...-not-calculate-bgpio_bits-via-ngpios.patch | 42 -------------------
+ .../800-GPIO-add-named-gpio-exports.patch     |  2 +-
+ .../530-jffs2_make_lzma_available.patch       |  2 +-
+ ...vert-to-platform-remove-callback-ret.patch |  6 +--
+ ...mediatek-lvts_thermal-Make-coeff-con.patch |  4 +-
+ ...mediatek-lvts_thermal-Add-mt7988-sup.patch |  6 +--
+ ...mediatek-lvts_thermal-Add-suspend-an.patch |  4 +-
+ ...mediatek-lvts_thermal-Add-mt8192-sup.patch |  6 +--
+ 12 files changed, 25 insertions(+), 101 deletions(-)
+ delete mode 100644 target/linux/generic/backport-6.6/0081-v6.10-cpu-Fix-broken-cmdline-nosmp-and-maxcpus-0.patch
+ delete mode 100644 target/linux/generic/backport-6.6/801-v6.11-gpio-mmio-do-not-calculate-bgpio_bits-via-ngpios.patch
+
+diff --git a/include/kernel-6.6 b/include/kernel-6.6
+index ebd26db32bc5e5..6a6c8aae1124be 100644
+--- a/include/kernel-6.6
++++ b/include/kernel-6.6
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.6 = .38
+-LINUX_KERNEL_HASH-6.6.38 = 4ed403ffb550565d03485aeca9a52c128cdde43f4a373a1a9ee3a590524fe743
++LINUX_VERSION-6.6 = .39
++LINUX_KERNEL_HASH-6.6.39 = 2783d42112095f95c510e1b421f056df8cbfa845f9040c6115080434a77a776b
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0485-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch b/target/linux/bcm27xx/patches-6.6/950-0485-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
+index e1846dc8f51da2..1280d2c27d6a02 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0485-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0485-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
+@@ -75,7 +75,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ --- a/drivers/usb/host/xhci-ring.c
+ +++ b/drivers/usb/host/xhci-ring.c
+-@@ -3657,6 +3657,48 @@ static int xhci_align_td(struct xhci_hcd
++@@ -3658,6 +3658,48 @@ static int xhci_align_td(struct xhci_hcd
+  	return 1;
+  }
+  
+@@ -124,7 +124,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  /* This is very similar to what ehci-q.c qtd_fill() does */
+  int xhci_queue_bulk_tx(struct xhci_hcd *xhci, gfp_t mem_flags,
+  		struct urb *urb, int slot_id, unsigned int ep_index)
+-@@ -3813,6 +3855,8 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
++@@ -3814,6 +3856,8 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
+  	}
+  
+  	check_trb_math(urb, enqd_len);
+@@ -133,7 +133,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	giveback_first_trb(xhci, slot_id, ep_index, urb->stream_id,
+  			start_cycle, start_trb);
+  	return 0;
+-@@ -3948,6 +3992,8 @@ int xhci_queue_ctrl_tx(struct xhci_hcd *
++@@ -3949,6 +3993,8 @@ int xhci_queue_ctrl_tx(struct xhci_hcd *
+  			/* Event on completion */
+  			field | TRB_IOC | TRB_TYPE(TRB_STATUS) | ep_ring->cycle_state);
+  
+diff --git a/target/linux/generic/backport-6.6/0080-v6.9-smp-Avoid-setup_max_cpus_namespace_collision_shadowing.patch b/target/linux/generic/backport-6.6/0080-v6.9-smp-Avoid-setup_max_cpus_namespace_collision_shadowing.patch
+index e3e9859037917b..54ebaa1a80d3f6 100644
+--- a/target/linux/generic/backport-6.6/0080-v6.9-smp-Avoid-setup_max_cpus_namespace_collision_shadowing.patch
++++ b/target/linux/generic/backport-6.6/0080-v6.9-smp-Avoid-setup_max_cpus_namespace_collision_shadowing.patch
+@@ -32,13 +32,17 @@ Cc: linux-kernel@vger.kernel.org
+  #define cpuhp_tasks_frozen	0
+ --- a/kernel/cpu.c
+ +++ b/kernel/cpu.c
+-@@ -1905,14 +1905,14 @@ static bool __init cpuhp_bringup_cpus_pa
++@@ -1905,17 +1905,17 @@ static bool __init cpuhp_bringup_cpus_pa
+  static inline bool cpuhp_bringup_cpus_parallel(unsigned int ncpus) { return false; }
+  #endif /* CONFIG_HOTPLUG_PARALLEL */
+  
+ -void __init bringup_nonboot_cpus(unsigned int setup_max_cpus)
+ +void __init bringup_nonboot_cpus(unsigned int max_cpus)
+  {
++-	if (!setup_max_cpus)
+++	if (!max_cpus)
++ 		return;
++ 
+  	/* Try parallel bringup optimization if enabled */
+ -	if (cpuhp_bringup_cpus_parallel(setup_max_cpus))
+ +	if (cpuhp_bringup_cpus_parallel(max_cpus))
+diff --git a/target/linux/generic/backport-6.6/0081-v6.10-cpu-Fix-broken-cmdline-nosmp-and-maxcpus-0.patch b/target/linux/generic/backport-6.6/0081-v6.10-cpu-Fix-broken-cmdline-nosmp-and-maxcpus-0.patch
+deleted file mode 100644
+index e47796a0785aff..00000000000000
+--- a/target/linux/generic/backport-6.6/0081-v6.10-cpu-Fix-broken-cmdline-nosmp-and-maxcpus-0.patch
++++ /dev/null
+@@ -1,38 +0,0 @@
+-From 6ef8eb5125722c241fd60d7b0c872d5c2e5dd4ca Mon Sep 17 00:00:00 2001
+-From: Huacai Chen <chenhuacai@loongson.cn>
+-Date: Tue, 18 Jun 2024 16:13:36 +0800
+-Subject: [PATCH] cpu: Fix broken cmdline "nosmp" and "maxcpus=0"
+-
+-After the rework of "Parallel CPU bringup", the cmdline "nosmp" and
+-"maxcpus=0" parameters are not working anymore. These parameters set
+-setup_max_cpus to zero and that's handed to bringup_nonboot_cpus().
+-
+-The code there does a decrement before checking for zero, which brings it
+-into the negative space and brings up all CPUs.
+-
+-Add a zero check at the beginning of the function to prevent this.
+-
+-[ tglx: Massaged change log ]
+-
+-Fixes: 18415f33e2ac4ab382 ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
+-Fixes: 06c6796e0304234da6 ("cpu/hotplug: Fix off by one in cpuhp_bringup_mask()")
+-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+-Cc: stable@vger.kernel.org
+-Link: https://lore.kernel.org/r/20240618081336.3996825-1-chenhuacai@loongson.cn
+----
+- kernel/cpu.c | 3 +++
+- 1 file changed, 3 insertions(+)
+-
+---- a/kernel/cpu.c
+-+++ b/kernel/cpu.c
+-@@ -1907,6 +1907,9 @@ static inline bool cpuhp_bringup_cpus_pa
+- 
+- void __init bringup_nonboot_cpus(unsigned int max_cpus)
+- {
+-+	if (!max_cpus)
+-+		return;
+-+
+- 	/* Try parallel bringup optimization if enabled */
+- 	if (cpuhp_bringup_cpus_parallel(max_cpus))
+- 		return;
+diff --git a/target/linux/generic/backport-6.6/801-v6.11-gpio-mmio-do-not-calculate-bgpio_bits-via-ngpios.patch b/target/linux/generic/backport-6.6/801-v6.11-gpio-mmio-do-not-calculate-bgpio_bits-via-ngpios.patch
+deleted file mode 100644
+index 117c879e48e4c7..00000000000000
+--- a/target/linux/generic/backport-6.6/801-v6.11-gpio-mmio-do-not-calculate-bgpio_bits-via-ngpios.patch
++++ /dev/null
+@@ -1,42 +0,0 @@
+-From f07798d7bb9c46d17d80103fb772fd2c75d47919 Mon Sep 17 00:00:00 2001
+-From: Shiji Yang <yangshiji66@outlook.com>
+-Date: Tue, 25 Jun 2024 09:19:49 +0800
+-Subject: [PATCH] gpio: mmio: do not calculate bgpio_bits via "ngpios"
+-
+-bgpio_bits must be aligned with the data bus width. For example, on a
+-32 bit big endian system and we only have 16 GPIOs. If we only assume
+-bgpio_bits=16 we can never control the GPIO because the base address
+-is the lowest address.
+-
+-low address                          high address
+--------------------------------------------------
+-|   byte3   |   byte2   |   byte1   |   byte0   |
+--------------------------------------------------
+-|    NaN    |    NaN    |  gpio8-15 |  gpio0-7  |
+--------------------------------------------------
+-
+-Fixes: 55b2395e4e92 ("gpio: mmio: handle "ngpios" properly in bgpio_init()")
+-Fixes: https://github.com/openwrt/openwrt/issues/15739
+-Reported-by: Mark Mentovai <mark@mentovai.com>
+-Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
+-Suggested-By: Mark Mentovai <mark@mentovai.com>
+-Reviewed-by: Jonas Gorski <jonas.gorski@gmail.com>
+-Tested-by: Lóránd Horváth <lorand.horvath82@gmail.com>
+-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+-Link: https://lore.kernel.org/r/TYCP286MB089577B47D70F0AB25ABA6F5BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM
+-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+----
+- drivers/gpio/gpio-mmio.c | 2 --
+- 1 file changed, 2 deletions(-)
+-
+---- a/drivers/gpio/gpio-mmio.c
+-+++ b/drivers/gpio/gpio-mmio.c
+-@@ -622,8 +622,6 @@ int bgpio_init(struct gpio_chip *gc, str
+- 	ret = gpiochip_get_ngpios(gc, dev);
+- 	if (ret)
+- 		gc->ngpio = gc->bgpio_bits;
+--	else
+--		gc->bgpio_bits = roundup_pow_of_two(round_up(gc->ngpio, 8));
+- 
+- 	ret = bgpio_setup_io(gc, dat, set, clr, flags);
+- 	if (ret)
+diff --git a/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch b/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
+index 666dcfad4d41ec..cb03f760dfd071 100644
+--- a/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
++++ b/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
+@@ -15,7 +15,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  
+  #include "gpiolib.h"
+  #include "gpiolib-of.h"
+-@@ -1111,3 +1113,74 @@ void of_gpiochip_remove(struct gpio_chip
++@@ -1129,3 +1131,74 @@ void of_gpiochip_remove(struct gpio_chip
+  {
+  	of_node_put(dev_of_node(&chip->gpiodev->dev));
+  }
+diff --git a/target/linux/generic/pending-6.6/530-jffs2_make_lzma_available.patch b/target/linux/generic/pending-6.6/530-jffs2_make_lzma_available.patch
+index 3be6c8eb9db484..66c458d7e6200f 100644
+--- a/target/linux/generic/pending-6.6/530-jffs2_make_lzma_available.patch
++++ b/target/linux/generic/pending-6.6/530-jffs2_make_lzma_available.patch
+@@ -254,7 +254,7 @@ Signed-off-by: Alexandros C. Couloumbis <alex@ozo.com>
+ +}
+ --- a/fs/jffs2/super.c
+ +++ b/fs/jffs2/super.c
+-@@ -374,14 +374,41 @@ static int __init init_jffs2_fs(void)
++@@ -375,14 +375,41 @@ static int __init init_jffs2_fs(void)
+  	BUILD_BUG_ON(sizeof(struct jffs2_raw_inode) != 68);
+  	BUILD_BUG_ON(sizeof(struct jffs2_raw_summary) != 32);
+  
+diff --git a/target/linux/mediatek/patches-6.6/830-v6.7-39-thermal-lvts-Convert-to-platform-remove-callback-ret.patch b/target/linux/mediatek/patches-6.6/830-v6.7-39-thermal-lvts-Convert-to-platform-remove-callback-ret.patch
+index 76fe8326d6f700..2793f3857f3a33 100644
+--- a/target/linux/mediatek/patches-6.6/830-v6.7-39-thermal-lvts-Convert-to-platform-remove-callback-ret.patch
++++ b/target/linux/mediatek/patches-6.6/830-v6.7-39-thermal-lvts-Convert-to-platform-remove-callback-ret.patch
+@@ -29,7 +29,7 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ 
+ --- a/drivers/thermal/mediatek/lvts_thermal.c
+ +++ b/drivers/thermal/mediatek/lvts_thermal.c
+-@@ -1247,7 +1247,7 @@ static int lvts_probe(struct platform_de
++@@ -1249,7 +1249,7 @@ static int lvts_probe(struct platform_de
+  	return 0;
+  }
+  
+@@ -38,7 +38,7 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  {
+  	struct lvts_domain *lvts_td;
+  	int i;
+-@@ -1258,8 +1258,6 @@ static int lvts_remove(struct platform_d
++@@ -1260,8 +1260,6 @@ static int lvts_remove(struct platform_d
+  		lvts_ctrl_set_enable(&lvts_td->lvts_ctrl[i], false);
+  
+  	lvts_debugfs_exit(lvts_td);
+@@ -47,7 +47,7 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  }
+  
+  static const struct lvts_ctrl_data mt8195_lvts_mcu_data_ctrl[] = {
+-@@ -1360,7 +1358,7 @@ MODULE_DEVICE_TABLE(of, lvts_of_match);
++@@ -1362,7 +1360,7 @@ MODULE_DEVICE_TABLE(of, lvts_of_match);
+  
+  static struct platform_driver lvts_driver = {
+  	.probe = lvts_probe,
+diff --git a/target/linux/mediatek/patches-6.6/830-v6.7-40-thermal-drivers-mediatek-lvts_thermal-Make-coeff-con.patch b/target/linux/mediatek/patches-6.6/830-v6.7-40-thermal-drivers-mediatek-lvts_thermal-Make-coeff-con.patch
+index 0b965c95217a02..a9f84a4c7d361a 100644
+--- a/target/linux/mediatek/patches-6.6/830-v6.7-40-thermal-drivers-mediatek-lvts_thermal-Make-coeff-con.patch
++++ b/target/linux/mediatek/patches-6.6/830-v6.7-40-thermal-drivers-mediatek-lvts_thermal-Make-coeff-con.patch
+@@ -171,7 +171,7 @@ Link: https://lore.kernel.org/r/20230922055020.6436-4-linux@fw-web.de
+  
+  		lvts_ctrl[i].low_thresh = INT_MIN;
+  		lvts_ctrl[i].high_thresh = INT_MIN;
+-@@ -1229,6 +1240,8 @@ static int lvts_probe(struct platform_de
++@@ -1231,6 +1242,8 @@ static int lvts_probe(struct platform_de
+  	if (irq < 0)
+  		return irq;
+  
+@@ -180,7 +180,7 @@ Link: https://lore.kernel.org/r/20230922055020.6436-4-linux@fw-web.de
+  	ret = lvts_domain_init(dev, lvts_td, lvts_data);
+  	if (ret)
+  		return dev_err_probe(dev, ret, "Failed to initialize the lvts domain\n");
+-@@ -1342,11 +1355,15 @@ static const struct lvts_ctrl_data mt819
++@@ -1344,11 +1357,15 @@ static const struct lvts_ctrl_data mt819
+  static const struct lvts_data mt8195_lvts_mcu_data = {
+  	.lvts_ctrl	= mt8195_lvts_mcu_data_ctrl,
+  	.num_lvts_ctrl	= ARRAY_SIZE(mt8195_lvts_mcu_data_ctrl),
+diff --git a/target/linux/mediatek/patches-6.6/830-v6.7-42-thermal-drivers-mediatek-lvts_thermal-Add-mt7988-sup.patch b/target/linux/mediatek/patches-6.6/830-v6.7-42-thermal-drivers-mediatek-lvts_thermal-Add-mt7988-sup.patch
+index 65d90899f877c2..a32d950fc9fdc0 100644
+--- a/target/linux/mediatek/patches-6.6/830-v6.7-42-thermal-drivers-mediatek-lvts_thermal-Add-mt7988-sup.patch
++++ b/target/linux/mediatek/patches-6.6/830-v6.7-42-thermal-drivers-mediatek-lvts_thermal-Add-mt7988-sup.patch
+@@ -33,7 +33,7 @@ Link: https://lore.kernel.org/r/20230922055020.6436-5-linux@fw-web.de
+  #define LVTS_HW_SHUTDOWN_MT8195		105000
+  
+  #define LVTS_MINIMUM_THRESHOLD		20000
+-@@ -1273,6 +1276,33 @@ static void lvts_remove(struct platform_
++@@ -1275,6 +1278,33 @@ static void lvts_remove(struct platform_
+  	lvts_debugfs_exit(lvts_td);
+  }
+  
+@@ -67,7 +67,7 @@ Link: https://lore.kernel.org/r/20230922055020.6436-5-linux@fw-web.de
+  static const struct lvts_ctrl_data mt8195_lvts_mcu_data_ctrl[] = {
+  	{
+  		.cal_offset = { 0x04, 0x07 },
+-@@ -1352,6 +1382,13 @@ static const struct lvts_ctrl_data mt819
++@@ -1354,6 +1384,13 @@ static const struct lvts_ctrl_data mt819
+  	}
+  };
+  
+@@ -81,7 +81,7 @@ Link: https://lore.kernel.org/r/20230922055020.6436-5-linux@fw-web.de
+  static const struct lvts_data mt8195_lvts_mcu_data = {
+  	.lvts_ctrl	= mt8195_lvts_mcu_data_ctrl,
+  	.num_lvts_ctrl	= ARRAY_SIZE(mt8195_lvts_mcu_data_ctrl),
+-@@ -1367,6 +1404,7 @@ static const struct lvts_data mt8195_lvt
++@@ -1369,6 +1406,7 @@ static const struct lvts_data mt8195_lvt
+  };
+  
+  static const struct of_device_id lvts_of_match[] = {
+diff --git a/target/linux/mediatek/patches-6.6/830-v6.7-45-thermal-drivers-mediatek-lvts_thermal-Add-suspend-an.patch b/target/linux/mediatek/patches-6.6/830-v6.7-45-thermal-drivers-mediatek-lvts_thermal-Add-suspend-an.patch
+index 98946fc814c775..46e1eeb2396d9c 100644
+--- a/target/linux/mediatek/patches-6.6/830-v6.7-45-thermal-drivers-mediatek-lvts_thermal-Add-suspend-an.patch
++++ b/target/linux/mediatek/patches-6.6/830-v6.7-45-thermal-drivers-mediatek-lvts_thermal-Add-suspend-an.patch
+@@ -24,7 +24,7 @@ Link: https://lore.kernel.org/r/20231017190545.157282-3-bero@baylibre.com
+ 
+ --- a/drivers/thermal/mediatek/lvts_thermal.c
+ +++ b/drivers/thermal/mediatek/lvts_thermal.c
+-@@ -1303,6 +1303,38 @@ static const struct lvts_ctrl_data mt798
++@@ -1305,6 +1305,38 @@ static const struct lvts_ctrl_data mt798
+  	}
+  };
+  
+@@ -63,7 +63,7 @@ Link: https://lore.kernel.org/r/20231017190545.157282-3-bero@baylibre.com
+  static const struct lvts_ctrl_data mt8195_lvts_mcu_data_ctrl[] = {
+  	{
+  		.cal_offset = { 0x04, 0x07 },
+-@@ -1411,12 +1443,17 @@ static const struct of_device_id lvts_of
++@@ -1413,12 +1445,17 @@ static const struct of_device_id lvts_of
+  };
+  MODULE_DEVICE_TABLE(of, lvts_of_match);
+  
+diff --git a/target/linux/mediatek/patches-6.6/830-v6.7-47-thermal-drivers-mediatek-lvts_thermal-Add-mt8192-sup.patch b/target/linux/mediatek/patches-6.6/830-v6.7-47-thermal-drivers-mediatek-lvts_thermal-Add-mt8192-sup.patch
+index d47885635978ef..3b7d9489f2544e 100644
+--- a/target/linux/mediatek/patches-6.6/830-v6.7-47-thermal-drivers-mediatek-lvts_thermal-Add-mt8192-sup.patch
++++ b/target/linux/mediatek/patches-6.6/830-v6.7-47-thermal-drivers-mediatek-lvts_thermal-Add-mt8192-sup.patch
+@@ -34,7 +34,7 @@ Link: https://lore.kernel.org/r/20231017190545.157282-4-bero@baylibre.com
+  #define LVTS_HW_SHUTDOWN_MT8195		105000
+  
+  #define LVTS_MINIMUM_THRESHOLD		20000
+-@@ -1335,6 +1336,88 @@ static int lvts_resume(struct device *de
++@@ -1337,6 +1338,88 @@ static int lvts_resume(struct device *de
+  	return 0;
+  }
+  
+@@ -123,7 +123,7 @@ Link: https://lore.kernel.org/r/20231017190545.157282-4-bero@baylibre.com
+  static const struct lvts_ctrl_data mt8195_lvts_mcu_data_ctrl[] = {
+  	{
+  		.cal_offset = { 0x04, 0x07 },
+-@@ -1421,6 +1504,16 @@ static const struct lvts_data mt7988_lvt
++@@ -1423,6 +1506,16 @@ static const struct lvts_data mt7988_lvt
+  	.temp_offset	= LVTS_COEFF_B_MT7988,
+  };
+  
+@@ -140,7 +140,7 @@ Link: https://lore.kernel.org/r/20231017190545.157282-4-bero@baylibre.com
+  static const struct lvts_data mt8195_lvts_mcu_data = {
+  	.lvts_ctrl	= mt8195_lvts_mcu_data_ctrl,
+  	.num_lvts_ctrl	= ARRAY_SIZE(mt8195_lvts_mcu_data_ctrl),
+-@@ -1437,6 +1530,8 @@ static const struct lvts_data mt8195_lvt
++@@ -1439,6 +1532,8 @@ static const struct lvts_data mt8195_lvt
+  
+  static const struct of_device_id lvts_of_match[] = {
+  	{ .compatible = "mediatek,mt7988-lvts-ap", .data = &mt7988_lvts_ap_data },
