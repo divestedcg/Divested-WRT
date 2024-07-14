@@ -2,6 +2,7 @@
 - update to 850a5caaa3204f3745b91707b24c4c63a4a2a221
   https://github.com/openwrt/openwrt/compare/37636a87...850a5caa
 - [cherrypick] #15928: update to kernel 6.6.39 (security and bug fixes)
+- pulled, wifi is broken
 
 20240704-00
 - update to 37636a8752ecdc0ab399c3f38979c6cfb5576bc6
