@@ -1,3 +1,10 @@
+20240717-00
+- update to 9d8d0509bf2a630464e050de21e21110748e4f27
+  https://github.com/openwrt/openwrt/compare/850a5caa...9d8d0509
+- [upstream] update to kernel 6.6.40 (security and bug fixes)
+- reverted recent mac80211 changes to fix wifi
+  git revert 419ceead 192afd31 7ca4190c 1bfcc1ea
+
 20240714-00
 - update to 850a5caaa3204f3745b91707b24c4c63a4a2a221
   https://github.com/openwrt/openwrt/compare/37636a87...850a5caa
