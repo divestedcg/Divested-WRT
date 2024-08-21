@@ -1,3 +1,10 @@
+20240821-00
+- update to 580ad3e6bb57216706dfb9bc44875cfc4ca41feb
+  https://github.com/openwrt/openwrt/compare/0171157d...580ad3e6
+- [upstream] update to kernel 6.6.47 (security and bug fixes)
+- this release was delayed due to upstream packet drop issues
+  https://github.com/openwrt/openwrt/pull/16173
+
 20240806-00
 - update to 0171157d45f1c8c068608b69afdcdef101e5a594
   https://github.com/openwrt/openwrt/compare/a9f58ddd...0171157d
