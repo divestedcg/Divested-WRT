@@ -1,3 +1,8 @@
+20240831-00
+- update to c6f04f718ec89561f2261f2388857baa126eaa50
+  https://github.com/openwrt/openwrt/compare/580ad3e6...c6f04f71
+- [cherrypick] #16282: update to kernel 6.6.48 (security and bug fixes)
+
 20240821-00
 - update to 580ad3e6bb57216706dfb9bc44875cfc4ca41feb
   https://github.com/openwrt/openwrt/compare/0171157d...580ad3e6
