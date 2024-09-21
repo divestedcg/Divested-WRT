@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tad <tad@spotco.us>
 Date: Tue, 2 Feb 2021 06:14:22 -0500
-Subject: [PATCH 01/10] Revert "uhttpd: don't redirect to HTTPS by default"
+Subject: [PATCH 1/8] Revert "uhttpd: don't redirect to HTTPS by default"
 
 This reverts commit 0cf3c5dd7257dff1c87b61c5e53e5b1787ab7015.
 
@@ -11,7 +11,7 @@ Signed-off-by: Tad <tad@spotco.us>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/package/network/services/uhttpd/files/uhttpd.config b/package/network/services/uhttpd/files/uhttpd.config
-index a9b8ff3d15..4bb2c3463e 100644
+index ce76fe6b6b..3f143f356e 100644
 --- a/package/network/services/uhttpd/files/uhttpd.config
 +++ b/package/network/services/uhttpd/files/uhttpd.config
 @@ -10,7 +10,7 @@ config uhttpd main

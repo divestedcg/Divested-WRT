@@ -1,3 +1,8 @@
+20240920-00
+- update to d0a2b3f824c5e283caf31ceea49abf3022e7dc51
+  https://github.com/openwrt/openwrt/compare/0db6f9a8...d0a2b3f8
+- [upstream] update to kernel 6.6.52 (security and bug fixes)
+
 20240910-00
 - update to 0db6f9a856842ef85d5470d9b8ec6b1d435fe261
   https://github.com/openwrt/openwrt/compare/c6f04f71...0db6f9a8

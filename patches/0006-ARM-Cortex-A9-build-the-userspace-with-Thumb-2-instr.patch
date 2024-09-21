@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Rui Salvaterra <rsalvaterra@gmail.com>
 Date: Fri, 19 Jun 2020 10:45:25 +0100
-Subject: [PATCH 08/10] ARM Cortex-A9: build the userspace with Thumb-2
+Subject: [PATCH 6/8] ARM Cortex-A9: build the userspace with Thumb-2
  instructions
 
 Thumb-2 code is denser than pure ARM, reducing RAM usage and improving
@@ -17,10 +17,10 @@ Tested-by: Tad <tad@spotco.us>
  1 file changed, 5 insertions(+)
 
 diff --git a/include/target.mk b/include/target.mk
-index e67af2994d..4dd3aba059 100644
+index d5807ba01a..9e988f3a96 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -268,6 +268,11 @@ ifeq ($(DUMP),1)
+@@ -278,6 +278,11 @@ ifeq ($(DUMP),1)
      CPU_TYPE = sparc
      CPU_CFLAGS_ultrasparc = -mcpu=ultrasparc
    endif
