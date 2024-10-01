@@ -1,3 +1,11 @@
+special notice:
+sysupgrade appears broken for a few months now
+https://github.com/openwrt/openwrt/issues/16148
+
+20240930-00
+- update to 7e972fe242240973536d3db55301f0c33ca2fa6b
+  https://github.com/openwrt/openwrt/compare/d0a2b3f8...7e972fe2
+
 20240920-00
 - update to d0a2b3f824c5e283caf31ceea49abf3022e7dc51
   https://github.com/openwrt/openwrt/compare/0db6f9a8...d0a2b3f8
