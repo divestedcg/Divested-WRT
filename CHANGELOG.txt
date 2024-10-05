@@ -2,6 +2,11 @@ special notice:
 sysupgrade appears broken for a few months now
 https://github.com/openwrt/openwrt/issues/16148
 
+20241005-00
+- update to 3a168e359587df90497c1f27f8b4e3d23199c7e5
+  https://github.com/openwrt/openwrt/compare/7e972fe2...3a168e35
+- [upstream] update to kernel 6.6.54 (security and bug fixes)
+
 20240930-00
 - update to 7e972fe242240973536d3db55301f0c33ca2fa6b
   https://github.com/openwrt/openwrt/compare/d0a2b3f8...7e972fe2
