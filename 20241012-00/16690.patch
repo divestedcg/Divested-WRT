@@ -1,0 +1,62 @@
+From 3127063cda8688ee07e3a95c4a51e197dea48ee1 Mon Sep 17 00:00:00 2001
+From: Boris Krasnovskiy <borkra@gmail.com>
+Date: Sat, 12 Oct 2024 19:57:16 -0400
+Subject: [PATCH 1/2] mvebu: fix default partition name
+
+Fixing the issue introduced in commit 6ff970bb51f53c731b0612152734cec82ca92543
+firmware partition name is specifc to nas device not global
+
+Signed-off-by: Boris Krasnovskiy <borkra@gmail.com>
+---
+ .../linux/mvebu/cortexa9/base-files/lib/upgrade/platform.sh  | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/target/linux/mvebu/cortexa9/base-files/lib/upgrade/platform.sh b/target/linux/mvebu/cortexa9/base-files/lib/upgrade/platform.sh
+index 049f8eeb8c852..e2a82fe87c347 100755
+--- a/target/linux/mvebu/cortexa9/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mvebu/cortexa9/base-files/lib/upgrade/platform.sh
+@@ -6,7 +6,6 @@
+ RAMFS_COPY_BIN='fw_printenv fw_setenv seq strings'
+ RAMFS_COPY_DATA='/etc/fw_env.config /var/lock/fw_printenv.lock'
+ 
+-PART_NAME=firmware
+ REQUIRE_IMAGE_METADATA=1
+ 
+ platform_check_image() {
+@@ -74,6 +73,10 @@ platform_do_upgrade() {
+ 		esac
+ 		default_do_upgrade "$1"
+ 		;;
++	iptime,nas1dual)
++		PART_NAME=firmware
++		;;
++
+ 	linksys,wrt1200ac|\
+ 	linksys,wrt1900ac-v1|\
+ 	linksys,wrt1900ac-v2|\
+
+From 6117b41fb6d4ab82284015b41f7241082b7ced94 Mon Sep 17 00:00:00 2001
+From: Boris Krasnovskiy <borkra@gmail.com>
+Date: Sat, 12 Oct 2024 20:01:57 -0400
+Subject: [PATCH 2/2] mvebu: fix sysupgrade failure
+
+This fixes issue introduced by commit 715634e6d1443eacdcb84b04d1028c1564b08dbf
+
+Signed-off-by: Boris Krasnovskiy <borkra@gmail.com>
+---
+ package/base-files/files/lib/upgrade/nand.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/base-files/files/lib/upgrade/nand.sh b/package/base-files/files/lib/upgrade/nand.sh
+index 9fa3cd2ddd40d..ca302557c8ea0 100644
+--- a/package/base-files/files/lib/upgrade/nand.sh
++++ b/package/base-files/files/lib/upgrade/nand.sh
+@@ -300,7 +300,7 @@ nand_upgrade_fit() {
+ # Write images in the TAR file to MTD partitions and/or UBI volumes as required
+ nand_upgrade_tar() {
+ 	local tar_file="$1"
+-	local cmd="$2"
++	local cmd="${2:-cat}"
+ 	local jffs2_markers="${CI_JFFS2_CLEAN_MARKERS:-0}"
+ 
+ 	# WARNING: This fails if tar contains more than one 'sysupgrade-*' directory.

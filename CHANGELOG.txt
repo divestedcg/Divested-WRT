@@ -1,6 +1,17 @@
-special notice:
-sysupgrade appears broken for a few months now
-https://github.com/openwrt/openwrt/issues/16148
+20241012-00
+- update to 4f4cb52e24ddf4e931b783ea8e65ec5d5b530261
+  https://github.com/openwrt/openwrt/compare/3a168e35...4f4cb52e
+- [upstream] update to kernel 6.6.56 (security and bug fixes)
+- [cherrypick] #16690: mvebu: fix sysupgrade failure
+  thanks @borkra!
+- steps to manually fix sysupgrade to ensure both slots are fixed:
+  $ nano /lib/upgrade/platform.sh
+  ctrl+shift+- then input 9 and enter then ctrl+k, then ctrl+o, then ctrl+x
+  $ nano /lib/upgrade/nand.sh
+  ctrl+shift+- then input 303 and enter
+  replace `local cmd="$2"` with `local cmd="${2:-cat}"`
+  then ctrl+o, then ctrl+x
+  then perform the sysupgrade
 
 20241005-00
 - update to 3a168e359587df90497c1f27f8b4e3d23199c7e5
