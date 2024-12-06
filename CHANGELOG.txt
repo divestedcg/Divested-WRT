@@ -1,3 +1,8 @@
+20241206-00
+- update to 1269a836edc45a42ab1e76dcd20e8cd8325529da
+  https://github.com/openwrt/openwrt/compare/56952678...1269a836
+- divblock may be broken under some configurations
+
 20241125-00
 - update to 5695267847c2fe51290fdbde6ecd7114654f7988
   https://github.com/openwrt/openwrt/compare/749a4332...56952678
