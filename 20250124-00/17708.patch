@@ -1,0 +1,150 @@
+From b5ba9c0069443013529ffe37ade67463a9474cd2 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 23 Jan 2025 12:22:43 -0500
+Subject: [PATCH] kernel: bump 6.6 to 6.6.74
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.6.74
+
+All patches automatically rebased.
+
+Build system: x86/64
+Build-tested: bcm27xx/bcm2712, flogic/xiaomi_redmi-router-ax6000-ubootmod
+Run-tested: bcm27xx/bcm2712, flogic/xiaomi_redmi-router-ax6000-ubootmod
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.6                                   |  4 ++--
+ ...rm-v3d-Suppress-all-but-the-first-MMU-error.patch |  6 +++---
+ ...ew-debugfs-end-points-to-query-GPU-usage-st.patch |  6 +++---
+ ...m-v3d-fix-up-register-addresses-for-V3D-7.x.patch | 12 ++++++------
+ 4 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/include/kernel-6.6 b/include/kernel-6.6
+index aa0a345b293acc..277669c3902d9c 100644
+--- a/include/kernel-6.6
++++ b/include/kernel-6.6
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.6 = .73
+-LINUX_KERNEL_HASH-6.6.73 = d2028db190c201650898be8db1c705e9fe73ab44fc04290b4f7af63514122490
++LINUX_VERSION-6.6 = .74
++LINUX_KERNEL_HASH-6.6.74 = f15e2b1a8bab0eba494b07858a5abc88d8f788e25f6fe4a572a77840bbd5494d
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0183-drm-v3d-Suppress-all-but-the-first-MMU-error.patch b/target/linux/bcm27xx/patches-6.6/950-0183-drm-v3d-Suppress-all-but-the-first-MMU-error.patch
+index 31c7840e1444e0..eeb65bbd40e699 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0183-drm-v3d-Suppress-all-but-the-first-MMU-error.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0183-drm-v3d-Suppress-all-but-the-first-MMU-error.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/gpu/drm/v3d/v3d_irq.c
+ +++ b/drivers/gpu/drm/v3d/v3d_irq.c
+-@@ -177,6 +177,7 @@ v3d_hub_irq(int irq, void *arg)
++@@ -181,6 +181,7 @@ v3d_hub_irq(int irq, void *arg)
+  			"GMP",
+  		};
+  		const char *client = "?";
+@@ -21,7 +21,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  
+  		V3D_WRITE(V3D_MMU_CTL, V3D_READ(V3D_MMU_CTL));
+  
+-@@ -186,6 +187,7 @@ v3d_hub_irq(int irq, void *arg)
++@@ -190,6 +191,7 @@ v3d_hub_irq(int irq, void *arg)
+  				client = v3d41_axi_ids[axi_id];
+  		}
+  
+@@ -29,7 +29,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  		dev_err(v3d->drm.dev, "MMU error from client %s (%d) at 0x%llx%s%s%s\n",
+  			client, axi_id, (long long)vio_addr,
+  			((intsts & V3D_HUB_INT_MMU_WRV) ?
+-@@ -194,6 +196,7 @@ v3d_hub_irq(int irq, void *arg)
++@@ -198,6 +200,7 @@ v3d_hub_irq(int irq, void *arg)
+  			 ", pte invalid" : ""),
+  			((intsts & V3D_HUB_INT_MMU_CAP) ?
+  			 ", cap exceeded" : ""));
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0464-drm-v3d-New-debugfs-end-points-to-query-GPU-usage-st.patch b/target/linux/bcm27xx/patches-6.6/950-0464-drm-v3d-New-debugfs-end-points-to-query-GPU-usage-st.patch
+index aef90564b8f391..01e267fd484bec 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0464-drm-v3d-New-debugfs-end-points-to-query-GPU-usage-st.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0464-drm-v3d-New-debugfs-end-points-to-query-GPU-usage-st.patch
+@@ -258,7 +258,7 @@ Signed-off-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
+  
+  		trace_v3d_bcl_irq(&v3d->drm, fence->seqno);
+  		dma_fence_signal(&fence->base);
+-@@ -109,6 +111,7 @@ v3d_irq(int irq, void *arg)
++@@ -110,6 +112,7 @@ v3d_irq(int irq, void *arg)
+  	if (intsts & V3D_INT_FRDONE) {
+  		struct v3d_fence *fence =
+  			to_v3d_fence(v3d->render_job->base.irq_fence);
+@@ -266,7 +266,7 @@ Signed-off-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
+  
+  		trace_v3d_rcl_irq(&v3d->drm, fence->seqno);
+  		dma_fence_signal(&fence->base);
+-@@ -118,6 +121,7 @@ v3d_irq(int irq, void *arg)
++@@ -120,6 +123,7 @@ v3d_irq(int irq, void *arg)
+  	if (intsts & V3D_INT_CSDDONE) {
+  		struct v3d_fence *fence =
+  			to_v3d_fence(v3d->csd_job->base.irq_fence);
+@@ -274,7 +274,7 @@ Signed-off-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
+  
+  		trace_v3d_csd_irq(&v3d->drm, fence->seqno);
+  		dma_fence_signal(&fence->base);
+-@@ -154,6 +158,7 @@ v3d_hub_irq(int irq, void *arg)
++@@ -157,6 +161,7 @@ v3d_hub_irq(int irq, void *arg)
+  	if (intsts & V3D_HUB_INT_TFUC) {
+  		struct v3d_fence *fence =
+  			to_v3d_fence(v3d->tfu_job->base.irq_fence);
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0555-drm-v3d-fix-up-register-addresses-for-V3D-7.x.patch b/target/linux/bcm27xx/patches-6.6/950-0555-drm-v3d-fix-up-register-addresses-for-V3D-7.x.patch
+index 1466d2aadca296..560c2f627f8d18 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0555-drm-v3d-fix-up-register-addresses-for-V3D-7.x.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0555-drm-v3d-fix-up-register-addresses-for-V3D-7.x.patch
+@@ -295,7 +295,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  
+  static irqreturn_t
+  v3d_hub_irq(int irq, void *arg);
+-@@ -118,7 +119,8 @@ v3d_irq(int irq, void *arg)
++@@ -120,7 +121,8 @@ v3d_irq(int irq, void *arg)
+  		status = IRQ_HANDLED;
+  	}
+  
+@@ -305,7 +305,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  		struct v3d_fence *fence =
+  			to_v3d_fence(v3d->csd_job->base.irq_fence);
+  		v3d->gpu_queue_stats[V3D_CSD].last_exec_end = local_clock();
+-@@ -131,7 +133,7 @@ v3d_irq(int irq, void *arg)
++@@ -134,7 +136,7 @@ v3d_irq(int irq, void *arg)
+  	/* We shouldn't be triggering these if we have GMP in
+  	 * always-allowed mode.
+  	 */
+@@ -314,7 +314,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  		dev_err(v3d->drm.dev, "GMP violation\n");
+  
+  	/* V3D 4.2 wires the hub and core IRQs together, so if we &
+-@@ -205,6 +207,11 @@ v3d_hub_irq(int irq, void *arg)
++@@ -209,6 +211,11 @@ v3d_hub_irq(int irq, void *arg)
+  		status = IRQ_HANDLED;
+  	}
+  
+@@ -326,7 +326,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  	return status;
+  }
+  
+-@@ -219,8 +226,8 @@ v3d_irq_init(struct v3d_dev *v3d)
++@@ -223,8 +230,8 @@ v3d_irq_init(struct v3d_dev *v3d)
+  	 * for us.
+  	 */
+  	for (core = 0; core < v3d->cores; core++)
+@@ -337,7 +337,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  
+  	irq1 = platform_get_irq_optional(v3d_to_pdev(v3d), 1);
+  	if (irq1 == -EPROBE_DEFER)
+-@@ -264,12 +271,12 @@ v3d_irq_enable(struct v3d_dev *v3d)
++@@ -268,12 +275,12 @@ v3d_irq_enable(struct v3d_dev *v3d)
+  
+  	/* Enable our set of interrupts, masking out any others. */
+  	for (core = 0; core < v3d->cores; core++) {
+@@ -354,7 +354,7 @@ v2: fix kernel panic with debug-fs interface to list registers
+  }
+  
+  void
+-@@ -284,8 +291,8 @@ v3d_irq_disable(struct v3d_dev *v3d)
++@@ -288,8 +295,8 @@ v3d_irq_disable(struct v3d_dev *v3d)
+  
+  	/* Clear any pending interrupts we might have left. */
+  	for (core = 0; core < v3d->cores; core++)

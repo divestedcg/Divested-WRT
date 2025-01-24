@@ -1,7 +1,13 @@
+20250124-00
+- update to 6a7fa68569ac11bb2c2abb14026e8b84acd3a12f
+  https://github.com/openwrt/openwrt/compare/17b0d137...6a7fa685
+- [cherrypick] #17708: update to kernel 6.6.74 (security and bug fixes)
+- enables CONFIG_USE_APK
+
 20250110-00
 - update to 17b0d1379a3cd4a2e2dbefa7d0f9bc281269f97e
   https://github.com/openwrt/openwrt/compare/d1e9c50d...17b0d137
-- [upstream] update to kernel 6.6.69 (security and bug fixes)
+- [upstream] update to kernel 6.6.70 (security and bug fixes)
 
 20241225-00
 - update to d1e9c50d06a8cb618cb85ab489cbcccaec220636
