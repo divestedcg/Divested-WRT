@@ -2,6 +2,7 @@
 - update to 92814fec77fe24a68ab4a2acbf3ac245163c6090
   https://github.com/openwrt/openwrt/compare/6a7fa685...92814fec
 - [cherrypick] #17822: update to kernel 6.6.76 (security and bug fixes)
+- pulled, wired is broken
 
 20250124-00
 - update to 6a7fa68569ac11bb2c2abb14026e8b84acd3a12f
