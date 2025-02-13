@@ -1,3 +1,8 @@
+20250213-00
+- update to b6415e9fa9556705092dd5391ebed48f13741f6e
+  https://github.com/openwrt/openwrt/compare/92814fec...b6415e9f
+- [upstream] update to kernel 6.6.77 (security and bug fixes)
+
 20250209-00
 - update to 92814fec77fe24a68ab4a2acbf3ac245163c6090
   https://github.com/openwrt/openwrt/compare/6a7fa685...92814fec
