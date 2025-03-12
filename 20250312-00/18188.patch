@@ -1,0 +1,248 @@
+From 81a973ea67647b0e0aa31dead7c775e9aa4000e9 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 7 Mar 2025 15:17:22 -0500
+Subject: [PATCH 1/2] kernel: bump 6.6 to 6.6.81
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.6.81
+
+All patches automatically rebased.
+
+For x86, CONFIG_MICROCODE_LATE_FORCE_MINREV was introduced in this bump
+with hrecommendation to enable it[1].
+
+1. https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/arch/x86/Kconfig?id=v6.6.81&id2=v6.6.80
+
+Build system: x86/64
+Build-tested: bcm27xx/bcm2712, flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+Run-tested: bcm27xx/bcm2712, flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.6                            |  4 ++--
+ ...all-the-downstream-rpi-sound-card-dr.patch |  2 +-
+ ...-net-macb-Also-set-DMA-coherent-mask.patch | 24 +++++++++----------
+ ...port-for-Raspberry-Pi-RP1-ethernet-c.patch |  4 ++--
+ ...-rockchip-Fix-typo-in-function-names.patch |  2 +-
+ target/linux/x86/config-6.6                   |  1 +
+ 6 files changed, 19 insertions(+), 18 deletions(-)
+
+diff --git a/include/kernel-6.6 b/include/kernel-6.6
+index 1c340699471bbe..c5c29a5aadf067 100644
+--- a/include/kernel-6.6
++++ b/include/kernel-6.6
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.6 = .80
+-LINUX_KERNEL_HASH-6.6.80 = 6cf911d01324f45c9dd2f44cf06f55bda0ecf383bc498f132a0c549768531327
++LINUX_VERSION-6.6 = .81
++LINUX_KERNEL_HASH-6.6.81 = af483828e67f1b9918bc438d789cdbb06c13a4d43a41d5f35d44c9a6d620318f
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0106-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch b/target/linux/bcm27xx/patches-6.6/950-0106-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
+index 1d2f0062582719..56712a2b48d320 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0106-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0106-Add-support-for-all-the-downstream-rpi-sound-card-dr.patch
+@@ -17583,7 +17583,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	 * For devices with more than one control interface, we assume the
+ --- a/sound/usb/quirks.c
+ +++ b/sound/usb/quirks.c
+-@@ -2253,6 +2253,8 @@ static const struct usb_audio_quirk_flag
++@@ -2254,6 +2254,8 @@ static const struct usb_audio_quirk_flag
+  		   QUIRK_FLAG_ALIGN_TRANSFER),
+  	DEVICE_FLG(0x534d, 0x2109, /* MacroSilicon MS2109 */
+  		   QUIRK_FLAG_ALIGN_TRANSFER),
+diff --git a/target/linux/bcm27xx/patches-6.6/950-0518-net-macb-Also-set-DMA-coherent-mask.patch b/target/linux/bcm27xx/patches-6.6/950-0518-net-macb-Also-set-DMA-coherent-mask.patch
+index cbfab3e4e6c12d..9882230654470d 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-0518-net-macb-Also-set-DMA-coherent-mask.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-0518-net-macb-Also-set-DMA-coherent-mask.patch
+@@ -134,7 +134,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	struct napi_struct	napi_tx;
+  
+  	dma_addr_t		rx_ring_dma;
+-@@ -1285,9 +1304,15 @@ struct macb {
++@@ -1287,9 +1306,15 @@ struct macb {
+  
+  	u32			caps;
+  	unsigned int		dma_burst_length;
+@@ -222,7 +222,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  				wmb(); // ensure softirq can see update
+  			}
+  
+-@@ -2402,6 +2425,11 @@ static netdev_tx_t macb_start_xmit(struc
++@@ -2404,6 +2427,11 @@ static netdev_tx_t macb_start_xmit(struc
+  	skb_tx_timestamp(skb);
+  
+  	spin_lock_irq(&bp->lock);
+@@ -234,7 +234,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
+  	spin_unlock_irq(&bp->lock);
+  
+-@@ -2776,6 +2804,37 @@ static void macb_configure_dma(struct ma
++@@ -2778,6 +2806,37 @@ static void macb_configure_dma(struct ma
+  	}
+  }
+  
+@@ -272,7 +272,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static void macb_init_hw(struct macb *bp)
+  {
+  	u32 config;
+-@@ -2804,6 +2863,11 @@ static void macb_init_hw(struct macb *bp
++@@ -2806,6 +2865,11 @@ static void macb_init_hw(struct macb *bp
+  	if (bp->caps & MACB_CAPS_JUMBO)
+  		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
+  
+@@ -284,7 +284,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	macb_configure_dma(bp);
+  
+  	/* Enable RX partial store and forward and set watermark */
+-@@ -3165,6 +3229,52 @@ static void gem_get_ethtool_strings(stru
++@@ -3170,6 +3234,52 @@ static void gem_get_ethtool_strings(stru
+  	}
+  }
+  
+@@ -337,7 +337,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static struct net_device_stats *macb_get_stats(struct net_device *dev)
+  {
+  	struct macb *bp = netdev_priv(dev);
+-@@ -3757,6 +3867,8 @@ static const struct ethtool_ops macb_eth
++@@ -3764,6 +3874,8 @@ static const struct ethtool_ops macb_eth
+  };
+  
+  static const struct ethtool_ops gem_ethtool_ops = {
+@@ -346,7 +346,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	.get_regs_len		= macb_get_regs_len,
+  	.get_regs		= macb_get_regs,
+  	.get_wol		= macb_get_wol,
+-@@ -3766,6 +3878,8 @@ static const struct ethtool_ops gem_etht
++@@ -3773,6 +3885,8 @@ static const struct ethtool_ops gem_etht
+  	.get_ethtool_stats	= gem_get_ethtool_stats,
+  	.get_strings		= gem_get_ethtool_strings,
+  	.get_sset_count		= gem_get_sset_count,
+@@ -355,7 +355,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	.get_link_ksettings     = macb_get_link_ksettings,
+  	.set_link_ksettings     = macb_set_link_ksettings,
+  	.get_ringparam		= macb_get_ringparam,
+-@@ -5062,6 +5176,11 @@ static int macb_probe(struct platform_de
++@@ -5069,6 +5183,11 @@ static int macb_probe(struct platform_de
+  			}
+  		}
+  	}
+@@ -365,9 +365,9 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ +	bp->use_aw2b_fill = device_property_read_bool(&pdev->dev, "cdns,use-aw2b-fill");
+ +
+  	spin_lock_init(&bp->lock);
++ 	spin_lock_init(&bp->stats_lock);
+  
+- 	/* setup capabilities */
+-@@ -5117,6 +5236,21 @@ static int macb_probe(struct platform_de
++@@ -5125,6 +5244,21 @@ static int macb_probe(struct platform_de
+  	else
+  		bp->phy_interface = interface;
+  
+@@ -389,7 +389,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	/* IP specific init */
+  	err = init(pdev);
+  	if (err)
+-@@ -5193,6 +5327,19 @@ static int macb_remove(struct platform_d
++@@ -5201,6 +5335,19 @@ static int macb_remove(struct platform_d
+  	return 0;
+  }
+  
+@@ -409,7 +409,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static int __maybe_unused macb_suspend(struct device *dev)
+  {
+  	struct net_device *netdev = dev_get_drvdata(dev);
+-@@ -5407,6 +5554,7 @@ static const struct dev_pm_ops macb_pm_o
++@@ -5415,6 +5562,7 @@ static const struct dev_pm_ops macb_pm_o
+  static struct platform_driver macb_driver = {
+  	.probe		= macb_probe,
+  	.remove		= macb_remove,
+diff --git a/target/linux/bcm27xx/patches-6.6/950-1423-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch b/target/linux/bcm27xx/patches-6.6/950-1423-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
+index 6a9b7b36bd4075..c34d1c87203538 100644
+--- a/target/linux/bcm27xx/patches-6.6/950-1423-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
++++ b/target/linux/bcm27xx/patches-6.6/950-1423-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/net/ethernet/cadence/macb_main.c
+ +++ b/drivers/net/ethernet/cadence/macb_main.c
+-@@ -5023,6 +5023,17 @@ static const struct macb_config versal_c
++@@ -5030,6 +5030,17 @@ static const struct macb_config versal_c
+  	.usrio = &macb_default_usrio,
+  };
+  
+@@ -33,7 +33,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  static const struct of_device_id macb_dt_ids[] = {
+  	{ .compatible = "cdns,at91sam9260-macb", .data = &at91sam9260_config },
+  	{ .compatible = "cdns,macb" },
+-@@ -5043,6 +5054,7 @@ static const struct of_device_id macb_dt
++@@ -5050,6 +5061,7 @@ static const struct of_device_id macb_dt
+  	{ .compatible = "microchip,mpfs-macb", .data = &mpfs_config },
+  	{ .compatible = "microchip,sama7g5-gem", .data = &sama7g5_gem_config },
+  	{ .compatible = "microchip,sama7g5-emac", .data = &sama7g5_emac_config },
+diff --git a/target/linux/rockchip/patches-6.6/032-04-v6.10-phy-rockchip-Fix-typo-in-function-names.patch b/target/linux/rockchip/patches-6.6/032-04-v6.10-phy-rockchip-Fix-typo-in-function-names.patch
+index 9495dd2b108839..08620d66ecfd4c 100644
+--- a/target/linux/rockchip/patches-6.6/032-04-v6.10-phy-rockchip-Fix-typo-in-function-names.patch
++++ b/target/linux/rockchip/patches-6.6/032-04-v6.10-phy-rockchip-Fix-typo-in-function-names.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  	.init = rockchip_combphy_init,
+  	.exit = rockchip_combphy_exit,
+  	.owner = THIS_MODULE,
+-@@ -364,7 +364,7 @@ static int rockchip_combphy_probe(struct
++@@ -367,7 +367,7 @@ static int rockchip_combphy_probe(struct
+  		return ret;
+  	}
+  
+diff --git a/target/linux/x86/config-6.6 b/target/linux/x86/config-6.6
+index c416bb6a08dd7b..ad7333425328c6 100644
+--- a/target/linux/x86/config-6.6
++++ b/target/linux/x86/config-6.6
+@@ -239,6 +239,7 @@ CONFIG_M686=y
+ # CONFIG_MGEODEGX1 is not set
+ # CONFIG_MGEODE_LX is not set
+ CONFIG_MICROCODE=y
++CONFIG_MICROCODE_LATE_FORCE_MINREV=y
+ CONFIG_MICROCODE_LATE_LOADING=y
+ CONFIG_MIGRATION=y
+ CONFIG_MITIGATION_RFDS=y
+
+From 2371095c490db9b6649e7d0bad130a12faf2beb5 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Sun, 9 Mar 2025 06:18:32 -0400
+Subject: [PATCH 2/2] kernel: bump 6.6 to 6.6.82
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.6.82
+
+All patches automatically rebased.
+
+Added CONFIG_MICROCODE_INITRD32=y to x86: config-6.6[1]
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/arch/x86/Kconfig?id=v6.6.82&id2=v6.6.81
+
+Build system: x86/64
+Build-tested: bcm27xx/bcm2712
+Run-tested: bcm27xx/bcm2712
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ include/kernel-6.6          | 4 ++--
+ target/linux/x86/config-6.6 | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/kernel-6.6 b/include/kernel-6.6
+index c5c29a5aadf067..7502edfd628785 100644
+--- a/include/kernel-6.6
++++ b/include/kernel-6.6
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.6 = .81
+-LINUX_KERNEL_HASH-6.6.81 = af483828e67f1b9918bc438d789cdbb06c13a4d43a41d5f35d44c9a6d620318f
++LINUX_VERSION-6.6 = .82
++LINUX_KERNEL_HASH-6.6.82 = f3c2389b8c23cabe747f104a3e434201ca6e7725bbbfb3a8c59a063ac4820e41
+diff --git a/target/linux/x86/config-6.6 b/target/linux/x86/config-6.6
+index ad7333425328c6..2b6ab88dc3e92f 100644
+--- a/target/linux/x86/config-6.6
++++ b/target/linux/x86/config-6.6
+@@ -239,6 +239,7 @@ CONFIG_M686=y
+ # CONFIG_MGEODEGX1 is not set
+ # CONFIG_MGEODE_LX is not set
+ CONFIG_MICROCODE=y
++CONFIG_MICROCODE_INITRD32=y
+ CONFIG_MICROCODE_LATE_FORCE_MINREV=y
+ CONFIG_MICROCODE_LATE_LOADING=y
+ CONFIG_MIGRATION=y
