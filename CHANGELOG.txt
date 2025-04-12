@@ -1,3 +1,15 @@
+20250412-00
+- update to 6bbf4a540dcb7d66ef35ca8c9739c2f71e9a149d
+  https://github.com/openwrt/openwrt/compare/7aa3dfdb...6bbf4a54
+- [cherrypick] #18457: update to kernel 6.6.87 (security and bug fixes)
+- many packages will fail to compile with gcc15, please use gcc14
+  - eg. for fedora 42 as root
+    - dnf install gcc14 gcc14-c++
+    - ln -s /usr/bin/gcc-14 /usr/local/bin/gcc
+    - ln -s /usr/bin/gcc-14 /usr/local/bin/cc
+    - ln -s /usr/bin/cpp-14 /usr/local/bin/cpp
+    - ln -s /usr/bin/g++-14 /usr/local/bin/g++
+
 20250326-00
 - update to 7aa3dfdbda829c04475cffbd6708f1ff96e4849b
   https://github.com/openwrt/openwrt/compare/939628f6...7aa3dfdb
