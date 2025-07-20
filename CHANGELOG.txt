@@ -1,3 +1,10 @@
+20250720-00
+- update to ccaa4933b187d465a20a8256d375b15f4390c481
+  https://github.com/openwrt/openwrt/compare/7e09959e...ccaa4933
+- [upstream] update to kernel 6.6.99 (security and bug fixes)
+- patches have been refreshed
+- revert 5359639, compile failure
+
 20250707-00
 - update to 7e09959efda2019c28856cfba157f04e8db62f42
   https://github.com/openwrt/openwrt/compare/d3324aa2...7e09959e
