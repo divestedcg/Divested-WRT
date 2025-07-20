@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tad <tad@spotco.us>
+From: Tavi <tavi@divested.dev>
 Date: Fri, 27 Nov 2020 13:47:56 -0500
-Subject: [PATCH 4/8] dnsmasq: only listen on br-lan interface
+Subject: [PATCH 5/9] dnsmasq: only listen on br-lan interface
 
 dnsmasq should not listen on all interfaces, restrict it to br-lan.
 
 Note: this will break default config if your LAN isn't br-lan.
-Signed-off-by: Tad <tad@spotco.us>
+Signed-off-by: Tavi <tavi@divested.dev>
 ---
  package/network/services/dnsmasq/files/dnsmasq.conf | 2 ++
  1 file changed, 2 insertions(+)

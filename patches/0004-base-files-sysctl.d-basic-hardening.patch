@@ -1,22 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tad <tad@spotco.us>
+From: Tavi <tavi@divested.dev>
 Date: Fri, 27 Nov 2020 13:49:59 -0500
-Subject: [PATCH 3/8] base-files: sysctl.d: basic hardening
+Subject: [PATCH 4/9] base-files: sysctl.d: basic hardening
 
 Set some sysctls that increase security.
 
-Signed-off-by: Tad <tad@spotco.us>
+Signed-off-by: Tavi <tavi@divested.dev>
 ---
- .../files/etc/sysctl.d/60-restrict.conf       | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../files/etc/sysctl.d/60-restrict.conf       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
  create mode 100644 package/base-files/files/etc/sysctl.d/60-restrict.conf
 
 diff --git a/package/base-files/files/etc/sysctl.d/60-restrict.conf b/package/base-files/files/etc/sysctl.d/60-restrict.conf
 new file mode 100644
-index 0000000000..2b5162fdb7
+index 0000000000..e81c02f01b
 --- /dev/null
 +++ b/package/base-files/files/etc/sysctl.d/60-restrict.conf
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,29 @@
 +dev.tty.ldisc_autoload=0
 +fs.protected_fifos=2
 +fs.protected_hardlinks=1
@@ -24,10 +24,12 @@ index 0000000000..2b5162fdb7
 +fs.protected_symlinks=1
 +fs.suid_dumpable=0
 +kernel.dmesg_restrict=1
++kernel.io_uring_disabled=2
 +kernel.kexec_load_disabled=1
 +kernel.kptr_restrict=2
 +kernel.perf_event_paranoid=3
 +kernel.randomize_va_space=2
++kernel.unprivileged_bpf_disabled=2
 +kernel.yama.ptrace_scope=1
 +net.core.bpf_jit_harden=2
 +net.ipv4.icmp_ignore_bogus_error_responses=1

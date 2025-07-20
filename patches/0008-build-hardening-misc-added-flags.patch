@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tad <tad@spotco.us>
+From: Tavi <tavi@divested.dev>
 Date: Fri, 2 Jul 2021 13:03:00 -0400
-Subject: [PATCH 7/8] build: hardening: misc added flags
+Subject: [PATCH 8/9] build: hardening: misc added flags
 
-Signed-off-by: Tad <tad@spotco.us>
+Signed-off-by: Tavi <tavi@divested.dev>
 ---
  include/hardening.mk | 1 +
  1 file changed, 1 insertion(+)

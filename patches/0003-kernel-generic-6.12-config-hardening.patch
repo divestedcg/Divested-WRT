@@ -1,21 +1,21 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tavi <tavi@divested.dev>
-Date: Thu, 16 May 2024 13:42:53 -0400
-Subject: [PATCH 2/9] kernel: generic 6.6: config hardening
+Date: Sun, 20 Jul 2025 10:44:30 -0400
+Subject: [PATCH 3/9] kernel: generic 6.12: config hardening
 
 Enables various security options.
 Disables various high-risk bits.
 
 Signed-off-by: Tavi <tavi@divested.dev>
 ---
- target/linux/generic/config-6.6 | 165 ++++++++++++++++++++++++++++++++
+ target/linux/generic/config-6.12 | 165 +++++++++++++++++++++++++++++++
  1 file changed, 165 insertions(+)
 
-diff --git a/target/linux/generic/config-6.6 b/target/linux/generic/config-6.6
-index 8ede1d244d..32c2751a90 100644
---- a/target/linux/generic/config-6.6
-+++ b/target/linux/generic/config-6.6
-@@ -7574,3 +7574,168 @@ CONFIG_ZONE_DMA=y
+diff --git a/target/linux/generic/config-6.12 b/target/linux/generic/config-6.12
+index 53d799bc19..6895f100f1 100644
+--- a/target/linux/generic/config-6.12
++++ b/target/linux/generic/config-6.12
+@@ -7771,3 +7771,168 @@ CONFIG_ZRAM_DEF_COMP="unset-value"
  # CONFIG_ZSMALLOC is not set
  CONFIG_ZSMALLOC_CHAIN_SIZE=8
  # CONFIG_ZSWAP is not set
