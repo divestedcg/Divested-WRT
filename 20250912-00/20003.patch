@@ -1,0 +1,1469 @@
+From b99f1bbffa7c5482ef8404d36680d961531db9a1 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Wed, 10 Sep 2025 03:53:23 -0400
+Subject: [PATCH 1/3] kernel: bump 6.12 to 6.12.46
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.46
+
+Removed upstreamed:
+	backport-6.12/600-01-v6.14-net-dsa-add-hook-to-determine-whether-EEE-is-support.patch[1]
+	generic-backport/600-02-v6.14-net-dsa-provide-implementation-of-.support_eee.patch[2]
+	generic/backport-6.12/610-02-v6.14-net-dsa-b53-bcm_sf2-implement-.support_eee-method.patch[3]
+	generic/backport-6.12/610-05-v6.16-net-dsa-b53-do-not-enable-EEE-on-bcm63xx.patch[4]
+	generic/backport-6.12/621-proc-fix-missing-pde_set_flags.patch[5]
+	generic/pending-6.12/742-net-ethernet-mtk_eth_soc-fix-tx-vlan-tag-for-llc-pac.patch[6]
+
+Manually rebased:
+	bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
+
+All other patches automatically rebased.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=f7976772b16a7da725f9156c5ab6472ba22e3bc0
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=cda6c5c095e1997e63ed805ed3191f3d2af806a0
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=b765b9ee4e5a82e9d0e5d0649bf031e8a8b90b3d
+4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=3fbe3f4c57fda09f32e13fa05f53a0cc6f500619
+5. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=3eebe856d09b6bdd8df99eb67203c831f23e21d7
+6. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.12.46&id=f8b4b6f7c2bbfa33e50b8cc946c161172cdefbd5
+
+Build system: x86/64
+Build-tested: flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3, x86/64-glibc
+Run-tested: flogic/xiaomi_redmi-router-ax6000-ubootmod, ramips/tplink_archer-a6-v3, x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ ...-net-macb-Also-set-DMA-coherent-mask.patch |  28 ++--
+ ...port-for-Raspberry-Pi-RP1-ethernet-c.patch |   4 +-
+ ...-to-determine-whether-EEE-is-support.patch |  54 --------
+ ...ovide-implementation-of-.support_eee.patch |  53 --------
+ ...cm_sf2-implement-.support_eee-method.patch |  69 ----------
+ ...sa-b53-mdio-add-support-for-BCM53101.patch |   4 +-
+ ...sa-b53-implement-setting-ageing-time.patch |   4 +-
+ ...dsa-b53-do-not-enable-EEE-on-bcm63xx.patch |  47 -------
+ .../621-proc-fix-missing-pde_set_flags.patch  | 121 ------------------
+ ...ack-to-interpreter-for-programs-with.patch |   8 +-
+ ...et-ethernet-mediatek-add-EEE-support.patch |   6 +-
+ .../721-net-add-packet-mangeling.patch        |   4 +-
+ target/linux/generic/kernel-6.12              |   4 +-
+ ...-block-add-support-for-notifications.patch |   2 +-
+ .../pending-6.12/655-increase_skb_pad.patch   |   2 +-
+ ...net-mtk_eth_soc-enable-threaded-NAPI.patch |   2 +-
+ ..._eth_soc-work-around-issue-with-send.patch |   4 +-
+ ..._eth_soc-optimize-dma-ring-address-i.patch |  56 ++++----
+ ...mtk_eth_soc-shrink-struct-mtk_tx_buf.patch |   2 +-
+ ..._eth_soc-add-support-for-sending-fra.patch |   2 +-
+ ...ernet-mtk_eth_soc-use-napi_build_skb.patch |   4 +-
+ ...-mediatek-enlarge-DMA-reserve-buffer.patch |   2 +-
+ ..._eth_soc-add-paths-and-SerDes-modes-.patch |  18 +--
+ ...th_soc-reduce-rx-ring-size-for-older.patch |  16 +--
+ ..._eth_soc-do-not-enable-page-pool-sta.patch |   4 +-
+ ..._eth_soc-fix-tx-vlan-tag-for-llc-pac.patch |  39 ------
+ ...dsa-add-out-of-band-tagging-protocol.patch |   2 +-
+ ...0812-soc-qcom-mdt_loader-support-MPD.patch |  14 +-
+ 28 files changed, 96 insertions(+), 479 deletions(-)
+ delete mode 100644 target/linux/generic/backport-6.12/600-01-v6.14-net-dsa-add-hook-to-determine-whether-EEE-is-support.patch
+ delete mode 100644 target/linux/generic/backport-6.12/600-02-v6.14-net-dsa-provide-implementation-of-.support_eee.patch
+ delete mode 100644 target/linux/generic/backport-6.12/610-02-v6.14-net-dsa-b53-bcm_sf2-implement-.support_eee-method.patch
+ delete mode 100644 target/linux/generic/backport-6.12/610-05-v6.16-net-dsa-b53-do-not-enable-EEE-on-bcm63xx.patch
+ delete mode 100644 target/linux/generic/backport-6.12/621-proc-fix-missing-pde_set_flags.patch
+ delete mode 100644 target/linux/generic/pending-6.12/742-net-ethernet-mtk_eth_soc-fix-tx-vlan-tag-for-llc-pac.patch
+
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch b/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
+index 70087e1839f701..ea8d014e60cc62 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
+@@ -199,7 +199,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	snprintf(bp->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
+  		 bp->pdev->name, bp->pdev->id);
+  	bp->mii_bus->priv = bp;
+-@@ -1641,6 +1658,11 @@ static int macb_rx(struct macb_queue *qu
++@@ -1642,6 +1659,11 @@ static int macb_rx(struct macb_queue *qu
+  
+  		macb_init_rx_ring(queue);
+  		queue_writel(queue, RBQP, queue->rx_ring_dma);
+@@ -211,7 +211,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  
+  		macb_writel(bp, NCR, ctrl | MACB_BIT(RE));
+  
+-@@ -1941,8 +1963,9 @@ static irqreturn_t macb_interrupt(int ir
++@@ -1944,8 +1966,9 @@ static irqreturn_t macb_interrupt(int ir
+  				queue_writel(queue, ISR, MACB_BIT(TCOMP) |
+  							 MACB_BIT(TXUBR));
+  
+@@ -222,19 +222,19 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  				wmb(); // ensure softirq can see update
+  			}
+  
+-@@ -2397,6 +2420,11 @@ static netdev_tx_t macb_start_xmit(struc
++@@ -2401,6 +2424,11 @@ static netdev_tx_t macb_start_xmit(struc
+  	skb_tx_timestamp(skb);
+  
+- 	spin_lock_irq(&bp->lock);
++ 	spin_lock(&bp->lock);
+ +
+ +	/* TSTART write might get dropped, so make the IRQ retrigger a buffer read */
+ +	if (macb_readl(bp, TSR) & MACB_BIT(TGO))
+ +		queue->tx_pending = 1;
+ +
+  	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
+- 	spin_unlock_irq(&bp->lock);
++ 	spin_unlock(&bp->lock);
+  
+-@@ -2803,6 +2831,37 @@ static void macb_configure_dma(struct ma
++@@ -2807,6 +2835,37 @@ static void macb_configure_dma(struct ma
+  	}
+  }
+  
+@@ -272,7 +272,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static void macb_init_hw(struct macb *bp)
+  {
+  	u32 config;
+-@@ -2831,6 +2890,11 @@ static void macb_init_hw(struct macb *bp
++@@ -2835,6 +2894,11 @@ static void macb_init_hw(struct macb *bp
+  	if (bp->caps & MACB_CAPS_JUMBO)
+  		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
+  
+@@ -284,7 +284,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	macb_configure_dma(bp);
+  
+  	/* Enable RX partial store and forward and set watermark */
+-@@ -3195,6 +3259,52 @@ static void gem_get_ethtool_strings(stru
++@@ -3199,6 +3263,52 @@ static void gem_get_ethtool_strings(stru
+  	}
+  }
+  
+@@ -337,7 +337,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static struct net_device_stats *macb_get_stats(struct net_device *dev)
+  {
+  	struct macb *bp = netdev_priv(dev);
+-@@ -3779,6 +3889,8 @@ static const struct ethtool_ops macb_eth
++@@ -3783,6 +3893,8 @@ static const struct ethtool_ops macb_eth
+  };
+  
+  static const struct ethtool_ops gem_ethtool_ops = {
+@@ -346,7 +346,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	.get_regs_len		= macb_get_regs_len,
+  	.get_regs		= macb_get_regs,
+  	.get_wol		= macb_get_wol,
+-@@ -3788,6 +3900,8 @@ static const struct ethtool_ops gem_etht
++@@ -3792,6 +3904,8 @@ static const struct ethtool_ops gem_etht
+  	.get_ethtool_stats	= gem_get_ethtool_stats,
+  	.get_strings		= gem_get_ethtool_strings,
+  	.get_sset_count		= gem_get_sset_count,
+@@ -355,7 +355,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	.get_link_ksettings     = macb_get_link_ksettings,
+  	.set_link_ksettings     = macb_set_link_ksettings,
+  	.get_ringparam		= macb_get_ringparam,
+-@@ -5109,6 +5223,11 @@ static int macb_probe(struct platform_de
++@@ -5113,6 +5227,11 @@ static int macb_probe(struct platform_de
+  			}
+  		}
+  	}
+@@ -367,7 +367,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	spin_lock_init(&bp->lock);
+  	spin_lock_init(&bp->stats_lock);
+  
+-@@ -5169,6 +5288,21 @@ static int macb_probe(struct platform_de
++@@ -5173,6 +5292,21 @@ static int macb_probe(struct platform_de
+  	else
+  		bp->phy_interface = interface;
+  
+@@ -389,7 +389,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	/* IP specific init */
+  	err = init(pdev);
+  	if (err)
+-@@ -5240,6 +5374,19 @@ static void macb_remove(struct platform_
++@@ -5244,6 +5378,19 @@ static void macb_remove(struct platform_
+  	}
+  }
+  
+@@ -409,7 +409,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static int __maybe_unused macb_suspend(struct device *dev)
+  {
+  	struct net_device *netdev = dev_get_drvdata(dev);
+-@@ -5493,6 +5640,7 @@ static const struct dev_pm_ops macb_pm_o
++@@ -5497,6 +5644,7 @@ static const struct dev_pm_ops macb_pm_o
+  static struct platform_driver macb_driver = {
+  	.probe		= macb_probe,
+  	.remove_new	= macb_remove,
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0565-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch b/target/linux/bcm27xx/patches-6.12/950-0565-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
+index 947cb02dda9bcb..3e1dce2badadc1 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0565-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0565-net-macb-Add-support-for-Raspberry-Pi-RP1-ethernet-c.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/net/ethernet/cadence/macb_main.c
+ +++ b/drivers/net/ethernet/cadence/macb_main.c
+-@@ -5072,6 +5072,17 @@ static const struct macb_config versal_c
++@@ -5076,6 +5076,17 @@ static const struct macb_config versal_c
+  	.usrio = &macb_default_usrio,
+  };
+  
+@@ -33,7 +33,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  static const struct of_device_id macb_dt_ids[] = {
+  	{ .compatible = "cdns,at91sam9260-macb", .data = &at91sam9260_config },
+  	{ .compatible = "cdns,macb" },
+-@@ -5092,6 +5103,7 @@ static const struct of_device_id macb_dt
++@@ -5096,6 +5107,7 @@ static const struct of_device_id macb_dt
+  	{ .compatible = "microchip,mpfs-macb", .data = &mpfs_config },
+  	{ .compatible = "microchip,sama7g5-gem", .data = &sama7g5_gem_config },
+  	{ .compatible = "microchip,sama7g5-emac", .data = &sama7g5_emac_config },
+diff --git a/target/linux/generic/backport-6.12/600-01-v6.14-net-dsa-add-hook-to-determine-whether-EEE-is-support.patch b/target/linux/generic/backport-6.12/600-01-v6.14-net-dsa-add-hook-to-determine-whether-EEE-is-support.patch
+deleted file mode 100644
+index 446f918fa081a6..00000000000000
+--- a/target/linux/generic/backport-6.12/600-01-v6.14-net-dsa-add-hook-to-determine-whether-EEE-is-support.patch
++++ /dev/null
+@@ -1,54 +0,0 @@
+-From 9723a77318b7c0cfd06ea207e52a042f8c815318 Mon Sep 17 00:00:00 2001
+-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+-Date: Tue, 10 Dec 2024 14:18:16 +0000
+-Subject: [PATCH] net: dsa: add hook to determine whether EEE is supported
+-
+-Add a hook to determine whether the switch supports EEE. This will
+-return false if the switch does not, or true if it does. If the
+-method is not implemented, we assume (currently) that the switch
+-supports EEE.
+-
+-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+-Link: https://patch.msgid.link/E1tL144-006cZD-El@rmk-PC.armlinux.org.uk
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+----
+- include/net/dsa.h | 1 +
+- net/dsa/user.c    | 8 ++++++++
+- 2 files changed, 9 insertions(+)
+-
+---- a/include/net/dsa.h
+-+++ b/include/net/dsa.h
+-@@ -1003,6 +1003,7 @@ struct dsa_switch_ops {
+- 	/*
+- 	 * Port's MAC EEE settings
+- 	 */
+-+	bool	(*support_eee)(struct dsa_switch *ds, int port);
+- 	int	(*set_mac_eee)(struct dsa_switch *ds, int port,
+- 			       struct ethtool_keee *e);
+- 	int	(*get_mac_eee)(struct dsa_switch *ds, int port,
+---- a/net/dsa/user.c
+-+++ b/net/dsa/user.c
+-@@ -1231,6 +1231,10 @@ static int dsa_user_set_eee(struct net_d
+- 	struct dsa_switch *ds = dp->ds;
+- 	int ret;
+- 
+-+	/* Check whether the switch supports EEE */
+-+	if (ds->ops->support_eee && !ds->ops->support_eee(ds, dp->index))
+-+		return -EOPNOTSUPP;
+-+
+- 	/* Port's PHY and MAC both need to be EEE capable */
+- 	if (!dev->phydev || !dp->pl)
+- 		return -ENODEV;
+-@@ -1251,6 +1255,10 @@ static int dsa_user_get_eee(struct net_d
+- 	struct dsa_switch *ds = dp->ds;
+- 	int ret;
+- 
+-+	/* Check whether the switch supports EEE */
+-+	if (ds->ops->support_eee && !ds->ops->support_eee(ds, dp->index))
+-+		return -EOPNOTSUPP;
+-+
+- 	/* Port's PHY and MAC both need to be EEE capable */
+- 	if (!dev->phydev || !dp->pl)
+- 		return -ENODEV;
+diff --git a/target/linux/generic/backport-6.12/600-02-v6.14-net-dsa-provide-implementation-of-.support_eee.patch b/target/linux/generic/backport-6.12/600-02-v6.14-net-dsa-provide-implementation-of-.support_eee.patch
+deleted file mode 100644
+index d7342daa0ba8f3..00000000000000
+--- a/target/linux/generic/backport-6.12/600-02-v6.14-net-dsa-provide-implementation-of-.support_eee.patch
++++ /dev/null
+@@ -1,53 +0,0 @@
+-From 99379f587278c818777cb4778e2c79c6c1440c65 Mon Sep 17 00:00:00 2001
+-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+-Date: Tue, 10 Dec 2024 14:18:21 +0000
+-Subject: [PATCH] net: dsa: provide implementation of .support_eee()
+-
+-Provide a trivial implementation for the .support_eee() method which
+-switch drivers can use to simply indicate that they support EEE on
+-all their user ports.
+-
+-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+-Link: https://patch.msgid.link/E1tL149-006cZJ-JJ@rmk-PC.armlinux.org.uk
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+----
+- include/net/dsa.h |  1 +
+- net/dsa/port.c    | 16 ++++++++++++++++
+- 2 files changed, 17 insertions(+)
+-
+---- a/include/net/dsa.h
+-+++ b/include/net/dsa.h
+-@@ -1399,5 +1399,6 @@ static inline bool dsa_user_dev_check(co
+- 
+- netdev_tx_t dsa_enqueue_skb(struct sk_buff *skb, struct net_device *dev);
+- void dsa_port_phylink_mac_change(struct dsa_switch *ds, int port, bool up);
+-+bool dsa_supports_eee(struct dsa_switch *ds, int port);
+- 
+- #endif
+---- a/net/dsa/port.c
+-+++ b/net/dsa/port.c
+-@@ -1589,6 +1589,22 @@ dsa_port_phylink_mac_select_pcs(struct p
+- 	return pcs;
+- }
+- 
+-+/* dsa_supports_eee - indicate that EEE is supported
+-+ * @ds: pointer to &struct dsa_switch
+-+ * @port: port index
+-+ *
+-+ * A default implementation for the .support_eee() DSA operations member,
+-+ * which drivers can use to indicate that they support EEE on all of their
+-+ * user ports.
+-+ *
+-+ * Returns: true
+-+ */
+-+bool dsa_supports_eee(struct dsa_switch *ds, int port)
+-+{
+-+	return true;
+-+}
+-+EXPORT_SYMBOL_GPL(dsa_supports_eee);
+-+
+- static void dsa_port_phylink_mac_config(struct phylink_config *config,
+- 					unsigned int mode,
+- 					const struct phylink_link_state *state)
+diff --git a/target/linux/generic/backport-6.12/610-02-v6.14-net-dsa-b53-bcm_sf2-implement-.support_eee-method.patch b/target/linux/generic/backport-6.12/610-02-v6.14-net-dsa-b53-bcm_sf2-implement-.support_eee-method.patch
+deleted file mode 100644
+index 2658c6861b12a5..00000000000000
+--- a/target/linux/generic/backport-6.12/610-02-v6.14-net-dsa-b53-bcm_sf2-implement-.support_eee-method.patch
++++ /dev/null
+@@ -1,69 +0,0 @@
+-From c86692fc2cb77d94dd8c166c2b9017f196d02a84 Mon Sep 17 00:00:00 2001
+-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+-Date: Tue, 10 Dec 2024 14:18:26 +0000
+-Subject: [PATCH] net: dsa: b53/bcm_sf2: implement .support_eee() method
+-
+-Implement the .support_eee() method to indicate that EEE is not
+-supported by two switch variants, rather than making these checks in
+-the .set_mac_eee() and .get_mac_eee() methods.
+-
+-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+-Link: https://patch.msgid.link/E1tL14E-006cZU-Nc@rmk-PC.armlinux.org.uk
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+----
+- drivers/net/dsa/b53/b53_common.c | 13 +++++++------
+- drivers/net/dsa/b53/b53_priv.h   |  1 +
+- 2 files changed, 8 insertions(+), 6 deletions(-)
+-
+---- a/drivers/net/dsa/b53/b53_common.c
+-+++ b/drivers/net/dsa/b53/b53_common.c
+-@@ -2387,13 +2387,16 @@ int b53_eee_init(struct dsa_switch *ds,
+- }
+- EXPORT_SYMBOL(b53_eee_init);
+- 
+--int b53_get_mac_eee(struct dsa_switch *ds, int port, struct ethtool_keee *e)
+-+bool b53_support_eee(struct dsa_switch *ds, int port)
+- {
+- 	struct b53_device *dev = ds->priv;
+- 
+--	if (is5325(dev) || is5365(dev))
+--		return -EOPNOTSUPP;
+-+	return !is5325(dev) && !is5365(dev);
+-+}
+-+EXPORT_SYMBOL(b53_support_eee);
+- 
+-+int b53_get_mac_eee(struct dsa_switch *ds, int port, struct ethtool_keee *e)
+-+{
+- 	return 0;
+- }
+- EXPORT_SYMBOL(b53_get_mac_eee);
+-@@ -2403,9 +2406,6 @@ int b53_set_mac_eee(struct dsa_switch *d
+- 	struct b53_device *dev = ds->priv;
+- 	struct ethtool_keee *p = &dev->ports[port].eee;
+- 
+--	if (is5325(dev) || is5365(dev))
+--		return -EOPNOTSUPP;
+--
+- 	p->eee_enabled = e->eee_enabled;
+- 	b53_eee_enable_set(ds, port, e->eee_enabled);
+- 
+-@@ -2462,6 +2462,7 @@ static const struct dsa_switch_ops b53_s
+- 	.port_setup		= b53_setup_port,
+- 	.port_enable		= b53_enable_port,
+- 	.port_disable		= b53_disable_port,
+-+	.support_eee		= b53_support_eee,
+- 	.get_mac_eee		= b53_get_mac_eee,
+- 	.set_mac_eee		= b53_set_mac_eee,
+- 	.port_bridge_join	= b53_br_join,
+---- a/drivers/net/dsa/b53/b53_priv.h
+-+++ b/drivers/net/dsa/b53/b53_priv.h
+-@@ -387,6 +387,7 @@ int b53_enable_port(struct dsa_switch *d
+- void b53_disable_port(struct dsa_switch *ds, int port);
+- void b53_brcm_hdr_setup(struct dsa_switch *ds, int port);
+- int b53_eee_init(struct dsa_switch *ds, int port, struct phy_device *phy);
+-+bool b53_support_eee(struct dsa_switch *ds, int port);
+- int b53_get_mac_eee(struct dsa_switch *ds, int port, struct ethtool_keee *e);
+- int b53_set_mac_eee(struct dsa_switch *ds, int port, struct ethtool_keee *e);
+- 
+diff --git a/target/linux/generic/backport-6.12/610-03-v6.15-net-dsa-b53-mdio-add-support-for-BCM53101.patch b/target/linux/generic/backport-6.12/610-03-v6.15-net-dsa-b53-mdio-add-support-for-BCM53101.patch
+index dd17c8f6aad361..6d69ec0648fec8 100644
+--- a/target/linux/generic/backport-6.12/610-03-v6.15-net-dsa-b53-mdio-add-support-for-BCM53101.patch
++++ b/target/linux/generic/backport-6.12/610-03-v6.15-net-dsa-b53-mdio-add-support-for-BCM53101.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/dsa/b53/b53_common.c
+ +++ b/drivers/net/dsa/b53/b53_common.c
+-@@ -2581,6 +2581,19 @@ static const struct b53_chip_data b53_sw
++@@ -2584,6 +2584,19 @@ static const struct b53_chip_data b53_sw
+  		.jumbo_size_reg = B53_JUMBO_MAX_SIZE,
+  	},
+  	{
+@@ -38,7 +38,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  		.chip_id = BCM53115_DEVICE_ID,
+  		.dev_name = "BCM53115",
+  		.vlans = 4096,
+-@@ -2961,6 +2974,7 @@ int b53_switch_detect(struct b53_device
++@@ -2964,6 +2977,7 @@ int b53_switch_detect(struct b53_device
+  			return ret;
+  
+  		switch (id32) {
+diff --git a/target/linux/generic/backport-6.12/610-04-v6.16-net-dsa-b53-implement-setting-ageing-time.patch b/target/linux/generic/backport-6.12/610-04-v6.16-net-dsa-b53-implement-setting-ageing-time.patch
+index 75ad5c5e3ee671..5c993a61196295 100644
+--- a/target/linux/generic/backport-6.12/610-04-v6.16-net-dsa-b53-implement-setting-ageing-time.patch
++++ b/target/linux/generic/backport-6.12/610-04-v6.16-net-dsa-b53-implement-setting-ageing-time.patch
+@@ -40,7 +40,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	ret = b53_reset_switch(dev);
+  	if (ret) {
+  		dev_err(ds->dev, "failed to reset switch\n");
+-@@ -2441,6 +2446,28 @@ static int b53_get_max_mtu(struct dsa_sw
++@@ -2444,6 +2449,28 @@ static int b53_get_max_mtu(struct dsa_sw
+  	return B53_MAX_MTU;
+  }
+  
+@@ -69,7 +69,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static const struct phylink_mac_ops b53_phylink_mac_ops = {
+  	.mac_select_pcs	= b53_phylink_mac_select_pcs,
+  	.mac_config	= b53_phylink_mac_config,
+-@@ -2465,6 +2492,7 @@ static const struct dsa_switch_ops b53_s
++@@ -2468,6 +2495,7 @@ static const struct dsa_switch_ops b53_s
+  	.support_eee		= b53_support_eee,
+  	.get_mac_eee		= b53_get_mac_eee,
+  	.set_mac_eee		= b53_set_mac_eee,
+diff --git a/target/linux/generic/backport-6.12/610-05-v6.16-net-dsa-b53-do-not-enable-EEE-on-bcm63xx.patch b/target/linux/generic/backport-6.12/610-05-v6.16-net-dsa-b53-do-not-enable-EEE-on-bcm63xx.patch
+deleted file mode 100644
+index 39fb229f33b3bd..00000000000000
+--- a/target/linux/generic/backport-6.12/610-05-v6.16-net-dsa-b53-do-not-enable-EEE-on-bcm63xx.patch
++++ /dev/null
+@@ -1,47 +0,0 @@
+-From 1237c2d4a8db79dfd4369bff6930b0e385ed7d5c Mon Sep 17 00:00:00 2001
+-From: Jonas Gorski <jonas.gorski@gmail.com>
+-Date: Mon, 2 Jun 2025 21:39:49 +0200
+-Subject: [PATCH] net: dsa: b53: do not enable EEE on bcm63xx
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-BCM63xx internal switches do not support EEE, but provide multiple RGMII
+-ports where external PHYs may be connected. If one of these PHYs are EEE
+-capable, we may try to enable EEE for the MACs, which then hangs the
+-system on access of the (non-existent) EEE registers.
+-
+-Fix this by checking if the switch actually supports EEE before
+-attempting to configure it.
+-
+-Fixes: 22256b0afb12 ("net: dsa: b53: Move EEE functions to b53")
+-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-Tested-by: Álvaro Fernández Rojas <noltari@gmail.com>
+-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+-Link: https://patch.msgid.link/20250602193953.1010487-2-jonas.gorski@gmail.com
+-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+----
+- drivers/net/dsa/b53/b53_common.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+---- a/drivers/net/dsa/b53/b53_common.c
+-+++ b/drivers/net/dsa/b53/b53_common.c
+-@@ -2382,6 +2382,9 @@ int b53_eee_init(struct dsa_switch *ds,
+- {
+- 	int ret;
+- 
+-+	if (!b53_support_eee(ds, port))
+-+		return 0;
+-+
+- 	ret = phy_init_eee(phy, false);
+- 	if (ret)
+- 		return 0;
+-@@ -2396,7 +2399,7 @@ bool b53_support_eee(struct dsa_switch *
+- {
+- 	struct b53_device *dev = ds->priv;
+- 
+--	return !is5325(dev) && !is5365(dev);
+-+	return !is5325(dev) && !is5365(dev) && !is63xx(dev);
+- }
+- EXPORT_SYMBOL(b53_support_eee);
+- 
+diff --git a/target/linux/generic/backport-6.12/621-proc-fix-missing-pde_set_flags.patch b/target/linux/generic/backport-6.12/621-proc-fix-missing-pde_set_flags.patch
+deleted file mode 100644
+index ba026b9c3a1268..00000000000000
+--- a/target/linux/generic/backport-6.12/621-proc-fix-missing-pde_set_flags.patch
++++ /dev/null
+@@ -1,121 +0,0 @@
+-From: wangzijie <wangzijie1@honor.com>
+-To: <akpm@linux-foundation.org>, <brauner@kernel.org>,
+-	<viro@zeniv.linux.org.uk>, <adobriyan@gmail.com>,
+-	<rick.p.edgecombe@intel.com>, <ast@kernel.org>,
+-	<k.shutemov@gmail.com>, <jirislaby@kernel.org>,
+-	<linux-fsdevel@vger.kernel.org>
+-Cc: <polynomial-c@gmx.de>, <gregkh@linuxfoundation.org>,
+-	<stable@vger.kernel.org>, <regressions@lists.linux.dev>,
+-	wangzijie <wangzijie1@honor.com>
+-Subject: [PATCH v3] proc: fix missing pde_set_flags() for net proc files
+-Date: Thu, 21 Aug 2025 18:58:06 +0800	[thread overview]
+-Message-ID: <20250821105806.1453833-1-wangzijie1@honor.com> (raw)
+-
+-To avoid potential UAF issues during module removal races, we use pde_set_flags()
+-to save proc_ops flags in PDE itself before proc_register(), and then use
+-pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
+-
+-However, the pde_set_flags() call was missing when creating net related proc files.
+-This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+-inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
+-
+-Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+-NULL check for proc_ops in pde_set_flags().
+-
+-[1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+-
+-Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al")
+-Cc: stable@vger.kernel.org
+-Reported-by: Lars Wendler <polynomial-c@gmx.de>
+-Signed-off-by: wangzijie <wangzijie1@honor.com>
+----
+-v3:
+-- followed by Christian's suggestion to stash pde->proc_ops in a local const variable
+-v2:
+-- followed by Jiri's suggestion to refractor code and reformat commit message
+----
+- fs/proc/generic.c | 38 +++++++++++++++++++++-----------------
+- 1 file changed, 21 insertions(+), 17 deletions(-)
+-
+---- a/fs/proc/generic.c
+-+++ b/fs/proc/generic.c
+-@@ -362,6 +362,25 @@ static const struct inode_operations pro
+- 	.setattr	= proc_notify_change,
+- };
+- 
+-+static void pde_set_flags(struct proc_dir_entry *pde)
+-+{
+-+	const struct proc_ops *proc_ops = pde->proc_ops;
+-+
+-+	if (!proc_ops)
+-+		return;
+-+
+-+	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+-+		pde->flags |= PROC_ENTRY_PERMANENT;
+-+	if (proc_ops->proc_read_iter)
+-+		pde->flags |= PROC_ENTRY_proc_read_iter;
+-+#ifdef CONFIG_COMPAT
+-+	if (proc_ops->proc_compat_ioctl)
+-+		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+-+#endif
+-+	if (proc_ops->proc_lseek)
+-+		pde->flags |= PROC_ENTRY_proc_lseek;
+-+}
+-+
+- /* returns the registered entry, or frees dp and returns NULL on failure */
+- struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+- 		struct proc_dir_entry *dp)
+-@@ -369,6 +388,8 @@ struct proc_dir_entry *proc_register(str
+- 	if (proc_alloc_inum(&dp->low_ino))
+- 		goto out_free_entry;
+- 
+-+	pde_set_flags(dp);
+-+
+- 	write_lock(&proc_subdir_lock);
+- 	dp->parent = dir;
+- 	if (pde_subdir_insert(dir, dp) == false) {
+-@@ -557,20 +578,6 @@ struct proc_dir_entry *proc_create_reg(c
+- 	return p;
+- }
+- 
+--static void pde_set_flags(struct proc_dir_entry *pde)
+--{
+--	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+--		pde->flags |= PROC_ENTRY_PERMANENT;
+--	if (pde->proc_ops->proc_read_iter)
+--		pde->flags |= PROC_ENTRY_proc_read_iter;
+--#ifdef CONFIG_COMPAT
+--	if (pde->proc_ops->proc_compat_ioctl)
+--		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+--#endif
+--	if (pde->proc_ops->proc_lseek)
+--		pde->flags |= PROC_ENTRY_proc_lseek;
+--}
+--
+- struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+- 		struct proc_dir_entry *parent,
+- 		const struct proc_ops *proc_ops, void *data)
+-@@ -581,7 +588,6 @@ struct proc_dir_entry *proc_create_data(
+- 	if (!p)
+- 		return NULL;
+- 	p->proc_ops = proc_ops;
+--	pde_set_flags(p);
+- 	return proc_register(parent, p);
+- }
+- EXPORT_SYMBOL(proc_create_data);
+-@@ -632,7 +638,6 @@ struct proc_dir_entry *proc_create_seq_p
+- 	p->proc_ops = &proc_seq_ops;
+- 	p->seq_ops = ops;
+- 	p->state_size = state_size;
+--	pde_set_flags(p);
+- 	return proc_register(parent, p);
+- }
+- EXPORT_SYMBOL(proc_create_seq_private);
+-@@ -663,7 +668,6 @@ struct proc_dir_entry *proc_create_singl
+- 		return NULL;
+- 	p->proc_ops = &proc_single_ops;
+- 	p->single_show = show;
+--	pde_set_flags(p);
+- 	return proc_register(parent, p);
+- }
+- EXPORT_SYMBOL(proc_create_single_data);
+diff --git a/target/linux/generic/backport-6.12/630-v6.17-bpf-Allow-fall-back-to-interpreter-for-programs-with.patch b/target/linux/generic/backport-6.12/630-v6.17-bpf-Allow-fall-back-to-interpreter-for-programs-with.patch
+index 9943f84a9047c3..0100e2b9712686 100644
+--- a/target/linux/generic/backport-6.12/630-v6.17-bpf-Allow-fall-back-to-interpreter-for-programs-with.patch
++++ b/target/linux/generic/backport-6.12/630-v6.17-bpf-Allow-fall-back-to-interpreter-for-programs-with.patch
+@@ -46,7 +46,7 @@ Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  	 */
+  	WARN_ON_ONCE(1);
+  	return 0;
+-@@ -2385,8 +2384,9 @@ out:
++@@ -2401,8 +2400,9 @@ out:
+  	return ret;
+  }
+  
+@@ -57,7 +57,7 @@ Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+  	u32 stack_depth = max_t(u32, fp->aux->stack_depth, 1);
+  	u32 idx = (round_up(stack_depth, 32) / 32) - 1;
+-@@ -2395,15 +2395,16 @@ static void bpf_prog_select_func(struct
++@@ -2411,15 +2411,16 @@ static void bpf_prog_select_func(struct
+  	 * But for non-JITed programs, we don't need bpf_func, so no bounds
+  	 * check needed.
+  	 */
+@@ -76,7 +76,7 @@ Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  }
+  
+  /**
+-@@ -2422,7 +2423,7 @@ struct bpf_prog *bpf_prog_select_runtime
++@@ -2438,7 +2439,7 @@ struct bpf_prog *bpf_prog_select_runtime
+  	/* In case of BPF to BPF calls, verifier did all the prep
+  	 * work with regards to JITing, etc.
+  	 */
+@@ -85,7 +85,7 @@ Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  
+  	if (fp->bpf_func)
+  		goto finalize;
+-@@ -2431,7 +2432,8 @@ struct bpf_prog *bpf_prog_select_runtime
++@@ -2447,7 +2448,8 @@ struct bpf_prog *bpf_prog_select_runtime
+  	    bpf_prog_has_kfunc_call(fp))
+  		jit_needed = true;
+  
+diff --git a/target/linux/generic/backport-6.12/721-01-v6.15-net-ethernet-mediatek-add-EEE-support.patch b/target/linux/generic/backport-6.12/721-01-v6.15-net-ethernet-mediatek-add-EEE-support.patch
+index 2ca3f2ef004111..c58635a2846c44 100644
+--- a/target/linux/generic/backport-6.12/721-01-v6.15-net-ethernet-mediatek-add-EEE-support.patch
++++ b/target/linux/generic/backport-6.12/721-01-v6.15-net-ethernet-mediatek-add-EEE-support.patch
+@@ -39,7 +39,7 @@ Signed-off-by: Qingfang Deng <dqfext@gmail.com>
+  	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK;
+  	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
+  }
+-@@ -4506,6 +4516,61 @@ static int mtk_set_pauseparam(struct net
++@@ -4514,6 +4524,61 @@ static int mtk_set_pauseparam(struct net
+  	return phylink_ethtool_set_pauseparam(mac->phylink, pause);
+  }
+  
+@@ -101,7 +101,7 @@ Signed-off-by: Qingfang Deng <dqfext@gmail.com>
+  static u16 mtk_select_queue(struct net_device *dev, struct sk_buff *skb,
+  			    struct net_device *sb_dev)
+  {
+-@@ -4538,6 +4603,8 @@ static const struct ethtool_ops mtk_etht
++@@ -4546,6 +4611,8 @@ static const struct ethtool_ops mtk_etht
+  	.set_pauseparam		= mtk_set_pauseparam,
+  	.get_rxnfc		= mtk_get_rxnfc,
+  	.set_rxnfc		= mtk_set_rxnfc,
+@@ -110,7 +110,7 @@ Signed-off-by: Qingfang Deng <dqfext@gmail.com>
+  };
+  
+  static const struct net_device_ops mtk_netdev_ops = {
+-@@ -4598,6 +4665,8 @@ static int mtk_add_mac(struct mtk_eth *e
++@@ -4606,6 +4673,8 @@ static int mtk_add_mac(struct mtk_eth *e
+  	}
+  	mac = netdev_priv(eth->netdev[id]);
+  	eth->mac[id] = mac;
+diff --git a/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch
+index fee5641cbd4828..842c9b0d306d38 100644
+--- a/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch
++++ b/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch
+@@ -52,7 +52,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+   */
+ --- a/include/linux/skbuff.h
+ +++ b/include/linux/skbuff.h
+-@@ -3236,6 +3236,10 @@ static inline int pskb_trim(struct sk_bu
++@@ -3242,6 +3242,10 @@ static inline int pskb_trim(struct sk_bu
+  	return (len < skb->len) ? __pskb_trim(skb, len) : 0;
+  }
+  
+@@ -63,7 +63,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  /**
+   *	pskb_trim_unique - remove end from a paged unique (not cloned) buffer
+   *	@skb: buffer to alter
+-@@ -3401,16 +3405,6 @@ static inline struct sk_buff *dev_alloc_
++@@ -3407,16 +3411,6 @@ static inline struct sk_buff *dev_alloc_
+  }
+  
+  
+diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
+index 6108288d11208e..6b98e2d3af1987 100644
+--- a/target/linux/generic/kernel-6.12
++++ b/target/linux/generic/kernel-6.12
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.12 = .45
+-LINUX_KERNEL_HASH-6.12.45 = 8f95a8549cfbdfb89c1181a1f55a971f04dfcd629508a2ed70b777ab92f9db3e
++LINUX_VERSION-6.12 = .46
++LINUX_KERNEL_HASH-6.12.46 = 2e5e7382d324caac23c5d80415f7c7ba64e3dbeee2ad936291e8c6c4b114573e
+diff --git a/target/linux/generic/pending-6.12/454-block-add-support-for-notifications.patch b/target/linux/generic/pending-6.12/454-block-add-support-for-notifications.patch
+index bb78fc368f860c..6a5abef682fff4 100644
+--- a/target/linux/generic/pending-6.12/454-block-add-support-for-notifications.patch
++++ b/target/linux/generic/pending-6.12/454-block-add-support-for-notifications.patch
+@@ -149,7 +149,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ +device_initcall(blk_notifications_init);
+ --- a/include/linux/blkdev.h
+ +++ b/include/linux/blkdev.h
+-@@ -1751,4 +1751,12 @@ static inline bool bdev_can_atomic_write
++@@ -1753,4 +1753,12 @@ static inline bool bdev_can_atomic_write
+  
+  #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
+  
+diff --git a/target/linux/generic/pending-6.12/655-increase_skb_pad.patch b/target/linux/generic/pending-6.12/655-increase_skb_pad.patch
+index 57857272f0c0a4..895e0a8d8fea03 100644
+--- a/target/linux/generic/pending-6.12/655-increase_skb_pad.patch
++++ b/target/linux/generic/pending-6.12/655-increase_skb_pad.patch
+@@ -9,7 +9,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/include/linux/skbuff.h
+ +++ b/include/linux/skbuff.h
+-@@ -3203,7 +3203,7 @@ static inline int pskb_network_may_pull(
++@@ -3209,7 +3209,7 @@ static inline int pskb_network_may_pull(
+   * NET_IP_ALIGN(2) + ethernet_header(14) + IP_header(20/40) + ports(8)
+   */
+  #ifndef NET_SKB_PAD
+diff --git a/target/linux/generic/pending-6.12/702-net-ethernet-mtk_eth_soc-enable-threaded-NAPI.patch b/target/linux/generic/pending-6.12/702-net-ethernet-mtk_eth_soc-enable-threaded-NAPI.patch
+index 9a059593c97c29..d476465132f6f3 100644
+--- a/target/linux/generic/pending-6.12/702-net-ethernet-mtk_eth_soc-enable-threaded-NAPI.patch
++++ b/target/linux/generic/pending-6.12/702-net-ethernet-mtk_eth_soc-enable-threaded-NAPI.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -5140,6 +5140,8 @@ static int mtk_probe(struct platform_dev
++@@ -5148,6 +5148,8 @@ static int mtk_probe(struct platform_dev
+  		dev_err(eth->dev, "failed to allocated dummy device\n");
+  		goto err_unreg_netdev;
+  	}
+diff --git a/target/linux/generic/pending-6.12/732-01-net-ethernet-mtk_eth_soc-work-around-issue-with-send.patch b/target/linux/generic/pending-6.12/732-01-net-ethernet-mtk_eth_soc-work-around-issue-with-send.patch
+index f4b07485ea221a..71b20b9c960cf8 100644
+--- a/target/linux/generic/pending-6.12/732-01-net-ethernet-mtk_eth_soc-work-around-issue-with-send.patch
++++ b/target/linux/generic/pending-6.12/732-01-net-ethernet-mtk_eth_soc-work-around-issue-with-send.patch
+@@ -53,7 +53,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	bool gso = false;
+  	int tx_num;
+  
+-@@ -1634,6 +1651,18 @@ static netdev_tx_t mtk_start_xmit(struct
++@@ -1641,6 +1658,18 @@ static netdev_tx_t mtk_start_xmit(struct
+  		return NETDEV_TX_BUSY;
+  	}
+  
+@@ -72,7 +72,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	/* TSO: fill MSS info in tcp checksum field */
+  	if (skb_is_gso(skb)) {
+  		if (skb_cow_head(skb, 0)) {
+-@@ -1649,8 +1678,14 @@ static netdev_tx_t mtk_start_xmit(struct
++@@ -1656,8 +1685,14 @@ static netdev_tx_t mtk_start_xmit(struct
+  		}
+  	}
+  
+diff --git a/target/linux/generic/pending-6.12/732-03-net-ethernet-mtk_eth_soc-optimize-dma-ring-address-i.patch b/target/linux/generic/pending-6.12/732-03-net-ethernet-mtk_eth_soc-optimize-dma-ring-address-i.patch
+index c7cf3299c028e6..ef46691878033b 100644
+--- a/target/linux/generic/pending-6.12/732-03-net-ethernet-mtk_eth_soc-optimize-dma-ring-address-i.patch
++++ b/target/linux/generic/pending-6.12/732-03-net-ethernet-mtk_eth_soc-optimize-dma-ring-address-i.patch
+@@ -114,7 +114,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  		/* unmap dma */
+  		mtk_tx_unmap(eth, tx_buf, NULL, false);
+-@@ -1715,7 +1720,7 @@ static struct mtk_rx_ring *mtk_get_rx_ri
++@@ -1723,7 +1728,7 @@ static struct mtk_rx_ring *mtk_get_rx_ri
+  
+  		ring = &eth->rx_ring[i];
+  		idx = NEXT_DESP_IDX(ring->calc_idx, ring->dma_size);
+@@ -123,7 +123,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		if (rxd->rxd2 & RX_DMA_DONE) {
+  			ring->calc_idx_update = true;
+  			return ring;
+-@@ -1883,7 +1888,7 @@ static int mtk_xdp_submit_frame(struct m
++@@ -1891,7 +1896,7 @@ static int mtk_xdp_submit_frame(struct m
+  	}
+  	htxd = txd;
+  
+@@ -132,7 +132,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	memset(tx_buf, 0, sizeof(*tx_buf));
+  	htx_buf = tx_buf;
+  
+-@@ -1902,7 +1907,7 @@ static int mtk_xdp_submit_frame(struct m
++@@ -1910,7 +1915,7 @@ static int mtk_xdp_submit_frame(struct m
+  				goto unmap;
+  
+  			tx_buf = mtk_desc_to_tx_buf(ring, txd,
+@@ -141,7 +141,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			memset(tx_buf, 0, sizeof(*tx_buf));
+  			n_desc++;
+  		}
+-@@ -1940,7 +1945,7 @@ static int mtk_xdp_submit_frame(struct m
++@@ -1948,7 +1953,7 @@ static int mtk_xdp_submit_frame(struct m
+  	} else {
+  		int idx;
+  
+@@ -150,7 +150,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		mtk_w32(eth, NEXT_DESP_IDX(idx, ring->dma_size),
+  			MT7628_TX_CTX_IDX0);
+  	}
+-@@ -1951,7 +1956,7 @@ static int mtk_xdp_submit_frame(struct m
++@@ -1959,7 +1964,7 @@ static int mtk_xdp_submit_frame(struct m
+  
+  unmap:
+  	while (htxd != txd) {
+@@ -159,7 +159,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		mtk_tx_unmap(eth, tx_buf, NULL, false);
+  
+  		htxd->txd3 = TX_DMA_LS0 | TX_DMA_OWNER_CPU;
+-@@ -2083,7 +2088,7 @@ static int mtk_poll_rx(struct napi_struc
++@@ -2091,7 +2096,7 @@ static int mtk_poll_rx(struct napi_struc
+  			goto rx_done;
+  
+  		idx = NEXT_DESP_IDX(ring->calc_idx, ring->dma_size);
+@@ -168,7 +168,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		data = ring->data[idx];
+  
+  		if (!mtk_rx_get_desc(eth, &trxd, rxd))
+-@@ -2347,7 +2352,7 @@ static int mtk_poll_tx_qdma(struct mtk_e
++@@ -2355,7 +2360,7 @@ static int mtk_poll_tx_qdma(struct mtk_e
+  			break;
+  
+  		tx_buf = mtk_desc_to_tx_buf(ring, desc,
+@@ -177,7 +177,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		if (!tx_buf->data)
+  			break;
+  
+-@@ -2398,7 +2403,7 @@ static int mtk_poll_tx_pdma(struct mtk_e
++@@ -2406,7 +2411,7 @@ static int mtk_poll_tx_pdma(struct mtk_e
+  		}
+  		mtk_tx_unmap(eth, tx_buf, &bq, true);
+  
+@@ -186,7 +186,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		ring->last_free = desc;
+  		atomic_inc(&ring->free_count);
+  
+-@@ -2516,7 +2521,7 @@ static int mtk_tx_alloc(struct mtk_eth *
++@@ -2524,7 +2529,7 @@ static int mtk_tx_alloc(struct mtk_eth *
+  {
+  	const struct mtk_soc_data *soc = eth->soc;
+  	struct mtk_tx_ring *ring = &eth->tx_ring;
+@@ -195,7 +195,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	struct mtk_tx_dma_v2 *txd;
+  	int ring_size;
+  	u32 ofs, val;
+-@@ -2563,7 +2568,7 @@ static int mtk_tx_alloc(struct mtk_eth *
++@@ -2571,7 +2576,7 @@ static int mtk_tx_alloc(struct mtk_eth *
+  	 * descriptors in ring->dma_pdma.
+  	 */
+  	if (!MTK_HAS_CAPS(soc->caps, MTK_QDMA)) {
+@@ -204,7 +204,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  						    &ring->phys_pdma, GFP_KERNEL);
+  		if (!ring->dma_pdma)
+  			goto no_tx_mem;
+-@@ -2578,7 +2583,7 @@ static int mtk_tx_alloc(struct mtk_eth *
++@@ -2586,7 +2591,7 @@ static int mtk_tx_alloc(struct mtk_eth *
+  	atomic_set(&ring->free_count, ring_size - 2);
+  	ring->next_free = ring->dma;
+  	ring->last_free = (void *)txd;
+@@ -213,7 +213,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	ring->thresh = MAX_SKB_FRAGS;
+  
+  	/* make sure that all changes to the dma ring are flushed before we
+-@@ -2590,7 +2595,7 @@ static int mtk_tx_alloc(struct mtk_eth *
++@@ -2598,7 +2603,7 @@ static int mtk_tx_alloc(struct mtk_eth *
+  		mtk_w32(eth, ring->phys, soc->reg_map->qdma.ctx_ptr);
+  		mtk_w32(eth, ring->phys, soc->reg_map->qdma.dtx_ptr);
+  		mtk_w32(eth,
+@@ -222,7 +222,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			soc->reg_map->qdma.crx_ptr);
+  		mtk_w32(eth, ring->last_free_ptr, soc->reg_map->qdma.drx_ptr);
+  
+-@@ -2639,14 +2644,14 @@ static void mtk_tx_clean(struct mtk_eth
++@@ -2647,14 +2652,14 @@ static void mtk_tx_clean(struct mtk_eth
+  	}
+  	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && ring->dma) {
+  		dma_free_coherent(eth->dma_dev,
+@@ -239,7 +239,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  				  ring->dma_pdma, ring->phys_pdma);
+  		ring->dma_pdma = NULL;
+  	}
+-@@ -2702,15 +2707,13 @@ static int mtk_rx_alloc(struct mtk_eth *
++@@ -2710,15 +2715,13 @@ static int mtk_rx_alloc(struct mtk_eth *
+  	if (!MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM) ||
+  	    rx_flag != MTK_RX_FLAGS_NORMAL) {
+  		ring->dma = dma_alloc_coherent(eth->dma_dev,
+@@ -258,7 +258,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	}
+  
+  	if (!ring->dma)
+-@@ -2721,7 +2724,7 @@ static int mtk_rx_alloc(struct mtk_eth *
++@@ -2729,7 +2732,7 @@ static int mtk_rx_alloc(struct mtk_eth *
+  		dma_addr_t dma_addr;
+  		void *data;
+  
+@@ -267,7 +267,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		if (ring->page_pool) {
+  			data = mtk_page_pool_get_buff(ring->page_pool,
+  						      &dma_addr, GFP_KERNEL);
+-@@ -2812,7 +2815,7 @@ static void mtk_rx_clean(struct mtk_eth
++@@ -2820,7 +2823,7 @@ static void mtk_rx_clean(struct mtk_eth
+  			if (!ring->data[i])
+  				continue;
+  
+@@ -276,7 +276,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			if (!rxd->rxd1)
+  				continue;
+  
+-@@ -2829,7 +2832,7 @@ static void mtk_rx_clean(struct mtk_eth
++@@ -2837,7 +2840,7 @@ static void mtk_rx_clean(struct mtk_eth
+  
+  	if (!in_sram && ring->dma) {
+  		dma_free_coherent(eth->dma_dev,
+@@ -285,7 +285,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  				  ring->dma, ring->phys);
+  		ring->dma = NULL;
+  	}
+-@@ -3200,7 +3203,7 @@ static void mtk_dma_free(struct mtk_eth
++@@ -3208,7 +3211,7 @@ static void mtk_dma_free(struct mtk_eth
+  
+  	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && eth->scratch_ring) {
+  		dma_free_coherent(eth->dma_dev,
+@@ -294,7 +294,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  				  eth->scratch_ring, eth->phy_scratch_ring);
+  		eth->scratch_ring = NULL;
+  		eth->phy_scratch_ring = 0;
+-@@ -5228,6 +5231,9 @@ static void mtk_remove(struct platform_d
++@@ -5236,6 +5239,9 @@ static void mtk_remove(struct platform_d
+  	mtk_mdio_cleanup(eth);
+  }
+  
+@@ -304,7 +304,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  static const struct mtk_soc_data mt2701_data = {
+  	.reg_map = &mtk_reg_map,
+  	.caps = MT7623_CAPS | MTK_HWLRO,
+-@@ -5236,14 +5242,14 @@ static const struct mtk_soc_data mt2701_
++@@ -5244,14 +5250,14 @@ static const struct mtk_soc_data mt2701_
+  	.required_pctl = true,
+  	.version = 1,
+  	.tx = {
+@@ -321,7 +321,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+  		.dma_size = MTK_DMA_SIZE(2K),
+-@@ -5264,14 +5270,14 @@ static const struct mtk_soc_data mt7621_
++@@ -5272,14 +5278,14 @@ static const struct mtk_soc_data mt7621_
+  	.hash_offset = 2,
+  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
+  	.tx = {
+@@ -338,7 +338,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+  		.dma_size = MTK_DMA_SIZE(2K),
+-@@ -5294,14 +5300,14 @@ static const struct mtk_soc_data mt7622_
++@@ -5302,14 +5308,14 @@ static const struct mtk_soc_data mt7622_
+  	.has_accounting = true,
+  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
+  	.tx = {
+@@ -355,7 +355,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+  		.dma_size = MTK_DMA_SIZE(2K),
+-@@ -5323,14 +5329,14 @@ static const struct mtk_soc_data mt7623_
++@@ -5331,14 +5337,14 @@ static const struct mtk_soc_data mt7623_
+  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
+  	.disable_pll_modes = true,
+  	.tx = {
+@@ -372,7 +372,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+  		.dma_size = MTK_DMA_SIZE(2K),
+-@@ -5349,14 +5355,14 @@ static const struct mtk_soc_data mt7629_
++@@ -5357,14 +5363,14 @@ static const struct mtk_soc_data mt7629_
+  	.has_accounting = true,
+  	.version = 1,
+  	.tx = {
+@@ -389,7 +389,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+  		.dma_size = MTK_DMA_SIZE(2K),
+-@@ -5379,14 +5385,14 @@ static const struct mtk_soc_data mt7981_
++@@ -5387,14 +5393,14 @@ static const struct mtk_soc_data mt7981_
+  	.has_accounting = true,
+  	.foe_entry_size = MTK_FOE_ENTRY_V2_SIZE,
+  	.tx = {
+@@ -406,7 +406,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+-@@ -5409,14 +5415,14 @@ static const struct mtk_soc_data mt7986_
++@@ -5417,14 +5423,14 @@ static const struct mtk_soc_data mt7986_
+  	.has_accounting = true,
+  	.foe_entry_size = MTK_FOE_ENTRY_V2_SIZE,
+  	.tx = {
+@@ -423,7 +423,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+-@@ -5439,14 +5445,14 @@ static const struct mtk_soc_data mt7988_
++@@ -5447,14 +5453,14 @@ static const struct mtk_soc_data mt7988_
+  	.has_accounting = true,
+  	.foe_entry_size = MTK_FOE_ENTRY_V3_SIZE,
+  	.tx = {
+@@ -440,7 +440,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.irq_done_mask = MTK_RX_DONE_INT_V2,
+  		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+-@@ -5463,13 +5469,13 @@ static const struct mtk_soc_data rt5350_
++@@ -5471,13 +5477,13 @@ static const struct mtk_soc_data rt5350_
+  	.required_pctl = false,
+  	.version = 1,
+  	.tx = {
+diff --git a/target/linux/generic/pending-6.12/732-04-net-ethernet-mtk_eth_soc-shrink-struct-mtk_tx_buf.patch b/target/linux/generic/pending-6.12/732-04-net-ethernet-mtk_eth_soc-shrink-struct-mtk_tx_buf.patch
+index b33b9d3f0e20aa..a2dd04b3788b22 100644
+--- a/target/linux/generic/pending-6.12/732-04-net-ethernet-mtk_eth_soc-shrink-struct-mtk_tx_buf.patch
++++ b/target/linux/generic/pending-6.12/732-04-net-ethernet-mtk_eth_soc-shrink-struct-mtk_tx_buf.patch
+@@ -80,7 +80,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			tx_buf->mac_id = mac->id;
+  
+  			setup_tx_buf(eth, tx_buf, txd_pdma, txd_info.addr,
+-@@ -1831,8 +1815,6 @@ static int mtk_xdp_frame_map(struct mtk_
++@@ -1839,8 +1823,6 @@ static int mtk_xdp_frame_map(struct mtk_
+  						txd_info->size, DMA_TO_DEVICE);
+  		if (unlikely(dma_mapping_error(eth->dma_dev, txd_info->addr)))
+  			return -ENOMEM;
+diff --git a/target/linux/generic/pending-6.12/732-05-net-ethernet-mtk_eth_soc-add-support-for-sending-fra.patch b/target/linux/generic/pending-6.12/732-05-net-ethernet-mtk_eth_soc-add-support-for-sending-fra.patch
+index c085328a56065f..56cbff2a311680 100644
+--- a/target/linux/generic/pending-6.12/732-05-net-ethernet-mtk_eth_soc-add-support-for-sending-fra.patch
++++ b/target/linux/generic/pending-6.12/732-05-net-ethernet-mtk_eth_soc-add-support-for-sending-fra.patch
+@@ -435,7 +435,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	bool gso = false;
+  	int tx_num;
+  
+-@@ -1640,37 +1791,42 @@ static netdev_tx_t mtk_start_xmit(struct
++@@ -1647,37 +1798,42 @@ static netdev_tx_t mtk_start_xmit(struct
+  		return NETDEV_TX_BUSY;
+  	}
+  
+diff --git a/target/linux/generic/pending-6.12/733-01-net-ethernet-mtk_eth_soc-use-napi_build_skb.patch b/target/linux/generic/pending-6.12/733-01-net-ethernet-mtk_eth_soc-use-napi_build_skb.patch
+index 0aba4b69b742a1..f35ee08ff2ec6f 100644
+--- a/target/linux/generic/pending-6.12/733-01-net-ethernet-mtk_eth_soc-use-napi_build_skb.patch
++++ b/target/linux/generic/pending-6.12/733-01-net-ethernet-mtk_eth_soc-use-napi_build_skb.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -2294,7 +2294,7 @@ static int mtk_poll_rx(struct napi_struc
++@@ -2302,7 +2302,7 @@ static int mtk_poll_rx(struct napi_struc
+  			if (ret != XDP_PASS)
+  				goto skip_rx;
+  
+@@ -19,7 +19,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  			if (unlikely(!skb)) {
+  				page_pool_put_full_page(ring->page_pool,
+  							page, true);
+-@@ -2332,7 +2332,7 @@ static int mtk_poll_rx(struct napi_struc
++@@ -2340,7 +2340,7 @@ static int mtk_poll_rx(struct napi_struc
+  			dma_unmap_single(eth->dma_dev, ((u64)trxd.rxd1 | addr64),
+  					 ring->buf_size, DMA_FROM_DEVICE);
+  
+diff --git a/target/linux/generic/pending-6.12/734-net-ethernet-mediatek-enlarge-DMA-reserve-buffer.patch b/target/linux/generic/pending-6.12/734-net-ethernet-mediatek-enlarge-DMA-reserve-buffer.patch
+index 1efb93226c3702..61f28c84413df5 100644
+--- a/target/linux/generic/pending-6.12/734-net-ethernet-mediatek-enlarge-DMA-reserve-buffer.patch
++++ b/target/linux/generic/pending-6.12/734-net-ethernet-mediatek-enlarge-DMA-reserve-buffer.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Chad Monroe <chad@monroe.io>
+  /* QDMA Flow Control Register */
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -3465,12 +3465,14 @@ static int mtk_start_dma(struct mtk_eth
++@@ -3473,12 +3473,14 @@ static int mtk_start_dma(struct mtk_eth
+  		       MTK_TX_BT_32DWORDS | MTK_NDP_CO_PRO |
+  		       MTK_RX_2B_OFFSET | MTK_TX_WB_DDONE;
+  
+diff --git a/target/linux/generic/pending-6.12/737-net-ethernet-mtk_eth_soc-add-paths-and-SerDes-modes-.patch b/target/linux/generic/pending-6.12/737-net-ethernet-mtk_eth_soc-add-paths-and-SerDes-modes-.patch
+index faa91b006eecfe..225fc73ea77b1a 100644
+--- a/target/linux/generic/pending-6.12/737-net-ethernet-mtk_eth_soc-add-paths-and-SerDes-modes-.patch
++++ b/target/linux/generic/pending-6.12/737-net-ethernet-mtk_eth_soc-add-paths-and-SerDes-modes-.patch
+@@ -477,7 +477,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	.mac_finish = mtk_mac_finish,
+  	.mac_link_down = mtk_mac_link_down,
+  	.mac_link_up = mtk_mac_link_up,
+-@@ -3573,6 +3718,9 @@ static int mtk_open(struct net_device *d
++@@ -3581,6 +3726,9 @@ static int mtk_open(struct net_device *d
+  
+  	ppe_num = eth->soc->ppe_num;
+  
+@@ -487,7 +487,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	err = phylink_of_phy_connect(mac->phylink, mac->of_node, 0);
+  	if (err) {
+  		netdev_err(dev, "%s: could not attach PHY: %d\n", __func__,
+-@@ -3720,6 +3868,9 @@ static int mtk_stop(struct net_device *d
++@@ -3728,6 +3876,9 @@ static int mtk_stop(struct net_device *d
+  	for (i = 0; i < ARRAY_SIZE(eth->ppe); i++)
+  		mtk_ppe_stop(eth->ppe[i]);
+  
+@@ -497,7 +497,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	return 0;
+  }
+  
+-@@ -4810,6 +4961,7 @@ static const struct net_device_ops mtk_n
++@@ -4818,6 +4969,7 @@ static const struct net_device_ops mtk_n
+  static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
+  {
+  	const __be32 *_id = of_get_property(np, "reg", NULL);
+@@ -505,7 +505,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	phy_interface_t phy_mode;
+  	struct phylink *phylink;
+  	struct mtk_mac *mac;
+-@@ -4848,16 +5000,41 @@ static int mtk_add_mac(struct mtk_eth *e
++@@ -4856,16 +5008,41 @@ static int mtk_add_mac(struct mtk_eth *e
+  	mac->id = id;
+  	mac->hw = eth;
+  	mac->of_node = np;
+@@ -555,7 +555,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	}
+  
+  	memset(mac->hwlro_ip, 0, sizeof(mac->hwlro_ip));
+-@@ -4940,8 +5117,21 @@ static int mtk_add_mac(struct mtk_eth *e
++@@ -4948,8 +5125,21 @@ static int mtk_add_mac(struct mtk_eth *e
+  		phy_interface_zero(mac->phylink_config.supported_interfaces);
+  		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+  			  mac->phylink_config.supported_interfaces);
+@@ -577,7 +577,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	phylink = phylink_create(&mac->phylink_config,
+  				 of_fwnode_handle(mac->of_node),
+  				 phy_mode, &mtk_phylink_ops);
+-@@ -4992,6 +5182,26 @@ free_netdev:
++@@ -5000,6 +5190,26 @@ free_netdev:
+  	return err;
+  }
+  
+@@ -604,7 +604,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  void mtk_eth_set_dma_device(struct mtk_eth *eth, struct device *dma_dev)
+  {
+  	struct net_device *dev, *tmp;
+-@@ -5138,7 +5348,8 @@ static int mtk_probe(struct platform_dev
++@@ -5146,7 +5356,8 @@ static int mtk_probe(struct platform_dev
+  			regmap_write(cci, 0, 3);
+  	}
+  
+@@ -614,7 +614,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  		err = mtk_sgmii_init(eth);
+  
+  		if (err)
+-@@ -5249,6 +5460,24 @@ static int mtk_probe(struct platform_dev
++@@ -5257,6 +5468,24 @@ static int mtk_probe(struct platform_dev
+  		}
+  	}
+  
+@@ -639,7 +639,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
+  		err = devm_request_irq(eth->dev, eth->irq[0],
+  				       mtk_handle_irq, 0,
+-@@ -5359,6 +5588,11 @@ static void mtk_remove(struct platform_d
++@@ -5367,6 +5596,11 @@ static void mtk_remove(struct platform_d
+  		mtk_stop(eth->netdev[i]);
+  		mac = netdev_priv(eth->netdev[i]);
+  		phylink_disconnect_phy(mac->phylink);
+diff --git a/target/linux/generic/pending-6.12/738-01-net-ethernet-mtk_eth_soc-reduce-rx-ring-size-for-older.patch b/target/linux/generic/pending-6.12/738-01-net-ethernet-mtk_eth_soc-reduce-rx-ring-size-for-older.patch
+index b45f7993c91535..66e65cf44177a3 100644
+--- a/target/linux/generic/pending-6.12/738-01-net-ethernet-mtk_eth_soc-reduce-rx-ring-size-for-older.patch
++++ b/target/linux/generic/pending-6.12/738-01-net-ethernet-mtk_eth_soc-reduce-rx-ring-size-for-older.patch
+@@ -30,7 +30,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -5626,7 +5626,7 @@ static const struct mtk_soc_data mt2701_
++@@ -5634,7 +5634,7 @@ static const struct mtk_soc_data mt2701_
+  		DESC_SIZE(struct mtk_rx_dma),
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+@@ -39,7 +39,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+  	},
+-@@ -5654,7 +5654,7 @@ static const struct mtk_soc_data mt7621_
++@@ -5662,7 +5662,7 @@ static const struct mtk_soc_data mt7621_
+  		DESC_SIZE(struct mtk_rx_dma),
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+@@ -48,7 +48,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+  	},
+-@@ -5684,7 +5684,7 @@ static const struct mtk_soc_data mt7622_
++@@ -5692,7 +5692,7 @@ static const struct mtk_soc_data mt7622_
+  		DESC_SIZE(struct mtk_rx_dma),
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+@@ -57,7 +57,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+  	},
+-@@ -5713,7 +5713,7 @@ static const struct mtk_soc_data mt7623_
++@@ -5721,7 +5721,7 @@ static const struct mtk_soc_data mt7623_
+  		DESC_SIZE(struct mtk_rx_dma),
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+@@ -66,7 +66,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+  	},
+-@@ -5739,7 +5739,7 @@ static const struct mtk_soc_data mt7629_
++@@ -5747,7 +5747,7 @@ static const struct mtk_soc_data mt7629_
+  		DESC_SIZE(struct mtk_rx_dma),
+  		.irq_done_mask = MTK_RX_DONE_INT,
+  		.dma_l4_valid = RX_DMA_L4_VALID,
+@@ -75,7 +75,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+  	},
+-@@ -5771,7 +5771,7 @@ static const struct mtk_soc_data mt7981_
++@@ -5779,7 +5779,7 @@ static const struct mtk_soc_data mt7981_
+  		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+@@ -84,7 +84,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	},
+  };
+  
+-@@ -5801,7 +5801,7 @@ static const struct mtk_soc_data mt7986_
++@@ -5809,7 +5809,7 @@ static const struct mtk_soc_data mt7986_
+  		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+@@ -93,7 +93,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	},
+  };
+  
+-@@ -5854,7 +5854,7 @@ static const struct mtk_soc_data rt5350_
++@@ -5862,7 +5862,7 @@ static const struct mtk_soc_data rt5350_
+  		.dma_l4_valid = RX_DMA_L4_VALID_PDMA,
+  		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+  		.dma_len_offset = 16,
+diff --git a/target/linux/generic/pending-6.12/738-02-net-ethernet-mtk_eth_soc-do-not-enable-page-pool-sta.patch b/target/linux/generic/pending-6.12/738-02-net-ethernet-mtk_eth_soc-do-not-enable-page-pool-sta.patch
+index 63083192e65ca6..fa3651970d68b1 100644
+--- a/target/linux/generic/pending-6.12/738-02-net-ethernet-mtk_eth_soc-do-not-enable-page-pool-sta.patch
++++ b/target/linux/generic/pending-6.12/738-02-net-ethernet-mtk_eth_soc-do-not-enable-page-pool-sta.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	help
+ --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+ +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -4729,6 +4729,7 @@ static int mtk_get_sset_count(struct net
++@@ -4737,6 +4737,7 @@ static int mtk_get_sset_count(struct net
+  
+  static void mtk_ethtool_pp_stats(struct mtk_eth *eth, u64 *data)
+  {
+@@ -33,7 +33,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	struct page_pool_stats stats = {};
+  	int i;
+  
+-@@ -4741,6 +4742,7 @@ static void mtk_ethtool_pp_stats(struct
++@@ -4749,6 +4750,7 @@ static void mtk_ethtool_pp_stats(struct
+  		page_pool_get_stats(ring->page_pool, &stats);
+  	}
+  	page_pool_ethtool_stats_get(data, &stats);
+diff --git a/target/linux/generic/pending-6.12/742-net-ethernet-mtk_eth_soc-fix-tx-vlan-tag-for-llc-pac.patch b/target/linux/generic/pending-6.12/742-net-ethernet-mtk_eth_soc-fix-tx-vlan-tag-for-llc-pac.patch
+deleted file mode 100644
+index b72871385b192f..00000000000000
+--- a/target/linux/generic/pending-6.12/742-net-ethernet-mtk_eth_soc-fix-tx-vlan-tag-for-llc-pac.patch
++++ /dev/null
+@@ -1,39 +0,0 @@
+-From: Felix Fietkau <nbd@nbd.name>
+-Date: Sun, 31 Aug 2025 20:05:13 +0200
+-Subject: [PATCH] net: ethernet: mtk_eth_soc: fix tx vlan tag for llc packets
+-
+-When sending llc packets with vlan tx offload, the hardware fails to
+-actually add the tag. Deal with this by fixing it up in software.
+-
+-Fixes: 656e705243fd ("net-next: mediatek: add support for MT7623 ethernet")
+-Reported-by: Thibaut VARENE <hacks@slashdirt.org>
+-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+----
+-
+---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+-@@ -1918,6 +1918,13 @@ static netdev_tx_t mtk_start_xmit(struct
+- 	bool gso = false;
+- 	int tx_num;
+- 
+-+	if (skb_vlan_tag_present(skb) &&
+-+	    !eth_proto_is_802_3(eth_hdr(skb)->h_proto)) {
+-+		skb = __vlan_hwaccel_push_inside(skb);
+-+		if (!skb)
+-+			goto dropped;
+-+	}
+-+
+- 	/* normally we can rely on the stack not calling this more than once,
+- 	 * however we have 2 queues running on the same ring so we need to lock
+- 	 * the ring access
+-@@ -1986,8 +1993,9 @@ send:
+- 
+- drop:
+- 	spin_unlock(&eth->page_lock);
+--	stats->tx_dropped++;
+- 	dev_kfree_skb_any(skb);
+-+dropped:
+-+	stats->tx_dropped++;
+- 	return NETDEV_TX_OK;
+- }
+- 
+diff --git a/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
+index 7d4f7a482fcf5d..df6f6da0172293 100644
+--- a/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -93,7 +93,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+ +#endif
+ --- a/include/linux/skbuff.h
+ +++ b/include/linux/skbuff.h
+-@@ -4798,6 +4798,9 @@ enum skb_ext_id {
++@@ -4804,6 +4804,9 @@ enum skb_ext_id {
+  #if IS_ENABLED(CONFIG_MCTP_FLOWS)
+  	SKB_EXT_MCTP,
+  #endif
+diff --git a/target/linux/qualcommax/patches-6.12/0812-soc-qcom-mdt_loader-support-MPD.patch b/target/linux/qualcommax/patches-6.12/0812-soc-qcom-mdt_loader-support-MPD.patch
+index e2fa20541071db..c8d50199b0b074 100644
+--- a/target/linux/qualcommax/patches-6.12/0812-soc-qcom-mdt_loader-support-MPD.patch
++++ b/target/linux/qualcommax/patches-6.12/0812-soc-qcom-mdt_loader-support-MPD.patch
+@@ -32,7 +32,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  
+  static bool mdt_header_valid(const struct firmware *fw)
+  {
+-@@ -98,6 +108,56 @@ static ssize_t mdt_load_split_segment(vo
++@@ -100,6 +110,56 @@ static ssize_t mdt_load_split_segment(vo
+  	return ret;
+  }
+  
+@@ -89,7 +89,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  /**
+   * qcom_mdt_get_size() - acquire size of the memory region needed to load mdt
+   * @fw:		firmware object for the mdt file
+-@@ -333,7 +393,8 @@ static bool qcom_mdt_bins_are_split(cons
++@@ -335,7 +395,8 @@ static bool qcom_mdt_bins_are_split(cons
+  static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+  			   const char *fw_name, int pas_id, void *mem_region,
+  			   phys_addr_t mem_phys, size_t mem_size,
+@@ -99,7 +99,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  {
+  	const struct elf32_phdr *phdrs;
+  	const struct elf32_phdr *phdr;
+-@@ -390,6 +451,14 @@ static int __qcom_mdt_load(struct device
++@@ -392,6 +453,14 @@ static int __qcom_mdt_load(struct device
+  		if (!mdt_phdr_valid(phdr))
+  			continue;
+  
+@@ -114,7 +114,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  		offset = phdr->p_paddr - mem_reloc;
+  		if (offset < 0 || offset + phdr->p_memsz > mem_size) {
+  			dev_err(dev, "segment outside memory range\n");
+-@@ -407,7 +476,11 @@ static int __qcom_mdt_load(struct device
++@@ -409,7 +478,11 @@ static int __qcom_mdt_load(struct device
+  
+  		ptr = mem_region + offset;
+  
+@@ -127,7 +127,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  			/* Firmware is large enough to be non-split */
+  			if (phdr->p_offset + phdr->p_filesz > fw->size) {
+  				dev_err(dev, "file %s segment %d would be truncated\n",
+-@@ -424,7 +497,7 @@ static int __qcom_mdt_load(struct device
++@@ -426,7 +499,7 @@ static int __qcom_mdt_load(struct device
+  				break;
+  		}
+  
+@@ -136,7 +136,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  			memset(ptr + phdr->p_filesz, 0, phdr->p_memsz - phdr->p_filesz);
+  	}
+  
+-@@ -459,7 +532,7 @@ int qcom_mdt_load(struct device *dev, co
++@@ -461,7 +534,7 @@ int qcom_mdt_load(struct device *dev, co
+  		return ret;
+  
+  	return __qcom_mdt_load(dev, fw, firmware, pas_id, mem_region, mem_phys,
+@@ -145,7 +145,7 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  }
+  EXPORT_SYMBOL_GPL(qcom_mdt_load);
+  
+-@@ -482,9 +555,36 @@ int qcom_mdt_load_no_init(struct device
++@@ -484,9 +557,36 @@ int qcom_mdt_load_no_init(struct device
+  			  size_t mem_size, phys_addr_t *reloc_base)
+  {
+  	return __qcom_mdt_load(dev, fw, firmware, pas_id, mem_region, mem_phys,
+
+From c3842af0ec28b6324da85ec5f18e28ee041ee966 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 11 Sep 2025 15:37:51 -0400
+Subject: [PATCH 2/3] x86: config: add CONFIG_MITIGATION_VMSCAPE=y
+
+Introduced in the 6.12.47 update, set this new mitigation option to
+be enabled. See: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/arch/x86/Kconfig?id=v6.12.47&id2=v6.12.46
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ target/linux/x86/config-6.12 | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/target/linux/x86/config-6.12 b/target/linux/x86/config-6.12
+index 83f3f45b354cd2..5fb0d2885b5b72 100644
+--- a/target/linux/x86/config-6.12
++++ b/target/linux/x86/config-6.12
+@@ -272,6 +272,7 @@ CONFIG_MITIGATION_SRBDS=y
+ CONFIG_MITIGATION_SSB=y
+ CONFIG_MITIGATION_TAA=y
+ CONFIG_MITIGATION_TSA=y
++CONFIG_MITIGATION_VMSCAPE=y
+ # CONFIG_MK6 is not set
+ # CONFIG_MK7 is not set
+ # CONFIG_MK8 is not set
+
+From d19e9bd3a3d227c7d27d7c0e34bd93472007d1b2 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 11 Sep 2025 15:43:04 -0400
+Subject: [PATCH 3/3] kernel: bump 6.12 to 6.12.47
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.47
+
+No patches needed to be rebased.
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ target/linux/generic/kernel-6.12 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
+index 6b98e2d3af1987..db2569539485dc 100644
+--- a/target/linux/generic/kernel-6.12
++++ b/target/linux/generic/kernel-6.12
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.12 = .46
+-LINUX_KERNEL_HASH-6.12.46 = 2e5e7382d324caac23c5d80415f7c7ba64e3dbeee2ad936291e8c6c4b114573e
++LINUX_VERSION-6.12 = .47
++LINUX_KERNEL_HASH-6.12.47 = e82fe40871743048226987bd349ef107168b15aab90140e872ca4ed470922e25
