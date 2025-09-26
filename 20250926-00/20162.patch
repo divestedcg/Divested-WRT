@@ -1,0 +1,200 @@
+From 39cd55b74ca5191b3a383ca6c75514a825991365 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Thu, 25 Sep 2025 06:05:42 -0400
+Subject: [PATCH] kernel: bump 6.12 to 6.12.49
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.49
+
+All patches automatically rebased.
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ ...-implement-xhci_fixup_endpoint-for-interval-adju.patch | 4 ++--
+ ...xhci-drop-and-add-the-endpoint-context-in-xhci_f.patch | 2 +-
+ ...50-0333-xhci-quirks-add-link-TRB-quirk-for-VL805.patch | 2 +-
+ .../950-0334-usb-xhci-add-VLI_SS_BULK_OUT_BUG-quirk.patch | 8 ++++----
+ .../950-0335-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch     | 2 +-
+ ...1-xhci-Use-more-event-ring-segment-table-entries.patch | 2 +-
+ ...ers-usb-xhci-set-HID-bit-in-streaming-endpoint-c.patch | 2 +-
+ .../950-0692-cgroup-Add-cgroup_enable-option.patch        | 2 +-
+ ...xhci-default-to-Intel-scheme-for-calculating-U1-.patch | 6 +++---
+ target/linux/generic/kernel-6.12                          | 4 ++--
+ 10 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0125-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch b/target/linux/bcm27xx/patches-6.12/950-0125-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+index 1860bf17370b3c..0491be43696290 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0125-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0125-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+ 
+ --- a/drivers/usb/host/xhci.c
+ +++ b/drivers/usb/host/xhci.c
+-@@ -1519,6 +1519,109 @@ static int xhci_check_ep0_maxpacket(stru
++@@ -1515,6 +1515,109 @@ static int xhci_check_ep0_maxpacket(stru
+  }
+  
+  /*
+@@ -124,7 +124,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+   * non-error returns are a promise to giveback() the urb later
+   * we drop ownership so next owner (or urb unlink) can get it
+   */
+-@@ -5390,6 +5493,7 @@ static const struct hc_driver xhci_hc_dr
++@@ -5386,6 +5489,7 @@ static const struct hc_driver xhci_hc_dr
+  	.endpoint_reset =	xhci_endpoint_reset,
+  	.check_bandwidth =	xhci_check_bandwidth,
+  	.reset_bandwidth =	xhci_reset_bandwidth,
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0127-usb-xhci-drop-and-add-the-endpoint-context-in-xhci_f.patch b/target/linux/bcm27xx/patches-6.12/950-0127-usb-xhci-drop-and-add-the-endpoint-context-in-xhci_f.patch
+index 1ac575a2ce0a50..e2f7caeaf6439d 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0127-usb-xhci-drop-and-add-the-endpoint-context-in-xhci_f.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0127-usb-xhci-drop-and-add-the-endpoint-context-in-xhci_f.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci.c
+ +++ b/drivers/usb/host/xhci.c
+-@@ -1608,7 +1608,7 @@ static void xhci_fixup_endpoint(struct u
++@@ -1604,7 +1604,7 @@ static void xhci_fixup_endpoint(struct u
+  		return;
+  	}
+  	ctrl_ctx->add_flags = xhci_get_endpoint_flag_from_index(ep_index);
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0333-xhci-quirks-add-link-TRB-quirk-for-VL805.patch b/target/linux/bcm27xx/patches-6.12/950-0333-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+index f2833089349dd4..fad1aafc0f7008 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0333-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0333-xhci-quirks-add-link-TRB-quirk-for-VL805.patch
+@@ -53,7 +53,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	if (addr == 0) {
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1628,6 +1628,9 @@ struct xhci_hcd {
++@@ -1631,6 +1631,9 @@ struct xhci_hcd {
+  #define XHCI_ETRON_HOST	BIT_ULL(49)
+  #define XHCI_LIMIT_ENDPOINT_INTERVAL_9 BIT_ULL(50)
+  
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0334-usb-xhci-add-VLI_SS_BULK_OUT_BUG-quirk.patch b/target/linux/bcm27xx/patches-6.12/950-0334-usb-xhci-add-VLI_SS_BULK_OUT_BUG-quirk.patch
+index 4e1c1bd76b53e9..de71239bd2cfda 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0334-usb-xhci-add-VLI_SS_BULK_OUT_BUG-quirk.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0334-usb-xhci-add-VLI_SS_BULK_OUT_BUG-quirk.patch
+@@ -34,7 +34,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci-mem.c
+ +++ b/drivers/usb/host/xhci-mem.c
+-@@ -1397,6 +1397,7 @@ int xhci_endpoint_init(struct xhci_hcd *
++@@ -1383,6 +1383,7 @@ int xhci_endpoint_init(struct xhci_hcd *
+  	unsigned int ep_index;
+  	struct xhci_ep_ctx *ep_ctx;
+  	struct xhci_ring *ep_ring;
+@@ -42,7 +42,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	unsigned int max_packet;
+  	enum xhci_ring_type ring_type;
+  	u32 max_esit_payload;
+-@@ -1406,6 +1407,8 @@ int xhci_endpoint_init(struct xhci_hcd *
++@@ -1392,6 +1393,8 @@ int xhci_endpoint_init(struct xhci_hcd *
+  	unsigned int mult;
+  	unsigned int avg_trb_len;
+  	unsigned int err_count = 0;
+@@ -51,7 +51,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  
+  	ep_index = xhci_get_endpoint_index(&ep->desc);
+  	ep_ctx = xhci_get_ep_ctx(xhci, virt_dev->in_ctx, ep_index);
+-@@ -1441,9 +1444,35 @@ int xhci_endpoint_init(struct xhci_hcd *
++@@ -1427,9 +1430,35 @@ int xhci_endpoint_init(struct xhci_hcd *
+  
+  	mult = xhci_get_endpoint_mult(udev, ep);
+  	max_packet = usb_endpoint_maxp(&ep->desc);
+@@ -100,7 +100,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1630,6 +1630,7 @@ struct xhci_hcd {
++@@ -1633,6 +1633,7 @@ struct xhci_hcd {
+  
+  /* Downstream VLI fixes */
+  #define XHCI_AVOID_DQ_ON_LINK	BIT_ULL(56)
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0335-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch b/target/linux/bcm27xx/patches-6.12/950-0335-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
+index c1731fb1df3e18..2875648984527a 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0335-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0335-usb-xhci-add-XHCI_VLI_HUB_TT_QUIRK.patch
+@@ -144,7 +144,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	return 0;
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1631,6 +1631,7 @@ struct xhci_hcd {
++@@ -1634,6 +1634,7 @@ struct xhci_hcd {
+  /* Downstream VLI fixes */
+  #define XHCI_AVOID_DQ_ON_LINK	BIT_ULL(56)
+  #define XHCI_VLI_SS_BULK_OUT_BUG	BIT_ULL(57)
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0401-xhci-Use-more-event-ring-segment-table-entries.patch b/target/linux/bcm27xx/patches-6.12/950-0401-xhci-Use-more-event-ring-segment-table-entries.patch
+index 6baba3b443ae02..f74985e43335d2 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0401-xhci-Use-more-event-ring-segment-table-entries.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0401-xhci-Use-more-event-ring-segment-table-entries.patch
+@@ -21,7 +21,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci.h
+ +++ b/drivers/usb/host/xhci.h
+-@@ -1395,7 +1395,7 @@ struct urb_priv {
++@@ -1398,7 +1398,7 @@ struct urb_priv {
+  };
+  
+  /* Number of Event Ring segments to allocate, when amount is not specified. (spec allows 32k) */
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0534-drivers-usb-xhci-set-HID-bit-in-streaming-endpoint-c.patch b/target/linux/bcm27xx/patches-6.12/950-0534-drivers-usb-xhci-set-HID-bit-in-streaming-endpoint-c.patch
+index 9a052443c0b43c..49598a723bfea2 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0534-drivers-usb-xhci-set-HID-bit-in-streaming-endpoint-c.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0534-drivers-usb-xhci-set-HID-bit-in-streaming-endpoint-c.patch
+@@ -28,7 +28,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/usb/host/xhci-mem.c
+ +++ b/drivers/usb/host/xhci-mem.c
+-@@ -715,6 +715,14 @@ void xhci_setup_streams_ep_input_ctx(str
++@@ -701,6 +701,14 @@ void xhci_setup_streams_ep_input_ctx(str
+  	ep_ctx->ep_info &= cpu_to_le32(~EP_MAXPSTREAMS_MASK);
+  	ep_ctx->ep_info |= cpu_to_le32(EP_MAXPSTREAMS(max_primary_streams)
+  				       | EP_HAS_LSA);
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0692-cgroup-Add-cgroup_enable-option.patch b/target/linux/bcm27xx/patches-6.12/950-0692-cgroup-Add-cgroup_enable-option.patch
+index 9ea92a5f324ad0..d44e050e020722 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0692-cgroup-Add-cgroup_enable-option.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0692-cgroup-Add-cgroup_enable-option.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/kernel/cgroup/cgroup.c
+ +++ b/kernel/cgroup/cgroup.c
+-@@ -6887,6 +6887,39 @@ static int __init cgroup_disable(char *s
++@@ -6916,6 +6916,39 @@ static int __init cgroup_disable(char *s
+  }
+  __setup("cgroup_disable=", cgroup_disable);
+  
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0950-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch b/target/linux/bcm27xx/patches-6.12/950-0950-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
+index 06b91a6ce65e06..33f8ca71adb81c 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0950-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0950-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
+@@ -39,8 +39,8 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ +
+  static bool td_on_ring(struct xhci_td *td, struct xhci_ring *ring)
+  {
+- 	struct xhci_segment *seg = ring->first_seg;
+-@@ -4795,7 +4799,7 @@ static u16 xhci_calculate_u1_timeout(str
++ 	struct xhci_segment *seg;
++@@ -4791,7 +4795,7 @@ static u16 xhci_calculate_u1_timeout(str
+  		}
+  	}
+  
+@@ -49,7 +49,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  		timeout_ns = xhci_calculate_intel_u1_timeout(udev, desc);
+  	else
+  		timeout_ns = udev->u1_params.sel;
+-@@ -4859,7 +4863,7 @@ static u16 xhci_calculate_u2_timeout(str
++@@ -4855,7 +4859,7 @@ static u16 xhci_calculate_u2_timeout(str
+  		}
+  	}
+  
+diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
+index dd7f683f1abc07..438cd31bb8db20 100644
+--- a/target/linux/generic/kernel-6.12
++++ b/target/linux/generic/kernel-6.12
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.12 = .48
+-LINUX_KERNEL_HASH-6.12.48 = 5bf9eb676751bf48978e38363c772298b41a75336d5038ed6d37012399471db2
++LINUX_VERSION-6.12 = .49
++LINUX_KERNEL_HASH-6.12.49 = 234621e146dacce2241049555d550e4f7a6bde67ccd7ef232d47ac8145425526
