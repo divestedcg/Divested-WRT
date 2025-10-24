@@ -1,3 +1,9 @@
+20251024-00
+- update to c3c75d0e685b90fdcb9f1cf79a6e2c6949cce9ac
+  https://github.com/openwrt/openwrt/compare/011ba05f...c3c75d0e
+- [cherrypick] #20515: update to kernel 6.12.55 (security and bug fixes)
+- includes fix for CVE-2025-62526
+
 20251010-00
 - update to 011ba05fd397ff2c366cc29595eae122d17d6b53
   https://github.com/openwrt/openwrt/compare/b4a528ec...011ba05f
