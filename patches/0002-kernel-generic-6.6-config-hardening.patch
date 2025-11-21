@@ -12,10 +12,10 @@ Signed-off-by: Tavi <tavi@divested.dev>
  1 file changed, 165 insertions(+)
 
 diff --git a/target/linux/generic/config-6.6 b/target/linux/generic/config-6.6
-index 8ede1d244d..32c2751a90 100644
+index 980545120b..6a4c12f475 100644
 --- a/target/linux/generic/config-6.6
 +++ b/target/linux/generic/config-6.6
-@@ -7574,3 +7574,168 @@ CONFIG_ZONE_DMA=y
+@@ -7591,3 +7591,168 @@ CONFIG_ZONE_DMA=y
  # CONFIG_ZSMALLOC is not set
  CONFIG_ZSMALLOC_CHAIN_SIZE=8
  # CONFIG_ZSWAP is not set

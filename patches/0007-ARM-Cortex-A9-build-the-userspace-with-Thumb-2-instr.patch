@@ -17,10 +17,10 @@ Tested-by: Tavi <tavi@divested.dev>
  1 file changed, 5 insertions(+)
 
 diff --git a/include/target.mk b/include/target.mk
-index 4f55181329..4578b72beb 100644
+index 1c379c87bc..b4d6c33249 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -267,6 +267,11 @@ ifeq ($(DUMP),1)
+@@ -260,6 +260,11 @@ ifeq ($(DUMP),1)
      CPU_TYPE = sparc
      CPU_CFLAGS_ultrasparc = -mcpu=ultrasparc
    endif

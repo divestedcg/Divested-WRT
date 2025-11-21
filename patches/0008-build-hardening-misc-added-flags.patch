@@ -9,10 +9,10 @@ Signed-off-by: Tavi <tavi@divested.dev>
  1 file changed, 1 insertion(+)
 
 diff --git a/include/hardening.mk b/include/hardening.mk
-index 4a8874261b..f7f80ff110 100644
+index 1565e5aa27..7f8afd5e1a 100644
 --- a/include/hardening.mk
 +++ b/include/hardening.mk
-@@ -64,3 +64,4 @@ ifdef CONFIG_PKG_RELRO_FULL
+@@ -77,3 +77,4 @@ ifdef CONFIG_PKG_DT_RELR
    endif
  endif
  

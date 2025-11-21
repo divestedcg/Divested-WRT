@@ -1,3 +1,12 @@
+20251121-00
+- update to 7f5c7b862676fb212f026e1d9be17bef2d9b977b
+  https://github.com/openwrt/openwrt/compare/38753dea...7f5c7b86
+- [upstream] update to kernel 6.12.58 (security and bug fixes)
+- switched host to Fedora 43 with GCC 15
+- note ASU is now included due to an upstream hard dependency
+  this will be removed eventually
+  please do not use it
+
 20251107-00
 - update to 38753dea6405fcc3b92994b0926d3bfd4760345f
   https://github.com/openwrt/openwrt/compare/c3c75d0e...38753dea
