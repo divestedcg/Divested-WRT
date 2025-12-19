@@ -1,3 +1,8 @@
+20251219-00
+- update to caef0a839a80749b7a125f09cb26814980fb7202
+  https://github.com/openwrt/openwrt/compare/1842735a...caef0a83
+- [cherrypick] #21209: update to kernel 6.12.63 (security and bug fixes)
+
 20251105-00
 - update to 1842735a069badd074ba0a4318764c699080e3ae
   https://github.com/openwrt/openwrt/compare/7f5c7b86...1842735a
