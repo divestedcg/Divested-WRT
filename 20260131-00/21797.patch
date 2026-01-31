@@ -1,0 +1,385 @@
+From 4fef31a3d0586961d30b25b86a8540ce1cf38761 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 30 Jan 2026 15:37:22 -0500
+Subject: [PATCH] kernel: bump 6.12 to 6.12.68
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.68
+
+All patches automatically rebased.
+
+Build system: x86/64
+Build-tested: flogic/glinet_gl-mt6000
+Run-tested: flogic/glinet_gl-mt6000
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ .../950-0344-sdhci-Add-SD-Express-hook.patch       |  2 +-
+ ...hci-of-dwcmshc-define-sdio-timeout-clocks.patch | 12 ++++++------
+ ...dhci-of-dwcmshc-define-sdio-timeout-clock.patch |  2 +-
+ .../generic/hack-6.12/259-regmap_dynamic.patch     |  2 +-
+ target/linux/generic/kernel-6.12                   |  4 ++--
+ .../generic/pending-6.12/834-ledtrig-libata.patch  |  8 ++++----
+ ...-net-dsa-add-out-of-band-tagging-protocol.patch |  2 +-
+ .../0374-dt-bindings-pwm-add-IPQ6018-binding.patch |  3 ---
+ ...pwm-driver-for-qualcomm-ipq6018-pwm-block.patch | 11 ++---------
+ .../0376-arm64-dts-qcom-ipq9574-add-pwm-node.patch |  4 +---
+ .../714-net-phy-sfp-add-support-for-SMBus.patch    |  6 +++---
+ ...mshc-Add-command-queue-support-for-rockch.patch | 14 +++++++-------
+ ...mshc-Fix-command-queue-support-for-RK3576.patch |  2 +-
+ .../105-nanopi-r4s-sd-signalling.patch             |  2 +-
+ 14 files changed, 31 insertions(+), 43 deletions(-)
+
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch b/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
+index ef89cdb2176c76..67fefbf0a5adb2 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
+@@ -12,7 +12,7 @@ sdhci: remove PYA0_INTR_BUG quirk. Add quirks to disable some of the higher SDR
+ 
+ --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+ +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+-@@ -1241,7 +1241,11 @@ static const struct dwcmshc_pltfm_data s
++@@ -1248,7 +1248,11 @@ static const struct dwcmshc_pltfm_data s
+  		.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+  			  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+  		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0358-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clocks.patch b/target/linux/bcm27xx/patches-6.12/950-0358-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clocks.patch
+index ebdb57af0a1583..2eee2bbc702639 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0358-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clocks.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0358-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clocks.patch
+@@ -48,7 +48,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static unsigned int dwcmshc_get_max_clock(struct sdhci_host *host)
+  {
+  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+-@@ -1143,10 +1155,11 @@ static int sg2042_init(struct device *de
++@@ -1150,10 +1162,11 @@ static int sg2042_init(struct device *de
+  }
+  
+  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+@@ -61,7 +61,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	.reset			= dwcmshc_reset,
+  	.adma_write_desc	= dwcmshc_adma_write_desc,
+  	.irq			= dwcmshc_cqe_irq_handler,
+-@@ -1219,8 +1232,10 @@ static const struct sdhci_ops sdhci_dwcm
++@@ -1226,8 +1239,10 @@ static const struct sdhci_ops sdhci_dwcm
+  static const struct dwcmshc_pltfm_data sdhci_dwcmshc_pdata = {
+  	.pdata = {
+  		.ops = &sdhci_dwcmshc_ops,
+@@ -74,7 +74,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	},
+  };
+  
+-@@ -1235,6 +1250,15 @@ static const struct dwcmshc_pltfm_data s
++@@ -1242,6 +1257,15 @@ static const struct dwcmshc_pltfm_data s
+  };
+  #endif
+  
+@@ -90,7 +90,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
+  	.pdata = {
+  		.ops = &sdhci_dwcmshc_rk35xx_ops,
+-@@ -1358,6 +1382,10 @@ dsbl_cqe_caps:
++@@ -1365,6 +1389,10 @@ dsbl_cqe_caps:
+  
+  static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+  	{
+@@ -101,7 +101,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  		.compatible = "rockchip,rk3588-dwcmshc",
+  		.data = &sdhci_dwcmshc_rk35xx_pdata,
+  	},
+-@@ -1450,13 +1478,32 @@ static int dwcmshc_probe(struct platform
++@@ -1457,13 +1485,32 @@ static int dwcmshc_probe(struct platform
+  		priv->bus_clk = devm_clk_get(dev, "bus");
+  		if (!IS_ERR(priv->bus_clk))
+  			clk_prepare_enable(priv->bus_clk);
+@@ -134,7 +134,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  
+  	priv->vendor_specific_area1 =
+  		sdhci_readl(host, DWCMSHC_P_VENDOR_AREA1) & DWCMSHC_AREA1_MASK;
+-@@ -1516,6 +1563,7 @@ err_rpm:
++@@ -1523,6 +1570,7 @@ err_rpm:
+  	pm_runtime_put_noidle(dev);
+  err_clk:
+  	clk_disable_unprepare(pltfm_host->clk);
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0947-fixup-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clock.patch b/target/linux/bcm27xx/patches-6.12/950-0947-fixup-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clock.patch
+index 727815eb9fdf7c..900f0f643bca91 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0947-fixup-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clock.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0947-fixup-mmc-sdhci-of-dwcmshc-define-sdio-timeout-clock.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+ +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+-@@ -1250,13 +1250,15 @@ static const struct dwcmshc_pltfm_data s
++@@ -1257,13 +1257,15 @@ static const struct dwcmshc_pltfm_data s
+  };
+  #endif
+  
+diff --git a/target/linux/generic/hack-6.12/259-regmap_dynamic.patch b/target/linux/generic/hack-6.12/259-regmap_dynamic.patch
+index cbd6c422349381..4f48fc06905107 100644
+--- a/target/linux/generic/hack-6.12/259-regmap_dynamic.patch
++++ b/target/linux/generic/hack-6.12/259-regmap_dynamic.patch
+@@ -137,7 +137,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  #include <linux/mutex.h>
+  #include <linux/err.h>
+  #include <linux/property.h>
+-@@ -3521,3 +3522,5 @@ static int __init regmap_initcall(void)
++@@ -3523,3 +3524,5 @@ static int __init regmap_initcall(void)
+  	return 0;
+  }
+  postcore_initcall(regmap_initcall);
+diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
+index 2f31adbfb26673..1be2869132ebc6 100644
+--- a/target/linux/generic/kernel-6.12
++++ b/target/linux/generic/kernel-6.12
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.12 = .67
+-LINUX_KERNEL_HASH-6.12.67 = 16805dc62e1fa5ef8a3f466f3f44a2efb171b5206d6840ced4ba5475cf12c432
++LINUX_VERSION-6.12 = .68
++LINUX_KERNEL_HASH-6.12.68 = d367c7504bd4da520dd01eb08125d2d0ac088bc8af4cd56d236f2074dd4225b7
+diff --git a/target/linux/generic/pending-6.12/834-ledtrig-libata.patch b/target/linux/generic/pending-6.12/834-ledtrig-libata.patch
+index b013236cf0aa99..373e2ec5754c8d 100644
+--- a/target/linux/generic/pending-6.12/834-ledtrig-libata.patch
++++ b/target/linux/generic/pending-6.12/834-ledtrig-libata.patch
+@@ -63,7 +63,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  /**
+   *	ata_build_rw_tf - Build ATA taskfile for given read/write request
+   *	@qc: Metadata associated with the taskfile to build
+-@@ -4770,6 +4781,9 @@ void __ata_qc_complete(struct ata_queued
++@@ -4800,6 +4811,9 @@ void __ata_qc_complete(struct ata_queued
+  		link->active_tag = ATA_TAG_POISON;
+  		ap->nr_active_links--;
+  	}
+@@ -73,7 +73,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  
+  	/* clear exclusive status */
+  	if (unlikely(qc->flags & ATA_QCFLAG_CLEAR_EXCL &&
+-@@ -5492,6 +5506,9 @@ struct ata_port *ata_port_alloc(struct a
++@@ -5522,6 +5536,9 @@ struct ata_port *ata_port_alloc(struct a
+  	ap->stats.unhandled_irq = 1;
+  	ap->stats.idle_irq = 1;
+  #endif
+@@ -83,7 +83,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	ata_sff_port_init(ap);
+  
+  	ata_force_pflags(ap);
+-@@ -5508,6 +5525,12 @@ void ata_port_free(struct ata_port *ap)
++@@ -5538,6 +5555,12 @@ void ata_port_free(struct ata_port *ap)
+  	kfree(ap->pmp_link);
+  	kfree(ap->slave_link);
+  	ida_free(&ata_ida, ap->print_id);
+@@ -96,7 +96,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	kfree(ap);
+  }
+  EXPORT_SYMBOL_GPL(ata_port_free);
+-@@ -5912,7 +5935,23 @@ int ata_host_register(struct ata_host *h
++@@ -5942,7 +5965,23 @@ int ata_host_register(struct ata_host *h
+  		WARN_ON(1);
+  		return -EINVAL;
+  	}
+diff --git a/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
+index 7a802cd70ba78f..ebc794abb83c0b 100644
+--- a/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/ipq40xx/patches-6.12/701-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -93,7 +93,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+ +#endif
+ --- a/include/linux/skbuff.h
+ +++ b/include/linux/skbuff.h
+-@@ -4804,6 +4804,9 @@ enum skb_ext_id {
++@@ -4806,6 +4806,9 @@ enum skb_ext_id {
+  #if IS_ENABLED(CONFIG_MCTP_FLOWS)
+  	SKB_EXT_MCTP,
+  #endif
+diff --git a/target/linux/qualcommbe/patches-6.12/0374-dt-bindings-pwm-add-IPQ6018-binding.patch b/target/linux/qualcommbe/patches-6.12/0374-dt-bindings-pwm-add-IPQ6018-binding.patch
+index d7c280c1ccc5d2..07a64a0f61004a 100644
+--- a/target/linux/qualcommbe/patches-6.12/0374-dt-bindings-pwm-add-IPQ6018-binding.patch
++++ b/target/linux/qualcommbe/patches-6.12/0374-dt-bindings-pwm-add-IPQ6018-binding.patch
+@@ -125,9 +125,6 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  | 51 ++++++++++++++++++++++
+  1 file changed, 51 insertions(+)
+ 
+-diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+-new file mode 100644
+-index 0000000000000000000000000000000000000000..f9f1f652e7527bc8fb3d5fad51b0057ea53b3766
+ --- /dev/null
+ +++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+ @@ -0,0 +1,51 @@
+diff --git a/target/linux/qualcommbe/patches-6.12/0375-pwm-driver-for-qualcomm-ipq6018-pwm-block.patch b/target/linux/qualcommbe/patches-6.12/0375-pwm-driver-for-qualcomm-ipq6018-pwm-block.patch
+index becabd6b78eec4..367349657e659b 100644
+--- a/target/linux/qualcommbe/patches-6.12/0375-pwm-driver-for-qualcomm-ipq6018-pwm-block.patch
++++ b/target/linux/qualcommbe/patches-6.12/0375-pwm-driver-for-qualcomm-ipq6018-pwm-block.patch
+@@ -242,11 +242,9 @@ v2: Make #pwm-cells const (Rob Herring)
+  drivers/pwm/pwm-ipq.c | 239 ++++++++++++++++++++++++++++++++++++++++++++++++++
+  3 files changed, 252 insertions(+)
+ 
+-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+-index bf2d101f67a1e0ae12a58b5630abd5cfd77ccc99..6393f4e91697ae471b1aba72e7ef3f94c5e18383 100644
+ --- a/drivers/pwm/Kconfig
+ +++ b/drivers/pwm/Kconfig
+-@@ -347,6 +347,18 @@ config PWM_INTEL_LGM
++@@ -319,6 +319,18 @@ config PWM_INTEL_LGM
+  	  To compile this driver as a module, choose M here: the module
+  	  will be called pwm-intel-lgm.
+  
+@@ -265,11 +263,9 @@ index bf2d101f67a1e0ae12a58b5630abd5cfd77ccc99..6393f4e91697ae471b1aba72e7ef3f94
+  config PWM_IQS620A
+  	tristate "Azoteq IQS620A PWM support"
+  	depends on MFD_IQS62X || COMPILE_TEST
+-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+-index 0dc0d2b69025dbd27013285cd335d3cb1ca2ab3f..5630a521a7cffeb83ff8c8960e15eb23ddb1c9f8 100644
+ --- a/drivers/pwm/Makefile
+ +++ b/drivers/pwm/Makefile
+-@@ -29,6 +29,7 @@ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
++@@ -27,6 +27,7 @@ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+  obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
+@@ -277,9 +273,6 @@ index 0dc0d2b69025dbd27013285cd335d3cb1ca2ab3f..5630a521a7cffeb83ff8c8960e15eb23
+  obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+  obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
+-diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
+-new file mode 100644
+-index 0000000000000000000000000000000000000000..9955b185bc60f27d770f3833d5acd7f587595324
+ --- /dev/null
+ +++ b/drivers/pwm/pwm-ipq.c
+ @@ -0,0 +1,239 @@
+diff --git a/target/linux/qualcommbe/patches-6.12/0376-arm64-dts-qcom-ipq9574-add-pwm-node.patch b/target/linux/qualcommbe/patches-6.12/0376-arm64-dts-qcom-ipq9574-add-pwm-node.patch
+index 15f90a49ba95c0..9519307e486b0f 100644
+--- a/target/linux/qualcommbe/patches-6.12/0376-arm64-dts-qcom-ipq9574-add-pwm-node.patch
++++ b/target/linux/qualcommbe/patches-6.12/0376-arm64-dts-qcom-ipq9574-add-pwm-node.patch
+@@ -122,11 +122,9 @@ Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 10 ++++++++++
+  1 file changed, 10 insertions(+)
+ 
+-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+-index 86c9cb9fffc98fdd1b0b08e81428ce5e7bb87e17..baf165dcb6b1be823332cdfac631eef2633867b4 100644
+ --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+ +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+-@@ -449,6 +449,16 @@ tcsr: syscon@1937000 {
++@@ -469,6 +469,16 @@
+  			reg = <0x01937000 0x21000>;
+  		};
+  
+diff --git a/target/linux/realtek/patches-6.12/714-net-phy-sfp-add-support-for-SMBus.patch b/target/linux/realtek/patches-6.12/714-net-phy-sfp-add-support-for-SMBus.patch
+index 5379dbf33011d2..74549b99af233d 100644
+--- a/target/linux/realtek/patches-6.12/714-net-phy-sfp-add-support-for-SMBus.patch
++++ b/target/linux/realtek/patches-6.12/714-net-phy-sfp-add-support-for-SMBus.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+ 
+ --- a/drivers/net/phy/sfp.c
+ +++ b/drivers/net/phy/sfp.c
+-@@ -715,10 +715,64 @@ static int sfp_i2c_write(struct sfp *sfp
++@@ -717,10 +717,64 @@ static int sfp_i2c_write(struct sfp *sfp
+  	return ret == ARRAY_SIZE(msgs) ? len : 0;
+  }
+  
+@@ -77,7 +77,7 @@ Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+  
+  	sfp->i2c = i2c;
+  	sfp->read = sfp_i2c_read;
+-@@ -750,6 +804,29 @@ static int sfp_i2c_mdiobus_create(struct
++@@ -752,6 +806,29 @@ static int sfp_i2c_mdiobus_create(struct
+  	return 0;
+  }
+  
+@@ -107,7 +107,7 @@ Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+  static void sfp_i2c_mdiobus_destroy(struct sfp *sfp)
+  {
+  	mdiobus_unregister(sfp->i2c_mii);
+-@@ -1924,9 +2001,15 @@ static void sfp_sm_fault(struct sfp *sfp
++@@ -1926,9 +2003,15 @@ static void sfp_sm_fault(struct sfp *sfp
+  
+  static int sfp_sm_add_mdio_bus(struct sfp *sfp)
+  {
+diff --git a/target/linux/rockchip/patches-6.12/037-04-v6.19-mmc-sdhci-of-dwcmshc-Add-command-queue-support-for-rockch.patch b/target/linux/rockchip/patches-6.12/037-04-v6.19-mmc-sdhci-of-dwcmshc-Add-command-queue-support-for-rockch.patch
+index 74e5a8e20b74a8..e6c632df2dbc20 100644
+--- a/target/linux/rockchip/patches-6.12/037-04-v6.19-mmc-sdhci-of-dwcmshc-Add-command-queue-support-for-rockch.patch
++++ b/target/linux/rockchip/patches-6.12/037-04-v6.19-mmc-sdhci-of-dwcmshc-Add-command-queue-support-for-rockch.patch
+@@ -117,7 +117,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock)
+  {
+  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+-@@ -734,6 +800,10 @@ static void rk35xx_sdhci_reset(struct sd
++@@ -741,6 +807,10 @@ static void rk35xx_sdhci_reset(struct sd
+  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+  	struct dwcmshc_priv *dwc_priv = sdhci_pltfm_priv(pltfm_host);
+  	struct rk35xx_priv *priv = dwc_priv->priv;
+@@ -128,7 +128,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  
+  	if (mask & SDHCI_RESET_ALL && priv->reset) {
+  		reset_control_assert(priv->reset);
+-@@ -742,6 +812,9 @@ static void rk35xx_sdhci_reset(struct sd
++@@ -749,6 +819,9 @@ static void rk35xx_sdhci_reset(struct sd
+  	}
+  
+  	sdhci_reset(host, mask);
+@@ -138,7 +138,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  }
+  
+  static int dwcmshc_rk35xx_init(struct device *dev, struct sdhci_host *host,
+-@@ -1235,6 +1308,15 @@ static const struct dwcmshc_pltfm_data s
++@@ -1242,6 +1315,15 @@ static const struct dwcmshc_pltfm_data s
+  };
+  #endif
+  
+@@ -154,7 +154,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
+  	.pdata = {
+  		.ops = &sdhci_dwcmshc_rk35xx_ops,
+-@@ -1243,6 +1325,7 @@ static const struct dwcmshc_pltfm_data s
++@@ -1250,6 +1332,7 @@ static const struct dwcmshc_pltfm_data s
+  		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+  			   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+  	},
+@@ -162,7 +162,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  	.init = dwcmshc_rk35xx_init,
+  	.postinit = dwcmshc_rk35xx_postinit,
+  };
+-@@ -1292,7 +1375,8 @@ static const struct cqhci_host_ops dwcms
++@@ -1299,7 +1382,8 @@ static const struct cqhci_host_ops dwcms
+  	.set_tran_desc	= dwcmshc_set_tran_desc,
+  };
+  
+@@ -172,7 +172,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  {
+  	struct cqhci_host *cq_host;
+  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+-@@ -1322,7 +1406,10 @@ static void dwcmshc_cqhci_init(struct sd
++@@ -1329,7 +1413,10 @@ static void dwcmshc_cqhci_init(struct sd
+  	}
+  
+  	cq_host->mmio = host->ioaddr + priv->vendor_specific_area2;
+@@ -184,7 +184,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  
+  	/* Enable using of 128-bit task descriptors */
+  	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
+-@@ -1491,7 +1578,7 @@ static int dwcmshc_probe(struct platform
++@@ -1498,7 +1585,7 @@ static int dwcmshc_probe(struct platform
+  		priv->vendor_specific_area2 =
+  			sdhci_readw(host, DWCMSHC_P_VENDOR_AREA2);
+  
+diff --git a/target/linux/rockchip/patches-6.12/037-05-v6.19-mmc-sdhci-of-dwcmshc-Fix-command-queue-support-for-RK3576.patch b/target/linux/rockchip/patches-6.12/037-05-v6.19-mmc-sdhci-of-dwcmshc-Fix-command-queue-support-for-RK3576.patch
+index 3dd29ffefbc1f5..14746cca150289 100644
+--- a/target/linux/rockchip/patches-6.12/037-05-v6.19-mmc-sdhci-of-dwcmshc-Fix-command-queue-support-for-RK3576.patch
++++ b/target/linux/rockchip/patches-6.12/037-05-v6.19-mmc-sdhci-of-dwcmshc-Fix-command-queue-support-for-RK3576.patch
+@@ -45,7 +45,7 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+ 
+ --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+ +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+-@@ -1338,6 +1338,7 @@ static const struct dwcmshc_pltfm_data s
++@@ -1345,6 +1345,7 @@ static const struct dwcmshc_pltfm_data s
+  		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+  			   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+  	},
+diff --git a/target/linux/rockchip/patches-6.12/105-nanopi-r4s-sd-signalling.patch b/target/linux/rockchip/patches-6.12/105-nanopi-r4s-sd-signalling.patch
+index e3199ce0ed420b..5f8486d50d41cd 100644
+--- a/target/linux/rockchip/patches-6.12/105-nanopi-r4s-sd-signalling.patch
++++ b/target/linux/rockchip/patches-6.12/105-nanopi-r4s-sd-signalling.patch
+@@ -22,7 +22,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
+  	status = "okay";
+ --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
+ +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
+-@@ -112,6 +112,11 @@
++@@ -111,6 +111,11 @@
+  	status = "disabled";
+  };
+  

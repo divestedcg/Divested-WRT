@@ -1,3 +1,9 @@
+20260131-00
+- update to bca6c2481c9b83dff511d13f20f20597646669cb
+  https://github.com/openwrt/openwrt/compare/9d1f6ec4...bca6c248
+- [cherrypick] #21797: update to kernel 6.12.68 (security and bug fixes)
+- [upstream] update to openssl 3.5.5 (security and bug fixes)
+
 20260117-00
 - update to 9d1f6ec49df6d937d4f547614e8b34231c94771d
   https://github.com/openwrt/openwrt/compare/17b90c59...9d1f6ec4
