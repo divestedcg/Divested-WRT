@@ -1,3 +1,11 @@
+20260302-00
+- update to 3207627eab69cab4f6c95341f75b079273e9a6d3
+  https://github.com/openwrt/openwrt/compare/55120e36...3207627e
+- [upstream] update to kernel 6.12.74 (security and bug fixes)
+- the wireless template config has been updated with additional
+  options that you may consider using
+- if you use isolate=1 you should also enable bridge_isolate=1
+
 20260215-00
 - update to 55120e363ef1601e322629dbc1359ae24e8b17c3
   https://github.com/openwrt/openwrt/compare/bca6c248...55120e36
