@@ -1,3 +1,8 @@
+20260314-00
+- update to 0d04e03385f3b37d5a3a1f5b8a33d988b034ebfa
+  https://github.com/openwrt/openwrt/compare/3207627e...0d04e033
+- [cherrypick] #22276: update to kernel 6.12.77 (security and bug fixes)
+
 20260302-00
 - update to 3207627eab69cab4f6c95341f75b079273e9a6d3
   https://github.com/openwrt/openwrt/compare/55120e36...3207627e
