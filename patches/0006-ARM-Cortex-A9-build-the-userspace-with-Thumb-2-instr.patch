@@ -17,12 +17,12 @@ Tested-by: Tavi <tavi@divested.dev>
  1 file changed, 5 insertions(+)
 
 diff --git a/include/target.mk b/include/target.mk
-index 1c379c87bc..b4d6c33249 100644
+index 1e70b780e7..296074ad61 100644
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -260,6 +260,11 @@ ifeq ($(DUMP),1)
-     CPU_TYPE = sparc
-     CPU_CFLAGS_ultrasparc = -mcpu=ultrasparc
+@@ -256,6 +256,11 @@ ifeq ($(DUMP),1)
+     CPU_CFLAGS_e5500:=-mcpu=e5500
+     CPU_CFLAGS_powerpc64:=-mcpu=powerpc64
    endif
 +  ifeq ($(ARCH),arm)
 +    CPU_CFLAGS_cortex-a7 = -mthumb
