@@ -1,0 +1,43 @@
+From 656a3a62af4ffcbe798a9a6295090b36cb9f4427 Mon Sep 17 00:00:00 2001
+From: Andre Heider <a.heider@gmail.com>
+Date: Tue, 12 May 2026 10:05:46 +0200
+Subject: [PATCH] dnsmasq: bump to v2.92rel2
+
+Replace 'rel' in the version with a dot, so the package version is
+more standard and becomes dnsmasq-full-2.92.2-r1.apk.
+
+version 2.92rel2
+	2.92 point release incorporating fixes for
+	CVE-2026-2291
+	CVE-2026-4890
+	CVE-2026-4891
+	CVE-2026-4892
+	CVE-2026-4893
+	CVE-2026-5172
+
+Signed-off-by: Andre Heider <a.heider@gmail.com>
+---
+ package/network/services/dnsmasq/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/network/services/dnsmasq/Makefile b/package/network/services/dnsmasq/Makefile
+index 3e98c621b5d507..b665c6fb5ac414 100644
+--- a/package/network/services/dnsmasq/Makefile
++++ b/package/network/services/dnsmasq/Makefile
+@@ -8,13 +8,13 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=dnsmasq
+-PKG_UPSTREAM_VERSION:=2.92
+-PKG_VERSION:=$(subst test,~~test,$(subst rc,~rc,$(PKG_UPSTREAM_VERSION)))
++PKG_UPSTREAM_VERSION:=2.92rel2
++PKG_VERSION:=$(subst rel,.,$(subst test,~~test,$(subst rc,~rc,$(PKG_UPSTREAM_VERSION))))
+ PKG_RELEASE:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_UPSTREAM_VERSION).tar.xz
+ PKG_SOURCE_URL:=https://thekelleys.org.uk/dnsmasq/
+-PKG_HASH:=4bf50c2c1018f9fbc26037df51b90ecea0cb73d46162846763b92df0d6c3a458
++PKG_HASH:=43d72b8c129bdf33d17bafedc98823f63e46b5005128066bf0d2a472a32ce06a
+ 
+ PKG_LICENSE:=GPL-2.0
+ PKG_LICENSE_FILES:=COPYING

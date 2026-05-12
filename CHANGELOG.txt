@@ -1,3 +1,12 @@
+20260512-00
+- update to 348303a9e210a7fc7afdea8f86699b26d598c72b
+  https://github.com/openwrt/openwrt/compare/bf9e4ed9...348303
+- [cherrypick] #23316: update to dnsmasq v2.92rel2 (security and bug fixes)
+- special notice:
+  - upstream has upgraded the mvebu platform to kernel 6.18 series
+  - WRT1900ACv1/mamba will no longer be supported due to size limitations
+  - this will be the last build with kernel 6.12 series
+
 20260511-00
 - update to bf9e4ed9451745781d1027a33e62da8a57461dc6
   https://github.com/openwrt/openwrt/compare/55cb7a01...bf9e4ed9
