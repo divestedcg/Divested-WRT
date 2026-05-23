@@ -1,9 +1,16 @@
 special notice:
 - upstream has upgraded the mvebu platform to kernel 6.18 series for testing
-- once default mamba will no longer be supported due to size limitations
+- once default, mamba will no longer be supported due to size limitations
+
+20260523-00
+- update to 49b5093679bd029846002dba859ab3a1933baa86
+  https://github.com/openwrt/openwrt/compare/862a4edf...49b50936
+- [cherrypick] #23444: update to kernel 6.12.91 (security and bug fixes)
+- [upstream] ubus update (security fixes)
 
 20260516-00
 - update to 862a4edfa6944e10bf128752428e2dc2ef3c3c56
+  https://github.com/openwrt/openwrt/compare/348303a9...862a4edf
 - [upstream] update to kernel 6.12.89 (security and bug fixes)
 - [upstream] uhttpd update (security fixes)
 - [upstream] musl update (security fixes)
@@ -11,7 +18,7 @@ special notice:
 
 20260512-00
 - update to 348303a9e210a7fc7afdea8f86699b26d598c72b
-  https://github.com/openwrt/openwrt/compare/bf9e4ed9...348303
+  https://github.com/openwrt/openwrt/compare/bf9e4ed9...348303a9
 - [cherrypick] #23316: update to dnsmasq v2.92rel2 (security and bug fixes)
 
 20260511-00
