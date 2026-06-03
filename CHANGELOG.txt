@@ -2,6 +2,11 @@ special notice:
 - upstream has upgraded the mvebu platform to kernel 6.18 series for testing
 - once default, mamba will no longer be supported due to size limitations
 
+20260603-00
+- update to 84f4f779204a3de631670fee69141188b56e4976
+  https://github.com/openwrt/openwrt/compare/49b50936...84f4f779
+- [upstream] update to kernel 6.12.92 (security and bug fixes)
+
 20260523-00
 - update to 49b5093679bd029846002dba859ab3a1933baa86
   https://github.com/openwrt/openwrt/compare/862a4edf...49b50936
