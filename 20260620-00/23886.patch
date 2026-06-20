@@ -1,0 +1,555 @@
+From 74c2e19e8d4181fccae4c9e37f71d7c5f0f2a75f Mon Sep 17 00:00:00 2001
+From: Shiji Yang <yangshiji66@outlook.com>
+Date: Sat, 20 Jun 2026 10:00:30 +0800
+Subject: [PATCH 1/2] kernel: reorder kernel config symbols
+
+Sort kernel configuration files alphabetically.
+
+Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
+---
+ target/linux/airoha/en7523/config-6.18   | 2 +-
+ target/linux/d1/config-6.18              | 2 +-
+ target/linux/generic/config-6.12         | 2 +-
+ target/linux/generic/config-6.18         | 7 ++-----
+ target/linux/mpc85xx/config-6.18         | 2 +-
+ target/linux/realtek/rtl931x/config-6.18 | 2 +-
+ target/linux/sunxi/config-6.18           | 2 +-
+ 7 files changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/target/linux/airoha/en7523/config-6.18 b/target/linux/airoha/en7523/config-6.18
+index eefe1353a45fc9..3e60f19b7caf0e 100644
+--- a/target/linux/airoha/en7523/config-6.18
++++ b/target/linux/airoha/en7523/config-6.18
+@@ -221,8 +221,8 @@ CONFIG_OLD_SIGSUSPEND3=y
+ CONFIG_OUTER_CACHE=y
+ CONFIG_OUTER_CACHE_SYNC=y
+ CONFIG_PADATA=y
+-CONFIG_PAGE_OFFSET=0xC0000000
+ CONFIG_PAGE_BLOCK_MAX_ORDER=10
++CONFIG_PAGE_OFFSET=0xC0000000
+ CONFIG_PAGE_POOL=y
+ CONFIG_PAGE_SIZE_LESS_THAN_256KB=y
+ CONFIG_PAGE_SIZE_LESS_THAN_64KB=y
+diff --git a/target/linux/d1/config-6.18 b/target/linux/d1/config-6.18
+index ab1a8b3e4ddb28..fd6e6b0fe871f7 100644
+--- a/target/linux/d1/config-6.18
++++ b/target/linux/d1/config-6.18
+@@ -119,6 +119,7 @@ CONFIG_ERRATA_THEAD_MAE=y
+ CONFIG_EXCLUSIVE_SYSTEM_RAM=y
+ CONFIG_EXT4_FS=y
+ CONFIG_EXTCON=y
++CONFIG_F2FS_FS=y
+ CONFIG_FAILOVER=y
+ CONFIG_FHANDLE=y
+ CONFIG_FIXED_PHY=y
+@@ -128,7 +129,6 @@ CONFIG_FONT_AUTOSELECT=y
+ CONFIG_FONT_SUPPORT=y
+ CONFIG_FPU=y
+ CONFIG_FRAME_POINTER=y
+-CONFIG_F2FS_FS=y
+ CONFIG_FS_IOMAP=y
+ CONFIG_FS_MBCACHE=y
+ CONFIG_FUNCTION_ALIGNMENT=0
+diff --git a/target/linux/generic/config-6.12 b/target/linux/generic/config-6.12
+index 3a914f94f951c1..25946519ad713c 100644
+--- a/target/linux/generic/config-6.12
++++ b/target/linux/generic/config-6.12
+@@ -2168,6 +2168,7 @@ CONFIG_FS_STACK=y
+ # CONFIG_FUSION_SPI is not set
+ CONFIG_FUTEX=y
+ CONFIG_FUTEX_PI=y
++# CONFIG_FWNODE_PCS is not set
+ # CONFIG_FW_CFG_SYSFS is not set
+ # CONFIG_FW_DEVLINK_SYNC_STATE_TIMEOUT is not set
+ CONFIG_FW_LOADER=y
+@@ -2176,7 +2177,6 @@ CONFIG_FW_LOADER=y
+ CONFIG_FW_LOADER_USER_HELPER=y
+ CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
+ # CONFIG_FW_UPLOAD is not set
+-# CONFIG_FWNODE_PCS is not set
+ # CONFIG_FXAS21002C is not set
+ # CONFIG_FXLS8962AF_I2C is not set
+ # CONFIG_FXLS8962AF_SPI is not set
+diff --git a/target/linux/generic/config-6.18 b/target/linux/generic/config-6.18
+index c56af80734bb02..e532458b42a142 100644
+--- a/target/linux/generic/config-6.18
++++ b/target/linux/generic/config-6.18
+@@ -1636,7 +1636,6 @@ CONFIG_DQL=y
+ # CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D is not set
+ # CONFIG_DRM_PANEL_HIMAX_HX8279 is not set
+ # CONFIG_DRM_PANEL_HIMAX_HX83102 is not set
+-# CONFIG_DRM_PANEL_HIMAX_HX83112B is not set
+ # CONFIG_DRM_PANEL_HIMAX_HX83112A is not set
+ # CONFIG_DRM_PANEL_HIMAX_HX83112B is not set
+ # CONFIG_DRM_PANEL_HIMAX_HX8394 is not set
+@@ -1676,7 +1675,6 @@ CONFIG_DQL=y
+ # CONFIG_DRM_PANEL_NOVATEK_NT36672E is not set
+ # CONFIG_DRM_PANEL_NOVATEK_NT37801 is not set
+ # CONFIG_DRM_PANEL_NOVATEK_NT39016 is not set
+-# CONFIG_DRM_PANEL_NOVATEK_NT37801 is not set
+ # CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO is not set
+ # CONFIG_DRM_PANEL_ORISETECH_OTA5601A is not set
+ # CONFIG_DRM_PANEL_ORISETECH_OTM8009A is not set
+@@ -1706,7 +1704,6 @@ CONFIG_DQL=y
+ # CONFIG_DRM_PANEL_SAMSUNG_S6E63M0 is not set
+ # CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS427AP24 is not set
+ # CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01 is not set
+-# CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS427AP24 is not set
+ # CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0 is not set
+ # CONFIG_DRM_PANEL_SAMSUNG_S6E8AA5X01_AMS561RA01 is not set
+ # CONFIG_DRM_PANEL_SAMSUNG_SOFEF00 is not set
+@@ -1773,9 +1770,9 @@ CONFIG_DQL=y
+ # CONFIG_DRM_TI_DLPC3433 is not set
+ # CONFIG_DRM_TI_SN65DSI83 is not set
+ # CONFIG_DRM_TI_SN65DSI86 is not set
++# CONFIG_DRM_TI_TDP158 is not set
+ # CONFIG_DRM_TI_TFP410 is not set
+ # CONFIG_DRM_TI_TPD12S015 is not set
+-# CONFIG_DRM_TI_TDP158 is not set
+ # CONFIG_DRM_TOSHIBA_TC358762 is not set
+ # CONFIG_DRM_TOSHIBA_TC358764 is not set
+ # CONFIG_DRM_TOSHIBA_TC358767 is not set
+@@ -2270,6 +2267,7 @@ CONFIG_FUTEX=y
+ CONFIG_FUTEX_PI=y
+ CONFIG_FUTEX_PRIVATE_HASH=y
+ # CONFIG_FWCTL is not set
++# CONFIG_FWNODE_PCS is not set
+ # CONFIG_FW_CFG_SYSFS is not set
+ # CONFIG_FW_DEVLINK_SYNC_STATE_TIMEOUT is not set
+ CONFIG_FW_LOADER=y
+@@ -2278,7 +2276,6 @@ CONFIG_FW_LOADER=y
+ CONFIG_FW_LOADER_USER_HELPER=y
+ CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
+ # CONFIG_FW_UPLOAD is not set
+-# CONFIG_FWNODE_PCS is not set
+ # CONFIG_FXAS21002C is not set
+ # CONFIG_FXLS8962AF_I2C is not set
+ # CONFIG_FXLS8962AF_SPI is not set
+diff --git a/target/linux/mpc85xx/config-6.18 b/target/linux/mpc85xx/config-6.18
+index 142d6249db5d10..80b19b2d894814 100644
+--- a/target/linux/mpc85xx/config-6.18
++++ b/target/linux/mpc85xx/config-6.18
+@@ -187,11 +187,11 @@ CONFIG_OF_KOBJ=y
+ CONFIG_OF_MDIO=y
+ CONFIG_OLD_SIGACTION=y
+ CONFIG_OLD_SIGSUSPEND=y
+-CONFIG_PAGE_BLOCK_MAX_ORDER=10
+ # CONFIG_P1010_RDB is not set
+ # CONFIG_P1022_DS is not set
+ # CONFIG_P1022_RDK is not set
+ # CONFIG_P1023_RDB is not set
++CONFIG_PAGE_BLOCK_MAX_ORDER=10
+ CONFIG_PAGE_OFFSET=0xc0000000
+ CONFIG_PAGE_POOL=y
+ CONFIG_PAGE_SIZE_LESS_THAN_256KB=y
+diff --git a/target/linux/realtek/rtl931x/config-6.18 b/target/linux/realtek/rtl931x/config-6.18
+index cdc6233afaa909..5f97d95869a851 100644
+--- a/target/linux/realtek/rtl931x/config-6.18
++++ b/target/linux/realtek/rtl931x/config-6.18
+@@ -1,10 +1,10 @@
++CONFIG_AQUANTIA_PHY=y
+ CONFIG_ARCH_32BIT_OFF_T=y
+ CONFIG_ARCH_HIBERNATION_POSSIBLE=y
+ CONFIG_ARCH_KEEP_MEMBLOCK=y
+ CONFIG_ARCH_MMAP_RND_BITS_MAX=15
+ CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX=15
+ CONFIG_ARCH_SUSPEND_POSSIBLE=y
+-CONFIG_AQUANTIA_PHY=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_COUNT=16
+ CONFIG_BLK_DEV_RAM_SIZE=4096
+diff --git a/target/linux/sunxi/config-6.18 b/target/linux/sunxi/config-6.18
+index c5d8692aab2490..346faaa8a18015 100644
+--- a/target/linux/sunxi/config-6.18
++++ b/target/linux/sunxi/config-6.18
+@@ -459,6 +459,7 @@ CONFIG_SND_SIMPLE_CARD=y
+ CONFIG_SND_SIMPLE_CARD_UTILS=y
+ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_I2C_AND_SPI=y
++# CONFIG_SND_SUN20I_D1_CODEC_ANALOG is not set
+ # CONFIG_SND_SUN4I_I2S is not set
+ # CONFIG_SND_SUN4I_SPDIF is not set
+ # CONFIG_SND_SUN50I_DMIC is not set
+@@ -476,7 +477,6 @@ CONFIG_SPI_SUN6I=y
+ CONFIG_SRCU=y
+ CONFIG_STMMAC_ETH=y
+ CONFIG_STMMAC_PLATFORM=y
+-# CONFIG_SND_SUN20I_D1_CODEC_ANALOG is not set
+ # CONFIG_SUN20I_GPADC is not set
+ # CONFIG_SUN20I_PPU is not set
+ CONFIG_SUN4I_A10_CCU=y
+
+From 3b3d6ba1e971772de2d6b41ed67e576d6c9456d7 Mon Sep 17 00:00:00 2001
+From: Shiji Yang <yangshiji66@outlook.com>
+Date: Fri, 19 Jun 2026 21:50:12 +0800
+Subject: [PATCH 2/2] kernel: bump 6.12 to 6.12.94
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.94
+
+New kconfig symbols:
+- ARM64_ERRATUM_4118414: enabled on ARM Cortex-A76 and newer targets.
+- ARM64_ERRATUM_4193714: enabled on ARM C1-Pro and newer targets.
+
+All patches are automatically refreshed.
+
+Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
+---
+ target/linux/armsr/armv8/config-6.12                        | 2 ++
+ .../ath79/patches-6.12/900-unaligned_access_hacks.patch     | 4 ++--
+ target/linux/bcm27xx/bcm2712/config-6.12                    | 1 +
+ ...22-Bluetooth-hci_sync-Add-fallback-bd-address-prop.patch | 4 ++--
+ .../patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch   | 2 +-
+ ...ivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch | 2 +-
+ ...c-sdhci-extend-maximum-ADMA-transfer-length-to-4Mi.patch | 2 +-
+ ...c-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch | 4 ++--
+ ...0-0502-Bluetooth-hci_sync-Fix-crash-on-NULL-parent.patch | 2 +-
+ ...m-vc4-Make-v3d-paths-unavailable-on-any-generation.patch | 2 +-
+ .../patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch  | 2 +-
+ ...1-v6.14-net-mvpp2-implement-pcs_inband_caps-method.patch | 4 ++--
+ ...20-09-v6.14-net-phy-Constify-struct-mdio_device_id.patch | 2 +-
+ ...-net-phy-support-active-high-property-for-PHY-LEDs.patch | 2 +-
+ target/linux/generic/config-6.12                            | 2 ++
+ .../hack-6.12/780-usb-net-MeigLink_modem_support.patch      | 6 +++---
+ target/linux/generic/hack-6.12/901-debloat_sock_diag.patch  | 2 +-
+ target/linux/generic/hack-6.12/902-debloat_proc.patch       | 2 +-
+ target/linux/generic/kernel-6.12                            | 4 ++--
+ .../generic/pending-6.12/103-kbuild-export-SUBARCH.patch    | 2 +-
+ ...t-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch | 2 +-
+ .../703-phy-add-detach-callback-to-struct-phy_driver.patch  | 2 +-
+ 22 files changed, 31 insertions(+), 26 deletions(-)
+
+diff --git a/target/linux/armsr/armv8/config-6.12 b/target/linux/armsr/armv8/config-6.12
+index 6463660b5ad906..a1176c0585c5fb 100644
+--- a/target/linux/armsr/armv8/config-6.12
++++ b/target/linux/armsr/armv8/config-6.12
+@@ -83,6 +83,8 @@ CONFIG_ARM64_ERRATUM_2441007=y
+ CONFIG_ARM64_ERRATUM_2441009=y
+ CONFIG_ARM64_ERRATUM_2457168=y
+ CONFIG_ARM64_ERRATUM_2658417=y
++CONFIG_ARM64_ERRATUM_4118414=y
++CONFIG_ARM64_ERRATUM_4193714=y
+ CONFIG_ARM64_ERRATUM_819472=y
+ CONFIG_ARM64_ERRATUM_824069=y
+ CONFIG_ARM64_ERRATUM_826319=y
+diff --git a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
+index e26aaebab3c32a..71ecaa9ce15676 100644
+--- a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
+@@ -259,7 +259,7 @@ SVN-Revision: 35130
+  #include <linux/uaccess.h>
+  #include <linux/ipv6.h>
+  #include <linux/icmpv6.h>
+-@@ -915,10 +916,10 @@ static void tcp_v6_send_response(const s
++@@ -912,10 +913,10 @@ static void tcp_v6_send_response(const s
+  	topt = (__be32 *)(t1 + 1);
+  
+  	if (tsecr) {
+@@ -701,7 +701,7 @@ SVN-Revision: 35130
+ +#include <linux/in6.h>
+  
+  struct net;
+- 
++ extern struct net init_net;
+ --- a/include/uapi/linux/in.h
+ +++ b/include/uapi/linux/in.h
+ @@ -93,7 +93,7 @@ enum {
+diff --git a/target/linux/bcm27xx/bcm2712/config-6.12 b/target/linux/bcm27xx/bcm2712/config-6.12
+index eaf00f4bf67275..47ceac70240dbd 100644
+--- a/target/linux/bcm27xx/bcm2712/config-6.12
++++ b/target/linux/bcm27xx/bcm2712/config-6.12
+@@ -30,6 +30,7 @@ CONFIG_ARM64_ERRATUM_1165522=y
+ CONFIG_ARM64_ERRATUM_1286807=y
+ CONFIG_ARM64_ERRATUM_1463225=y
+ CONFIG_ARM64_ERRATUM_3194386=y
++CONFIG_ARM64_ERRATUM_4118414=y
+ CONFIG_ARM64_HW_AFDBM=y
+ CONFIG_ARM64_LD_HAS_FIX_ERRATUM_843419=y
+ CONFIG_ARM64_PA_BITS=48
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0322-Bluetooth-hci_sync-Add-fallback-bd-address-prop.patch b/target/linux/bcm27xx/patches-6.12/950-0322-Bluetooth-hci_sync-Add-fallback-bd-address-prop.patch
+index 4e0895dc45a6bd..b50b49f2a4f9fd 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0322-Bluetooth-hci_sync-Add-fallback-bd-address-prop.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0322-Bluetooth-hci_sync-Add-fallback-bd-address-prop.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/net/bluetooth/hci_sync.c
+ +++ b/net/bluetooth/hci_sync.c
+-@@ -4942,6 +4942,7 @@ static const struct {
++@@ -4961,6 +4961,7 @@ static const struct {
+   */
+  static int hci_dev_setup_sync(struct hci_dev *hdev)
+  {
+@@ -28,7 +28,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	int ret = 0;
+  	bool invalid_bdaddr;
+  	size_t i;
+-@@ -4970,7 +4971,8 @@ static int hci_dev_setup_sync(struct hci
++@@ -4989,7 +4990,8 @@ static int hci_dev_setup_sync(struct hci
+  			 test_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+  	if (!ret) {
+  		if (test_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks) &&
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch b/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
+index 2b695742edac54..64c0bfb7004e3d 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0344-sdhci-Add-SD-Express-hook.patch
+@@ -51,7 +51,7 @@ sdhci: remove PYA0_INTR_BUG quirk. Add quirks to disable some of the higher SDR
+  };
+  
+  /*****************************************************************************\
+-@@ -4572,6 +4582,15 @@ int sdhci_setup_host(struct sdhci_host *
++@@ -4573,6 +4583,15 @@ int sdhci_setup_host(struct sdhci_host *
+  	    !(host->quirks2 & SDHCI_QUIRK2_BROKEN_DDR50))
+  		mmc->caps |= MMC_CAP_UHS_DDR50;
+  
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch b/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
+index eafdd011401df3..1cc5a26d0a8ff8 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/mmc/core/mmc.c
+ +++ b/drivers/mmc/core/mmc.c
+-@@ -1915,8 +1915,8 @@ static int mmc_init_card(struct mmc_host
++@@ -1917,8 +1917,8 @@ static int mmc_init_card(struct mmc_host
+  			host->cqe_enabled = true;
+  
+  			if (card->ext_csd.cmdq_en) {
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0437-mmc-sdhci-extend-maximum-ADMA-transfer-length-to-4Mi.patch b/target/linux/bcm27xx/patches-6.12/950-0437-mmc-sdhci-extend-maximum-ADMA-transfer-length-to-4Mi.patch
+index 39c26127fb6214..5c6296a2b511ec 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0437-mmc-sdhci-extend-maximum-ADMA-transfer-length-to-4Mi.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0437-mmc-sdhci-extend-maximum-ADMA-transfer-length-to-4Mi.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	BUG_ON(data->blksz > host->mmc->max_blk_size);
+  	BUG_ON(data->blocks > 65535);
+  
+-@@ -4716,11 +4716,16 @@ int sdhci_setup_host(struct sdhci_host *
++@@ -4717,11 +4717,16 @@ int sdhci_setup_host(struct sdhci_host *
+  	spin_lock_init(&host->lock);
+  
+  	/*
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch b/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
+index df94ea0ca528f5..995105eff6927b 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
+@@ -85,7 +85,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  void mmc_blk_mq_recovery(struct mmc_queue *mq)
+ --- a/drivers/mmc/core/mmc.c
+ +++ b/drivers/mmc/core/mmc.c
+-@@ -1657,6 +1657,7 @@ static int mmc_init_card(struct mmc_host
++@@ -1659,6 +1659,7 @@ static int mmc_init_card(struct mmc_host
+  		card->ocr = ocr;
+  		card->type = MMC_TYPE_MMC;
+  		card->rca = 1;
+@@ -93,7 +93,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  		memcpy(card->raw_cid, cid, sizeof(card->raw_cid));
+  	}
+  
+-@@ -1922,6 +1923,7 @@ static int mmc_init_card(struct mmc_host
++@@ -1924,6 +1925,7 @@ static int mmc_init_card(struct mmc_host
+  				pr_info("%s: Host Software Queue enabled\n",
+  					mmc_hostname(host));
+  			}
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0502-Bluetooth-hci_sync-Fix-crash-on-NULL-parent.patch b/target/linux/bcm27xx/patches-6.12/950-0502-Bluetooth-hci_sync-Fix-crash-on-NULL-parent.patch
+index ee48969572873a..98c428e7a8e1e8 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0502-Bluetooth-hci_sync-Fix-crash-on-NULL-parent.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0502-Bluetooth-hci_sync-Fix-crash-on-NULL-parent.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/net/bluetooth/hci_sync.c
+ +++ b/net/bluetooth/hci_sync.c
+-@@ -4942,7 +4942,8 @@ static const struct {
++@@ -4961,7 +4961,8 @@ static const struct {
+   */
+  static int hci_dev_setup_sync(struct hci_dev *hdev)
+  {
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0588-drm-vc4-Make-v3d-paths-unavailable-on-any-generation.patch b/target/linux/bcm27xx/patches-6.12/950-0588-drm-vc4-Make-v3d-paths-unavailable-on-any-generation.patch
+index 1c5725d7aa7362..5b43bbf224db07 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0588-drm-vc4-Make-v3d-paths-unavailable-on-any-generation.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0588-drm-vc4-Make-v3d-paths-unavailable-on-any-generation.patch
+@@ -569,7 +569,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  	for (i = 0; i < exec->shader_state_count; i++) {
+ --- a/drivers/gpu/drm/vc4/vc4_validate_shaders.c
+ +++ b/drivers/gpu/drm/vc4/vc4_validate_shaders.c
+-@@ -786,7 +786,7 @@ vc4_validate_shader(struct drm_gem_dma_o
++@@ -787,7 +787,7 @@ vc4_validate_shader(struct drm_gem_dma_o
+  	struct vc4_validated_shader_info *validated_shader = NULL;
+  	struct vc4_shader_validation_state validation_state;
+  
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch b/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
+index 620f208543ee59..436740ffbc82f2 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
+@@ -35,7 +35,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20250113154741.67520-2-mcana
+  
+ --- a/drivers/gpu/drm/v3d/v3d_sched.c
+ +++ b/drivers/gpu/drm/v3d/v3d_sched.c
+-@@ -663,8 +663,6 @@ v3d_cpu_job_run(struct drm_sched_job *sc
++@@ -664,8 +664,6 @@ v3d_cpu_job_run(struct drm_sched_job *sc
+  	struct v3d_cpu_job *job = to_cpu_job(sched_job);
+  	struct v3d_dev *v3d = job->base.v3d;
+  
+diff --git a/target/linux/generic/backport-6.12/601-11-v6.14-net-mvpp2-implement-pcs_inband_caps-method.patch b/target/linux/generic/backport-6.12/601-11-v6.14-net-mvpp2-implement-pcs_inband_caps-method.patch
+index 846d9df36de192..c0ab7ac5e21123 100644
+--- a/target/linux/generic/backport-6.12/601-11-v6.14-net-mvpp2-implement-pcs_inband_caps-method.patch
++++ b/target/linux/generic/backport-6.12/601-11-v6.14-net-mvpp2-implement-pcs_inband_caps-method.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+ +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+-@@ -6237,19 +6237,26 @@ static const struct phylink_pcs_ops mvpp
++@@ -6256,19 +6256,26 @@ static const struct phylink_pcs_ops mvpp
+  	.pcs_config = mvpp2_xlg_pcs_config,
+  };
+  
+@@ -51,7 +51,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  }
+  
+  static void mvpp2_gmac_pcs_get_state(struct phylink_pcs *pcs,
+-@@ -6356,7 +6363,7 @@ static void mvpp2_gmac_pcs_an_restart(st
++@@ -6375,7 +6382,7 @@ static void mvpp2_gmac_pcs_an_restart(st
+  }
+  
+  static const struct phylink_pcs_ops mvpp2_phylink_gmac_pcs_ops = {
+diff --git a/target/linux/generic/backport-6.12/720-09-v6.14-net-phy-Constify-struct-mdio_device_id.patch b/target/linux/generic/backport-6.12/720-09-v6.14-net-phy-Constify-struct-mdio_device_id.patch
+index f54f471ab6bcc1..d09e95681e18cb 100644
+--- a/target/linux/generic/backport-6.12/720-09-v6.14-net-phy-Constify-struct-mdio_device_id.patch
++++ b/target/linux/generic/backport-6.12/720-09-v6.14-net-phy-Constify-struct-mdio_device_id.patch
+@@ -458,7 +458,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	{ }
+ --- a/drivers/net/phy/micrel.c
+ +++ b/drivers/net/phy/micrel.c
+-@@ -5835,7 +5835,7 @@ MODULE_DESCRIPTION("Micrel PHY driver");
++@@ -5836,7 +5836,7 @@ MODULE_DESCRIPTION("Micrel PHY driver");
+  MODULE_AUTHOR("David J. Choi");
+  MODULE_LICENSE("GPL");
+  
+diff --git a/target/linux/generic/backport-6.12/730-03-v6.13-net-phy-support-active-high-property-for-PHY-LEDs.patch b/target/linux/generic/backport-6.12/730-03-v6.13-net-phy-support-active-high-property-for-PHY-LEDs.patch
+index 95e8638c39cd40..d009115686f6d7 100644
+--- a/target/linux/generic/backport-6.12/730-03-v6.13-net-phy-support-active-high-property-for-PHY-LEDs.patch
++++ b/target/linux/generic/backport-6.12/730-03-v6.13-net-phy-support-active-high-property-for-PHY-LEDs.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/phy/phy_device.c
+ +++ b/drivers/net/phy/phy_device.c
+-@@ -3382,11 +3382,17 @@ static int of_phy_led(struct phy_device
++@@ -3385,11 +3385,17 @@ static int of_phy_led(struct phy_device
+  	if (index > U8_MAX)
+  		return -EINVAL;
+  
+diff --git a/target/linux/generic/config-6.12 b/target/linux/generic/config-6.12
+index 25946519ad713c..e9e782af417652 100644
+--- a/target/linux/generic/config-6.12
++++ b/target/linux/generic/config-6.12
+@@ -363,6 +363,8 @@ CONFIG_ARM64_CNP=y
+ # CONFIG_ARM64_ERRATUM_2966298 is not set
+ # CONFIG_ARM64_ERRATUM_3117295 is not set
+ # CONFIG_ARM64_ERRATUM_3194386 is not set
++# CONFIG_ARM64_ERRATUM_4118414 is not set
++# CONFIG_ARM64_ERRATUM_4193714 is not set
+ # CONFIG_ARM64_ERRATUM_819472 is not set
+ # CONFIG_ARM64_ERRATUM_824069 is not set
+ # CONFIG_ARM64_ERRATUM_826319 is not set
+diff --git a/target/linux/generic/hack-6.12/780-usb-net-MeigLink_modem_support.patch b/target/linux/generic/hack-6.12/780-usb-net-MeigLink_modem_support.patch
+index eff038fbd0699d..feeb329ca12065 100644
+--- a/target/linux/generic/hack-6.12/780-usb-net-MeigLink_modem_support.patch
++++ b/target/linux/generic/hack-6.12/780-usb-net-MeigLink_modem_support.patch
+@@ -32,7 +32,7 @@ Subject: [PATCH] net/usb/qmi_wwan: add MeigLink modem support
+  	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
+ --- a/drivers/usb/serial/option.c
+ +++ b/drivers/usb/serial/option.c
+-@@ -247,6 +247,11 @@ static void option_instat_callback(struc
++@@ -248,6 +248,11 @@ static void option_instat_callback(struc
+  #define UBLOX_PRODUCT_R410M			0x90b2
+  /* These Yuga products use Qualcomm's vendor ID */
+  #define YUGA_PRODUCT_CLM920_NC5			0x9625
+@@ -44,7 +44,7 @@ Subject: [PATCH] net/usb/qmi_wwan: add MeigLink modem support
+  
+  #define QUECTEL_VENDOR_ID			0x2c7c
+  /* These Quectel products use Quectel's vendor ID */
+-@@ -1156,6 +1161,11 @@ static const struct usb_device_id option
++@@ -1159,6 +1164,11 @@ static const struct usb_device_id option
+  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
+  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
+  	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
+@@ -56,7 +56,7 @@ Subject: [PATCH] net/usb/qmi_wwan: add MeigLink modem support
+  	/* Quectel products using Qualcomm vendor ID */
+  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
+  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
+-@@ -1197,6 +1207,11 @@ static const struct usb_device_id option
++@@ -1200,6 +1210,11 @@ static const struct usb_device_id option
+  	  .driver_info = ZLP },
+  	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
+  	  .driver_info = RSVD(4) },
+diff --git a/target/linux/generic/hack-6.12/901-debloat_sock_diag.patch b/target/linux/generic/hack-6.12/901-debloat_sock_diag.patch
+index 17a22d0528a575..0091ec29bb6f15 100644
+--- a/target/linux/generic/hack-6.12/901-debloat_sock_diag.patch
++++ b/target/linux/generic/hack-6.12/901-debloat_sock_diag.patch
+@@ -83,7 +83,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ip6_dst_check(struct dst_entry *,
+  							  u32));
+  INDIRECT_CALLABLE_DECLARE(struct dst_entry *ipv4_dst_check(struct dst_entry *,
+-@@ -2342,9 +2359,11 @@ static void __sk_free(struct sock *sk)
++@@ -2347,9 +2364,11 @@ static void __sk_free(struct sock *sk)
+  	if (likely(sk->sk_net_refcnt))
+  		sock_inuse_add(sock_net(sk), -1);
+  
+diff --git a/target/linux/generic/hack-6.12/902-debloat_proc.patch b/target/linux/generic/hack-6.12/902-debloat_proc.patch
+index fe45d47ec5c608..7beda5de63ebb1 100644
+--- a/target/linux/generic/hack-6.12/902-debloat_proc.patch
++++ b/target/linux/generic/hack-6.12/902-debloat_proc.patch
+@@ -331,7 +331,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -4285,6 +4285,8 @@ static __net_initdata struct pernet_oper
++@@ -4294,6 +4294,8 @@ static __net_initdata struct pernet_oper
+  
+  static int __init proto_init(void)
+  {
+diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
+index 2c776bd716f186..424db9bb4e2760 100644
+--- a/target/linux/generic/kernel-6.12
++++ b/target/linux/generic/kernel-6.12
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.12 = .93
+-LINUX_KERNEL_HASH-6.12.93 = 492648a87c0b69c5ac7f43be64792b9000e3439550d4e82e4a14710c49094fa3
++LINUX_VERSION-6.12 = .94
++LINUX_KERNEL_HASH-6.12.94 = e998a232b9418db3301cb58468e291a4f41d6ab8306029b30d991f56251dc8d2
+diff --git a/target/linux/generic/pending-6.12/103-kbuild-export-SUBARCH.patch b/target/linux/generic/pending-6.12/103-kbuild-export-SUBARCH.patch
+index f11976b9e368d9..a47479b7cac0dc 100644
+--- a/target/linux/generic/pending-6.12/103-kbuild-export-SUBARCH.patch
++++ b/target/linux/generic/pending-6.12/103-kbuild-export-SUBARCH.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/Makefile
+ +++ b/Makefile
+-@@ -593,7 +593,7 @@ export RUSTC_BOOTSTRAP := 1
++@@ -594,7 +594,7 @@ export RUSTC_BOOTSTRAP := 1
+  # Allows finding `.clippy.toml` in out-of-srctree builds.
+  export CLIPPY_CONF_DIR := $(srctree)
+  
+diff --git a/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch b/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+index 21f08fac78e02c..800613b392e318 100644
+--- a/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
++++ b/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+@@ -96,7 +96,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  }
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -2557,7 +2557,7 @@ void sk_setup_caps(struct sock *sk, stru
++@@ -2562,7 +2562,7 @@ void sk_setup_caps(struct sock *sk, stru
+  		icsk->icsk_ack.dst_quick_ack = dst_metric(dst, RTAX_QUICKACK);
+  	}
+  	if (sk->sk_route_caps & NETIF_F_GSO)
+diff --git a/target/linux/generic/pending-6.12/703-phy-add-detach-callback-to-struct-phy_driver.patch b/target/linux/generic/pending-6.12/703-phy-add-detach-callback-to-struct-phy_driver.patch
+index 474470b806db58..5c8dbcc3fe9cc1 100644
+--- a/target/linux/generic/pending-6.12/703-phy-add-detach-callback-to-struct-phy_driver.patch
++++ b/target/linux/generic/pending-6.12/703-phy-add-detach-callback-to-struct-phy_driver.patch
+@@ -11,7 +11,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+ 
+ --- a/drivers/net/phy/phy_device.c
+ +++ b/drivers/net/phy/phy_device.c
+-@@ -2035,6 +2035,9 @@ void phy_detach(struct phy_device *phyde
++@@ -2038,6 +2038,9 @@ void phy_detach(struct phy_device *phyde
+  		phydev->devlink = NULL;
+  	}
+  
