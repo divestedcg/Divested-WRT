@@ -1,6 +1,13 @@
-special notice:
-- upstream has upgraded the mvebu platform to kernel 6.18 series for testing
-- once default, mamba will no longer be supported due to size limitations
+20260706-00
+- update to a4e5c3b8f61be4ad80e8787fb4d9ed84fdfa132d
+  https://github.com/openwrt/openwrt/compare/304525e7...a4e5c3b8
+- [cherrypick] #24083: update to kernel 6.18.38 (security and bug fixes)
+- mamba is no longer supported upstream due to size limitations
+  however it appears to fit with 169,705 bytes left
+  so it will continue to be provided for now
+- NOTICE: for typical setups you MUST run the following command before updating
+  uci set dhcp.lan.dhcpv4='server' && uci set dhcp.lan.dhcpv6='server' && uci commit dhcp
+  for discussion see https://github.com/openwrt/openwrt/pull/24068
 
 20260620-00
 - update to 304525e7545110d1d46117a1759a22280c608f46
