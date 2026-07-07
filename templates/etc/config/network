@@ -1,2 +1,2 @@
 config globals 'globals'
-	option packet_steering '1'
+	option packet_steering '2'

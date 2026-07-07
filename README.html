@@ -1,5 +1,5 @@
 <h1 id="top">Divested-WRT: UNOFFICIAL <i>OpenWrt</i> builds<a href="#top">^</a></h1>
-<p>README last updated: 2024/12/25<p>
+<p>README last updated: 2026/07/07<p>
 
 <hr>
 <h2 id="license">License<a href="#license">^</a></h2>
@@ -12,7 +12,7 @@ All modifications are contained in the /patches directory.
 <h2 id="verification">Verification<a href="#verification">^</a></h2>
 <ul>
 	<li>#6395 FC99 11ED CD61 5871  2DF7 BADF CABD DBF5 B694</li>
-	<li>#Key mirrored at <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522/7" target="_blank" rel="nofollow noopener noreferrer">1</a>, <a href="https://raw.githubusercontent.com/divestedcg/Divested-WRT/master/divested_signing.key" target="_blank" rel="nofollow noopener noreferrer">2</a>, and <a href="https://gitlab.com/divested/Divested-WRT/-/raw/master/divested_signing.key" target="_blank" rel="nofollow noopener noreferrer">3</a>.</li>
+	<li>#Key mirrored at <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522/7" target="_blank" rel="nofollow noopener noreferrer">1</a>, <a href="https://codeberg.org/divested/Divested-WRT/raw/branch/master/divested_signing.key" target="_blank" rel="nofollow noopener noreferrer">2</a>, <a href="https://raw.githubusercontent.com/divestedcg/Divested-WRT/master/divested_signing.key" target="_blank" rel="nofollow noopener noreferrer">3</a>, and <a href="https://gitlab.com/divested/Divested-WRT/-/raw/master/divested_signing.key" target="_blank" rel="nofollow noopener noreferrer">4</a>.</li>
 	<li>$ gpg --import divested_signing.key; #once only</li>
 	<li>$ gpg --verify sha256sums;</li>
 	<li>$ sha256sum --ignore-missing --check sha256sums;</li>
@@ -29,58 +29,56 @@ If somethings breaks, you get to keep both pieces!
 <hr>
 <h2 id="credits">Credits<a href="#credits">^</a></h2>
 <ul>
-	<li>@jbsky for tons of mwlwifi fixes and improvements</li>
-	<li>Vladimir Oltean, Tobias Waldekranz, and DENG Qingfang for the DSA/FDB fixes and backports</li>
-	<li>Wout Mertens and Pavel Stano for the previously used DSA/FDB workaround</li>
-	<li>The mystery person who figured out that TX-AMSDU causes high latencies on mwlwifi, possibly @onja</li>
-	<li>Rui Salvaterra for the frequent kernel bumps+testing and the Thumb-2 patch</li>
-	<li>Daniel Engberg for the -O2 patch</li>
-	<li>@borkra for the 2024 sysupgrade fix</li>
-	<li><i>OpenWrt</i>, its amazing contributors, and its friendly community for all that it is</li>
-	<li>Alexander Popov, for maintaining a detailed list of kernel config hardening options <a href="https://github.com/a13xp0p0v/kconfig-hardened-check" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>Daniel Engberg for the -O2 patch.</li>
+	<li><i>OpenWrt</i>, its amazing contributors, and its friendly community for all that it is.</li>
+	<li>Alexander Popov, for maintaining a detailed list of kernel config hardening options <a href="https://github.com/a13xp0p0v/kconfig-hardened-check" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
+</ul>
+
+<hr>
+<h2 id="creditsLegacy">Credits (legacy)<a href="#creditsLegacy">^</a></h2>
+<ul>
+	<li>@jbsky for tons of mwlwifi fixes and improvements.</li>
+	<li>Vladimir Oltean, Tobias Waldekranz, and DENG Qingfang for the DSA/FDB fixes and backports.</li>
+	<li>Wout Mertens and Pavel Stano for the previously used DSA/FDB workaround.</li>
+	<li>The mystery person who figured out that TX-AMSDU causes high latencies on mwlwifi, possibly @onja.</li>
+	<li>Rui Salvaterra for the frequent kernel bumps+testing and the Thumb-2 patch.</li>
+	<li>@borkra for the 2024 sysupgrade fix.</li>
 </ul>
 
 <hr>
 <h2 id="faq">FAQ<a href="#faq">^</a></h2>
 <p id="why">Why make these builds?<a href="#why">^</a></p>
 <ul>
-	<li>I need wpad-full compiled in for RADIUS support. Only WPA2-EAP and WPA3 offer PFS.</li>
-	<li>I want extra security features that aren't enabled by default.</li>
+	<li>I want my porridge to be just right.</li>
 </ul>
 
 <p id="devicesTested">What devices have been tested?<a href="#devicesTested">^</a></p>
 <ul>
 	<li>WRT1900ACSv2/shelby</li>
 	<li>WRT1900ACv1/mamba</li>
-	<li>WRT1200AC/caiman</li>
-	<li>WRT32X/venom (via user report)</li>
-	<li>WRT1900ACv2/cobra (via user report)</li>
 </ul>
 
 <p id="updatePolicy">How often will these be updated?<a href="#updatePolicy">^</a></p>
 <ul>
-	<li>At least twice a month</li>
-	<li>Sometimes weekly</li>
+	<li>At least twice a month.</li>
 </ul>
 
 <p id="dependence">Can we rely on you to provide these builds in the future?<a href="#dependence">^</a></p>
 <ul>
 	<li>No.</li>
-	<li>However I have been making these for quite a while.</li>
-	<li>And this hardware is still some of the best around.</li>
 </ul>
 
 <p id="trust">Why should we trust you?<a href="#trust">^</a></p>
 <ul>
-	<li>You don't have to!</li>
-	<li>Patches and configs are included for you to compile this yourself.</li>
+	<li>You don't have to...</li>
+	<li>Patches and configs are included for you to compile this yourself!</li>
 </ul>
 
 <p id="selfBuild">How to create my own builds?<a href="#selfBuild">^</a></p>
 <ul>
-	<li>There is a video of this process <a href="https://divested.dev/pages/video-openwrt-compile_quick_start" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
-	<li>Create a VM with Debian or Fedora or what have you</li>
-	<li>Install all the necessary dependencies listed <a href="https://openwrt.org/docs/guide-developer/build-system/install-buildsystem#linux_distributions" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>There is a video of this process <a href="https://divested.dev/pages/video-openwrt-compile_quick_start" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
+	<li>Create a VM with Fedora or what have you.</li>
+	<li>Install all the necessary dependencies listed <a href="https://openwrt.org/docs/guide-developer/toolchain/install-buildsystem#linux_gnu-linux_distributions" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
 	<li>$ git clone https://git.openwrt.org/openwrt/openwrt.git</li>
 	<li>$ cd openwrt</li>
 	<li>$ git config pull.rebase true #makes updating easier</li>
@@ -96,7 +94,7 @@ If somethings breaks, you get to keep both pieces!
 <p id="selfBuildUpdate">How to update my own builds?<a href="#selfBuildUpdate">^</a></p>
 <ul>
 	<li>$ cd openwrt</li>
-	<li>$ make clean</li>
+	<li>$ make clean; make dirclean;</li>
 	<li>$ git pull</li>
 	<li>$ ./scripts/feeds update -a -f</li>
 	<li>$ ./scripts/feeds install -a -f</li>
@@ -110,26 +108,26 @@ If somethings breaks, you get to keep both pieces!
 	<li>A simple content blocking script is included that adds our blocklist config to dnsmasq from <a href="https://divested.dev/pages/dnsbl" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
 	<li>This is a much more efficient approach than downloading & processing the lists on device and has the benefit of supporting wildcards for greater efficiency and increased blocking.</li>
 	<li>This blocker can be permanently disabled via <code>/etc/init.d/divblock disable</code> if you don't want it or want another blocker package.</li>
-	<li>You can exclude a domain by adding it (one per line) to <code>/etc/config/divblock-exclusions</code> as so <code>/www\.example\.com/</code> then restart via <code>/etc/init.d/divblock restart</code></li>
+	<li>You can exclude a domain by adding it (one per line) to <code>/etc/config/divblock-exclusions</code> as so <code>/www\.example\.com/</code> then restart via <code>/etc/init.d/divblock restart</code>.</li>
 	<li>Please report any wrongly blocked domains via the <a href="https://divested.dev/pages/software#dnsrm" target="_blank" rel="nofollow noopener noreferrer">dnsrm issue trackers</a>.</li>
 </ul>
 
 <p id="postInstall">Anything to change after install?<a href="#postInstall">^</a></p>
 <ul>
-	<li>Change 'enabled' from '0' to '1' in '/etc/config/irqbalance' for improved Wi-Fi performance.</li>
-	<li>Uncomment 'devcrypto=devcrypto' under the '[engine]' block in '/etc/ssl/openssl.cnf' for improved OpenSSL performance for large block sizes.</li>
-	<li>Enable SQM/Cake if you have an asymmetric WAN.</li>
+	<li>Enable irqbalance.</li>
+	<li>Enable packet steering on all CPUs.</li>
+	<li>Enable software or preferably hardware flow offloading.</li>
+	<li>Optionally enable SQM with cake or cake_mq. Note: incompatible with hardware flow offloading.</li>
 </ul>
 
 <p id="goodies">Other things we should know?<a href="#goodies">^</a></p>
 <ul>
-	<li>Wiki pages are <a href="https://openwrt.org/toh/linksys/wrt_ac_series" target="_blank" rel="nofollow noopener noreferrer">here</a> and <a href="https://oldwiki.archive.openwrt.org/toh/linksys/wrt_ac_series" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
-	<li>You need to manually migrate if you are still on a swconfig build. <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522/150" target="_blank" rel="nofollow noopener noreferrer">simple guide here</a></li>
+	<li>Wiki pages are <a href=https://openwrt.org/docs/start" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
 	<li>There was a forum thread <a href="https://forum.openwrt.org/t/no-nonsense-linksys-wrt-builds/80522" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
-	<li>There is a git repo for this at <a href="https://github.com/divestedcg/Divested-WRT" target="_blank" rel="nofollow noopener noreferrer">GitHub</a> and <a href="https://gitlab.com/divested/Divested-WRT" target="_blank" rel="nofollow noopener noreferrer">GitLab</a>.</li>
-	<li>If you don't have one of these and want one, I recommend the WRT1900ACv2 or WRT1900ACS.</li>
-	<li>These are routers/APs, please don't run anything else on them. If you need a low power home server go buy an HP EliteDesk 800 G1/G2 Desk-Mini (<$120) or an Intel NUC (more expensive).</li>
-	<li>Donate to me <a href="/donate" target="_blank" rel="nofollow noopener noreferrer">here</a> and to OpenWrt <a href="https://openwrt.org/donate" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>There is a git repo for this at <a href="https://codeberg.org/divested/Divested-WRT" target="_blank" rel="nofollow noopener noreferrer">Codeberg</a> and <a href="https://github.com/divestedcg/Divested-WRT" target="_blank" rel="nofollow noopener noreferrer">GitHub</a> and <a href="https://gitlab.com/divested/Divested-WRT" target="_blank" rel="nofollow noopener noreferrer">GitLab</a>.</li>
+	<li>If you don't have one of these and want one, I recommend the Gl.iNet Flint 2.</li>
+	<li>These are routers/APs, please don't run anything else on them.</li>
+	<li>Donate to me <a href="/donate" target="_blank" rel="nofollow noopener noreferrer">here</a> and to OpenWrt <a href="https://openwrt.org/donate" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
 	<li>Have fun!</li>
 </ul>
 
@@ -137,12 +135,12 @@ If somethings breaks, you get to keep both pieces!
 <h2 id="notices">Notices<a href="#notices">^</a></h2>
 <ul>
 	<li><i>OpenWrt</i> is a registered trademark of the Software Freedom Conservancy.</li>
-	<li>Divested Computing Group is not affiliated with <i>OpenWrt</i> or LINKSYS</li>
-	<li>These builds are not sponsored or endorsed by <i>OpenWrt</i></li>
-	<li>The <i>OpenWrt</i> project website is located at <a href="https://openwrt.org" target="_blank" rel="nofollow noopener noreferrer">https://openwrt.org</a></li>
-	<li>The <i>OpenWrt</i> source code is available <a href="https://git.openwrt.org/openwrt/openwrt.git" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
-	<li>Linux is a registered trademark of Linus Torvalds</li>
-	<li>Linux source code is available <a href="https://kernel.org" target="_blank" rel="nofollow noopener noreferrer">here</a></li>
+	<li>Divested Computing Group is not affiliated with <i>OpenWrt</i> or any hardware vendors.</li>
+	<li>These builds are not sponsored or endorsed by <i>OpenWrt</i>.</li>
+	<li>The <i>OpenWrt</i> project website is located at <a href="https://openwrt.org" target="_blank" rel="nofollow noopener noreferrer">https://openwrt.org</a>.</li>
+	<li>The <i>OpenWrt</i> source code is available <a href="https://git.openwrt.org/openwrt/openwrt" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
+	<li>Linux is a registered trademark of Linus Torvalds.</li>
+	<li>Linux source code is available <a href="https://kernel.org" target="_blank" rel="nofollow noopener noreferrer">here</a>.</li>
 	<li>LINKSYS is a registered trademark of Belkin International, Inc.</li>
 	<li>All product names, logos, and brands are property of their respective owners. Use of these names, logos, and brands does not imply sponsorship or endorsement.</li>
 </ul>

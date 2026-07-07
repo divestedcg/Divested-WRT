@@ -1,3 +1,14 @@
+20260707-00
+- update to 273b186ac34b0f46cb77a78916c8789ceda35187
+  https://github.com/openwrt/openwrt/compare/a4e5c3b8...273b186a
+- complete overhaul & cleanup
+- fresh config & workspace
+- mvebu devices are no longer supported
+  they have served well over the past decade+
+- only supports a small selection of modern 2.5GbE + Wi-Fi 6/7 MTK devices
+  such as the OpenWrt One and the GL.iNet Flint 2
+- UNTESTED: I wanted to get it all compiled before I bought one
+
 20260706-00
 - update to a4e5c3b8f61be4ad80e8787fb4d9ed84fdfa132d
   https://github.com/openwrt/openwrt/compare/304525e7...a4e5c3b8
