@@ -1,13 +1,21 @@
-20260707-00
+These recent builds are UNTESTED!
+I wanted to get it all compiled before I bought one
+
+20260708-00-UNTESTED
+- update to c2a758b16a0de4640e57b95273594c7a84a25bbf
+  https://github.com/openwrt/openwrt/compare/273b186a...c2a758b1
+- adjusted roster (+4, -1)
+
+20260707-00-UNTESTED
 - update to 273b186ac34b0f46cb77a78916c8789ceda35187
   https://github.com/openwrt/openwrt/compare/a4e5c3b8...273b186a
 - complete overhaul & cleanup
 - fresh config & workspace
+- switched from openssl to upstream default of mbedtls
 - mvebu devices are no longer supported
   they have served well over the past decade+
 - only supports a small selection of modern 2.5GbE + Wi-Fi 6/7 MTK devices
   such as the OpenWrt One and the GL.iNet Flint 2
-- UNTESTED: I wanted to get it all compiled before I bought one
 
 20260706-00
 - update to a4e5c3b8f61be4ad80e8787fb4d9ed84fdfa132d
