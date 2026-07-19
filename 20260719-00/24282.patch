@@ -1,0 +1,618 @@
+From 7039fe42ecd0497b08ae6be90b77aaee23d0eae0 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Sat, 18 Jul 2026 14:06:48 -0400
+Subject: [PATCH] kernel: bump 6.18 to 6.18.39
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.39
+
+Removed upstreamed:
+  backport-6.18/704-v7.2-netfilter-flowtable-fix-offloaded-ct-timeout-never-b.patch[1]
+
+All other patches automatically rebased via update_kernel.sh
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.39&id=81a5971cbe18b474b49c651e32f2194b2fb171fe
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ ...hci_fixup_endpoint-for-interval-adju.patch |  2 +-
+ ...7-Support-for-the-Sony-IMX477-sensor.patch |  2 +-
+ ...9-Support-for-the-Sony-IMX519-sensor.patch |  2 +-
+ ...vicetree-Add-documentation-for-imx37.patch |  2 +-
+ ...a-i2c-Add-IMX708-CMOS-sensor-binding.patch |  2 +-
+ ...a-i2c-Replace-IMX708-sensor-binding-.patch |  2 +-
+ ...ndings-i2c-Add-Rohm-BU64754-bindings.patch |  2 +-
+ ...-bindings-Add-RPI-RP2040-GPIO-Bridge.patch |  2 +-
+ ...river-for-the-RPI-RP2040-GPIO-bridge.patch |  2 +-
+ ...edia-dt-bindings-i2c-Add-Sony-IMX500.patch |  2 +-
+ ...2c-Add-driver-for-Sony-IMX500-sensor.patch |  2 +-
+ ...Add-Raspberry-Pi-HEVC-decoder-driver.patch |  2 +-
+ ...-around-VL805-firmware-ASPM-meddling.patch |  2 +-
+ ...-to-Intel-scheme-for-calculating-U1-.patch |  4 +-
+ ...tform-Add-Raspberry-Pi-HEVC-decoder-.patch |  2 +-
+ ...Add-Raspberry-Pi-HEVC-decoder-driver.patch |  2 +-
+ ...pcie-add-en7528-pcie-and-phy-support.patch |  6 +-
+ ...-sched-Export-mq-functions-for-reuse.patch |  2 +-
+ ...ble-fix-offloaded-ct-timeout-never-b.patch | 76 -------------------
+ ...onvert-to-common-field_-get-prep-hel.patch |  2 +-
+ .../generic/hack-6.18/253-ksmbd-config.patch  |  2 +-
+ target/linux/generic/kernel-6.18              |  4 +-
+ ...add-uImage.FIT-subimage-block-driver.patch |  2 +-
+ ...-add-driver-for-MediaTek-USXGMII-PCS.patch |  2 +-
+ .../810-pci_disable_common_quirks.patch       |  8 +-
+ ...introduce-the-Qualcomm-IPQESS-driver.patch |  2 +-
+ ...dsa-add-out-of-band-tagging-protocol.patch |  2 +-
+ ...ck-compatible-for-ipq4019-Lantiq-DSL.patch |  2 +-
+ ...diatek-fix-clearing-interrupt-status.patch |  2 +-
+ ...ediatek-add-support-for-coherent-DMA.patch |  2 +-
+ ...30-01-i2c-add-init_recovery-callback.patch |  2 +-
+ ...d-maintainer-for-Qualcomm-PPE-driver.patch |  2 +-
+ ...pd-add-Realtek-Broadcom-PSE-MCU-core.patch |  2 +-
+ ...arfive-Add-JH7100-audio-reset-driver.patch |  2 +-
+ 34 files changed, 40 insertions(+), 116 deletions(-)
+ delete mode 100644 target/linux/generic/backport-6.18/704-v7.2-netfilter-flowtable-fix-offloaded-ct-timeout-never-b.patch
+
+diff --git a/target/linux/bcm27xx/patches-6.18/0113-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch b/target/linux/bcm27xx/patches-6.18/0113-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+index f37fe39f69d184..f6da7f157b1bee 100644
+--- a/target/linux/bcm27xx/patches-6.18/0113-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
++++ b/target/linux/bcm27xx/patches-6.18/0113-xhci-implement-xhci_fixup_endpoint-for-interval-adju.patch
+@@ -124,7 +124,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.org>
+   * non-error returns are a promise to giveback() the urb later
+   * we drop ownership so next owner (or urb unlink) can get it
+   */
+-@@ -5591,6 +5694,7 @@ static const struct hc_driver xhci_hc_dr
++@@ -5600,6 +5703,7 @@ static const struct hc_driver xhci_hc_dr
+  	.endpoint_reset =	xhci_endpoint_reset,
+  	.check_bandwidth =	xhci_check_bandwidth,
+  	.reset_bandwidth =	xhci_reset_bandwidth,
+diff --git a/target/linux/bcm27xx/patches-6.18/0124-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch b/target/linux/bcm27xx/patches-6.18/0124-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+index 5a6b227a444849..c08a081af80ba1 100644
+--- a/target/linux/bcm27xx/patches-6.18/0124-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.18/0124-media-i2c-imx477-Support-for-the-Sony-IMX477-sensor.patch
+@@ -612,7 +612,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24024,6 +24024,14 @@ T:	git git://linuxtv.org/media.git
++@@ -24023,6 +24023,14 @@ T:	git git://linuxtv.org/media.git
+  F:	Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
+  F:	drivers/media/i2c/imx415.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0135-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch b/target/linux/bcm27xx/patches-6.18/0135-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+index fb51e1d4a40ba5..9b1be1edea140b 100644
+--- a/target/linux/bcm27xx/patches-6.18/0135-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.18/0135-media-i2c-imx519-Support-for-the-Sony-IMX519-sensor.patch
+@@ -193,7 +193,7 @@ media: i2c: imx519: Squash fixes
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24032,6 +24032,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -24031,6 +24031,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/imx477.yaml
+  F:	drivers/media/i2c/imx477.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0136-Documentation-devicetree-Add-documentation-for-imx37.patch b/target/linux/bcm27xx/patches-6.18/0136-Documentation-devicetree-Add-documentation-for-imx37.patch
+index f1a46f40bd3241..27e6e118913b13 100644
+--- a/target/linux/bcm27xx/patches-6.18/0136-Documentation-devicetree-Add-documentation-for-imx37.patch
++++ b/target/linux/bcm27xx/patches-6.18/0136-Documentation-devicetree-Add-documentation-for-imx37.patch
+@@ -132,7 +132,7 @@ Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24029,6 +24029,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -24028,6 +24028,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-6.18/0262-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch b/target/linux/bcm27xx/patches-6.18/0262-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
+index c6fedcccb59637..5d31bb5d5eec69 100644
+--- a/target/linux/bcm27xx/patches-6.18/0262-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
++++ b/target/linux/bcm27xx/patches-6.18/0262-dtbindings-media-i2c-Add-IMX708-CMOS-sensor-binding.patch
+@@ -137,7 +137,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24073,6 +24073,14 @@ T:	git git://linuxtv.org/media_tree.git
++@@ -24072,6 +24072,14 @@ T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/imx519.yaml
+  F:	drivers/media/i2c/imx519.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0263-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch b/target/linux/bcm27xx/patches-6.18/0263-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
+index 3f18e38086e2cb..9ae7554d919af8 100644
+--- a/target/linux/bcm27xx/patches-6.18/0263-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
++++ b/target/linux/bcm27xx/patches-6.18/0263-dt-bindings-media-i2c-Replace-IMX708-sensor-binding-.patch
+@@ -271,7 +271,7 @@ Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24078,7 +24078,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
++@@ -24077,7 +24077,7 @@ M:	Raspberry Pi Kernel Maintenance <kern
+  L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+diff --git a/target/linux/bcm27xx/patches-6.18/0336-media-dt-bindings-i2c-Add-Rohm-BU64754-bindings.patch b/target/linux/bcm27xx/patches-6.18/0336-media-dt-bindings-i2c-Add-Rohm-BU64754-bindings.patch
+index 8cdb7595a4754b..ccd152141b1782 100644
+--- a/target/linux/bcm27xx/patches-6.18/0336-media-dt-bindings-i2c-Add-Rohm-BU64754-bindings.patch
++++ b/target/linux/bcm27xx/patches-6.18/0336-media-dt-bindings-i2c-Add-Rohm-BU64754-bindings.patch
+@@ -67,7 +67,7 @@ Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+ +...
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -22407,6 +22407,13 @@ L:	linux-iio@vger.kernel.org
++@@ -22406,6 +22406,13 @@ L:	linux-iio@vger.kernel.org
+  S:	Supported
+  F:	drivers/iio/light/rohm-bu27034.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0384-spi-dt-bindings-Add-RPI-RP2040-GPIO-Bridge.patch b/target/linux/bcm27xx/patches-6.18/0384-spi-dt-bindings-Add-RPI-RP2040-GPIO-Bridge.patch
+index 9a6728859c6952..fd6c246c9ed4e8 100644
+--- a/target/linux/bcm27xx/patches-6.18/0384-spi-dt-bindings-Add-RPI-RP2040-GPIO-Bridge.patch
++++ b/target/linux/bcm27xx/patches-6.18/0384-spi-dt-bindings-Add-RPI-RP2040-GPIO-Bridge.patch
+@@ -94,7 +94,7 @@ Signed-off-by: Richard Oliver <richard.oliver@raspberrypi.com>
+ +
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21522,6 +21522,11 @@ L:	linux-edac@vger.kernel.org
++@@ -21521,6 +21521,11 @@ L:	linux-edac@vger.kernel.org
+  S:	Maintained
+  F:	drivers/ras/amd/fmpm.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0385-spi-Add-a-driver-for-the-RPI-RP2040-GPIO-bridge.patch b/target/linux/bcm27xx/patches-6.18/0385-spi-Add-a-driver-for-the-RPI-RP2040-GPIO-bridge.patch
+index 0718a00a302972..8f15e3f929ffbb 100644
+--- a/target/linux/bcm27xx/patches-6.18/0385-spi-Add-a-driver-for-the-RPI-RP2040-GPIO-bridge.patch
++++ b/target/linux/bcm27xx/patches-6.18/0385-spi-Add-a-driver-for-the-RPI-RP2040-GPIO-bridge.patch
+@@ -58,7 +58,7 @@ Signed-off-by: Richard Oliver <richard.oliver@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21526,6 +21526,7 @@ RASPBERRY PI RP2040 GPIO BRIDGE DRIVER
++@@ -21525,6 +21525,7 @@ RASPBERRY PI RP2040 GPIO BRIDGE DRIVER
+  M:	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
+  S:	Maintained
+  F:	Documentation/devicetree/bindings/spi/raspberrypi,rp2040-gpio-bridge.yaml
+diff --git a/target/linux/bcm27xx/patches-6.18/0401-media-dt-bindings-i2c-Add-Sony-IMX500.patch b/target/linux/bcm27xx/patches-6.18/0401-media-dt-bindings-i2c-Add-Sony-IMX500.patch
+index 0bdd6ba2229733..5c46b32de57250 100644
+--- a/target/linux/bcm27xx/patches-6.18/0401-media-dt-bindings-i2c-Add-Sony-IMX500.patch
++++ b/target/linux/bcm27xx/patches-6.18/0401-media-dt-bindings-i2c-Add-Sony-IMX500.patch
+@@ -150,7 +150,7 @@ Signed-off-by: Richard Oliver <richard.oliver@raspberrypi.com>
+ +
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24078,6 +24078,13 @@ F:	Documentation/devicetree/bindings/med
++@@ -24077,6 +24077,13 @@ F:	Documentation/devicetree/bindings/med
+  F:	Documentation/devicetree/bindings/media/i2c/imx477.yaml
+  F:	drivers/media/i2c/imx477.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0402-media-i2c-Add-driver-for-Sony-IMX500-sensor.patch b/target/linux/bcm27xx/patches-6.18/0402-media-i2c-Add-driver-for-Sony-IMX500-sensor.patch
+index 8633567854cd2b..427fad0add323f 100644
+--- a/target/linux/bcm27xx/patches-6.18/0402-media-i2c-Add-driver-for-Sony-IMX500-sensor.patch
++++ b/target/linux/bcm27xx/patches-6.18/0402-media-i2c-Add-driver-for-Sony-IMX500-sensor.patch
+@@ -120,7 +120,7 @@ Signed-off-by: Richard Oliver <richard.oliver@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24084,6 +24084,7 @@ L:	linux-media@vger.kernel.org
++@@ -24083,6 +24083,7 @@ L:	linux-media@vger.kernel.org
+  S:	Maintained
+  T:	git git://linuxtv.org/media_tree.git
+  F:	Documentation/devicetree/bindings/media/i2c/sony,imx500.yaml
+diff --git a/target/linux/bcm27xx/patches-6.18/0524-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch b/target/linux/bcm27xx/patches-6.18/0524-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
+index 97cfd96e3fd33a..662d27d3f9c6f8 100644
+--- a/target/linux/bcm27xx/patches-6.18/0524-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
++++ b/target/linux/bcm27xx/patches-6.18/0524-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
+@@ -51,7 +51,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21528,6 +21528,16 @@ S:	Maintained
++@@ -21527,6 +21527,16 @@ S:	Maintained
+  F:	Documentation/devicetree/bindings/spi/raspberrypi,rp2040-gpio-bridge.yaml
+  F:	drivers/spi/spi-rp2040-gpio-bridge.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch b/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
+index e3d996dd6ce95b..2a4afc627a1bea 100644
+--- a/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
++++ b/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/pci/quirks.c
+ +++ b/drivers/pci/quirks.c
+-@@ -6293,6 +6293,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
++@@ -6278,6 +6278,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+diff --git a/target/linux/bcm27xx/patches-6.18/0542-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch b/target/linux/bcm27xx/patches-6.18/0542-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
+index 5579e2cb30ee79..04be9f94c7bd09 100644
+--- a/target/linux/bcm27xx/patches-6.18/0542-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
++++ b/target/linux/bcm27xx/patches-6.18/0542-usb-xhci-default-to-Intel-scheme-for-calculating-U1-.patch
+@@ -40,7 +40,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static bool td_on_ring(struct xhci_td *td, struct xhci_ring *ring)
+  {
+  	struct xhci_segment *seg;
+-@@ -4991,7 +4995,7 @@ static u16 xhci_calculate_u1_timeout(str
++@@ -5000,7 +5004,7 @@ static u16 xhci_calculate_u1_timeout(str
+  		}
+  	}
+  
+@@ -49,7 +49,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  		timeout_ns = xhci_calculate_intel_u1_timeout(udev, desc);
+  	else
+  		timeout_ns = udev->u1_params.sel;
+-@@ -5055,7 +5059,7 @@ static u16 xhci_calculate_u2_timeout(str
++@@ -5064,7 +5068,7 @@ static u16 xhci_calculate_u2_timeout(str
+  		}
+  	}
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0625-Revert-media-platform-Add-Raspberry-Pi-HEVC-decoder-.patch b/target/linux/bcm27xx/patches-6.18/0625-Revert-media-platform-Add-Raspberry-Pi-HEVC-decoder-.patch
+index fb6efe12b8ef49..50ca560625256c 100644
+--- a/target/linux/bcm27xx/patches-6.18/0625-Revert-media-platform-Add-Raspberry-Pi-HEVC-decoder-.patch
++++ b/target/linux/bcm27xx/patches-6.18/0625-Revert-media-platform-Add-Raspberry-Pi-HEVC-decoder-.patch
+@@ -33,7 +33,7 @@ This reverts commit 6bd54195d0b29330576542c8128e7a5c58d6bcdd.
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21528,16 +21528,6 @@ S:	Maintained
++@@ -21527,16 +21527,6 @@ S:	Maintained
+  F:	Documentation/devicetree/bindings/spi/raspberrypi,rp2040-gpio-bridge.yaml
+  F:	drivers/spi/spi-rp2040-gpio-bridge.c
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0626-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch b/target/linux/bcm27xx/patches-6.18/0626-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
+index be37fdb256b4c4..890d06c0bc2685 100644
+--- a/target/linux/bcm27xx/patches-6.18/0626-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
++++ b/target/linux/bcm27xx/patches-6.18/0626-media-platform-Add-Raspberry-Pi-HEVC-decoder-driver.patch
+@@ -36,7 +36,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21528,6 +21528,16 @@ S:	Maintained
++@@ -21527,6 +21527,16 @@ S:	Maintained
+  F:	Documentation/devicetree/bindings/spi/raspberrypi,rp2040-gpio-bridge.yaml
+  F:	drivers/spi/spi-rp2040-gpio-bridge.c
+  
+diff --git a/target/linux/econet/patches-6.18/912-pcie-add-en7528-pcie-and-phy-support.patch b/target/linux/econet/patches-6.18/912-pcie-add-en7528-pcie-and-phy-support.patch
+index 0a320436cf7434..63e12f34828893 100644
+--- a/target/linux/econet/patches-6.18/912-pcie-add-en7528-pcie-and-phy-support.patch
++++ b/target/linux/econet/patches-6.18/912-pcie-add-en7528-pcie-and-phy-support.patch
+@@ -55,7 +55,7 @@
+  #define PCIE_AHB_TRANS_BASE0_L	0x438
+  #define PCIE_AHB_TRANS_BASE0_H	0x43c
+  #define AHB2PCIE_SIZE(x)	((x) & GENMASK(4, 0))
+-@@ -746,6 +752,86 @@ static int mtk_pcie_startup_port_v2(stru
++@@ -750,6 +756,86 @@ static int mtk_pcie_startup_port_v2(stru
+  	return 0;
+  }
+  
+@@ -142,7 +142,7 @@
+  static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
+  				      unsigned int devfn, int where)
+  {
+-@@ -1107,6 +1193,20 @@ static int mtk_pcie_probe(struct platfor
++@@ -1120,6 +1206,20 @@ static int mtk_pcie_probe(struct platfor
+  	if (err)
+  		goto put_resources;
+  
+@@ -163,7 +163,7 @@
+  	return 0;
+  
+  put_resources:
+-@@ -1216,12 +1316,19 @@ static const struct mtk_pcie_soc mtk_pci
++@@ -1233,12 +1333,19 @@ static const struct mtk_pcie_soc mtk_pci
+  	.setup_irq = mtk_pcie_setup_irq,
+  };
+  
+diff --git a/target/linux/generic/backport-6.18/700-01-v7.0-net-sched-Export-mq-functions-for-reuse.patch b/target/linux/generic/backport-6.18/700-01-v7.0-net-sched-Export-mq-functions-for-reuse.patch
+index 4ea95e19b7f3cb..1fa1b97d34c7fa 100644
+--- a/target/linux/generic/backport-6.18/700-01-v7.0-net-sched-Export-mq-functions-for-reuse.patch
++++ b/target/linux/generic/backport-6.18/700-01-v7.0-net-sched-Export-mq-functions-for-reuse.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -25056,6 +25056,7 @@ L:	netdev@vger.kernel.org
++@@ -25055,6 +25055,7 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	include/net/pkt_cls.h
+  F:	include/net/pkt_sched.h
+diff --git a/target/linux/generic/backport-6.18/704-v7.2-netfilter-flowtable-fix-offloaded-ct-timeout-never-b.patch b/target/linux/generic/backport-6.18/704-v7.2-netfilter-flowtable-fix-offloaded-ct-timeout-never-b.patch
+deleted file mode 100644
+index 22cd634071ef0e..00000000000000
+--- a/target/linux/generic/backport-6.18/704-v7.2-netfilter-flowtable-fix-offloaded-ct-timeout-never-b.patch
++++ /dev/null
+@@ -1,76 +0,0 @@
+-From 53b3e60edb674b442b2b3bbdba484667b0f47a5d Mon Sep 17 00:00:00 2001
+-From: Adrian Bente <adibente@gmail.com>
+-Date: Thu, 28 May 2026 10:08:51 +0300
+-Subject: [PATCH] netfilter: flowtable: fix offloaded ct timeout never being extended
+-
+-OpenWrt has recently migrated many platforms to kernel 6.18. On the
+-MediaTek platform, which supports hardware network offloading, WiFi
+-connections accelerated via the WED path were observed to drop after
+-roughly 300 seconds.
+-
+-After several debugging sessions, assisted by the Claude LLM, the
+-problem was narrowed down as follows:
+-
+-nf_flow_table_extend_ct_timeout() extends ct->timeout for offloaded
+-flows using:
+-
+-	cmpxchg(&ct->timeout, expires, new_timeout);
+-
+-'expires' comes from nf_ct_expires(ct) and is a relative value, while
+-ct->timeout holds an absolute timestamp. The two are never equal, so
+-the cmpxchg always fails and the timeout is never extended.
+-
+-This goes unnoticed for most flows, but a long-lived hardware (WED)
+-offloaded flow on MediaTek MT7986 eventually has ct->timeout decay to
+-zero, the conntrack entry is reaped and the connection breaks.
+-
+-Open-code the relative value from a single READ_ONCE(ct->timeout)
+-snapshot and compare against that same absolute snapshot in the
+-cmpxchg, so the timeout extension actually takes effect while the
+-datapath remains authoritative if it updates ct->timeout concurrently.
+-
+-Fixes: 03428ca5cee9 ("netfilter: conntrack: rework offload nf_conn timeout extension logic")
+-Cc: stable@vger.kernel.org
+-Suggested-by: Florian Westphal <fw@strlen.de>
+-Signed-off-by: Adrian Bente <adibente@gmail.com>
+-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+----
+- net/netfilter/nf_flow_table_core.c | 13 +++++++++----
+- 1 file changed, 9 insertions(+), 4 deletions(-)
+-
+---- a/net/netfilter/nf_flow_table_core.c
+-+++ b/net/netfilter/nf_flow_table_core.c
+-@@ -500,8 +500,13 @@ static u32 nf_flow_table_tcp_timeout(con
+-  */
+- static void nf_flow_table_extend_ct_timeout(struct nf_conn *ct)
+- {
+--	static const u32 min_timeout = 5 * 60 * HZ;
+--	u32 expires = nf_ct_expires(ct);
+-+	static const s32 min_timeout = 5 * 60 * HZ;
+-+	u32 ct_timeout = READ_ONCE(ct->timeout);
+-+	s32 expires;
+-+
+-+	expires = ct_timeout - nfct_time_stamp;
+-+	if (expires <= 0) /* already expired */
+-+		return;
+- 
+- 	/* normal case: large enough timeout, nothing to do. */
+- 	if (likely(expires >= min_timeout))
+-@@ -519,7 +524,7 @@ static void nf_flow_table_extend_ct_time
+- 	if (nf_ct_is_confirmed(ct) &&
+- 	    test_bit(IPS_OFFLOAD_BIT, &ct->status)) {
+- 		u8 l4proto = nf_ct_protonum(ct);
+--		u32 new_timeout = true;
+-+		u32 new_timeout = 1;
+- 
+- 		switch (l4proto) {
+- 		case IPPROTO_UDP:
+-@@ -544,7 +549,7 @@ static void nf_flow_table_extend_ct_time
+- 		 */
+- 		if (new_timeout) {
+- 			new_timeout += nfct_time_stamp;
+--			cmpxchg(&ct->timeout, expires, new_timeout);
+-+			cmpxchg(&ct->timeout, ct_timeout, new_timeout);
+- 		}
+- 	}
+- 
+diff --git a/target/linux/generic/backport-6.18/822-v6.19-ALSA-usb-audio-Convert-to-common-field_-get-prep-hel.patch b/target/linux/generic/backport-6.18/822-v6.19-ALSA-usb-audio-Convert-to-common-field_-get-prep-hel.patch
+index 72aa514aaf8ed5..e32ab18e01f9ec 100644
+--- a/target/linux/generic/backport-6.18/822-v6.19-ALSA-usb-audio-Convert-to-common-field_-get-prep-hel.patch
++++ b/target/linux/generic/backport-6.18/822-v6.19-ALSA-usb-audio-Convert-to-common-field_-get-prep-hel.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+ 
+ --- a/sound/usb/mixer_quirks.c
+ +++ b/sound/usb/mixer_quirks.c
+-@@ -3308,10 +3308,6 @@ static int snd_bbfpro_controls_create(st
++@@ -3325,10 +3325,6 @@ static int snd_bbfpro_controls_create(st
+  #define RME_DIGIFACE_REGISTER(reg, mask) (((reg) << 16) | (mask))
+  #define RME_DIGIFACE_INVERT BIT(31)
+  
+diff --git a/target/linux/generic/hack-6.18/253-ksmbd-config.patch b/target/linux/generic/hack-6.18/253-ksmbd-config.patch
+index 724a461e2071f1..29fc995292c53f 100644
+--- a/target/linux/generic/hack-6.18/253-ksmbd-config.patch
++++ b/target/linux/generic/hack-6.18/253-ksmbd-config.patch
+@@ -10,7 +10,7 @@ Subject: [PATCH] Kconfig: add tristate for OID and ASNI string
+ 
+ --- a/init/Kconfig
+ +++ b/init/Kconfig
+-@@ -2191,7 +2191,7 @@ config PADATA
++@@ -2192,7 +2192,7 @@ config PADATA
+  	bool
+  
+  config ASN1
+diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
+index 4c51e5d02ca540..eba60731b26961 100644
+--- a/target/linux/generic/kernel-6.18
++++ b/target/linux/generic/kernel-6.18
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.18 = .38
+-LINUX_KERNEL_HASH-6.18.38 = ac26e508abd56e9f8b89872b6e10c49fc823bcc70d8068a5d8504c1a7c4ff045
++LINUX_VERSION-6.18 = .39
++LINUX_KERNEL_HASH-6.18.39 = a7a7e3d2ae9d95e74197223a8d4eb5f6be7aac21b6e6de27e9685d001c1f8cb0
+diff --git a/target/linux/generic/pending-6.18/510-block-add-uImage.FIT-subimage-block-driver.patch b/target/linux/generic/pending-6.18/510-block-add-uImage.FIT-subimage-block-driver.patch
+index 9d7d2cd7db5a9c..bafec18a6fb381 100644
+--- a/target/linux/generic/pending-6.18/510-block-add-uImage.FIT-subimage-block-driver.patch
++++ b/target/linux/generic/pending-6.18/510-block-add-uImage.FIT-subimage-block-driver.patch
+@@ -36,7 +36,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -26274,6 +26274,12 @@ F:	Documentation/filesystems/ubifs-authe
++@@ -26273,6 +26273,12 @@ F:	Documentation/filesystems/ubifs-authe
+  F:	Documentation/filesystems/ubifs.rst
+  F:	fs/ubifs/
+  
+diff --git a/target/linux/generic/pending-6.18/739-05-net-pcs-add-driver-for-MediaTek-USXGMII-PCS.patch b/target/linux/generic/pending-6.18/739-05-net-pcs-add-driver-for-MediaTek-USXGMII-PCS.patch
+index 385c5c924ebf5b..028ece1c43ca03 100644
+--- a/target/linux/generic/pending-6.18/739-05-net-pcs-add-driver-for-MediaTek-USXGMII-PCS.patch
++++ b/target/linux/generic/pending-6.18/739-05-net-pcs-add-driver-for-MediaTek-USXGMII-PCS.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -15790,7 +15790,9 @@ M:	Daniel Golle <daniel@makrotopia.org>
++@@ -15789,7 +15789,9 @@ M:	Daniel Golle <daniel@makrotopia.org>
+  L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	drivers/net/pcs/pcs-mtk-lynxi.c
+diff --git a/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch b/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
+index c95d0df015e5a5..0427701cade9d8 100644
+--- a/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
++++ b/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  
+ --- a/drivers/pci/quirks.c
+ +++ b/drivers/pci/quirks.c
+-@@ -316,6 +316,7 @@ static void quirk_mmio_always_on(struct
++@@ -301,6 +301,7 @@ static void quirk_mmio_always_on(struct
+  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
+  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
+  
+@@ -33,7 +33,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * The Mellanox Tavor device gives false positive parity errors.  Disable
+   * parity error reporting.
+-@@ -3519,6 +3520,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
++@@ -3504,6 +3505,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x65f9, quirk_intel_mc_errata);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x65fa, quirk_intel_mc_errata);
+  
+@@ -42,7 +42,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * Ivytown NTB BAR sizes are misreported by the hardware due to an erratum.
+   * To work around this, query the size it should be configured to by the
+-@@ -3544,6 +3547,8 @@ static void quirk_intel_ntb(struct pci_d
++@@ -3529,6 +3532,8 @@ static void quirk_intel_ntb(struct pci_d
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0e08, quirk_intel_ntb);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0e0d, quirk_intel_ntb);
+  
+@@ -51,7 +51,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * Some BIOS implementations leave the Intel GPU interrupts enabled, even
+   * though no one is handling them (e.g., if the i915 driver is never
+-@@ -3582,6 +3587,8 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
++@@ -3567,6 +3572,8 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
+  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x010a, disable_igfx_irq);
+  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0152, disable_igfx_irq);
+  
+diff --git a/target/linux/ipq40xx/patches-6.18/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch b/target/linux/ipq40xx/patches-6.18/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
+index caeff6c646084a..46fa54200471d0 100644
+--- a/target/linux/ipq40xx/patches-6.18/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
++++ b/target/linux/ipq40xx/patches-6.18/700-net-ipqess-introduce-the-Qualcomm-IPQESS-driver.patch
+@@ -24,7 +24,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21140,6 +21140,13 @@ L:	netdev@vger.kernel.org
++@@ -21139,6 +21139,13 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	drivers/net/ethernet/qualcomm/emac/
+  
+diff --git a/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
+index de5435c590c465..8e59a3885eeb4f 100644
+--- a/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -64,7 +64,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+  
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21146,6 +21146,7 @@ L:	netdev@vger.kernel.org
++@@ -21145,6 +21145,7 @@ L:	netdev@vger.kernel.org
+  S:	Maintained
+  F:	Documentation/devicetree/bindings/net/qcom,ipq4019-ess-edma.yaml
+  F:	drivers/net/ethernet/qualcomm/ipqess/
+diff --git a/target/linux/ipq40xx/patches-6.18/900-PCI-qcom-add-hack-compatible-for-ipq4019-Lantiq-DSL.patch b/target/linux/ipq40xx/patches-6.18/900-PCI-qcom-add-hack-compatible-for-ipq4019-Lantiq-DSL.patch
+index 42a010b8839102..6a8fb997d57073 100644
+--- a/target/linux/ipq40xx/patches-6.18/900-PCI-qcom-add-hack-compatible-for-ipq4019-Lantiq-DSL.patch
++++ b/target/linux/ipq40xx/patches-6.18/900-PCI-qcom-add-hack-compatible-for-ipq4019-Lantiq-DSL.patch
+@@ -156,7 +156,7 @@ Signed-off-by: Florian Maurer <f.maurer@outlook.com>
+  static const struct qcom_pcie_cfg cfg_2_7_0 = {
+  	.ops = &ops_2_7_0,
+  };
+-@@ -2016,6 +2107,7 @@ static const struct of_device_id qcom_pc
++@@ -2022,6 +2113,7 @@ static const struct of_device_id qcom_pc
+  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+diff --git a/target/linux/mediatek/patches-6.18/610-pcie-mediatek-fix-clearing-interrupt-status.patch b/target/linux/mediatek/patches-6.18/610-pcie-mediatek-fix-clearing-interrupt-status.patch
+index ab4ce2dc9219c2..e31e02d2c294e1 100644
+--- a/target/linux/mediatek/patches-6.18/610-pcie-mediatek-fix-clearing-interrupt-status.patch
++++ b/target/linux/mediatek/patches-6.18/610-pcie-mediatek-fix-clearing-interrupt-status.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/drivers/pci/controller/pcie-mediatek.c
+ +++ b/drivers/pci/controller/pcie-mediatek.c
+-@@ -597,9 +597,9 @@ static void mtk_pcie_intr_handler(struct
++@@ -601,9 +601,9 @@ static void mtk_pcie_intr_handler(struct
+  	if (status & INTX_MASK) {
+  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+  			/* Clear the INTx */
+diff --git a/target/linux/mediatek/patches-6.18/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch b/target/linux/mediatek/patches-6.18/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+index fa3d2ffe2aebf1..1272a9ffbd7ad7 100644
+--- a/target/linux/mediatek/patches-6.18/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
++++ b/target/linux/mediatek/patches-6.18/710-pci-pcie-mediatek-add-support-for-coherent-DMA.patch
+@@ -61,7 +61,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  struct mtk_pcie_port;
+  
+  /**
+-@@ -1043,6 +1049,27 @@ static int mtk_pcie_setup(struct mtk_pci
++@@ -1051,6 +1057,27 @@ static int mtk_pcie_setup(struct mtk_pci
+  	struct mtk_pcie_port *port, *tmp;
+  	int err, slot;
+  
+diff --git a/target/linux/mvebu/patches-6.18/830-01-i2c-add-init_recovery-callback.patch b/target/linux/mvebu/patches-6.18/830-01-i2c-add-init_recovery-callback.patch
+index dc25a91bf63a6a..cbf22f3b3e7fa8 100644
+--- a/target/linux/mvebu/patches-6.18/830-01-i2c-add-init_recovery-callback.patch
++++ b/target/linux/mvebu/patches-6.18/830-01-i2c-add-init_recovery-callback.patch
+@@ -147,7 +147,7 @@ Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ 
+ --- a/drivers/i2c/i2c-core-base.c
+ +++ b/drivers/i2c/i2c-core-base.c
+-@@ -427,12 +427,18 @@ static int i2c_init_recovery(struct i2c_
++@@ -428,12 +428,18 @@ static int i2c_init_recovery(struct i2c_
+  	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+  	bool is_error_level = true;
+  	char *err_str;
+diff --git a/target/linux/qualcommbe/patches-6.18/0325-MAINTAINERS-Add-maintainer-for-Qualcomm-PPE-driver.patch b/target/linux/qualcommbe/patches-6.18/0325-MAINTAINERS-Add-maintainer-for-Qualcomm-PPE-driver.patch
+index edda782427449f..a3c02429b660ea 100644
+--- a/target/linux/qualcommbe/patches-6.18/0325-MAINTAINERS-Add-maintainer-for-Qualcomm-PPE-driver.patch
++++ b/target/linux/qualcommbe/patches-6.18/0325-MAINTAINERS-Add-maintainer-for-Qualcomm-PPE-driver.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21240,6 +21240,15 @@ S:	Maintained
++@@ -21239,6 +21239,15 @@ S:	Maintained
+  F:	Documentation/devicetree/bindings/regulator/vqmmc-ipq4019-regulator.yaml
+  F:	drivers/regulator/vqmmc-ipq4019-regulator.c
+  
+diff --git a/target/linux/realtek/patches-6.18/816-01-net-pse-pd-add-Realtek-Broadcom-PSE-MCU-core.patch b/target/linux/realtek/patches-6.18/816-01-net-pse-pd-add-Realtek-Broadcom-PSE-MCU-core.patch
+index 077fa5939961ad..56742693e951a5 100644
+--- a/target/linux/realtek/patches-6.18/816-01-net-pse-pd-add-Realtek-Broadcom-PSE-MCU-core.patch
++++ b/target/linux/realtek/patches-6.18/816-01-net-pse-pd-add-Realtek-Broadcom-PSE-MCU-core.patch
+@@ -42,7 +42,7 @@ Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -21668,6 +21668,13 @@ S:	Maintained
++@@ -21667,6 +21667,13 @@ S:	Maintained
+  F:	include/sound/rt*.h
+  F:	sound/soc/codecs/rt*
+  
+diff --git a/target/linux/starfive/patches-6.18/1007-reset-starfive-Add-JH7100-audio-reset-driver.patch b/target/linux/starfive/patches-6.18/1007-reset-starfive-Add-JH7100-audio-reset-driver.patch
+index 52a169a2618e84..8eb1472c56caac 100644
+--- a/target/linux/starfive/patches-6.18/1007-reset-starfive-Add-JH7100-audio-reset-driver.patch
++++ b/target/linux/starfive/patches-6.18/1007-reset-starfive-Add-JH7100-audio-reset-driver.patch
+@@ -20,7 +20,7 @@ Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+ 
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -24566,7 +24566,7 @@ STARFIVE JH71X0 RESET CONTROLLER DRIVERS
++@@ -24565,7 +24565,7 @@ STARFIVE JH71X0 RESET CONTROLLER DRIVERS
+  M:	Emil Renner Berthing <kernel@esmil.dk>
+  M:	Hal Feng <hal.feng@starfivetech.com>
+  S:	Maintained

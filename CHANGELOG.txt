@@ -1,5 +1,17 @@
-These recent builds are UNTESTED!
+These recent mtk builds are UNTESTED!
 I wanted to get it all compiled before I bought one
+
+20260719-00-UNTESTED
+- update to b10eb807c84d2c1b0278cbad1f8068756684204e
+  https://github.com/openwrt/openwrt/compare/c2a758b1...b10eb807
+- [cherrypick] #24282: update to kernel 6.18.39 (security and bug fixes)
+
+20260719-00-mvebu
+- update to b10eb807c84d2c1b0278cbad1f8068756684204e
+  https://github.com/openwrt/openwrt/compare/a4e5c3b8...b10eb807
+- [cherrypick] #24282: update to kernel 6.18.39 (security and bug fixes)
+- my flint still hasn't arrived, so here is an on schedule mvebu update
+- config and patches matching dwrt/4447b63 aka 20260706-00
 
 20260708-00-UNTESTED
 - update to c2a758b16a0de4640e57b95273594c7a84a25bbf
@@ -12,10 +24,14 @@ I wanted to get it all compiled before I bought one
 - complete overhaul & cleanup
 - fresh config & workspace
 - switched from openssl to upstream default of mbedtls
-- mvebu devices are no longer supported
-  they have served well over the past decade+
 - only supports a small selection of modern 2.5GbE + Wi-Fi 6/7 MTK devices
   such as the OpenWrt One and the GL.iNet Flint 2
+- mvebu devices are no longer supported by D-WRT
+  they have served well over the past decade+
+- for the mvebu users: I hope you enjoyed D-WRT over the years
+  and consider continuing the journey with this new platform
+- no announcement on forum due to:
+  https://divested.dev/pages/blog-2026-01-14-leaving_forums
 
 20260706-00
 - update to a4e5c3b8f61be4ad80e8787fb4d9ed84fdfa132d
