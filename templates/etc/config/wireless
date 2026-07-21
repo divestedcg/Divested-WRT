@@ -2,12 +2,11 @@ config wifi-device 'radio0'
 	option type 'mac80211'
 	option channel '11' #1, 6, or 11
 	option hwmode '11g'
-	option path 'soc/soc:pcie/pci0000:00/0000:00:02.0/0000:02:00.0' #shelby and caiman
-	#option path 'soc/soc:pcie@82000000/pci0000:00/0000:00:02.0/0000:02:00.0' #mamba
-	option htmode 'HT20'
+	option path 'platform/soc/18000000.wifi'
+	option htmode 'HE20'
 	option country 'US'
 	option txpower '30'
-	option cell_density '0'
+	option cell_density '2'
 	list hostapd_options 'ssid_protection=1'
 
 config wifi-iface '24Example'
@@ -23,18 +22,16 @@ config wifi-iface '24Example'
 	option isolate '0'
 	option bridge_isolate '0'
 	option macaddr 'random'
-	option proxy_arp '1'
 
 config wifi-device 'radio1'
 	option type 'mac80211'
-	option channel '149' #36 or 149, DFS is broken on these devices
+	option channel '100'
 	option hwmode '11a'
-	option path 'soc/soc:pcie/pci0000:00/0000:00:01.0/0000:01:00.0' #shelby and caiman
-	#option path 'soc/soc:pcie@82000000/pci0000:00/0000:00:03.0/0000:03:00.0' #mamba
-	option htmode 'VHT80'
+	option path 'platform/soc/18000000.wifi+1'
+	option htmode 'HE160'
 	option country 'US'
 	option txpower '30'
-	option cell_density '0'
+	option cell_density '2'
 	list hostapd_options 'ssid_protection=1'
 
 config wifi-iface '5Example'
@@ -50,4 +47,3 @@ config wifi-iface '5Example'
 	option isolate '0'
 	option bridge_isolate '0'
 	option macaddr 'random'
-	option proxy_arp '1'
