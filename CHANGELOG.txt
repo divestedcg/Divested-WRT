@@ -2,6 +2,7 @@
 - update to b10eb807c84d2c1b0278cbad1f8068756684204e
   https://github.com/openwrt/openwrt/compare/c2a758b1...b10eb807
 - [cherrypick] #24282: update to kernel 6.18.39 (security and bug fixes)
+- tested working 20260721, goodbye mvebu
 
 20260719-00-mvebu
 - update to b10eb807c84d2c1b0278cbad1f8068756684204e
