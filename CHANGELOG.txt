@@ -1,3 +1,11 @@
+20260814-00
+- update to fc636dac867fcd8c68dee0ad69fc15954e075715
+  https://github.com/openwrt/openwrt/compare/486b4a4b...fc636dac
+- [upstream] mbedtls update (security fixes)
+- [upstream] hostapd update (security fixes)
+- [upstream] uhttpd update (security fixes)
+- [upstream] libubox update (security fixes)
+
 20260810-00
 - update to 486b4a4b3ede480635a185234fc624c969426f13
   https://github.com/openwrt/openwrt/compare/fdb162fb...486b4a4b
