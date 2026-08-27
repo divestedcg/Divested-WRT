@@ -1,7 +1,18 @@
-20260827-00
+20260827-02-BROKEN
+- [cherrypick] #24784: kernel: ethernet: mtk_wed: fix WED 2.0 WDMA TX hang issue
+- [cherrypick] #24800: update to kernel 6.18.46 (security and bug fixes)
+- [cherrypick] #24924: kernel: handle EPROBE_DEFER when reading the MAC address
+- broken: verified that #24800 is very broken on this platform
+
+20260827-01
+- does NOT include the kernel update/cherrypick noted in -00
+- working: unable to reproduce issue in -00
+
+20260827-00-BROKEN
 - update to a865bd92e2a6223d92a758faa12f1520ae4e77f8
   https://github.com/openwrt/openwrt/compare/fc636dac...a865bd92
 - [cherrypick] #24800: update to kernel 6.18.46 (security and bug fixes)
+- pulled due to packet loss(?) issue
 
 20260814-00
 - update to fc636dac867fcd8c68dee0ad69fc15954e075715
