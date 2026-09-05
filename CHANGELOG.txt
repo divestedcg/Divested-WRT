@@ -1,8 +1,11 @@
-20260827-02-BROKEN
+20260904-00
+- update to 3809dfe5c69b43bc9b39f7b75fa493bbc2ad57ac
+  https://github.com/openwrt/openwrt/compare/a865bd92...3809dfe5
 - [cherrypick] #24784: kernel: ethernet: mtk_wed: fix WED 2.0 WDMA TX hang issue
-- [cherrypick] #24800: update to kernel 6.18.46 (security and bug fixes)
-- [cherrypick] #24924: kernel: handle EPROBE_DEFER when reading the MAC address
-- broken: verified that #24800 is very broken on this platform
+- [cherrypick] #24800: update to kernel 6.18.49 (security and bug fixes)
+- [cherrypick] #24943: mediatek: filogic: correct MT7986 system timer rate
+- backport 29 flowtable patches:
+  6.18.45 has an impartial backport of a flowtable patch causing packet loss
 
 20260827-01
 - does NOT include the kernel update/cherrypick noted in -00
