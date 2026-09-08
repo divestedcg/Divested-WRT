@@ -1,11 +1,8 @@
-20260904-00
-- update to 3809dfe5c69b43bc9b39f7b75fa493bbc2ad57ac
-  https://github.com/openwrt/openwrt/compare/a865bd92...3809dfe5
-- [cherrypick] #24784: kernel: ethernet: mtk_wed: fix WED 2.0 WDMA TX hang issue
-- [cherrypick] #24800: update to kernel 6.18.49 (security and bug fixes)
-- [cherrypick] #24943: mediatek: filogic: correct MT7986 system timer rate
-- backport 29 flowtable patches:
-  6.18.45 has an impartial backport of a flowtable patch causing packet loss
+20260908-00
+- update to 769116266bb9d67b5d0cd30c7eb018e796d6aa7e
+  https://github.com/openwrt/openwrt/compare/a865bd92...76911626
+- [cherrypick] #24784: kernel: backport fix for MTK WED 2.0 WDMA TX hang issue
+- [cherrypick] #24800: update to kernel 6.18.50 (security and bug fixes)
 
 20260827-01
 - does NOT include the kernel update/cherrypick noted in -00
@@ -15,7 +12,7 @@
 - update to a865bd92e2a6223d92a758faa12f1520ae4e77f8
   https://github.com/openwrt/openwrt/compare/fc636dac...a865bd92
 - [cherrypick] #24800: update to kernel 6.18.46 (security and bug fixes)
-- pulled due to packet loss(?) issue
+- pulled due to packet loss issue
 
 20260814-00
 - update to fc636dac867fcd8c68dee0ad69fc15954e075715
@@ -292,7 +289,7 @@
   https://github.com/openwrt/openwrt/compare/92814fec...b6415e9f
 - [upstream] update to kernel 6.6.77 (security and bug fixes)
 
-20250209-00
+20250209-00-BROKEN
 - update to 92814fec77fe24a68ab4a2acbf3ac245163c6090
   https://github.com/openwrt/openwrt/compare/6a7fa685...92814fec
 - [cherrypick] #17822: update to kernel 6.6.76 (security and bug fixes)
@@ -409,7 +406,7 @@
 - reverted recent mac80211 changes to fix wifi
   git revert 419ceead 192afd31 7ca4190c 1bfcc1ea
 
-20240714-00
+20240714-00-BROKEN
 - update to 850a5caaa3204f3745b91707b24c4c63a4a2a221
   https://github.com/openwrt/openwrt/compare/37636a87...850a5caa
 - [cherrypick] #15928: update to kernel 6.6.39 (security and bug fixes)

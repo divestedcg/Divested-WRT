@@ -1,7 +1,7 @@
-From da5c83ece675ae99b7ed1df93f9d7128505ab727 Mon Sep 17 00:00:00 2001
+From b05d134027f286223f1d639cbde7161e177479c7 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Wed, 19 Aug 2026 14:08:25 -0400
-Subject: [PATCH 1/5] kernel: bump 6.18 to 6.18.45
+Subject: [PATCH 1/8] kernel: bump 6.18 to 6.18.45
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.45
 
@@ -1965,10 +1965,10 @@ index d647b74de66233..1fa0994955bff5 100644
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 
-From 0dac9f6620c6bb3c6050472963e6654ecc387e70 Mon Sep 17 00:00:00 2001
+From 94e2bb1f05f91c237d5ef4827f3dee82d72410dd Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Sun, 23 Aug 2026 10:28:00 -0400
-Subject: [PATCH 2/5] kernel: bump 6.18 to 6.18.46
+Subject: [PATCH 2/8] kernel: bump 6.18 to 6.18.46
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.46
 
@@ -2108,10 +2108,10 @@ index 5962abd0603141..111864bf443a89 100644
   static void __exit nf_flow_table_module_exit(void)
   {
 
-From d8b076516a0e77821c7166fdf2e17b872116db20 Mon Sep 17 00:00:00 2001
+From 32a2a980f6d09505b64e40e7eed4484205a49a42 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Thu, 27 Aug 2026 14:59:58 -0400
-Subject: [PATCH 3/5] kernel: bump 6.18 to 6.18.47
+Subject: [PATCH 3/8] kernel: bump 6.18 to 6.18.47
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.47
 
@@ -2201,10 +2201,10 @@ index 6bff40ad90d368..e8ce946b4d1eb9 100644
   	bprm->p = vma->vm_end - stack_shift;
   #else
 
-From 6a3c9867e2751286fa86a412743e11382c62e7b7 Mon Sep 17 00:00:00 2001
+From 106c3a86e47c6018842c66961ba5ef31bf63a360 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Sat, 29 Aug 2026 14:25:14 -0400
-Subject: [PATCH 4/5] kernel: bump 6.18 to 6.18.48
+Subject: [PATCH 4/8] kernel: bump 6.18 to 6.18.48
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.48
 
@@ -2229,10 +2229,10 @@ index 1214645b02f11c..97a66de6a491ed 100644
 +LINUX_VERSION-6.18 = .48
 +LINUX_KERNEL_HASH-6.18.48 = 5ebdadb10a4b5708fc6b1c457764a110bc49f8150cc3502c59b921ead8c6fc8c
 
-From a8e7d6faacc09fc069a698bc65c29062c71369da Mon Sep 17 00:00:00 2001
+From 85e1a8c58bc2de7c3b84d01587b448ef3b01789f Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Wed, 2 Sep 2026 14:56:29 -0400
-Subject: [PATCH 5/5] kernel: bump 6.18 to 6.18.49
+Subject: [PATCH 5/8] kernel: bump 6.18 to 6.18.49
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.49
 
@@ -2842,4 +2842,949 @@ index 595f5a55e6093f..1c4ffe0d1c4b21 100644
 +@@ -4944,6 +4944,9 @@ enum skb_ext_id {
   #if IS_ENABLED(CONFIG_INET_PSP)
   	SKB_EXT_PSP,
+  #endif
+
+From 52f4e6bcce5add5bbfa7f4d8250114700da1ab47 Mon Sep 17 00:00:00 2001
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Date: Sat, 5 Sep 2026 22:56:22 +0200
+Subject: [PATCH 6/8] kernel: xt_FLOWOFFLOAD: always set the flow output
+ ifindex
+
+xt_FLOWOFFLOAD carries its own copy of the flow route setup and fills
+route->tuple[dir].out.ifindex only for FLOW_OFFLOAD_XMIT_DIRECT flows.
+Upstream fixed the same omission in the nftables path with 2bdc536c9da7
+("netfilter: always set route tuple out ifindex"), which arrived with
+6.18.45, but our copy was not updated.
+
+Since 6.18.45 the FLOW_OFFLOAD_XMIT_NEIGH path in
+nf_flow_offload_ip_hook() looks the output device up by that index
+instead of transmitting on the dst device, so every packet of a flow
+offloaded through the iptables target is dropped and the flow is torn
+down whenever the forward path cannot be discovered or the egress is not
+a plain ethernet device. fw3 uses the target for
+"option flow_offloading 1" and kmod-ipt-offload still builds it.
+
+Set the ifindex outside of the FLOW_OFFLOAD_XMIT_DIRECT branch and fall
+back to the dst device when the forward path is unknown, mirroring the
+patch we now carry for the nftables path.
+
+Fixes: da5c83ece675 ("kernel: bump 6.18 to 6.18.45")
+Assisted-by: Claude:claude-opus-5
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ .../650-netfilter-add-xt_FLOWOFFLOAD-target.patch     | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+index 69fb06aad075d5..a12fd22bf9e904 100644
+--- a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
++++ b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+@@ -44,7 +44,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  obj-$(CONFIG_NETFILTER_XT_TARGET_LED) += xt_LED.o
+ --- /dev/null
+ +++ b/net/netfilter/xt_FLOWOFFLOAD.c
+-@@ -0,0 +1,703 @@
++@@ -0,0 +1,710 @@
+ +/*
+ + * Copyright (C) 2018-2021 Felix Fietkau <nbd@nbd.name>
+ + *
+@@ -447,6 +447,14 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +	if (nf_dev_fill_forward_path(route, dst, ct, dir, ha, &stack) >= 0)
+ +		nf_dev_path_info(&stack, &info, ha);
+ +
+++	/* The xmit path looks the output device up by index for every xmit
+++	 * type, so it has to be set even when the forward path is unknown.
+++	 */
+++	if (info.outdev)
+++		route->tuple[dir].out.ifindex = info.outdev->ifindex;
+++	else
+++		route->tuple[dir].out.ifindex = dst->dev->ifindex;
+++
+ +	devs[!dir] = (struct net_device *)info.indev;
+ +	if (!info.indev)
+ +		return;
+@@ -462,7 +470,6 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ +	if (info.xmit_type == FLOW_OFFLOAD_XMIT_DIRECT) {
+ +		memcpy(route->tuple[dir].out.h_source, info.h_source, ETH_ALEN);
+ +		memcpy(route->tuple[dir].out.h_dest, info.h_dest, ETH_ALEN);
+-+		route->tuple[dir].out.ifindex = info.outdev->ifindex;
+ +		route->tuple[dir].out.hw_ifindex = info.hw_outdev->ifindex;
+ +		route->tuple[dir].xmit_type = info.xmit_type;
+ +	}
+
+From 394d741e6e76ecd172dbbf1d9ba171e378211734 Mon Sep 17 00:00:00 2001
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Date: Sat, 5 Sep 2026 22:56:13 +0200
+Subject: [PATCH 7/8] kernel: netfilter: fix flow offload with an unknown
+ forward path
+
+6.18.45 pulled in b5964aac51e0 ("netfilter: flowtable: consolidate xmit
+path") as a dependency of the CVE fix 8aecf0bbcc72. Since then the
+FLOW_OFFLOAD_XMIT_NEIGH path no longer transmits on the dst device, it
+looks the output device up by flow_offload_tuple.ifidx, which is fed from
+route->tuple[dir].out.ifindex.
+
+That field is only assigned in nft_dev_forward_path() when the forward
+path could be discovered, nft_default_forward_path() never sets it. A
+flow whose egress path cannot be resolved is therefore offloaded with an
+interface index of 0, nf_flow_offload_ip_hook() drops the packet and
+tears the flow down, the flow_offload expression offloads it again right
+away and the loss repeats instead of settling.
+
+Bridged Wi-Fi is the common case: mac80211 fails .ndo_fill_forward_path
+with -EOPNOTSUPP unless the driver implements .net_fill_forward_path, and
+with WED the path ends in DEV_PATH_MTK_WDMA, which the parser does not
+handle either, so both ways end up without an output device. This matches
+the reports of sporadic packet loss towards wireless clients with
+software flow offloading enabled on mediatek/filogic.
+
+Add a patch that falls back to the dst device, which is the device the
+neighbour is looked up on and the device the packets were transmitted on
+before the xmit paths were merged. Mainline avoids the situation
+differently since 871df5007eda ("netfilter: flowtable: bail out if
+forward path cannot be discovered"), which sits on top of the forward
+path discovery rework and does not apply to 6.18.y. 6.12 does not carry
+the rework and is not affected.
+
+Fixes: da5c83ece675 ("kernel: bump 6.18 to 6.18.45")
+Assisted-by: Claude:claude-opus-5
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ ...ble-set-out-ifindex-when-the-forward.patch | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
+
+diff --git a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
+new file mode 100644
+index 00000000000000..aa250063b95279
+--- /dev/null
++++ b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
+@@ -0,0 +1,59 @@
++From: Hauke Mehrtens <hauke@hauke-m.de>
++Date: Wed, 2 Sep 2026 22:15:00 +0200
++Subject: [PATCH] netfilter: flowtable: set out ifindex when the forward path
++ is unknown
++
++Since commit b5964aac51e0 ("netfilter: flowtable: consolidate xmit path")
++the FLOW_OFFLOAD_XMIT_NEIGH path does not transmit on the dst device any
++more, it looks the output device up by the interface index stored in the
++flow tuple:
++
++	xmit.outdev = dev_get_by_index_rcu(state->net, tuplehash->tuple.ifidx);
++	if (!xmit.outdev) {
++		flow_offload_teardown(flow);
++		return NF_DROP;
++	}
++
++That index comes from route->tuple[dir].out.ifindex, which is only
++assigned in nft_dev_forward_path() when the forward path could be
++discovered.  nft_default_forward_path() never sets it, so a flow whose
++egress path cannot be resolved is offloaded with an interface index of 0.
++Every packet of such a flow is then dropped while the flow entry is torn
++down, and the flow_offload expression offloads it again right away, so
++the loss repeats instead of settling.
++
++This is easy to hit on a router that bridges Wi-Fi and Ethernet:
++mac80211 returns -EOPNOTSUPP from .ndo_fill_forward_path when the driver
++does not implement .net_fill_forward_path, and dev_fill_forward_path()
++turns any error into a failure of the whole path lookup.  Traffic towards
++Wi-Fi clients then loses a packet per re-offload cycle, which shows up as
++sporadic stalls and lost UDP datagrams rather than as a hard failure.
++
++Fall back to the dst device, which is the device the neighbour is looked
++up on and the device the packet was transmitted on before the two xmit
++paths were merged.
++
++Mainline avoids the situation differently since commit 871df5007eda
++("netfilter: flowtable: bail out if forward path cannot be discovered"),
++which refuses to offload the flow at all.  That change sits on top of the
++forward path discovery rework and does not apply to 6.18.y, and it also
++gives up the offload for flows that were offloaded successfully before,
++so restoring the previous behaviour is the minimal fix here.
++
++Fixes: b5964aac51e0 ("netfilter: flowtable: consolidate xmit path")
++Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
++---
++ net/netfilter/nf_flow_table_path.c | 2 ++
++ 1 file changed, 2 insertions(+)
++
++--- a/net/netfilter/nf_flow_table_path.c
+++++ b/net/netfilter/nf_flow_table_path.c
++@@ -205,6 +205,8 @@ static void nft_dev_forward_path(struct
++ 
++ 	if (info.outdev)
++ 		route->tuple[dir].out.ifindex = info.outdev->ifindex;
+++	else
+++		route->tuple[dir].out.ifindex = dst->dev->ifindex;
++ 
++ 	if (!info.indev || !nft_flowtable_find_dev(info.indev, ft))
++ 		return;
+
+From cb2c5b10529a028a649539e6b33b63c8da66af89 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Mon, 7 Sep 2026 13:42:06 -0400
+Subject: [PATCH 8/8] kernel: bump 6.18 to 6.18.50
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.50
+
+Manually rebased:
+  pending-6.18/737-02-net-phylink-introduce-internal-phylink-PCS-handling.patch
+
+All other patches automatically rebased via update_kernel.sh
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ .../900-unaligned_access_hacks.patch          |  2 +-
+ ...upport-DS1-exit-firmware-re-download.patch | 14 ++++++------
+ ...erride-of-kernel-s-default-NUMA-poli.patch | 10 ++++-----
+ ...ility-to-configure-NUMA-allocation-p.patch |  2 +-
+ .../0409-mm-mempolicy-Add-MPOL_RANDOM.patch   | 20 ++++++++---------
+ ...ore-runtime-policy-changes-when-set-.patch |  2 +-
+ ...n-Maintain-TLB-coherency-in-LRU-code.patch |  2 +-
+ ...-around-VL805-firmware-ASPM-meddling.patch |  2 +-
+ ...y-allocate-Host-Memory-Buffer-segmen.patch |  8 +++----
+ ...accessors-for-HMB-segment-table-entr.patch |  2 +-
+ ...884-nvme-host-pci-Revert-to-upstream.patch |  8 +++----
+ ...ert-nvme-host-pci-Revert-to-upstream.patch |  8 +++----
+ ...v7.1-net-add-netdev_from_priv-helper.patch |  2 +-
+ ...sa-realtek-rtl8365mb-add-FDB-support.patch |  2 +-
+ .../generic/hack-6.18/204-module_strip.patch  |  4 ++--
+ .../721-net-add-packet-mangeling.patch        |  4 ++--
+ target/linux/generic/kernel-6.18              |  4 ++--
+ ...Add-support-for-MAP-E-FMRs-mesh-mode.patch | 22 +++++++++----------
+ ...0211_ptr-even-with-no-CFG82111-suppo.patch |  2 +-
+ ...roduce-internal-phylink-PCS-handling.patch | 10 ++++-----
+ .../810-pci_disable_common_quirks.patch       |  6 ++---
+ ...e-single-creation-of-sysfs-entry-for.patch |  4 ++--
+ ...dsa-add-out-of-band-tagging-protocol.patch |  2 +-
+ ...dsa-add-out-of-band-tagging-protocol.patch |  2 +-
+ 24 files changed, 72 insertions(+), 72 deletions(-)
+
+diff --git a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+index 9d3bc6f5e6a3c9..c8e6acf341d456 100644
+--- a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+@@ -312,7 +312,7 @@ SVN-Revision: 35130
+  		case IPV6_2292HOPOPTS:
+ --- a/net/ipv6/exthdrs.c
+ +++ b/net/ipv6/exthdrs.c
+-@@ -1006,7 +1006,7 @@ static bool ipv6_hop_jumbo(struct sk_buf
++@@ -1004,7 +1004,7 @@ static bool ipv6_hop_jumbo(struct sk_buf
+  		goto drop;
+  	}
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0350-non-upstream-support-DS1-exit-firmware-re-download.patch b/target/linux/bcm27xx/patches-6.18/0350-non-upstream-support-DS1-exit-firmware-re-download.patch
+index 6d2cceadd18bc9..36f7c6c56661c1 100644
+--- a/target/linux/bcm27xx/patches-6.18/0350-non-upstream-support-DS1-exit-firmware-re-download.patch
++++ b/target/linux/bcm27xx/patches-6.18/0350-non-upstream-support-DS1-exit-firmware-re-download.patch
+@@ -265,7 +265,7 @@ JIRA: SWWLAN-136577
+  
+  	return intstatus;
+  }
+-@@ -2582,6 +2597,182 @@ static int brcmf_sdio_intr_rstatus(struc
++@@ -2583,6 +2598,182 @@ static int brcmf_sdio_intr_rstatus(struc
+  	return ret;
+  }
+  
+@@ -448,7 +448,7 @@ JIRA: SWWLAN-136577
+  static void brcmf_sdio_dpc(struct brcmf_sdio *bus)
+  {
+  	struct brcmf_sdio_dev *sdiod = bus->sdiodev;
+-@@ -2653,8 +2844,11 @@ static void brcmf_sdio_dpc(struct brcmf_
++@@ -2654,8 +2845,11 @@ static void brcmf_sdio_dpc(struct brcmf_
+  
+  	/* Handle host mailbox indication */
+  	if (intstatus & I_HMB_HOST_INT) {
+@@ -461,7 +461,7 @@ JIRA: SWWLAN-136577
+  	}
+  
+  	sdio_release_host(bus->sdiodev->func1);
+-@@ -2699,7 +2893,7 @@ static void brcmf_sdio_dpc(struct brcmf_
++@@ -2700,7 +2894,7 @@ static void brcmf_sdio_dpc(struct brcmf_
+  	brcmf_sdio_clrintr(bus);
+  
+  	if (bus->ctrl_frame_stat && (bus->clkstate == CLK_AVAIL) &&
+@@ -470,7 +470,7 @@ JIRA: SWWLAN-136577
+  		sdio_claim_host(bus->sdiodev->func1);
+  		if (bus->ctrl_frame_stat) {
+  			err = brcmf_sdio_tx_ctrlframe(bus,  bus->ctrl_frame_buf,
+-@@ -3570,6 +3764,10 @@ static int brcmf_sdio_bus_preinit(struct
++@@ -3571,6 +3765,10 @@ static int brcmf_sdio_bus_preinit(struct
+  	if (err < 0)
+  		goto done;
+  
+@@ -481,7 +481,7 @@ JIRA: SWWLAN-136577
+  	bus->tx_hdrlen = SDPCM_HWHDR_LEN + SDPCM_SWHDR_LEN;
+  	if (sdiodev->sg_support) {
+  		bus->txglom = false;
+-@@ -4220,7 +4418,7 @@ static void brcmf_sdio_firmware_callback
++@@ -4221,7 +4419,7 @@ static void brcmf_sdio_firmware_callback
+  	u8 saveclk, bpreq;
+  	u8 devctl;
+  
+@@ -490,7 +490,7 @@ JIRA: SWWLAN-136577
+  
+  	if (err)
+  		goto fail;
+-@@ -4398,12 +4596,25 @@ static void brcmf_sdio_firmware_callback
++@@ -4399,12 +4597,25 @@ static void brcmf_sdio_firmware_callback
+  	}
+  
+  	/* Attach to the common layer, reserve hdr space */
+@@ -517,7 +517,7 @@ JIRA: SWWLAN-136577
+  	/* ready */
+  	return;
+  
+-@@ -4658,3 +4869,40 @@ int brcmf_sdio_sleep(struct brcmf_sdio *
++@@ -4659,3 +4870,40 @@ int brcmf_sdio_sleep(struct brcmf_sdio *
+  
+  	return ret;
+  }
+diff --git a/target/linux/bcm27xx/patches-6.18/0406-mm-numa-Allow-override-of-kernel-s-default-NUMA-poli.patch b/target/linux/bcm27xx/patches-6.18/0406-mm-numa-Allow-override-of-kernel-s-default-NUMA-poli.patch
+index 52c1af138c920e..9d2faba0296e3c 100644
+--- a/target/linux/bcm27xx/patches-6.18/0406-mm-numa-Allow-override-of-kernel-s-default-NUMA-poli.patch
++++ b/target/linux/bcm27xx/patches-6.18/0406-mm-numa-Allow-override-of-kernel-s-default-NUMA-poli.patch
+@@ -22,7 +22,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+ 
+ --- a/mm/mempolicy.c
+ +++ b/mm/mempolicy.c
+-@@ -3316,7 +3316,9 @@ void __init numa_policy_init(void)
++@@ -3307,7 +3307,9 @@ void __init numa_policy_init(void)
+  /* Reset policy of current process to default */
+  void numa_default_policy(void)
+  {
+@@ -33,7 +33,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  }
+  
+  /*
+-@@ -3333,7 +3335,6 @@ static const char * const policy_modes[]
++@@ -3324,7 +3326,6 @@ static const char * const policy_modes[]
+  	[MPOL_PREFERRED_MANY]  = "prefer (many)",
+  };
+  
+@@ -41,7 +41,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  /**
+   * mpol_parse_str - parse string to mempolicy, for tmpfs mpol mount option.
+   * @str:  string containing mempolicy to parse
+-@@ -3346,13 +3347,18 @@ static const char * const policy_modes[]
++@@ -3337,13 +3338,18 @@ static const char * const policy_modes[]
+   */
+  int mpol_parse_str(char *str, struct mempolicy **mpol)
+  {
+@@ -61,7 +61,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  	if (flags)
+  		*flags++ = '\0';	/* terminate mode string */
+  
+-@@ -3432,9 +3438,16 @@ int mpol_parse_str(char *str, struct mem
++@@ -3423,9 +3429,16 @@ int mpol_parse_str(char *str, struct mem
+  			goto out;
+  	}
+  
+@@ -81,7 +81,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  
+  	/*
+  	 * Save nodes for mpol_to_str() to show the tmpfs mount options
+-@@ -3467,7 +3480,29 @@ out:
++@@ -3458,7 +3471,29 @@ out:
+  		*mpol = new;
+  	return err;
+  }
+diff --git a/target/linux/bcm27xx/patches-6.18/0408-iommu-dma-Add-ability-to-configure-NUMA-allocation-p.patch b/target/linux/bcm27xx/patches-6.18/0408-iommu-dma-Add-ability-to-configure-NUMA-allocation-p.patch
+index 080044cc7f9c3b..0fcbfda0c85e84 100644
+--- a/target/linux/bcm27xx/patches-6.18/0408-iommu-dma-Add-ability-to-configure-NUMA-allocation-p.patch
++++ b/target/linux/bcm27xx/patches-6.18/0408-iommu-dma-Add-ability-to-configure-NUMA-allocation-p.patch
+@@ -148,7 +148,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  }
+ --- a/mm/mempolicy.c
+ +++ b/mm/mempolicy.c
+-@@ -2242,6 +2242,12 @@ static nodemask_t *policy_nodemask(gfp_t
++@@ -2233,6 +2233,12 @@ static nodemask_t *policy_nodemask(gfp_t
+  	return nodemask;
+  }
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0409-mm-mempolicy-Add-MPOL_RANDOM.patch b/target/linux/bcm27xx/patches-6.18/0409-mm-mempolicy-Add-MPOL_RANDOM.patch
+index 433d351684d657..47bb1b7d00be37 100644
+--- a/target/linux/bcm27xx/patches-6.18/0409-mm-mempolicy-Add-MPOL_RANDOM.patch
++++ b/target/linux/bcm27xx/patches-6.18/0409-mm-mempolicy-Add-MPOL_RANDOM.patch
+@@ -53,7 +53,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  		*nodes = pol->nodes;
+  		break;
+  	case MPOL_LOCAL:
+-@@ -2068,6 +2076,27 @@ static unsigned int interleave_nodes(str
++@@ -2059,6 +2067,27 @@ static unsigned int interleave_nodes(str
+  	return nid;
+  }
+  
+@@ -81,7 +81,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  /*
+   * Depending on the memory policy provide a node from which to allocate the
+   * next slab entry.
+-@@ -2113,6 +2142,9 @@ unsigned int mempolicy_slab_node(void)
++@@ -2104,6 +2133,9 @@ unsigned int mempolicy_slab_node(void)
+  	case MPOL_LOCAL:
+  		return node;
+  
+@@ -91,7 +91,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  	default:
+  		BUG();
+  	}
+-@@ -2194,6 +2226,33 @@ static unsigned int interleave_nid(struc
++@@ -2185,6 +2217,33 @@ static unsigned int interleave_nid(struc
+  	return nid;
+  }
+  
+@@ -125,7 +125,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  /*
+   * Return a nodemask representing a mempolicy for filtering nodes for
+   * page allocation, together with preferred node id (or the input node id).
+-@@ -2237,6 +2296,9 @@ static nodemask_t *policy_nodemask(gfp_t
++@@ -2228,6 +2287,9 @@ static nodemask_t *policy_nodemask(gfp_t
+  			weighted_interleave_nodes(pol) :
+  			weighted_interleave_nid(pol, ilx);
+  		break;
+@@ -135,7 +135,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  	}
+  
+  	return nodemask;
+-@@ -2305,6 +2367,7 @@ bool init_nodemask_of_mempolicy(nodemask
++@@ -2296,6 +2358,7 @@ bool init_nodemask_of_mempolicy(nodemask
+  	case MPOL_BIND:
+  	case MPOL_INTERLEAVE:
+  	case MPOL_WEIGHTED_INTERLEAVE:
+@@ -143,7 +143,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  		*mask = mempolicy->nodes;
+  		break;
+  
+-@@ -2803,6 +2866,7 @@ bool __mpol_equal(struct mempolicy *a, s
++@@ -2794,6 +2857,7 @@ bool __mpol_equal(struct mempolicy *a, s
+  	case MPOL_PREFERRED:
+  	case MPOL_PREFERRED_MANY:
+  	case MPOL_WEIGHTED_INTERLEAVE:
+@@ -151,7 +151,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  		return !!nodes_equal(a->nodes, b->nodes);
+  	case MPOL_LOCAL:
+  		return true;
+-@@ -2994,6 +3058,10 @@ int mpol_misplaced(struct folio *folio,
++@@ -2985,6 +3049,10 @@ int mpol_misplaced(struct folio *folio,
+  		polnid = zonelist_node_idx(z);
+  		break;
+  
+@@ -162,7 +162,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  	default:
+  		BUG();
+  	}
+-@@ -3339,6 +3407,7 @@ static const char * const policy_modes[]
++@@ -3330,6 +3398,7 @@ static const char * const policy_modes[]
+  	[MPOL_WEIGHTED_INTERLEAVE] = "weighted interleave",
+  	[MPOL_LOCAL]      = "local",
+  	[MPOL_PREFERRED_MANY]  = "prefer (many)",
+@@ -170,7 +170,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  };
+  
+  /**
+-@@ -3401,6 +3470,7 @@ int mpol_parse_str(char *str, struct mem
++@@ -3392,6 +3461,7 @@ int mpol_parse_str(char *str, struct mem
+  		break;
+  	case MPOL_INTERLEAVE:
+  	case MPOL_WEIGHTED_INTERLEAVE:
+@@ -178,7 +178,7 @@ Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+  		/*
+  		 * Default to online nodes with memory if no nodelist
+  		 */
+-@@ -3545,6 +3615,7 @@ void mpol_to_str(char *buffer, int maxle
++@@ -3536,6 +3606,7 @@ void mpol_to_str(char *buffer, int maxle
+  	case MPOL_BIND:
+  	case MPOL_INTERLEAVE:
+  	case MPOL_WEIGHTED_INTERLEAVE:
+diff --git a/target/linux/bcm27xx/patches-6.18/0410-mm-mempolicy-Ignore-runtime-policy-changes-when-set-.patch b/target/linux/bcm27xx/patches-6.18/0410-mm-mempolicy-Ignore-runtime-policy-changes-when-set-.patch
+index 5c95c824c618b5..8d127228e27e27 100644
+--- a/target/linux/bcm27xx/patches-6.18/0410-mm-mempolicy-Ignore-runtime-policy-changes-when-set-.patch
++++ b/target/linux/bcm27xx/patches-6.18/0410-mm-mempolicy-Ignore-runtime-policy-changes-when-set-.patch
+@@ -68,7 +68,7 @@ Signed-off-by: Trevor Man <tman_github@trejan.com>
+  	if (err)
+  		return err;
+  
+-@@ -3572,6 +3583,7 @@ static int __init setup_numapolicy(char
++@@ -3563,6 +3574,7 @@ static int __init setup_numapolicy(char
+  		default_policy = pol;
+  		mpol_to_str(buf, sizeof(buf), &pol);
+  		pr_info("NUMA default policy overridden to '%s'\n", buf);
+diff --git a/target/linux/bcm27xx/patches-6.18/0411-mm-vmscan-Maintain-TLB-coherency-in-LRU-code.patch b/target/linux/bcm27xx/patches-6.18/0411-mm-vmscan-Maintain-TLB-coherency-in-LRU-code.patch
+index 2a4291f9309683..f2582ec6155193 100644
+--- a/target/linux/bcm27xx/patches-6.18/0411-mm-vmscan-Maintain-TLB-coherency-in-LRU-code.patch
++++ b/target/linux/bcm27xx/patches-6.18/0411-mm-vmscan-Maintain-TLB-coherency-in-LRU-code.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/mm/vmscan.c
+ +++ b/mm/vmscan.c
+-@@ -4305,7 +4305,7 @@ bool lru_gen_look_around(struct page_vma
++@@ -4300,7 +4300,7 @@ bool lru_gen_look_around(struct page_vma
+  		if (!folio)
+  			continue;
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch b/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
+index 2a4afc627a1bea..c0880d0b2e866c 100644
+--- a/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
++++ b/target/linux/bcm27xx/patches-6.18/0541-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/pci/quirks.c
+ +++ b/drivers/pci/quirks.c
+-@@ -6278,6 +6278,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
++@@ -6285,6 +6285,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+diff --git a/target/linux/bcm27xx/patches-6.18/0699-nvme-pci-manually-allocate-Host-Memory-Buffer-segmen.patch b/target/linux/bcm27xx/patches-6.18/0699-nvme-pci-manually-allocate-Host-Memory-Buffer-segmen.patch
+index 58a9d4fbb11190..0ba068abc4a0cd 100644
+--- a/target/linux/bcm27xx/patches-6.18/0699-nvme-pci-manually-allocate-Host-Memory-Buffer-segmen.patch
++++ b/target/linux/bcm27xx/patches-6.18/0699-nvme-pci-manually-allocate-Host-Memory-Buffer-segmen.patch
+@@ -47,7 +47,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	void **host_mem_desc_bufs;
+  	unsigned int nr_allocated_queues;
+  	unsigned int nr_write_queues;
+-@@ -2306,6 +2308,13 @@ static int nvme_set_host_mem(struct nvme
++@@ -2307,6 +2309,13 @@ static int nvme_set_host_mem(struct nvme
+  	return ret;
+  }
+  
+@@ -61,7 +61,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static void nvme_free_host_mem_multi(struct nvme_dev *dev)
+  {
+  	int i;
+-@@ -2322,6 +2331,7 @@ static void nvme_free_host_mem_multi(str
++@@ -2323,6 +2332,7 @@ static void nvme_free_host_mem_multi(str
+  	kfree(dev->host_mem_desc_bufs);
+  	dev->host_mem_desc_bufs = NULL;
+  }
+@@ -69,7 +69,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  
+  static void nvme_free_host_mem(struct nvme_dev *dev)
+  {
+-@@ -2366,6 +2376,93 @@ static int nvme_alloc_host_mem_single(st
++@@ -2367,6 +2377,93 @@ static int nvme_alloc_host_mem_single(st
+  	return 0;
+  }
+  
+@@ -163,7 +163,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static int nvme_alloc_host_mem_multi(struct nvme_dev *dev, u64 preferred,
+  		u32 chunk_size)
+  {
+-@@ -2426,6 +2523,7 @@ out:
++@@ -2427,6 +2524,7 @@ out:
+  	dev->host_mem_descs = NULL;
+  	return -ENOMEM;
+  }
+diff --git a/target/linux/bcm27xx/patches-6.18/0754-nvme-pci-use-LE-accessors-for-HMB-segment-table-entr.patch b/target/linux/bcm27xx/patches-6.18/0754-nvme-pci-use-LE-accessors-for-HMB-segment-table-entr.patch
+index a78e23e22f7ba2..f4aba0de49e4c1 100644
+--- a/target/linux/bcm27xx/patches-6.18/0754-nvme-pci-use-LE-accessors-for-HMB-segment-table-entr.patch
++++ b/target/linux/bcm27xx/patches-6.18/0754-nvme-pci-use-LE-accessors-for-HMB-segment-table-entr.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ 
+ --- a/drivers/nvme/host/pci.c
+ +++ b/drivers/nvme/host/pci.c
+-@@ -2438,9 +2438,9 @@ static int nvme_alloc_host_mem_multi(str
++@@ -2439,9 +2439,9 @@ static int nvme_alloc_host_mem_multi(str
+  	i = dev->nr_host_mem_descs = mapped_nents;
+  
+  	while (--i >= 0) {
+diff --git a/target/linux/bcm27xx/patches-6.18/0884-nvme-host-pci-Revert-to-upstream.patch b/target/linux/bcm27xx/patches-6.18/0884-nvme-host-pci-Revert-to-upstream.patch
+index 481bcb06f392f1..c529d9ccf5629b 100644
+--- a/target/linux/bcm27xx/patches-6.18/0884-nvme-host-pci-Revert-to-upstream.patch
++++ b/target/linux/bcm27xx/patches-6.18/0884-nvme-host-pci-Revert-to-upstream.patch
+@@ -32,7 +32,7 @@ Subject: [PATCH] nvme/host/pci: Revert to upstream
+  		else
+  			nvme_free_prps(req);
+  	}
+-@@ -2308,13 +2306,6 @@ static int nvme_set_host_mem(struct nvme
++@@ -2309,13 +2307,6 @@ static int nvme_set_host_mem(struct nvme
+  	return ret;
+  }
+  
+@@ -46,7 +46,7 @@ Subject: [PATCH] nvme/host/pci: Revert to upstream
+  static void nvme_free_host_mem_multi(struct nvme_dev *dev)
+  {
+  	int i;
+-@@ -2331,7 +2322,6 @@ static void nvme_free_host_mem_multi(str
++@@ -2332,7 +2323,6 @@ static void nvme_free_host_mem_multi(str
+  	kfree(dev->host_mem_desc_bufs);
+  	dev->host_mem_desc_bufs = NULL;
+  }
+@@ -54,7 +54,7 @@ Subject: [PATCH] nvme/host/pci: Revert to upstream
+  
+  static void nvme_free_host_mem(struct nvme_dev *dev)
+  {
+-@@ -2376,93 +2366,6 @@ static int nvme_alloc_host_mem_single(st
++@@ -2377,93 +2367,6 @@ static int nvme_alloc_host_mem_single(st
+  	return 0;
+  }
+  
+@@ -148,7 +148,7 @@ Subject: [PATCH] nvme/host/pci: Revert to upstream
+  static int nvme_alloc_host_mem_multi(struct nvme_dev *dev, u64 preferred,
+  		u32 chunk_size)
+  {
+-@@ -2523,7 +2426,6 @@ out:
++@@ -2524,7 +2427,6 @@ out:
+  	dev->host_mem_descs = NULL;
+  	return -ENOMEM;
+  }
+diff --git a/target/linux/bcm27xx/patches-6.18/0886-Revert-nvme-host-pci-Revert-to-upstream.patch b/target/linux/bcm27xx/patches-6.18/0886-Revert-nvme-host-pci-Revert-to-upstream.patch
+index 03bda9f8e69feb..716b7efd8d39a0 100644
+--- a/target/linux/bcm27xx/patches-6.18/0886-Revert-nvme-host-pci-Revert-to-upstream.patch
++++ b/target/linux/bcm27xx/patches-6.18/0886-Revert-nvme-host-pci-Revert-to-upstream.patch
+@@ -22,7 +22,7 @@ This reverts commit 7838cff31a7091c0a9c6b35ca4a961cace361c8b.
+  	void **host_mem_desc_bufs;
+  	unsigned int nr_allocated_queues;
+  	unsigned int nr_write_queues;
+-@@ -2306,6 +2308,13 @@ static int nvme_set_host_mem(struct nvme
++@@ -2307,6 +2309,13 @@ static int nvme_set_host_mem(struct nvme
+  	return ret;
+  }
+  
+@@ -36,7 +36,7 @@ This reverts commit 7838cff31a7091c0a9c6b35ca4a961cace361c8b.
+  static void nvme_free_host_mem_multi(struct nvme_dev *dev)
+  {
+  	int i;
+-@@ -2322,6 +2331,7 @@ static void nvme_free_host_mem_multi(str
++@@ -2323,6 +2332,7 @@ static void nvme_free_host_mem_multi(str
+  	kfree(dev->host_mem_desc_bufs);
+  	dev->host_mem_desc_bufs = NULL;
+  }
+@@ -44,7 +44,7 @@ This reverts commit 7838cff31a7091c0a9c6b35ca4a961cace361c8b.
+  
+  static void nvme_free_host_mem(struct nvme_dev *dev)
+  {
+-@@ -2366,6 +2376,93 @@ static int nvme_alloc_host_mem_single(st
++@@ -2367,6 +2377,93 @@ static int nvme_alloc_host_mem_single(st
+  	return 0;
+  }
+  
+@@ -138,7 +138,7 @@ This reverts commit 7838cff31a7091c0a9c6b35ca4a961cace361c8b.
+  static int nvme_alloc_host_mem_multi(struct nvme_dev *dev, u64 preferred,
+  		u32 chunk_size)
+  {
+-@@ -2426,6 +2523,7 @@ out:
++@@ -2427,6 +2524,7 @@ out:
+  	dev->host_mem_descs = NULL;
+  	return -ENOMEM;
+  }
+diff --git a/target/linux/generic/backport-6.18/601-v7.1-net-add-netdev_from_priv-helper.patch b/target/linux/generic/backport-6.18/601-v7.1-net-add-netdev_from_priv-helper.patch
+index 7b660bd9bdbf84..5011e0567e370c 100644
+--- a/target/linux/generic/backport-6.18/601-v7.1-net-add-netdev_from_priv-helper.patch
++++ b/target/linux/generic/backport-6.18/601-v7.1-net-add-netdev_from_priv-helper.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+ 
+ --- a/include/linux/netdevice.h
+ +++ b/include/linux/netdevice.h
+-@@ -2756,6 +2756,17 @@ static inline void *netdev_priv(const st
++@@ -2755,6 +2755,17 @@ static inline void *netdev_priv(const st
+  	return (void *)dev->priv;
+  }
+  
+diff --git a/target/linux/generic/backport-6.18/942-07-v7.2-net-dsa-realtek-rtl8365mb-add-FDB-support.patch b/target/linux/generic/backport-6.18/942-07-v7.2-net-dsa-realtek-rtl8365mb-add-FDB-support.patch
+index 1f4b9257d05891..98d8346f7d43b3 100644
+--- a/target/linux/generic/backport-6.18/942-07-v7.2-net-dsa-realtek-rtl8365mb-add-FDB-support.patch
++++ b/target/linux/generic/backport-6.18/942-07-v7.2-net-dsa-realtek-rtl8365mb-add-FDB-support.patch
+@@ -810,7 +810,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  	rc.lock_arg = priv;
+  	priv->map = devm_regmap_init(dev, NULL, priv, &rc);
+ @@ -326,6 +328,296 @@ void rtl83xx_reset_deassert(struct realt
+- 	gpiod_set_value(priv->reset, false);
++ 	gpiod_set_value_cansleep(priv->reset, false);
+  }
+  
+ +/**
+diff --git a/target/linux/generic/hack-6.18/204-module_strip.patch b/target/linux/generic/hack-6.18/204-module_strip.patch
+index 11173a2095b42d..d9fd6f876e74cc 100644
+--- a/target/linux/generic/hack-6.18/204-module_strip.patch
++++ b/target/linux/generic/hack-6.18/204-module_strip.patch
+@@ -107,7 +107,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  /* Parse tag=value strings from .modinfo section */
+  char *module_next_tag_pair(char *string, unsigned long *secsize)
+-@@ -2579,9 +2581,11 @@ static void module_augment_kernel_taints
++@@ -2591,9 +2593,11 @@ static void module_augment_kernel_taints
+  
+  static int check_modinfo(struct module *mod, struct load_info *info, int flags)
+  {
+@@ -120,7 +120,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (flags & MODULE_INIT_IGNORE_VERMAGIC)
+  		modmagic = NULL;
+  
+-@@ -2595,6 +2599,7 @@ static int check_modinfo(struct module *
++@@ -2607,6 +2611,7 @@ static int check_modinfo(struct module *
+  		       info->name, modmagic, vermagic);
+  		return -ENOEXEC;
+  	}
+diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
+index b20105de9ce998..ecaaf20ba83796 100644
+--- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
++++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
+@@ -27,7 +27,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  };
+  
+  /* Specifies the type of the struct net_device::ml_priv pointer */
+-@@ -2248,6 +2249,11 @@ struct net_device {
++@@ -2249,6 +2250,11 @@ struct net_device {
+  	const struct tlsdev_ops *tlsdev_ops;
+  #endif
+  
+@@ -39,7 +39,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	unsigned int		operstate;
+  	unsigned char		link_mode;
+  
+-@@ -2324,6 +2330,10 @@ struct net_device {
++@@ -2325,6 +2331,10 @@ struct net_device {
+  	struct psp_dev __rcu	*psp_dev;
+  #endif
+  
+diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
+index b3bd2894d927d0..fabd6df626f23f 100644
+--- a/target/linux/generic/kernel-6.18
++++ b/target/linux/generic/kernel-6.18
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.18 = .49
+-LINUX_KERNEL_HASH-6.18.49 = ae826f33111fea6f1d279dde7299d7463c8dfd204aeb75a8fb5432bc60a28191
++LINUX_VERSION-6.18 = .50
++LINUX_KERNEL_HASH-6.18.50 = d2fc041dab4e11d9645e3ba53be058faa52b8ce28a8a97c889bb2cacee170461
+diff --git a/target/linux/generic/pending-6.18/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch b/target/linux/generic/pending-6.18/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+index 6ed90821d06d94..cb226bb092f729 100644
+--- a/target/linux/generic/pending-6.18/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
++++ b/target/linux/generic/pending-6.18/666-Add-support-for-MAP-E-FMRs-mesh-mode.patch
+@@ -311,7 +311,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  /**
+   * ip6_tnl_addr_conflict - compare packet addresses to tunnel's own
+   *   @t: the outgoing tunnel device
+-@@ -1301,6 +1449,7 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
++@@ -1290,6 +1438,7 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
+  		u8 protocol)
+  {
+  	struct ip6_tnl *t = netdev_priv(dev);
+@@ -319,7 +319,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	struct ipv6hdr *ipv6h;
+  	const struct iphdr  *iph;
+  	int encap_limit = -1;
+-@@ -1400,6 +1549,18 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
++@@ -1389,6 +1538,18 @@ ipxip6_tnl_xmit(struct sk_buff *skb, str
+  	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
+  	dsfield = INET_ECN_encapsulate(dsfield, orig_dsfield);
+  
+@@ -338,7 +338,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+  		return -1;
+  
+-@@ -1553,6 +1714,14 @@ ip6_tnl_change(struct ip6_tnl *t, const
++@@ -1545,6 +1706,14 @@ ip6_tnl_change(struct ip6_tnl *t, const
+  	t->parms.link = p->link;
+  	t->parms.proto = p->proto;
+  	t->parms.fwmark = p->fwmark;
+@@ -353,7 +353,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	dst_cache_reset(&t->dst_cache);
+  	ip6_tnl_link_config(t);
+  }
+-@@ -1598,6 +1767,7 @@ ip6_tnl_parm_from_user(struct __ip6_tnl_
++@@ -1590,6 +1759,7 @@ ip6_tnl_parm_from_user(struct __ip6_tnl_
+  	p->flowinfo = u->flowinfo;
+  	p->link = u->link;
+  	p->proto = u->proto;
+@@ -361,7 +361,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	memcpy(p->name, u->name, sizeof(u->name));
+  }
+  
+-@@ -1981,6 +2151,15 @@ static int ip6_tnl_validate(struct nlatt
++@@ -1973,6 +2143,15 @@ static int ip6_tnl_validate(struct nlatt
+  	return 0;
+  }
+  
+@@ -377,7 +377,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  static void ip6_tnl_netlink_parms(struct nlattr *data[],
+  				  struct __ip6_tnl_parm *parms)
+  {
+-@@ -2018,6 +2197,46 @@ static void ip6_tnl_netlink_parms(struct
++@@ -2010,6 +2189,46 @@ static void ip6_tnl_netlink_parms(struct
+  
+  	if (data[IFLA_IPTUN_FWMARK])
+  		parms->fwmark = nla_get_u32(data[IFLA_IPTUN_FWMARK]);
+@@ -424,7 +424,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  }
+  
+  static int ip6_tnl_newlink(struct net_device *dev,
+-@@ -2129,6 +2348,12 @@ static void ip6_tnl_dellink(struct net_d
++@@ -2121,6 +2340,12 @@ static void ip6_tnl_dellink(struct net_d
+  
+  static size_t ip6_tnl_get_size(const struct net_device *dev)
+  {
+@@ -437,7 +437,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	return
+  		/* IFLA_IPTUN_LINK */
+  		nla_total_size(4) +
+-@@ -2158,6 +2383,24 @@ static size_t ip6_tnl_get_size(const str
++@@ -2150,6 +2375,24 @@ static size_t ip6_tnl_get_size(const str
+  		nla_total_size(0) +
+  		/* IFLA_IPTUN_FWMARK */
+  		nla_total_size(4) +
+@@ -462,7 +462,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  		0;
+  }
+  
+-@@ -2165,6 +2408,9 @@ static int ip6_tnl_fill_info(struct sk_b
++@@ -2157,6 +2400,9 @@ static int ip6_tnl_fill_info(struct sk_b
+  {
+  	struct ip6_tnl *tunnel = netdev_priv(dev);
+  	struct __ip6_tnl_parm *parm = &tunnel->parms;
+@@ -472,7 +472,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  
+  	if (nla_put_u32(skb, IFLA_IPTUN_LINK, parm->link) ||
+  	    nla_put_in6_addr(skb, IFLA_IPTUN_LOCAL, &parm->laddr) ||
+-@@ -2174,9 +2420,27 @@ static int ip6_tnl_fill_info(struct sk_b
++@@ -2166,9 +2412,27 @@ static int ip6_tnl_fill_info(struct sk_b
+  	    nla_put_be32(skb, IFLA_IPTUN_FLOWINFO, parm->flowinfo) ||
+  	    nla_put_u32(skb, IFLA_IPTUN_FLAGS, parm->flags) ||
+  	    nla_put_u8(skb, IFLA_IPTUN_PROTO, parm->proto) ||
+@@ -501,7 +501,7 @@ Signed-off-by: Steven Barth <cyrus@openwrt.org>
+  	if (nla_put_u16(skb, IFLA_IPTUN_ENCAP_TYPE, tunnel->encap.type) ||
+  	    nla_put_be16(skb, IFLA_IPTUN_ENCAP_SPORT, tunnel->encap.sport) ||
+  	    nla_put_be16(skb, IFLA_IPTUN_ENCAP_DPORT, tunnel->encap.dport) ||
+-@@ -2216,6 +2480,7 @@ static const struct nla_policy ip6_tnl_p
++@@ -2208,6 +2472,7 @@ static const struct nla_policy ip6_tnl_p
+  	[IFLA_IPTUN_ENCAP_DPORT]	= { .type = NLA_U16 },
+  	[IFLA_IPTUN_COLLECT_METADATA]	= { .type = NLA_FLAG },
+  	[IFLA_IPTUN_FWMARK]		= { .type = NLA_U32 },
+diff --git a/target/linux/generic/pending-6.18/731-net-permit-ieee80211_ptr-even-with-no-CFG82111-suppo.patch b/target/linux/generic/pending-6.18/731-net-permit-ieee80211_ptr-even-with-no-CFG82111-suppo.patch
+index 968632118b8c9f..f8a09898a6adf4 100644
+--- a/target/linux/generic/pending-6.18/731-net-permit-ieee80211_ptr-even-with-no-CFG82111-suppo.patch
++++ b/target/linux/generic/pending-6.18/731-net-permit-ieee80211_ptr-even-with-no-CFG82111-suppo.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+ 
+ --- a/include/linux/netdevice.h
+ +++ b/include/linux/netdevice.h
+-@@ -2308,7 +2308,7 @@ struct net_device {
++@@ -2309,7 +2309,7 @@ struct net_device {
+  #if IS_ENABLED(CONFIG_AX25)
+  	struct ax25_dev	__rcu	*ax25_ptr;
+  #endif
+diff --git a/target/linux/generic/pending-6.18/737-02-net-phylink-introduce-internal-phylink-PCS-handling.patch b/target/linux/generic/pending-6.18/737-02-net-phylink-introduce-internal-phylink-PCS-handling.patch
+index 85867ccaaf6a9a..610a60dbc610ae 100644
+--- a/target/linux/generic/pending-6.18/737-02-net-phylink-introduce-internal-phylink-PCS-handling.patch
++++ b/target/linux/generic/pending-6.18/737-02-net-phylink-introduce-internal-phylink-PCS-handling.patch
+@@ -180,7 +180,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+ +	if (pl->mac_ops->mac_select_pcs) {
+ +		pcs = pl->mac_ops->mac_select_pcs(pl->config,
+ +						  interface);
+-+		pcs_found = !!pcs;
+++		pcs_found = !IS_ERR_OR_NULL(pcs);
+ +	} else {
+ +		list_for_each_entry(pcs, &pl->pcs_list, list) {
+ +			if (!phylink_validate_pcs_interface(pcs, interface)) {
+@@ -191,7 +191,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+ +	}
+  
+ -	pcs = pl->mac_ops->mac_select_pcs(pl->config, interface);
+--	if (!pcs)
++-	if (IS_ERR_OR_NULL(pcs))
+ +	if (!pcs_found)
+  		return 0;
+  
+@@ -209,7 +209,8 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+ +	 */
+ +	} else if (test_bit(state->interface, pl->config->pcs_interfaces)) {
+ +		bool pcs_found = false;
+-+
++ 
++-		pcs_changed = pl->pcs != pcs;
+ +		list_for_each_entry(pcs, &pl->pcs_list, list) {
+ +			if (!phylink_validate_pcs_interface(pcs,
+ +							    state->interface)) {
+@@ -217,8 +218,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+ +				break;
+ +			}
+ +		}
+- 
+--		pcs_changed = pl->pcs != pcs;
+++
+ +		if (!pcs_found) {
+ +			phylink_err(pl,
+ +				    "couldn't find a PCS for %s\n",
+diff --git a/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch b/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
+index 0427701cade9d8..0ab30d4301d6ac 100644
+--- a/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
++++ b/target/linux/generic/pending-6.18/810-pci_disable_common_quirks.patch
+@@ -33,7 +33,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * The Mellanox Tavor device gives false positive parity errors.  Disable
+   * parity error reporting.
+-@@ -3504,6 +3505,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
++@@ -3507,6 +3508,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x65f9, quirk_intel_mc_errata);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x65fa, quirk_intel_mc_errata);
+  
+@@ -42,7 +42,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * Ivytown NTB BAR sizes are misreported by the hardware due to an erratum.
+   * To work around this, query the size it should be configured to by the
+-@@ -3529,6 +3532,8 @@ static void quirk_intel_ntb(struct pci_d
++@@ -3532,6 +3535,8 @@ static void quirk_intel_ntb(struct pci_d
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0e08, quirk_intel_ntb);
+  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0e0d, quirk_intel_ntb);
+  
+@@ -51,7 +51,7 @@ Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+  /*
+   * Some BIOS implementations leave the Intel GPU interrupts enabled, even
+   * though no one is handling them (e.g., if the i915 driver is never
+-@@ -3567,6 +3572,8 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
++@@ -3570,6 +3575,8 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
+  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x010a, disable_igfx_irq);
+  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0152, disable_igfx_irq);
+  
+diff --git a/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch b/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch
+index 62871e23353c7d..86d2683f1c73f6 100644
+--- a/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch
++++ b/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch
+@@ -68,7 +68,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+  
+  /* show configuration fields */
+  #define pci_config_attr(field, format_string)				\
+-@@ -1660,12 +1662,32 @@ static const struct attribute_group pci_
++@@ -1690,12 +1692,32 @@ static const struct attribute_group pci_
+  	.is_visible = resource_resize_is_visible,
+  };
+  
+@@ -102,7 +102,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+  }
+  
+  /**
+-@@ -1686,21 +1708,23 @@ static int __init pci_sysfs_init(void)
++@@ -1716,21 +1738,23 @@ static int __init pci_sysfs_init(void)
+  {
+  	struct pci_dev *pdev = NULL;
+  	struct pci_bus *pbus = NULL;
+diff --git a/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
+index 2b33e6275872fa..0561fd27027d92 100644
+--- a/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/ipq40xx/patches-6.18/701-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -136,7 +136,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+  #include <net/dst.h>
+  #include <net/sock.h>
+  #include <net/checksum.h>
+-@@ -5118,6 +5122,9 @@ static const u8 skb_ext_type_len[] = {
++@@ -5121,6 +5125,9 @@ static const u8 skb_ext_type_len[] = {
+  #if IS_ENABLED(CONFIG_INET_PSP)
+  	[SKB_EXT_PSP] = SKB_EXT_CHUNKSIZEOF(struct psp_skb_ext),
+  #endif
+diff --git a/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
+index 1c4ffe0d1c4b21..62160bd0ca2705 100644
+--- a/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
++++ b/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
+@@ -126,7 +126,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+  #include <net/dst.h>
+  #include <net/sock.h>
+  #include <net/checksum.h>
+-@@ -5118,6 +5122,9 @@ static const u8 skb_ext_type_len[] = {
++@@ -5121,6 +5125,9 @@ static const u8 skb_ext_type_len[] = {
+  #if IS_ENABLED(CONFIG_INET_PSP)
+  	[SKB_EXT_PSP] = SKB_EXT_CHUNKSIZEOF(struct psp_skb_ext),
   #endif
