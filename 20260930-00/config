@@ -81,6 +81,7 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_rt-ax52 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_rt-ax57m is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_rt-ax59u is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_asus_rt-ax59u-ubi is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_tuf-ax4200 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_tuf-ax4200q is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_asus_tuf-ax6000 is not set
@@ -90,6 +91,7 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r3-mini is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-poe is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-4e is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-8x is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-lite is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bazis_ax3000wm is not set
@@ -133,6 +135,7 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_cudy_wr3000u-v1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_cudy_wbr3000uax-v1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_cudy_wbr3000uax-v1-ubootmod is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_cudy_p2-v1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_dlink_aquila-pro-ai-e30-a1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_dlink_aquila-pro-ai-m30-a1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_dlink_aquila-pro-ai-m60-a1 is not set
@@ -168,10 +171,13 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_jiorouter_ax6000-jidu6j01 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_kebidumei_ax3000-u22 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kap-630 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-1012 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-1812 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-3411 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-3711 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-3811 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-3911 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_keenetic_kn-4410 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_konka_komi-a31 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_livinet_li320 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_ltc_vl7m19k is not set
@@ -188,7 +194,10 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netcore_n60 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netcore_n60-pro is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netcraze_nap-630 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_netcraze_nc-1012 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netcraze_nc-1812 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_netcraze_nc-3411 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_netcraze_nc-4410 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netgear_eax17 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netgear_wax220 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_netis_eap930-v1 is not set
@@ -222,6 +231,9 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_re6000xd is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_f65-v1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_fr365-v1 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-7dr7230-v1 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-7dr7230-v2 is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-7dr7250-v1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-xdr4288 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-xdr6086 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_tplink_tl-xdr6088 is not set
@@ -289,6 +301,7 @@ CONFIG_TARGET_PER_DEVICE_ROOTFS=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_rt-ax57m is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_rt-ax52 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_rt-ax59u is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_rt-ax59u-ubi is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_tuf-ax4200 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_tuf-ax4200q is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_tuf-ax6000 is not set
@@ -301,6 +314,7 @@ CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
 CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_bananapi_bpi-r4=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-poe is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-lite is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-4e is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-8x is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bazis_ax3000wm is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_buffalo_wsr-3000ax4p is not set
@@ -327,6 +341,7 @@ CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_bananapi_bpi-r4=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_m3000-v1-ubootmod is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_m3000-v2-yt8821 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_m3000-v2-yt8821-ubootmod is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_p2-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_re3000-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_tr3000-256mb-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_tr3000-v1 is not set
@@ -381,7 +396,10 @@ CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_glinet_gl-mt6000=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_jiorouter_ax6000-jidu6101 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_jiorouter_ax6000-jidu6j01 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_kebidumei_ax3000-u22 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-3411 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-4410 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kap-630 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-1012 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-1812 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-3711 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-3811 is not set
@@ -400,7 +418,10 @@ CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_glinet_gl-mt6000=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mercusys_mr90x-v1-ubi is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcore_n60 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcore_n60-pro is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcraze_nc-3411 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcraze_nc-4410 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcraze_nap-630 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcraze_nc-1012 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcraze_nc-1812 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netgear_eax17 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netgear_wax220 is not set
@@ -435,6 +456,9 @@ CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_openwrt_one=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_f65-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_fr365-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_re6000xd is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-7dr7230-v1 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-7dr7230-v2 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-7dr7250-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr4288 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr6086 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr6088 is not set
@@ -564,7 +588,6 @@ CONFIG_DEFAULT_wpad-basic-mbedtls=y
 CONFIG_MODULE_DEFAULT_wpad-basic-mbedtls=y
 CONFIG_HAS_FPU=y
 CONFIG_HAS_DT_OVERLAY_SUPPORT=y
-CONFIG_AUDIO_SUPPORT=y
 CONFIG_GPIO_SUPPORT=y
 CONFIG_PCI_SUPPORT=y
 CONFIG_PCIE_SUPPORT=y
@@ -579,6 +602,7 @@ CONFIG_USES_SEPARATE_INITRAMFS=y
 CONFIG_USES_SQUASHFS=y
 CONFIG_EMMC_SUPPORT=y
 CONFIG_NAND_SUPPORT=y
+CONFIG_HAS_ATOMIC64=y
 CONFIG_ARCH_64BIT=y
 CONFIG_USES_ROOTFS_PART=y
 CONFIG_REGULATOR_SUPPORT=y
@@ -647,7 +671,6 @@ CONFIG_SIGN_FIRMWARE=y
 #
 # General build options
 #
-# CONFIG_DISPLAY_SUPPORT is not set
 # CONFIG_BUILD_PATENTED is not set
 # CONFIG_BUILD_NLS is not set
 CONFIG_SHADOW_PASSWORDS=y
@@ -737,6 +760,7 @@ CONFIG_KERNEL_IPC_NS=y
 CONFIG_KERNEL_USER_NS=y
 CONFIG_KERNEL_PID_NS=y
 CONFIG_KERNEL_NET_NS=y
+CONFIG_KERNEL_TIME_NS=y
 CONFIG_KERNEL_POSIX_MQUEUE=y
 CONFIG_KERNEL_SECCOMP_FILTER=y
 CONFIG_KERNEL_SECCOMP=y
@@ -932,6 +956,20 @@ CONFIG_VERSION_CODE_FILENAMES=y
 # CONFIG_PER_FEED_REPO is not set
 
 #
+# Hardware support
+#
+# CONFIG_PACKAGE_accel-support is not set
+# CONFIG_PACKAGE_audio-support is not set
+# CONFIG_PACKAGE_dvb-support is not set
+# CONFIG_PACKAGE_hidraw-support is not set
+# CONFIG_PACKAGE_input-support is not set
+# CONFIG_PACKAGE_kvm-support is not set
+# CONFIG_PACKAGE_printer-support is not set
+# CONFIG_PACKAGE_scanner-support is not set
+# CONFIG_PACKAGE_video-support is not set
+# end of Hardware support
+
+#
 # Base system
 #
 CONFIG_PACKAGE_apk-mbedtls=y
@@ -1031,7 +1069,7 @@ CONFIG_BUSYBOX_DEFAULT_FEATURE_EDITING_MAX_LEN=512
 CONFIG_BUSYBOX_DEFAULT_FEATURE_EDITING_HISTORY=256
 CONFIG_BUSYBOX_DEFAULT_FEATURE_EDITING_SAVEHISTORY=y
 CONFIG_BUSYBOX_DEFAULT_FEATURE_EDITING_SAVE_ON_EXIT=y
-# CONFIG_BUSYBOX_DEFAULT_FEATURE_REVERSE_SEARCH is not set
+CONFIG_BUSYBOX_DEFAULT_FEATURE_REVERSE_SEARCH=y
 CONFIG_BUSYBOX_DEFAULT_FEATURE_TAB_COMPLETION=y
 # CONFIG_BUSYBOX_DEFAULT_FEATURE_USERNAME_COMPLETION is not set
 CONFIG_BUSYBOX_DEFAULT_FEATURE_EDITING_FANCY_PROMPT=y
@@ -2594,6 +2632,7 @@ CONFIG_PACKAGE_mt7988-wo-firmware=m
 # CONFIG_PACKAGE_rtl8192du-firmware is not set
 # CONFIG_PACKAGE_rtl8192eu-firmware is not set
 # CONFIG_PACKAGE_rtl8192se-firmware is not set
+# CONFIG_PACKAGE_rtl8261c-firmware is not set
 # CONFIG_PACKAGE_rtl826x-firmware is not set
 # CONFIG_PACKAGE_rtl826x-lp-firmware is not set
 # CONFIG_PACKAGE_rtl8723au-firmware is not set
@@ -2658,9 +2697,6 @@ CONFIG_PACKAGE_wireless-regdb=m
 #
 # Games
 #
-# CONFIG_PACKAGE_gzdoom is not set
-# CONFIG_PACKAGE_sdl3-doom is not set
-# CONFIG_PACKAGE_vice is not set
 # end of Games
 
 #
@@ -2699,13 +2735,6 @@ CONFIG_PACKAGE_wireless-regdb=m
 #
 # Bluetooth Support
 #
-# CONFIG_PACKAGE_kmod-ath3k is not set
-# CONFIG_PACKAGE_kmod-bluetooth is not set
-# CONFIG_PACKAGE_kmod-bluetooth-6lowpan is not set
-# CONFIG_PACKAGE_kmod-btmrvl is not set
-# CONFIG_PACKAGE_kmod-btsdio is not set
-# CONFIG_PACKAGE_kmod-btusb is not set
-# CONFIG_PACKAGE_kmod-hci-uart is not set
 # end of Bluetooth Support
 
 #
@@ -2770,6 +2799,11 @@ CONFIG_PACKAGE_kmod-crypto-sha512=y
 # CONFIG_PACKAGE_kmod-crypto-xxhash is not set
 # CONFIG_PACKAGE_kmod-cryptodev is not set
 # end of Cryptographic API modules
+
+#
+# DVB Support
+#
+# end of DVB Support
 
 #
 # Filesystems
@@ -2838,7 +2872,6 @@ CONFIG_PACKAGE_kmod-gpio-button-hotplug=y
 # CONFIG_PACKAGE_kmod-hwmon-adt7470 is not set
 # CONFIG_PACKAGE_kmod-hwmon-adt7475 is not set
 CONFIG_PACKAGE_kmod-hwmon-core=m
-# CONFIG_PACKAGE_kmod-hwmon-corsair-cpro is not set
 # CONFIG_PACKAGE_kmod-hwmon-dme1737 is not set
 # CONFIG_PACKAGE_kmod-hwmon-drivetemp is not set
 # CONFIG_PACKAGE_kmod-hwmon-emc2305 is not set
@@ -2947,16 +2980,11 @@ CONFIG_PACKAGE_kmod-i2c-mux-pca954x=m
 #
 # Input modules
 #
-# CONFIG_PACKAGE_kmod-hid is not set
-# CONFIG_PACKAGE_kmod-hid-alps is not set
-# CONFIG_PACKAGE_kmod-hid-generic is not set
 # CONFIG_PACKAGE_kmod-input-adc-keys is not set
 # CONFIG_PACKAGE_kmod-input-core is not set
-# CONFIG_PACKAGE_kmod-input-evdev is not set
 # CONFIG_PACKAGE_kmod-input-gpio-encoder is not set
 # CONFIG_PACKAGE_kmod-input-gpio-keys is not set
 # CONFIG_PACKAGE_kmod-input-gpio-keys-polled is not set
-# CONFIG_PACKAGE_kmod-input-joydev is not set
 # CONFIG_PACKAGE_kmod-input-matrix-keypad is not set
 # CONFIG_PACKAGE_kmod-input-matrixkmap is not set
 # CONFIG_PACKAGE_kmod-input-mouse-ps2 is not set
@@ -2965,6 +2993,7 @@ CONFIG_PACKAGE_kmod-i2c-mux-pca954x=m
 # CONFIG_PACKAGE_kmod-input-touchscreen-ads7846 is not set
 # CONFIG_PACKAGE_kmod-input-touchscreen-edt-ft5x06 is not set
 # CONFIG_PACKAGE_kmod-input-uinput is not set
+# CONFIG_PACKAGE_kmod-rc-core is not set
 # end of Input modules
 
 #
@@ -3011,6 +3040,43 @@ CONFIG_PACKAGE_kmod-lib-crc-itu-t=m
 # CONFIG_PACKAGE_kmod-lib-zstd is not set
 # CONFIG_PACKAGE_kmod-oid-registry is not set
 # end of Libraries
+
+#
+# Media tuners
+#
+# CONFIG_PACKAGE_kmod-media-tuner-e4000 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-fc0011 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-fc0012 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-fc0013 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-fc2580 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-it913x is not set
+# CONFIG_PACKAGE_kmod-media-tuner-max2165 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mc44s803 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mt2060 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mt2063 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mt20xx is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mt2131 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mt2266 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mxl5005s is not set
+# CONFIG_PACKAGE_kmod-media-tuner-mxl5007t is not set
+# CONFIG_PACKAGE_kmod-media-tuner-qt1010 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-r820t is not set
+# CONFIG_PACKAGE_kmod-media-tuner-si2157 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-simple is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda18212 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda18218 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda18250 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda18271 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda827x is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda8290 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tda9887 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tea5761 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tea5767 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-tua9001 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-xc2028 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-xc4000 is not set
+# CONFIG_PACKAGE_kmod-media-tuner-xc5000 is not set
+# end of Media tuners
 
 #
 # MultiFunction Device (MFD) Support
@@ -3401,7 +3467,6 @@ CONFIG_PACKAGE_kmod-eeprom-at24=m
 # CONFIG_PACKAGE_kmod-keys-encrypted is not set
 # CONFIG_PACKAGE_kmod-keys-trusted is not set
 # CONFIG_PACKAGE_kmod-lkdtm is not set
-# CONFIG_PACKAGE_kmod-lp is not set
 # CONFIG_PACKAGE_kmod-mhi-bus is not set
 # CONFIG_PACKAGE_kmod-mhi-pci-generic is not set
 # CONFIG_PACKAGE_kmod-mmc is not set
@@ -3492,7 +3557,6 @@ CONFIG_PACKAGE_kmod-rtc-pcf8563=m
 #
 # Sound Support
 #
-# CONFIG_PACKAGE_kmod-sound-core is not set
 # end of Sound Support
 
 #
@@ -3503,14 +3567,10 @@ CONFIG_PACKAGE_kmod-rtc-pcf8563=m
 # CONFIG_PACKAGE_kmod-usb-atm is not set
 # CONFIG_PACKAGE_kmod-usb-cdns is not set
 # CONFIG_PACKAGE_kmod-usb-cdns3 is not set
-# CONFIG_PACKAGE_kmod-usb-cm109 is not set
 CONFIG_PACKAGE_kmod-usb-core=m
 # CONFIG_PACKAGE_kmod-usb-dwc2 is not set
 # CONFIG_PACKAGE_kmod-usb-dwc2-pci is not set
 # CONFIG_PACKAGE_kmod-usb-dwc3 is not set
-# CONFIG_PACKAGE_kmod-usb-hid is not set
-# CONFIG_PACKAGE_kmod-usb-hid-cp2112 is not set
-# CONFIG_PACKAGE_kmod-usb-hid-mcp2221 is not set
 # CONFIG_PACKAGE_kmod-usb-ledtrig-usbport is not set
 # CONFIG_PACKAGE_kmod-usb-net is not set
 # CONFIG_PACKAGE_kmod-usb-net-aqc111 is not set
@@ -3541,7 +3601,6 @@ CONFIG_PACKAGE_kmod-usb-core=m
 # CONFIG_PACKAGE_kmod-usb-net-sr9700 is not set
 # CONFIG_PACKAGE_kmod-usb-ohci is not set
 # CONFIG_PACKAGE_kmod-usb-ohci-pci is not set
-# CONFIG_PACKAGE_kmod-usb-printer is not set
 # CONFIG_PACKAGE_kmod-usb-serial is not set
 # CONFIG_PACKAGE_kmod-usb-serial-ark3116 is not set
 # CONFIG_PACKAGE_kmod-usb-serial-belkin is not set
@@ -3574,7 +3633,6 @@ CONFIG_PACKAGE_kmod-usb-core=m
 CONFIG_PACKAGE_kmod-usb-xhci-hcd=m
 CONFIG_PACKAGE_kmod-usb-xhci-mtk=m
 # CONFIG_PACKAGE_kmod-usb-xhci-pci-renesas is not set
-# CONFIG_PACKAGE_kmod-usb-yealink is not set
 # CONFIG_PACKAGE_kmod-usb2 is not set
 # CONFIG_PACKAGE_kmod-usb2-pci is not set
 CONFIG_PACKAGE_kmod-usb3=m
@@ -3588,8 +3646,9 @@ CONFIG_PACKAGE_kmod-usb3=m
 # Video Support
 #
 # CONFIG_PACKAGE_kmod-media-controller is not set
-# CONFIG_PACKAGE_kmod-video-core is not set
 # CONFIG_PACKAGE_kmod-v4l2loopback is not set
+# CONFIG_PACKAGE_kmod-video-core is not set
+# CONFIG_PACKAGE_kmod-video-em28xx is not set
 # end of Video Support
 
 #
@@ -4107,14 +4166,12 @@ CONFIG_HAS_LUAJIT_ARCH=y
 # CONFIG_PACKAGE_python3-pytest-forked is not set
 # CONFIG_PACKAGE_python3-pytest-xdist is not set
 # CONFIG_PACKAGE_python3-pytz is not set
-# CONFIG_PACKAGE_python3-pyudev is not set
 # CONFIG_PACKAGE_python3-pyusb is not set
 # CONFIG_PACKAGE_python3-readline is not set
 # CONFIG_PACKAGE_python3-referencing is not set
 # CONFIG_PACKAGE_python3-requests is not set
 # CONFIG_PACKAGE_python3-rpds-py is not set
 # CONFIG_PACKAGE_python3-rsa is not set
-# CONFIG_PACKAGE_python3-rtslib-fb is not set
 # CONFIG_PACKAGE_python3-ruamel-yaml is not set
 # CONFIG_PACKAGE_python3-s3transfer is not set
 # CONFIG_PACKAGE_python3-schedule is not set
@@ -4884,49 +4941,20 @@ CONFIG_WOLFSSL_ALT_NAMES=y
 # CONFIG_PACKAGE_libassimp is not set
 # CONFIG_PACKAGE_libcairo is not set
 # CONFIG_PACKAGE_libdisplay-info is not set
-# CONFIG_PACKAGE_libdrm is not set
-# CONFIG_PACKAGE_libdrm-amdgpu is not set
-# CONFIG_PACKAGE_libdrm-etnaviv is not set
-# CONFIG_PACKAGE_libdrm-nouveau is not set
-# CONFIG_PACKAGE_libdrm-omap is not set
-# CONFIG_PACKAGE_libdrm-radeon is not set
-# CONFIG_PACKAGE_libdrm-tegra is not set
 # CONFIG_PACKAGE_libepoxy is not set
 # CONFIG_PACKAGE_libglm is not set
 # CONFIG_PACKAGE_libgraphene is not set
-# CONFIG_PACKAGE_libmesa-amd is not set
-# CONFIG_PACKAGE_libmesa-broadcom is not set
-# CONFIG_PACKAGE_libmesa-etnaviv is not set
-# CONFIG_PACKAGE_libmesa-lima is not set
-# CONFIG_PACKAGE_libmesa-llvmpipe is not set
-# CONFIG_PACKAGE_libmesa-nouveau is not set
-# CONFIG_PACKAGE_libmesa-panfrost is not set
-# CONFIG_PACKAGE_libmesa-softpipe is not set
-# CONFIG_PACKAGE_libmesa-tegra is not set
-# CONFIG_PACKAGE_libmesa-virgl is not set
-# CONFIG_PACKAGE_libmesa-zink is not set
 # CONFIG_PACKAGE_libpango is not set
 # CONFIG_PACKAGE_libseat is not set
-# CONFIG_PACKAGE_libteflon-etnaviv is not set
-# CONFIG_PACKAGE_libteflon-rocket is not set
-# CONFIG_PACKAGE_libva is not set
-# CONFIG_PACKAGE_libvulkan-broadcom is not set
-# CONFIG_PACKAGE_libvulkan-imagination is not set
-# CONFIG_PACKAGE_libvulkan-lvp is not set
-# CONFIG_PACKAGE_libvulkan-panfrost is not set
-# CONFIG_PACKAGE_libvulkan-radeon is not set
-# CONFIG_PACKAGE_libvulkan-virtio is not set
 CONFIG_HAVE_MESA=y
 CONFIG_MESA_USE_LLVM=y
 # CONFIG_PACKAGE_seatd is not set
 # CONFIG_PACKAGE_vulkan-loader is not set
-# CONFIG_PACKAGE_wayland-info is not set
 # end of Video
 
 #
 # libimobiledevice
 #
-# CONFIG_PACKAGE_libideviceactivation is not set
 # CONFIG_PACKAGE_libimobiledevice is not set
 # CONFIG_PACKAGE_libimobiledevice-glue is not set
 # CONFIG_PACKAGE_libirecovery is not set
@@ -4935,12 +4963,17 @@ CONFIG_MESA_USE_LLVM=y
 # CONFIG_PACKAGE_libusbmuxd is not set
 # end of libimobiledevice
 
+#
+# ucode
+#
+# CONFIG_PACKAGE_ucode-mod-plutosvg is not set
+# CONFIG_PACKAGE_ucode-mod-plutovg is not set
+# end of ucode
+
 # CONFIG_PACKAGE_abseil-cpp is not set
 # CONFIG_PACKAGE_acsccid is not set
-# CONFIG_PACKAGE_alsa-lib is not set
 # CONFIG_PACKAGE_argp-standalone is not set
 # CONFIG_PACKAGE_bind-libs is not set
-# CONFIG_PACKAGE_bluez-libs is not set
 # CONFIG_PACKAGE_boost is not set
 # CONFIG_boost-context-exclude is not set
 # CONFIG_boost-coroutine-exclude is not set
@@ -4948,7 +4981,6 @@ CONFIG_MESA_USE_LLVM=y
 # CONFIG_PACKAGE_cJSON is not set
 # CONFIG_PACKAGE_ccid is not set
 # CONFIG_PACKAGE_check is not set
-# CONFIG_PACKAGE_cog is not set
 CONFIG_PACKAGE_confuse=y
 # CONFIG_PACKAGE_czmq is not set
 # CONFIG_PACKAGE_davici is not set
@@ -4967,7 +4999,6 @@ CONFIG_PACKAGE_confuse=y
 # CONFIG_PACKAGE_gnulib-l10n is not set
 # CONFIG_PACKAGE_google-authenticator-libpam is not set
 # CONFIG_PACKAGE_gperftools is not set
-# CONFIG_PACKAGE_hidapi is not set
 # CONFIG_PACKAGE_ibrcommon is not set
 # CONFIG_PACKAGE_ibrdtn is not set
 # CONFIG_PACKAGE_icu is not set
@@ -4981,7 +5012,6 @@ CONFIG_PACKAGE_jansson=y
 # CONFIG_PACKAGE_knot-libs is not set
 # CONFIG_PACKAGE_knot-libzscanner is not set
 # CONFIG_PACKAGE_libaio is not set
-# CONFIG_PACKAGE_libao is not set
 # CONFIG_PACKAGE_libapparmor is not set
 # CONFIG_PACKAGE_libapr is not set
 # CONFIG_PACKAGE_libaprutil is not set
@@ -4989,7 +5019,6 @@ CONFIG_PACKAGE_jansson=y
 # CONFIG_PACKAGE_libarchive-noopenssl is not set
 # CONFIG_PACKAGE_libasm is not set
 # CONFIG_PACKAGE_libassuan is not set
-# CONFIG_PACKAGE_libatasmart is not set
 # CONFIG_PACKAGE_libaudit is not set
 # CONFIG_PACKAGE_libauparse is not set
 # CONFIG_PACKAGE_libavahi-client is not set
@@ -5011,7 +5040,6 @@ CONFIG_PACKAGE_libblobmsg-json=y
 # CONFIG_PACKAGE_libclang-cpp is not set
 # CONFIG_PACKAGE_libcli is not set
 # CONFIG_PACKAGE_libcoap is not set
-# CONFIG_PACKAGE_libcogcore is not set
 CONFIG_PACKAGE_libcomerr=m
 # CONFIG_PACKAGE_libconfig is not set
 # CONFIG_PACKAGE_libctf is not set
@@ -5030,6 +5058,7 @@ CONFIG_PACKAGE_libcomerr=m
 # CONFIG_PACKAGE_libdmapsharing is not set
 # CONFIG_PACKAGE_libdnet is not set
 # CONFIG_PACKAGE_libdouble-conversion is not set
+# CONFIG_PACKAGE_libdvbcsa is not set
 # CONFIG_PACKAGE_libdw is not set
 CONFIG_PACKAGE_libe2p=m
 # CONFIG_PACKAGE_libecdsautil is not set
@@ -5038,7 +5067,6 @@ CONFIG_PACKAGE_libe2p=m
 # CONFIG_PACKAGE_libesmtp is not set
 # CONFIG_PACKAGE_libestr is not set
 # CONFIG_PACKAGE_libev is not set
-# CONFIG_PACKAGE_libevdev is not set
 # CONFIG_PACKAGE_libevent2 is not set
 # CONFIG_PACKAGE_libevent2-core is not set
 # CONFIG_PACKAGE_libevent2-extra is not set
@@ -5056,11 +5084,66 @@ CONFIG_PACKAGE_libf2fs=m
 CONFIG_PACKAGE_libfdisk=m
 # CONFIG_PACKAGE_libfdt is not set
 # CONFIG_PACKAGE_libffi is not set
-# CONFIG_PACKAGE_libffmpeg-audio-dec is not set
-# CONFIG_PACKAGE_libffmpeg-custom is not set
-# CONFIG_PACKAGE_libffmpeg-full is not set
+
+#
+# FFmpeg configuration
+#
+
+#
+# Licensing
+#
+CONFIG_FFMPEG_GPL=y
+CONFIG_FFMPEG_VERSION3=y
+# CONFIG_FFMPEG_NONFREE is not set
+
+#
+# Build properties
+#
+CONFIG_FFMPEG_OPTIMIZE_SIZE=y
+CONFIG_FFMPEG_PROGRAMS=y
+
+#
+# Hardware acceleration
+#
+CONFIG_FFMPEG_LIBDRM=y
+CONFIG_FFMPEG_V4L2_M2M=y
+CONFIG_FFMPEG_V4L2_REQUEST=y
+
+#
+# Transport layer security
+#
+# CONFIG_FFMPEG_TLS_NONE is not set
+# CONFIG_FFMPEG_TLS_GNUTLS is not set
+# CONFIG_FFMPEG_TLS_OPENSSL is not set
+CONFIG_FFMPEG_TLS_MBEDTLS=y
+
+#
+# External libraries
+#
+CONFIG_FFMPEG_LIBOPUS=y
+# CONFIG_FFMPEG_LIBVORBIS is not set
+# CONFIG_FFMPEG_LIBVPX is not set
+# CONFIG_FFMPEG_LIBWEBP is not set
+# CONFIG_FFMPEG_LIBSPEEX is not set
+# CONFIG_FFMPEG_LIBXML2 is not set
+CONFIG_FFMPEG_LAME=y
+# CONFIG_FFMPEG_SHINE is not set
+
+#
+# System libraries
+#
+# CONFIG_FFMPEG_LIBV4L2 is not set
+CONFIG_FFMPEG_BZLIB=y
+# CONFIG_FFMPEG_LZMA is not set
+CONFIG_FFMPEG_ICONV=y
+
+#
+# Components
+#
+# CONFIG_FFMPEG_SELECT_COMPONENTS is not set
+# end of FFmpeg configuration
+
 # CONFIG_PACKAGE_libffmpeg-mini is not set
-# CONFIG_PACKAGE_libfido2 is not set
 # CONFIG_PACKAGE_libflac is not set
 # CONFIG_PACKAGE_libfmt is not set
 # CONFIG_PACKAGE_libfreetype is not set
@@ -5083,7 +5166,6 @@ CONFIG_PACKAGE_libgmp=y
 # CONFIG_PACKAGE_libgpiod is not set
 # CONFIG_PACKAGE_libgpiodcxx is not set
 # CONFIG_PACKAGE_libgps is not set
-# CONFIG_PACKAGE_libgudev is not set
 # CONFIG_PACKAGE_libhamlib is not set
 # CONFIG_PACKAGE_libhavege is not set
 # CONFIG_PACKAGE_libhiredis is not set
@@ -5099,7 +5181,6 @@ CONFIG_PACKAGE_libgmp=y
 # CONFIG_PACKAGE_libinih is not set
 # CONFIG_PACKAGE_libinireader is not set
 # CONFIG_PACKAGE_libinotifytools is not set
-# CONFIG_PACKAGE_libinput is not set
 # CONFIG_PACKAGE_libintl-full is not set
 CONFIG_PACKAGE_libiperf3=y
 # CONFIG_PACKAGE_libiw is not set
@@ -5128,7 +5209,6 @@ CONFIG_PACKAGE_liblucihttp-ucode=y
 # CONFIG_PACKAGE_liblzo is not set
 # CONFIG_PACKAGE_libmad is not set
 # CONFIG_PACKAGE_libmagic is not set
-# CONFIG_PACKAGE_libmanette is not set
 # CONFIG_PACKAGE_libmaxminddb is not set
 # CONFIG_PACKAGE_libmbim is not set
 # CONFIG_PACKAGE_libmd is not set
@@ -5238,6 +5318,7 @@ CONFIG_PACKAGE_libpcap=y
 # CONFIG_PACKAGE_libpri is not set
 # CONFIG_PACKAGE_libprotobuf-c is not set
 # CONFIG_PACKAGE_libpsl is not set
+# CONFIG_PACKAGE_libpulse is not set
 # CONFIG_PACKAGE_libqmi is not set
 # CONFIG_PACKAGE_libqrencode is not set
 # CONFIG_PACKAGE_libqrtr-glib is not set
@@ -5255,12 +5336,6 @@ CONFIG_PACKAGE_libreadline=y
 # CONFIG_PACKAGE_libsasl2 is not set
 # CONFIG_PACKAGE_libsasl2-sasldb is not set
 # CONFIG_PACKAGE_libsasl2-utils is not set
-# CONFIG_PACKAGE_libsdl2-compat is not set
-# CONFIG_PACKAGE_libsdl2-image is not set
-# CONFIG_PACKAGE_libsdl2-mixer is not set
-# CONFIG_PACKAGE_libsdl3 is not set
-# CONFIG_PACKAGE_libsdl3-image is not set
-# CONFIG_PACKAGE_libsdl3-mixer is not set
 # CONFIG_PACKAGE_libseccomp is not set
 # CONFIG_PACKAGE_libselinux is not set
 # CONFIG_PACKAGE_libsemanage is not set
@@ -5303,6 +5378,7 @@ CONFIG_PACKAGE_libss=m
 # CONFIG_PACKAGE_libtraceevent is not set
 # CONFIG_PACKAGE_libtraceevent-extra is not set
 # CONFIG_PACKAGE_libtracefs is not set
+# CONFIG_PACKAGE_libtsm is not set
 CONFIG_PACKAGE_libubox=y
 # CONFIG_PACKAGE_libubox-lua is not set
 CONFIG_PACKAGE_libubus=y
@@ -5314,7 +5390,6 @@ CONFIG_PACKAGE_libuclient=y
 CONFIG_PACKAGE_libucode=y
 # CONFIG_PACKAGE_libucontext is not set
 CONFIG_PACKAGE_libudebug=y
-# CONFIG_PACKAGE_libudev-zero is not set
 # CONFIG_PACKAGE_libudns is not set
 # CONFIG_PACKAGE_libuecc is not set
 # CONFIG_PACKAGE_libugpio is not set
@@ -5336,13 +5411,10 @@ CONFIG_PACKAGE_libuuid=y
 # CONFIG_PACKAGE_libvorbis is not set
 # CONFIG_PACKAGE_libvorbisidec is not set
 # CONFIG_PACKAGE_libvpx is not set
-# CONFIG_PACKAGE_libwacom is not set
 # CONFIG_PACKAGE_libwebp is not set
 # CONFIG_PACKAGE_libwebsockets-full is not set
 # CONFIG_PACKAGE_libwebsockets-mbedtls is not set
 # CONFIG_PACKAGE_libwebsockets-openssl is not set
-# CONFIG_PACKAGE_libwpe is not set
-# CONFIG_PACKAGE_libwpewebkit is not set
 # CONFIG_PACKAGE_libwrap is not set
 # CONFIG_PACKAGE_libxdp is not set
 # CONFIG_PACKAGE_libxerces-c is not set
@@ -5357,7 +5429,6 @@ CONFIG_PACKAGE_libuuid=y
 # CONFIG_PACKAGE_libyder is not set
 # CONFIG_PACKAGE_libzmq-curve is not set
 # CONFIG_PACKAGE_libzmq-nc is not set
-# CONFIG_PACKAGE_libzmusic is not set
 # CONFIG_PACKAGE_linux-atm is not set
 # CONFIG_PACKAGE_lmdb is not set
 # CONFIG_PACKAGE_log4cplus is not set
@@ -5375,6 +5446,8 @@ CONFIG_PACKAGE_libuuid=y
 # CONFIG_PACKAGE_openpgm is not set
 # CONFIG_PACKAGE_p11-kit is not set
 # CONFIG_PACKAGE_pixman is not set
+# CONFIG_PACKAGE_plutosvg is not set
+# CONFIG_PACKAGE_plutovg is not set
 # CONFIG_PACKAGE_poco is not set
 # CONFIG_PACKAGE_poco-all is not set
 # CONFIG_PACKAGE_protobuf is not set
@@ -5395,9 +5468,6 @@ CONFIG_PACKAGE_terminfo=y
 # CONFIG_PACKAGE_tinycdb is not set
 # CONFIG_PACKAGE_totem-pl-parser is not set
 # CONFIG_PACKAGE_vectorscan is not set
-# CONFIG_PACKAGE_wpebackend-fdo is not set
-# CONFIG_PACKAGE_wpewebkit-driver is not set
-# CONFIG_PACKAGE_wpewebkit-minibrowser is not set
 # CONFIG_PACKAGE_xkeyboard-config is not set
 # CONFIG_PACKAGE_xmlrpc-c-abyss is not set
 # CONFIG_PACKAGE_xmlrpc-c-client is not set
@@ -5524,7 +5594,6 @@ CONFIG_PACKAGE_luci-app-banip=y
 # CONFIG_PACKAGE_luci-app-crowdsec-firewall-bouncer is not set
 # CONFIG_PACKAGE_luci-app-csshnpd is not set
 # CONFIG_PACKAGE_luci-app-dawn is not set
-# CONFIG_PACKAGE_luci-app-dcwapd is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-dockerman is not set
 # CONFIG_PACKAGE_luci-app-dump1090 is not set
@@ -5545,11 +5614,9 @@ CONFIG_PACKAGE_luci-app-irqbalance=y
 # CONFIG_PACKAGE_luci-app-ledtrig-rssi is not set
 # CONFIG_PACKAGE_luci-app-ledtrig-switch is not set
 # CONFIG_PACKAGE_luci-app-ledtrig-usbport is not set
-# CONFIG_PACKAGE_luci-app-librespeed is not set
 # CONFIG_PACKAGE_luci-app-libreswan is not set
 # CONFIG_PACKAGE_luci-app-lldpd is not set
 # CONFIG_PACKAGE_luci-app-lorawan-basicstation is not set
-# CONFIG_PACKAGE_luci-app-minidlna is not set
 # CONFIG_PACKAGE_luci-app-mosquitto is not set
 # CONFIG_PACKAGE_luci-app-mwan3 is not set
 # CONFIG_PACKAGE_luci-app-natmap is not set
@@ -5950,15 +6017,11 @@ CONFIG_PACKAGE_luci-i18n-sqm-zh-tw=y
 # CONFIG_PACKAGE_oggfwd is not set
 # end of Streaming
 
-# CONFIG_PACKAGE_ffmpeg is not set
-# CONFIG_PACKAGE_ffprobe is not set
 # CONFIG_PACKAGE_fswebcam is not set
-# CONFIG_PACKAGE_go2rtc is not set
 # CONFIG_PACKAGE_gphoto2 is not set
 # CONFIG_PACKAGE_graphicsmagick is not set
 # CONFIG_PACKAGE_grilo is not set
 # CONFIG_PACKAGE_grilo-plugins is not set
-# CONFIG_PACKAGE_gst1-libav is not set
 # CONFIG_PACKAGE_gstreamer1-libs is not set
 # CONFIG_PACKAGE_gstreamer1-plugins-bad is not set
 # CONFIG_PACKAGE_gstreamer1-plugins-base is not set
@@ -5968,14 +6031,9 @@ CONFIG_PACKAGE_luci-i18n-sqm-zh-tw=y
 # CONFIG_PACKAGE_icecast is not set
 # CONFIG_PACKAGE_imagemagick is not set
 # CONFIG_PACKAGE_lcdgrilo is not set
-# CONFIG_PACKAGE_minidlna is not set
 # CONFIG_PACKAGE_minisatip is not set
-# CONFIG_PACKAGE_motion-ffmpeg is not set
 # CONFIG_PACKAGE_motion-noffmpeg is not set
-# CONFIG_PACKAGE_tvheadend is not set
 # CONFIG_PACKAGE_ustreamer is not set
-# CONFIG_PACKAGE_v4l2camera is not set
-# CONFIG_PACKAGE_v4l2rtspserver is not set
 # CONFIG_PACKAGE_v4l2tools is not set
 # CONFIG_PACKAGE_vips is not set
 # CONFIG_PACKAGE_xupnpd is not set
@@ -6355,9 +6413,6 @@ CONFIG_PACKAGE_knot-resolver_dnstap=y
 #
 # Meshtastic
 #
-# CONFIG_PACKAGE_meshtasticd-avahi-service is not set
-# CONFIG_PACKAGE_meshtasticd-full is not set
-# CONFIG_PACKAGE_meshtasticd-web is not set
 # end of Meshtastic
 
 #
@@ -6466,7 +6521,6 @@ CONFIG_PACKAGE_tc-tiny=y
 # CONFIG_PACKAGE_openssh-sftp-avahi-service is not set
 # CONFIG_PACKAGE_openssh-sftp-client is not set
 # CONFIG_PACKAGE_openssh-sftp-server is not set
-# CONFIG_PACKAGE_openssh-sk-helper is not set
 # CONFIG_PACKAGE_sshtunnel is not set
 # CONFIG_PACKAGE_tmate is not set
 # end of SSH
@@ -6563,9 +6617,7 @@ CONFIG_PACKAGE_tc-tiny=y
 # CONFIG_PACKAGE_kamailio is not set
 # CONFIG_PACKAGE_miax is not set
 # CONFIG_PACKAGE_pcapsipdump is not set
-# CONFIG_PACKAGE_rtpengine is not set
 # CONFIG_PACKAGE_rtpengine-no-transcode is not set
-# CONFIG_PACKAGE_rtpengine-recording is not set
 # CONFIG_PACKAGE_rtpproxy is not set
 # CONFIG_PACKAGE_sipp is not set
 # CONFIG_PACKAGE_siproxd is not set
@@ -6826,7 +6878,6 @@ CONFIG_PACKAGE_bmon=y
 # CONFIG_PACKAGE_crowdsec-firewall-bouncer is not set
 # CONFIG_PACKAGE_darkstat is not set
 # CONFIG_PACKAGE_dhcpcd is not set
-# CONFIG_PACKAGE_dmapd is not set
 # CONFIG_PACKAGE_dnstap is not set
 # CONFIG_PACKAGE_dnstop is not set
 # CONFIG_PACKAGE_ds-lite is not set
@@ -6977,6 +7028,7 @@ CONFIG_PACKAGE_ppp-mod-pppoe=y
 # CONFIG_PACKAGE_pppstats is not set
 # CONFIG_PACKAGE_proto-bonding is not set
 # CONFIG_PACKAGE_proxychains-ng is not set
+# CONFIG_PACKAGE_prplmesh is not set
 # CONFIG_PACKAGE_qcsuper is not set
 # CONFIG_PACKAGE_radius-mac is not set
 # CONFIG_PACKAGE_radsecproxy is not set
@@ -7066,7 +7118,6 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_unet-cli is not set
 # CONFIG_PACKAGE_unetd is not set
 # CONFIG_PACKAGE_uradvd is not set
-# CONFIG_PACKAGE_usbip is not set
 # CONFIG_PACKAGE_uspotfilter is not set
 # CONFIG_PACKAGE_usteer is not set
 # CONFIG_PACKAGE_ustp is not set
@@ -7092,41 +7143,19 @@ CONFIG_PACKAGE_uclient-fetch=y
 #
 # Sound
 #
-# CONFIG_PACKAGE_alsa-utils is not set
-# CONFIG_PACKAGE_alsa-utils-seq is not set
-# CONFIG_PACKAGE_alsa-utils-tests is not set
-# CONFIG_PACKAGE_aserver is not set
-# CONFIG_PACKAGE_espeak is not set
 # CONFIG_PACKAGE_faad2 is not set
 # CONFIG_PACKAGE_fdk-aac is not set
-# CONFIG_PACKAGE_ices is not set
 # CONFIG_PACKAGE_lame is not set
 # CONFIG_PACKAGE_lame-lib is not set
-# CONFIG_PACKAGE_libfluidsynth is not set
 # CONFIG_PACKAGE_liblo-utils is not set
 # CONFIG_PACKAGE_libwavpack is not set
 # CONFIG_PACKAGE_libxmp is not set
-# CONFIG_PACKAGE_madplay is not set
 # CONFIG_PACKAGE_mpc is not set
 # CONFIG_PACKAGE_mpd-avahi-service is not set
-# CONFIG_PACKAGE_mpd-full is not set
 # CONFIG_PACKAGE_mpd-mini is not set
-# CONFIG_PACKAGE_mpg123 is not set
 # CONFIG_PACKAGE_openal-soft is not set
 # CONFIG_PACKAGE_opus-tools is not set
-# CONFIG_PACKAGE_owntone is not set
-# CONFIG_PACKAGE_pianod is not set
-# CONFIG_PACKAGE_pianod-client is not set
-# CONFIG_PACKAGE_portaudio is not set
-# CONFIG_PACKAGE_pulseaudio-daemon is not set
-# CONFIG_PACKAGE_pulseaudio-daemon-avahi is not set
-# CONFIG_PACKAGE_rtpmidid is not set
-# CONFIG_PACKAGE_shairport-sync-mbedtls is not set
-# CONFIG_PACKAGE_shairport-sync-mini is not set
-# CONFIG_PACKAGE_shairport-sync-openssl is not set
 # CONFIG_PACKAGE_shine is not set
-# CONFIG_PACKAGE_snapclient is not set
-# CONFIG_PACKAGE_snapserver is not set
 
 #
 # Snapcast feature selection
@@ -7141,11 +7170,6 @@ CONFIG_SNAPCAST_SOXR=y
 CONFIG_SNAPCAST_VORBIS=y
 # end of Snapcast feature selection
 
-# CONFIG_PACKAGE_sox_ng is not set
-# CONFIG_PACKAGE_squeezelite-custom is not set
-# CONFIG_PACKAGE_squeezelite-dynamic is not set
-# CONFIG_PACKAGE_squeezelite-full is not set
-# CONFIG_PACKAGE_ttymidi-sysex is not set
 # CONFIG_PACKAGE_upmpdcli is not set
 # end of Sound
 
@@ -7449,12 +7473,6 @@ CONFIG_PACKAGE_sysfsutils=y
 #
 # Video
 #
-# CONFIG_PACKAGE_kmscube is not set
-# CONFIG_PACKAGE_libdrm-tests is not set
-# CONFIG_PACKAGE_libgtk-demos is not set
-# CONFIG_PACKAGE_libgtk-utils is not set
-# CONFIG_PACKAGE_libsdl3-tests is not set
-# CONFIG_PACKAGE_vkmark is not set
 # CONFIG_PACKAGE_vulkaninfo is not set
 # end of Video
 
@@ -7467,14 +7485,11 @@ CONFIG_PACKAGE_sysfsutils=y
 # libimobiledevice
 #
 # CONFIG_PACKAGE_ideviceinstaller is not set
-# CONFIG_PACKAGE_idevicerestore is not set
 # CONFIG_PACKAGE_ifuse is not set
 # CONFIG_PACKAGE_irecovery is not set
-# CONFIG_PACKAGE_libideviceactivation-utils is not set
 # CONFIG_PACKAGE_libimobiledevice-utils is not set
 # CONFIG_PACKAGE_libusbmuxd-utils is not set
 # CONFIG_PACKAGE_plistutil is not set
-# CONFIG_PACKAGE_usbmuxd is not set
 # end of libimobiledevice
 
 #
@@ -7511,7 +7526,6 @@ CONFIG_PACKAGE_sysfsutils=y
 # end of libselinux tools
 
 # CONFIG_PACKAGE_ack is not set
-# CONFIG_PACKAGE_acpid is not set
 # CONFIG_PACKAGE_adb is not set
 # CONFIG_PACKAGE_airos-dfs-reset is not set
 # CONFIG_PACKAGE_aliyun-cli is not set
@@ -7524,13 +7538,6 @@ CONFIG_PACKAGE_sysfsutils=y
 # CONFIG_PACKAGE_augeas-lenses-tests is not set
 # CONFIG_PACKAGE_base16384 is not set
 # CONFIG_PACKAGE_bc is not set
-# CONFIG_PACKAGE_bluelog is not set
-# CONFIG_PACKAGE_bluez-daemon is not set
-# CONFIG_PACKAGE_bluez-tools is not set
-# CONFIG_PACKAGE_bluez-utils is not set
-# CONFIG_PACKAGE_bluez-utils-btmon is not set
-# CONFIG_PACKAGE_bluez-utils-extra is not set
-# CONFIG_PACKAGE_bluld is not set
 # CONFIG_PACKAGE_bonniexx is not set
 # CONFIG_PACKAGE_borgbackup is not set
 # CONFIG_PACKAGE_bossa is not set
@@ -7669,7 +7676,6 @@ CONFIG_PACKAGE_sysfsutils=y
 # CONFIG_PACKAGE_cpupower is not set
 # CONFIG_PACKAGE_cpusage is not set
 # CONFIG_PACKAGE_crconf is not set
-# CONFIG_PACKAGE_crelay is not set
 # CONFIG_PACKAGE_crun is not set
 # CONFIG_PACKAGE_csstidy is not set
 # CONFIG_PACKAGE_ct-bugcheck is not set
@@ -7697,6 +7703,7 @@ CONFIG_PACKAGE_sysfsutils=y
 # CONFIG_PACKAGE_evtest is not set
 # CONFIG_PACKAGE_extract is not set
 # CONFIG_PACKAGE_eza is not set
+# CONFIG_PACKAGE_fbtest is not set
 # CONFIG_PACKAGE_fdt-utils is not set
 # CONFIG_PACKAGE_file is not set
 # CONFIG_PACKAGE_findutils is not set
@@ -7845,9 +7852,6 @@ CONFIG_LPAC_WITH_MBIM=y
 # CONFIG_PACKAGE_omnia-mcutool is not set
 # CONFIG_PACKAGE_open-plc-utils is not set
 # CONFIG_PACKAGE_opendoas is not set
-# CONFIG_PACKAGE_openobex is not set
-# CONFIG_PACKAGE_openobex-apps is not set
-# CONFIG_PACKAGE_openocd is not set
 # CONFIG_PACKAGE_opensc-utils is not set
 # CONFIG_PACKAGE_openssl-util is not set
 # CONFIG_PACKAGE_openzwave is not set
@@ -7906,7 +7910,6 @@ CONFIG_LPAC_WITH_MBIM=y
 # CONFIG_PACKAGE_rtl_433-ssl is not set
 # CONFIG_PACKAGE_runc is not set
 # CONFIG_PACKAGE_sane-backends is not set
-# CONFIG_PACKAGE_sane-daemon is not set
 # CONFIG_PACKAGE_sane-frontends is not set
 # CONFIG_PACKAGE_secilc is not set
 # CONFIG_PACKAGE_sed is not set
@@ -8025,11 +8028,9 @@ CONFIG_PACKAGE_ucode-mod-html=y
 # CONFIG_PACKAGE_unshare is not set
 # CONFIG_PACKAGE_usb-modeswitch is not set
 # CONFIG_PACKAGE_usbids is not set
-# CONFIG_PACKAGE_usbutils is not set
 # CONFIG_PACKAGE_uuidd is not set
 # CONFIG_PACKAGE_uuidgen is not set
 # CONFIG_PACKAGE_uvcdynctrl is not set
-# CONFIG_PACKAGE_v4l-utils is not set
 # CONFIG_PACKAGE_view1090 is not set
 # CONFIG_PACKAGE_viewadsb is not set
 # CONFIG_PACKAGE_vzlogger is not set
@@ -8060,9 +8061,7 @@ CONFIG_PACKAGE_ucode-mod-html=y
 #
 # Frameworks and Toolkits
 #
-# CONFIG_PACKAGE_cage is not set
 # CONFIG_PACKAGE_libgdk-pixbuf is not set
-# CONFIG_PACKAGE_libgtk is not set
 # CONFIG_PACKAGE_libwayland is not set
 # CONFIG_PACKAGE_qt5base-concurrent is not set
 # CONFIG_PACKAGE_qt5base-core is not set
@@ -8076,7 +8075,6 @@ CONFIG_PACKAGE_ucode-mod-html=y
 # CONFIG_PACKAGE_qt5base-plugin-input-evdevmouse is not set
 # CONFIG_PACKAGE_qt5base-plugin-input-evdevtablet is not set
 # CONFIG_PACKAGE_qt5base-plugin-input-evdevtouch is not set
-# CONFIG_PACKAGE_qt5base-plugin-input-libinput is not set
 # CONFIG_PACKAGE_qt5base-plugin-platforms-eglfs is not set
 # CONFIG_PACKAGE_qt5base-plugin-platforms-linuxfb is not set
 # CONFIG_PACKAGE_qt5base-plugin-platforms-minimal is not set
@@ -8118,8 +8116,6 @@ CONFIG_PACKAGE_ucode-mod-html=y
 # CONFIG_PACKAGE_qt5virtualkeyboard is not set
 # CONFIG_PACKAGE_wayland-protocols is not set
 # CONFIG_PACKAGE_wayland-scanner is not set
-# CONFIG_PACKAGE_weston is not set
-# CONFIG_PACKAGE_wlroots is not set
 # end of Frameworks and Toolkits
 # end of Video
 

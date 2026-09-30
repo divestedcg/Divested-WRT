@@ -1,4 +1,4 @@
-From 220a1a9244ad5f03de4abf8432e3cd86c2fa86b3 Mon Sep 17 00:00:00 2001
+From d330845dd21efc7675aa2618183d1a528f5a67d7 Mon Sep 17 00:00:00 2001
 From: Shiji Yang <yangshiji66@outlook.com>
 Date: Wed, 19 Aug 2026 21:16:35 +0800
 Subject: [PATCH] kernel: backport fix for MTK WED 2.0 WDMA TX hang issue

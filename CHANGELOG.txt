@@ -1,3 +1,11 @@
+20260930-00
+- update to c759267c92b0697a6fd6f369164a5ed4c1a6a03c
+  https://github.com/openwrt/openwrt/compare/d60def64a1...c759267c92
+- [cherrypick] #25331: update to kernel 6.18.54 (security and bug fixes)
+- [upstream] ubus update (security fixes)
+- [upstream] libpcap update (security fixes)
+- [upstream] procd update (security fixes)
+
 20260916-00
 - update to d60def64a187bee1de6e2bb711b2619e4a7fbeca
   https://github.com/openwrt/openwrt/compare/f0d3e332e5...d60def64a1
