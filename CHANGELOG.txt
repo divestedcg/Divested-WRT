@@ -1,3 +1,8 @@
+20261020-00
+- update to 2f4311dfff8d4f242f6ae53eb8db728aecbc2878
+  https://github.com/openwrt/openwrt/compare/cd2c55e43b...2f4311dfff
+- [upstream] many security fixes
+
 20261017-00
 - update to cd2c55e43b4e648c6e74101284ebff70fb050403
   https://github.com/openwrt/openwrt/compare/c759267c92...cd2c55e43b
