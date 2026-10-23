@@ -698,6 +698,7 @@ CONFIG_KERNEL_DEBUG_FS=y
 # CONFIG_KERNEL_KALLSYMS is not set
 # CONFIG_KERNEL_FTRACE is not set
 # CONFIG_KERNEL_DEBUG_INFO is not set
+CONFIG_KERNEL_DEBUG_INFO_NONE=y
 CONFIG_KERNEL_FRAME_WARN=2048
 # CONFIG_KERNEL_DEBUG_VIRTUAL is not set
 # CONFIG_KERNEL_DYNAMIC_DEBUG is not set
@@ -741,7 +742,6 @@ CONFIG_KERNEL_CPUSETS=y
 # CONFIG_KERNEL_PROC_PID_CPUSET is not set
 CONFIG_KERNEL_CGROUP_CPUACCT=y
 CONFIG_KERNEL_MEMCG=y
-CONFIG_KERNEL_MEMCG_KMEM=y
 # CONFIG_KERNEL_MEMCG_V1 is not set
 # CONFIG_KERNEL_CGROUP_PERF is not set
 CONFIG_KERNEL_CGROUP_SCHED=y
@@ -749,10 +749,7 @@ CONFIG_KERNEL_FAIR_GROUP_SCHED=y
 CONFIG_KERNEL_CFS_BANDWIDTH=y
 CONFIG_KERNEL_RT_GROUP_SCHED=y
 CONFIG_KERNEL_BLK_CGROUP=y
-# CONFIG_KERNEL_CFQ_GROUP_IOSCHED is not set
 CONFIG_KERNEL_BLK_DEV_THROTTLING=y
-# CONFIG_KERNEL_BLK_DEV_THROTTLING_LOW is not set
-# CONFIG_KERNEL_DEBUG_BLK_CGROUP is not set
 # CONFIG_KERNEL_NET_CLS_CGROUP is not set
 # CONFIG_KERNEL_CGROUP_NET_CLASSID is not set
 # CONFIG_KERNEL_CGROUP_NET_PRIO is not set
@@ -802,14 +799,6 @@ CONFIG_KERNEL_EXT4_FS_POSIX_ACL=y
 CONFIG_KERNEL_F2FS_FS_POSIX_ACL=y
 CONFIG_KERNEL_JFFS2_FS_POSIX_ACL=y
 CONFIG_KERNEL_TMPFS_POSIX_ACL=y
-CONFIG_KERNEL_CIFS_ACL=y
-CONFIG_KERNEL_HFS_FS_POSIX_ACL=y
-CONFIG_KERNEL_HFSPLUS_FS_POSIX_ACL=y
-CONFIG_KERNEL_NFS_ACL_SUPPORT=y
-# CONFIG_KERNEL_NFS_V3_ACL_SUPPORT is not set
-# CONFIG_KERNEL_NFSD_V2_ACL_SUPPORT is not set
-# CONFIG_KERNEL_NFSD_V3_ACL_SUPPORT is not set
-CONFIG_KERNEL_REISER_FS_POSIX_ACL=y
 CONFIG_KERNEL_XFS_POSIX_ACL=y
 CONFIG_KERNEL_JFS_POSIX_ACL=y
 # end of Filesystem ACL and attr support options
@@ -2848,7 +2837,6 @@ CONFIG_PACKAGE_kmod-crypto-sha512=y
 # CONFIG_PACKAGE_kmod-fs-nilfs2 is not set
 # CONFIG_PACKAGE_kmod-fs-ntfs is not set
 # CONFIG_PACKAGE_kmod-fs-ntfs3 is not set
-# CONFIG_PACKAGE_kmod-fs-reiserfs is not set
 # CONFIG_PACKAGE_kmod-fs-squashfs is not set
 # CONFIG_PACKAGE_kmod-fs-udf is not set
 # CONFIG_PACKAGE_kmod-fs-vfat is not set
@@ -3208,7 +3196,6 @@ CONFIG_PACKAGE_kmod-nf-ipt=y
 # CONFIG_PACKAGE_kmod-nf-ipt6 is not set
 # CONFIG_PACKAGE_kmod-nf-ipvs is not set
 CONFIG_PACKAGE_kmod-nf-log=y
-CONFIG_PACKAGE_kmod-nf-log6=y
 CONFIG_PACKAGE_kmod-nf-nat=y
 # CONFIG_PACKAGE_kmod-nf-nat6 is not set
 # CONFIG_PACKAGE_kmod-nf-nathelper is not set
@@ -3418,6 +3405,10 @@ CONFIG_PACKAGE_kmod-sfp=m
 # CONFIG_PACKAGE_kmod-netlink-diag is not set
 # CONFIG_PACKAGE_kmod-nlmon is not set
 # CONFIG_PACKAGE_kmod-nsh is not set
+# CONFIG_PACKAGE_kmod-openvswitch is not set
+# CONFIG_PACKAGE_kmod-openvswitch-geneve is not set
+# CONFIG_PACKAGE_kmod-openvswitch-gre is not set
+# CONFIG_PACKAGE_kmod-openvswitch-vxlan is not set
 # CONFIG_PACKAGE_kmod-ovpn-backports is not set
 # CONFIG_PACKAGE_kmod-packet-diag is not set
 # CONFIG_PACKAGE_kmod-pf-ring is not set
@@ -3434,6 +3425,7 @@ CONFIG_PACKAGE_kmod-pppox=y
 # CONFIG_PACKAGE_kmod-qrtr-tun is not set
 # CONFIG_PACKAGE_kmod-sched is not set
 # CONFIG_PACKAGE_kmod-sched-act-gate is not set
+# CONFIG_PACKAGE_kmod-sched-act-pedit is not set
 # CONFIG_PACKAGE_kmod-sched-act-police is not set
 # CONFIG_PACKAGE_kmod-sched-act-sample is not set
 # CONFIG_PACKAGE_kmod-sched-act-vlan is not set
@@ -3446,8 +3438,10 @@ CONFIG_PACKAGE_kmod-sched-core=y
 # CONFIG_PACKAGE_kmod-sched-drr is not set
 # CONFIG_PACKAGE_kmod-sched-dualpi2 is not set
 # CONFIG_PACKAGE_kmod-sched-etf is not set
+# CONFIG_PACKAGE_kmod-sched-ets is not set
 # CONFIG_PACKAGE_kmod-sched-flower is not set
 # CONFIG_PACKAGE_kmod-sched-fq-pie is not set
+# CONFIG_PACKAGE_kmod-sched-gred is not set
 # CONFIG_PACKAGE_kmod-sched-ipset is not set
 # CONFIG_PACKAGE_kmod-sched-mqprio is not set
 # CONFIG_PACKAGE_kmod-sched-pie is not set
@@ -4286,13 +4280,16 @@ CONFIG_RUST_SCCACHE_DIR=""
 CONFIG_PACKAGE_ucode=y
 # CONFIG_PACKAGE_ucode-mod-debug is not set
 CONFIG_PACKAGE_ucode-mod-digest=y
+# CONFIG_PACKAGE_ucode-mod-ffi is not set
 CONFIG_PACKAGE_ucode-mod-fs=y
 # CONFIG_PACKAGE_ucode-mod-io is not set
 CONFIG_PACKAGE_ucode-mod-log=y
 CONFIG_PACKAGE_ucode-mod-math=y
+# CONFIG_PACKAGE_ucode-mod-netaddr is not set
 CONFIG_PACKAGE_ucode-mod-nl80211=y
 # CONFIG_PACKAGE_ucode-mod-resolv is not set
 CONFIG_PACKAGE_ucode-mod-rtnl=y
+# CONFIG_PACKAGE_ucode-mod-serial is not set
 # CONFIG_PACKAGE_ucode-mod-socket is not set
 # CONFIG_PACKAGE_ucode-mod-struct is not set
 CONFIG_PACKAGE_ucode-mod-ubus=y
@@ -6067,6 +6064,15 @@ CONFIG_PACKAGE_luci-i18n-sqm-zh-tw=y
 # CONFIG_PACKAGE_icecast is not set
 # CONFIG_PACKAGE_imagemagick is not set
 # CONFIG_PACKAGE_lcdgrilo is not set
+# CONFIG_PACKAGE_libcamera is not set
+# CONFIG_PACKAGE_libcamera-cam is not set
+# CONFIG_PACKAGE_libcamera-ipa-ipu3 is not set
+# CONFIG_PACKAGE_libcamera-ipa-mali-c55 is not set
+# CONFIG_PACKAGE_libcamera-ipa-rkisp1 is not set
+# CONFIG_PACKAGE_libcamera-ipa-rkisp2 is not set
+# CONFIG_PACKAGE_libcamera-ipa-rpi-vc4 is not set
+# CONFIG_PACKAGE_libcamera-ipa-softisp is not set
+# CONFIG_PACKAGE_libcamera-v4l2 is not set
 # CONFIG_PACKAGE_minisatip is not set
 # CONFIG_PACKAGE_motion-noffmpeg is not set
 # CONFIG_PACKAGE_ustreamer is not set
@@ -6494,8 +6500,11 @@ CONFIG_WEECHAT_ZSTD=y
 #
 # Open vSwitch
 #
+# CONFIG_PACKAGE_openvswitch is not set
+# CONFIG_PACKAGE_openvswitch-ovn-host is not set
 # CONFIG_PACKAGE_openvswitch-ovn-north is not set
 # CONFIG_PACKAGE_openvswitch-python3 is not set
+# CONFIG_PACKAGE_ovsd is not set
 # end of Open vSwitch
 
 #

@@ -1,7 +1,7 @@
-From 8ff848de1aa06b2a7ed01c6ff5ea976611e4a3b4 Mon Sep 17 00:00:00 2001
+From f4372e8de3f8d52214d95381922f7f0cb4c63f01 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Sun, 11 Oct 2026 11:50:16 -0400
-Subject: [PATCH 1/3] kernel: bump 6.18 to 6.18.56
+Subject: [PATCH 1/4] kernel: bump 6.18 to 6.18.56
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.56
 
@@ -57,7 +57,6 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...t-usb-qmi_wwan-add-Quectel-EG120K-EA.patch | 60 ----------------
  .../generic/hack-6.18/253-ksmbd-config.patch  |  2 +-
  ...lare-custom-execmem-alloc-free-funct.patch |  6 +-
- ...-netfilter-add-xt_FLOWOFFLOAD-target.patch |  2 +-
  .../hack-6.18/660-fq_codel_defaults.patch     |  4 +-
  .../721-net-add-packet-mangeling.patch        |  2 +-
  ...hy-aquantia-enable-AQR112-and-AQR412.patch |  4 +-
@@ -90,7 +89,7 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...low-glue-layer-to-pass-reference-clo.patch |  4 +-
  ...and-qpic-only-support-max-4-bytes-ID.patch |  2 +-
  .../1011-net-stmmac-use-GFP_DMA32.patch       |  4 +-
- 62 files changed, 131 insertions(+), 361 deletions(-)
+ 61 files changed, 130 insertions(+), 360 deletions(-)
  delete mode 100644 target/linux/bcm27xx/patches-6.18/0008-of-overlay-Correct-symbol-path-fixups.patch
  delete mode 100644 target/linux/generic/backport-6.18/438-v7.3-mtd-spinand-Do-not-update-the-QE-bit-on-devices-without-one.patch
  delete mode 100644 target/linux/generic/backport-6.18/782-v7.3-USB-serial-option-add-Quectel-EG060W.patch
@@ -880,19 +879,6 @@ index c7dfea37e3d450..0ecf207fb13319 100644
   	return !!(execmem_info->ranges[type].flags & EXECMEM_ROX_CACHE);
   }
   
-diff --git a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-index 02abf04e1d22b1..1c6457d8cceb2c 100644
---- a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-+++ b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-@@ -774,7 +774,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  		      void (*iter)(struct nf_flowtable *flowtable,
-  				   struct flow_offload *flow, void *data),
-  		      void *data)
--@@ -596,6 +594,7 @@ static void nf_flow_offload_gc_step(stru
-+@@ -601,6 +599,7 @@ static void nf_flow_offload_gc_step(stru
-  		nf_flow_offload_stats(flow_table, flow);
-  	}
-  }
 diff --git a/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch b/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch
 index e8d0c1669da477..f407f396300e8f 100644
 --- a/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch
@@ -906,14 +892,14 @@ index e8d0c1669da477..f407f396300e8f 100644
 + 	mtu = min_t(u32, psched_mtu(qdisc_dev(sch)), FQ_CODEL_QUANTUM_MAX);
 + 	q->quantum = clamp_t(u32, mtu, 256, FQ_CODEL_QUANTUM_MAX);
 diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-index 0a578b84bde57c..be4c4ad1d0e5f3 100644
+index 694be38ac454df..2d2462829a129b 100644
 --- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 +++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 @@ -97,7 +97,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
   	help
  --- a/net/core/dev.c
  +++ b/net/core/dev.c
--@@ -3871,6 +3871,11 @@ static int xmit_one(struct sk_buff *skb,
+-@@ -3867,6 +3867,11 @@ static int xmit_one(struct sk_buff *skb,
 +@@ -3887,6 +3887,11 @@ static int xmit_one(struct sk_buff *skb,
   	if (dev_nit_active_rcu(dev))
   		dev_queue_xmit_nit(skb, dev);
@@ -1714,25 +1700,20 @@ index faa0ffa69b7fea..c47effa7354c69 100644
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 
-From 9a951b6c12515bbf93ecba32306c21b30b24f825 Mon Sep 17 00:00:00 2001
+From 2869195428b990fb4053db4b28d0545ed4e23b72 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Thu, 15 Oct 2026 20:43:47 -0400
-Subject: [PATCH 2/3] kernel: bump 6.18 to 6.18.57
+Subject: [PATCH 2/4] kernel: bump 6.18 to 6.18.57
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.57
 
 Removed upstreamed:
-  linux/generic/backport-6.18/438-v7.3-mtd-spinand-Do-not-update-the-QE-bit-on-devices-without-one.patch[1]
-  linux/generic/backport-6.18/782-v7.3-USB-serial-option-add-Quectel-EG060W.patch[2]
-  linux/generic/backport-6.18/787-v7.3-net-usb-qmi_wwan-add-Quectel-EG120K-EA.patch[3]
-  linux/bcm27xx/patches-6.18/0008-of-overlay-Correct-symbol-path-fixups.patch[4]
-  linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch[5]
-  linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch[6]
-  linux/rockchip/patches-6.18/045-43-v7.0-media-verisilicon-Fix-kernel-panic-due-to-__initconst-misuse.patch[7]
-  linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch[8]
+  linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch[1]
+  linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch[2]
+  linux/rockchip/patches-6.18/045-43-v7.0-media-verisilicon-Fix-kernel-panic-due-to-__initconst-misuse.patch[3]
+  linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch[4]
 
 Manually rebased:
-  linux/generic/pending-6.18/304-LoongArch-vdso-keep-the-prefix-map-flags.patch
   linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
   linux/bcm27xx/patches-6.18/0351-brcmfmac-Fix-interoperating-DPP-and-other-encryption.patch
 
@@ -1741,17 +1722,13 @@ All other patches automatically rebased via update_kernel.sh
 Added mac80211 build patch to gate struct sockaddr_unsized at 6.18.57
 since stable commit 946dc5835c8f now provides it.
 
-Added bcm27xx fixup from raspberrypi/linux 65085cf6cd89 for the new
+Folded raspberrypi/linux 65085cf6cd89 into bcm27xx 0319 for the new
 iommu attach_dev() signature.
 
-1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=1a62eb293f60a3b761786ee35534c4061231b10c
-2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=8b495843267b93bc1b395d51f929bcb1f97f84ba
-3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=626deff23b544ae4384b3e25580e1ec254808e59
-4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=b8cbeda043e479b2e83019e18b1609f2f5e44fd7
-5. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=6c5d98f24f99596c0075c05d17b099d298f0246b
-6. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=5133ef7c893c2c3aee7dd12503dc480de9dbfbb5
-7. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=07861e84b766c6db8014bc34138f3be4a62aad2a
-8. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=af98611ad109efcbfe3ba68eb10124ebc3257224
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=6c5d98f24f99596c0075c05d17b099d298f0246b
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=5133ef7c893c2c3aee7dd12503dc480de9dbfbb5
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=07861e84b766c6db8014bc34138f3be4a62aad2a
+4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=af98611ad109efcbfe3ba68eb10124ebc3257224
 
 Build system: x86/64
 Build-tested: x86/64-glibc
@@ -1764,6 +1741,7 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...Better-coalescing-parameter-defaults.patch |   4 +-
  ...53x-Add-ti-tca9554-compatible-string.patch |   2 +-
  ...ci_sync-Add-fallback-bd-address-prop.patch |   4 +-
+ ...0319-drivers-iommu-Add-BCM2712-IOMMU.patch |   5 +-
  ...nt-to-request-a-particular-dev-fbN-n.patch |   6 +-
  ...eroperating-DPP-and-other-encryption.patch |  24 +-
  ...th-hci_sync-Fix-crash-on-NULL-parent.patch |   2 +-
@@ -1773,7 +1751,6 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...accessors-for-HMB-segment-table-entr.patch |   2 +-
  ...884-nvme-host-pci-Revert-to-upstream.patch |   8 +-
  ...ert-nvme-host-pci-Revert-to-upstream.patch |   8 +-
- ...ixup-drivers-iommu-Add-BCM2712-IOMMU.patch |  21 ++
  ...erver-fix-signing-multi-iov-response.patch |   8 +-
  ...30-fix-CPU-port-VLAN-not-being-reset.patch |  14 +-
  ...-mt7530-untag-VLAN-aware-bridge-PVID.patch |   4 +-
@@ -1781,7 +1758,7 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  .../721-net-add-packet-mangeling.patch        |   6 +-
  .../generic/hack-6.18/902-debloat_proc.patch  |   6 +-
  target/linux/generic/kernel-6.18              |   4 +-
- ...t-send-arp-replies-if-src-and-target.patch |   8 +-
+ ...t-send-arp-replies-if-src-and-target.patch |  10 +-
  .../pending-6.18/630-packet_socket_type.patch |  10 +-
  .../pending-6.18/655-increase_skb_pad.patch   |   2 +-
  ...ng-with-source-address-failed-policy.patch |  16 +-
@@ -1803,9 +1780,8 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...p-add-the-crypto-domain-of-the-rv112.patch |   2 +-
  ...-precheck-and-delay-for-CQE-pending-.patch |   2 +-
  .../1011-net-stmmac-use-GFP_DMA32.patch       |   2 +-
- 44 files changed, 139 insertions(+), 663 deletions(-)
+ 44 files changed, 122 insertions(+), 666 deletions(-)
  create mode 100644 package/kernel/mac80211/patches/build/230-backports-sockaddr_unsized-landed-in-6.18.57.patch
- create mode 100644 target/linux/bcm27xx/patches-6.18/1070-fixup-drivers-iommu-Add-BCM2712-IOMMU.patch
  delete mode 100644 target/linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch
  delete mode 100644 target/linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch
  delete mode 100644 target/linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch
@@ -1909,6 +1885,29 @@ index ecf084ed592f9e..0e3421ffed5581 100644
   			 hci_test_quirk(hdev, HCI_QUIRK_USE_BDADDR_PROPERTY);
   	if (!ret) {
   		if (hci_test_quirk(hdev, HCI_QUIRK_USE_BDADDR_PROPERTY) &&
+diff --git a/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch b/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
+index 7fa1853aade078..c965dfaf178656 100644
+--- a/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
++++ b/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
+@@ -185,7 +185,7 @@ Signed-off-by: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>
+ +builtin_platform_driver(bcm2712_iommu_cache_driver);
+ --- /dev/null
+ +++ b/drivers/iommu/bcm2712-iommu.c
+-@@ -0,0 +1,763 @@
++@@ -0,0 +1,764 @@
+ +// SPDX-License-Identifier: GPL-2.0-only
+ +/*
+ + * IOMMU driver for BCM2712
+@@ -422,7 +422,8 @@ Signed-off-by: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>
+ +	return 0;
+ +}
+ +
+-+static int bcm2712_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
+++static int bcm2712_iommu_attach_dev(struct iommu_domain *domain, struct device *dev,
+++				    struct iommu_domain *old)
+ +{
+ +	struct bcm2712_iommu *mmu = dev ? dev_iommu_priv_get(dev) : 0;
+ +	struct bcm2712_iommu_domain *mydomain =
 diff --git a/target/linux/bcm27xx/patches-6.18/0325-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch b/target/linux/bcm27xx/patches-6.18/0325-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch
 index c522140d76c29c..cf7b259b0ab15d 100644
 --- a/target/linux/bcm27xx/patches-6.18/0325-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch
@@ -2171,33 +2170,6 @@ index 59af5d038a22a1..932a4b1883a38c 100644
   	dev->host_mem_descs = NULL;
   	return -ENOMEM;
   }
-diff --git a/target/linux/bcm27xx/patches-6.18/1070-fixup-drivers-iommu-Add-BCM2712-IOMMU.patch b/target/linux/bcm27xx/patches-6.18/1070-fixup-drivers-iommu-Add-BCM2712-IOMMU.patch
-new file mode 100644
-index 00000000000000..7357d11af3f048
---- /dev/null
-+++ b/target/linux/bcm27xx/patches-6.18/1070-fixup-drivers-iommu-Add-BCM2712-IOMMU.patch
-@@ -0,0 +1,21 @@
-+From 65085cf6cd89a969d78f4f61dde6683dbe5241fb Mon Sep 17 00:00:00 2001
-+From: Dom Cobley <popcornmix@gmail.com>
-+Date: Fri, 16 Oct 2026 11:06:14 +0100
-+Subject: [PATCH] fixup! drivers: iommu: Add BCM2712 IOMMU
-+
-+---
-+ drivers/iommu/bcm2712-iommu.c | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
-+
-+--- a/drivers/iommu/bcm2712-iommu.c
-++++ b/drivers/iommu/bcm2712-iommu.c
-+@@ -234,7 +234,8 @@ static int bcm2712_iommu_init(struct bcm
-+ 	return 0;
-+ }
-+ 
-+-static int bcm2712_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
-++static int bcm2712_iommu_attach_dev(struct iommu_domain *domain, struct device *dev,
-++				    struct iommu_domain *old)
-+ {
-+ 	struct bcm2712_iommu *mmu = dev ? dev_iommu_priv_get(dev) : 0;
-+ 	struct bcm2712_iommu_domain *mydomain =
 diff --git a/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch b/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch
 index 2d4bfe871fd929..3df98cdfc3f7ba 100644
 --- a/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch
@@ -2558,7 +2530,7 @@ index c05167c6f0d485..00000000000000
 - 
 - struct mt7530_hw_vlan_entry {
 diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-index be4c4ad1d0e5f3..04ba0dbc6e0475 100644
+index 2d2462829a129b..2617635100e4ff 100644
 --- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 +++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 @@ -52,7 +52,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
@@ -2629,10 +2601,10 @@ index cd97aa8548e1f0..f95022dd49e61a 100644
 +LINUX_VERSION-6.18 = .57
 +LINUX_KERNEL_HASH-6.18.57 = 5bd9acdc82ec5efc3790ae840e5aaa40dfde7efff261cf6dde902dc570acf98c
 diff --git a/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch b/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
-index c7db07d220ef08..2bf84af3d16110 100644
+index c7db07d220ef08..a254cac9243b33 100644
 --- a/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
 +++ b/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
-@@ -15,7 +15,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+@@ -15,20 +15,20 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  
  --- a/net/bridge/br_arp_nd_proxy.c
  +++ b/net/bridge/br_arp_nd_proxy.c
@@ -2641,7 +2613,10 @@ index c7db07d220ef08..2bf84af3d16110 100644
   			if ((p && (p->flags & BR_PROXYARP)) ||
   			    (dst && (dst->flags & BR_PROXYARP_WIFI)) ||
   			    br_is_neigh_suppress_enabled(dst, vid)) {
-@@ -25,10 +25,10 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ -				if (!vid)
+ +				replied = true;
+-+				if (!memcmp(n->ha, sha, dev->addr_len))
+++				if (!memcmp(ha, sha, dev->addr_len))
  +					replied = false;
  +				else if (!vid)
   					br_arp_send(br, p, skb->dev, sip, tip,
@@ -2816,14 +2791,14 @@ index a170c7370b6b37..1773a5d4958de1 100644
   #define MAC80211_SUPPORTED_FEATURES_TX	(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | \
   					 NETIF_F_HW_CSUM | NETIF_F_SG | \
 diff --git a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-index aa250063b95279..a46840e44c8a2b 100644
+index c7bc90a7274391..ce8f281431846e 100644
 --- a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
 +++ b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-@@ -48,7 +48,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+@@ -49,7 +49,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  
  --- a/net/netfilter/nf_flow_table_path.c
  +++ b/net/netfilter/nf_flow_table_path.c
--@@ -205,6 +205,8 @@ static void nft_dev_forward_path(struct
+-@@ -213,6 +213,8 @@ static void nft_dev_forward_path(struct
 +@@ -206,6 +206,8 @@ static void nft_dev_forward_path(struct
   
   	if (info.outdev)
@@ -3452,10 +3427,10 @@ index c47effa7354c69..1166dddf47bfa6 100644
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 
-From 5ff2b4a7a174583dee803cec4ce6788c2b84d8d4 Mon Sep 17 00:00:00 2001
+From 4c8dddd1b484af31e0f619d5df11d8a9a811350b Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
 Date: Fri, 16 Oct 2026 15:20:19 -0400
-Subject: [PATCH 3/3] kernel: add kmod-crypto-krb5 for 6.18 rpcsec
+Subject: [PATCH 3/4] kernel: add kmod-crypto-krb5 for 6.18 rpcsec
 
 Linux 6.18.57 backports upstream bf8672b99402 ("SUNRPC: Add Kconfig
 dependency on CRYPTO_KRB5") and the series moving rpcsec_gss_krb5 to
@@ -3475,17 +3450,17 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  2 files changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modules/crypto.mk
-index 2f853da7adeef5..f7389cea352722 100644
+index 3e9492f43c7ad5..8494f0393de30c 100644
 --- a/package/kernel/linux/modules/crypto.mk
 +++ b/package/kernel/linux/modules/crypto.mk
-@@ -561,6 +561,27 @@ endef
+@@ -558,6 +558,27 @@ endef
  
  $(eval $(call KernelPackage,crypto-kpp))
  
 +
 +define KernelPackage/crypto-krb5
 +  TITLE:=Kerberos 5 crypto library
-+  DEPENDS:=@!LINUX_6_12 +kmod-crypto-manager +kmod-crypto-authenc \
++  DEPENDS:=+kmod-crypto-manager +kmod-crypto-authenc \
 +	+kmod-crypto-hmac +kmod-crypto-cmac +kmod-crypto-sha1 \
 +	+kmod-crypto-sha256 +kmod-crypto-sha512 +kmod-crypto-cbc \
 +	+kmod-crypto-cts
@@ -3506,22 +3481,203 @@ index 2f853da7adeef5..f7389cea352722 100644
  define KernelPackage/crypto-lib-chacha20
    TITLE:=ChaCha library interface
    KCONFIG:=CONFIG_CRYPTO_LIB_CHACHA
-@@ -1129,4 +1150,3 @@ define KernelPackage/crypto-xxhash
+@@ -865,4 +886,3 @@ define KernelPackage/crypto-xxhash
  endef
  
  $(eval $(call KernelPackage,crypto-xxhash))
 -
 diff --git a/package/kernel/linux/modules/fs.mk b/package/kernel/linux/modules/fs.mk
-index 09bc00fc2101bb..b7b0aaa7b0c6a7 100644
+index 6c796ffd8a6260..00dd28e197efdd 100644
 --- a/package/kernel/linux/modules/fs.mk
 +++ b/package/kernel/linux/modules/fs.mk
-@@ -493,7 +493,8 @@ define KernelPackage/fs-nfs-common-rpcsec
+@@ -492,7 +492,8 @@ define KernelPackage/fs-nfs-common-rpcsec
  	+kmod-crypto-sha256 \
  	+kmod-crypto-sha512 \
  	+kmod-crypto-cbc \
 -	+kmod-crypto-cts
 +	+kmod-crypto-cts \
-+	+!LINUX_6_12:kmod-crypto-krb5
++	+kmod-crypto-krb5
    KCONFIG:= \
  	CONFIG_SUNRPC_GSS \
  	CONFIG_RPCSEC_GSS_KRB5
+
+From 06f7fe68d708c6e293a2e18235bf3001503aeda5 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 23 Oct 2026 10:00:37 -0400
+Subject: [PATCH 4/4] kernel: bump 6.18 to 6.18.58
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.58
+
+All patches automatically rebased via update_kernel.sh
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ ...-pass-net_device_path_ctx-to-dev_fill_forward_path.patch | 2 +-
+ .../hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch | 2 +-
+ .../generic/hack-6.18/721-net-add-packet-mangeling.patch    | 2 +-
+ target/linux/generic/kernel-6.18                            | 4 ++--
+ ...tfilter-flowtable-set-out-ifindex-when-the-forward.patch | 2 +-
+ ...tfilter-flowtable-tear-down-direct-xmit-flows-when.patch | 6 +++---
+ .../903-net-stmmac-force-name-from-dt-alias.patch           | 4 ++--
+ .../901-arm64-of-add-CMDLINE_OVERRIDE-support.patch         | 2 +-
+ ...mmu-rockchip-map-the-mmu-registers-non-exclusively.patch | 2 +-
+ .../189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch    | 2 +-
+ 10 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
+index f60610aa23dbd4..4a964e84ca2824 100644
+--- a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
++++ b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
+@@ -89,7 +89,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  struct net_device *dev_get_by_name_rcu(struct net *net, const char *name);
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -744,41 +744,37 @@ static struct net_device_path *dev_fwd_p
++@@ -750,41 +750,37 @@ static struct net_device_path *dev_fwd_p
+  	return &stack->path[k];
+  }
+  
+diff --git a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+index c645f98333d817..d10d2f0a43baff 100644
+--- a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
++++ b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+@@ -105,7 +105,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		      void (*iter)(struct nf_flowtable *flowtable,
+  				   struct flow_offload *flow, void *data),
+  		      void *data)
+-@@ -636,6 +634,7 @@ static void nf_flow_offload_gc_step(stru
++@@ -641,6 +639,7 @@ static void nf_flow_offload_gc_step(stru
+  		nf_flow_offload_stats(flow_table, flow);
+  	}
+  }
+diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
+index 2617635100e4ff..5dc1baa0ae42e1 100644
+--- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
++++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
+@@ -97,7 +97,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	help
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -3893,6 +3893,11 @@ static int xmit_one(struct sk_buff *skb,
++@@ -3889,6 +3889,11 @@ static int xmit_one(struct sk_buff *skb,
+  	if (dev_nit_active_rcu(dev))
+  		dev_queue_xmit_nit(skb, dev);
+  
+diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
+index f95022dd49e61a..2307a67f177b06 100644
+--- a/target/linux/generic/kernel-6.18
++++ b/target/linux/generic/kernel-6.18
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.18 = .57
+-LINUX_KERNEL_HASH-6.18.57 = 5bd9acdc82ec5efc3790ae840e5aaa40dfde7efff261cf6dde902dc570acf98c
++LINUX_VERSION-6.18 = .58
++LINUX_KERNEL_HASH-6.18.58 = 069b19f9032c4dac8149ae4b6520c35debca0f42a9f6d52ee55ba6ca9b818013
+diff --git a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
+index ce8f281431846e..88acce7b29b00a 100644
+--- a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
++++ b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
+@@ -49,7 +49,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+ 
+ --- a/net/netfilter/nf_flow_table_path.c
+ +++ b/net/netfilter/nf_flow_table_path.c
+-@@ -206,6 +206,8 @@ static void nft_dev_forward_path(struct
++@@ -214,6 +214,8 @@ static void nft_dev_forward_path(struct
+  
+  	if (info.outdev)
+  		route->tuple[dir].out.ifindex = info.outdev->ifindex;
+diff --git a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+index 26f627fb2ca793..39f2eb64b25380 100644
+--- a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
++++ b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+@@ -248,7 +248,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  static void nf_flow_offload_gc_step(struct nf_flowtable *flow_table,
+  				    struct flow_offload *flow, void *data)
+  {
+-@@ -572,6 +610,8 @@ static void nf_flow_offload_gc_step(stru
++@@ -577,6 +615,8 @@ static void nf_flow_offload_gc_step(stru
+  
+  	if (nf_flow_has_expired(flow) ||
+  	    nf_ct_is_dying(flow->ct) ||
+@@ -287,7 +287,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  			if (path->type == DEV_PATH_PPPOE)
+  				memcpy(info->h_dest, path->encap.h_dest, ETH_ALEN);
+  			break;
+-@@ -163,6 +168,13 @@ static void nft_dev_path_info(const stru
++@@ -164,6 +169,13 @@ static void nft_dev_path_info(const stru
+  			case DEV_PATH_BR_VLAN_KEEP:
+  				break;
+  			}
+@@ -301,7 +301,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  			info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
+  			break;
+  		default:
+-@@ -230,6 +242,9 @@ static void nft_dev_forward_path(struct
++@@ -231,6 +243,9 @@ static void nft_dev_forward_path(struct
+  	if (info.xmit_type == FLOW_OFFLOAD_XMIT_DIRECT) {
+  		memcpy(route->tuple[dir].out.h_source, info.h_source, ETH_ALEN);
+  		memcpy(route->tuple[dir].out.h_dest, info.h_dest, ETH_ALEN);
+diff --git a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+index f8f2f47e52fa37..5c46824fe3b18d 100644
+--- a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
++++ b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -7491,6 +7491,7 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7525,6 +7525,7 @@ int stmmac_dvr_probe(struct device *devi
+  {
+  	struct net_device *ndev = NULL;
+  	struct stmmac_priv *priv;
+@@ -33,7 +33,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+  	u32 rxq;
+  	int i, ret = 0;
+  
+-@@ -7745,7 +7746,24 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7779,7 +7780,24 @@ int stmmac_dvr_probe(struct device *devi
+  		goto error_phy_setup;
+  	}
+  
+diff --git a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
+index 23b7ab7efaaedd..dfa3d2aaca3e36 100644
+--- a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
++++ b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
+@@ -60,7 +60,7 @@ Signed-off-by: Sascha Plumhoff <sapl@plumhoff.net>
+  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+ --- a/arch/arm64/Kconfig
+ +++ b/arch/arm64/Kconfig
+-@@ -2436,6 +2436,14 @@ config CMDLINE_FORCE
++@@ -2468,6 +2468,14 @@ config CMDLINE_FORCE
+  
+  endchoice
+  
+diff --git a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
+index 46386d7f442c7a..c3a4d0963a2ea5 100644
+--- a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
++++ b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/iommu/rockchip-iommu.c
+ +++ b/drivers/iommu/rockchip-iommu.c
+-@@ -1236,8 +1236,9 @@ static int rk_iommu_probe(struct platfor
++@@ -1246,8 +1246,9 @@ static int rk_iommu_probe(struct platfor
+  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+  		if (!res)
+  			continue;
+diff --git a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
+index f6b570351827cd..e8ee4a28642e04 100644
+--- a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
++++ b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/pmdomain/rockchip/pm-domains.c
+ +++ b/drivers/pmdomain/rockchip/pm-domains.c
+-@@ -1104,6 +1104,8 @@ static const struct rockchip_domain_info
++@@ -1118,6 +1118,8 @@ static const struct rockchip_domain_info
+  };
+  
+  static const struct rockchip_domain_info rv1126_pm_domains[] = {

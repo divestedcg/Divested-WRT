@@ -1,3 +1,9 @@
+20261023-00
+- update to 818516b92cc9b2cfb9eb71731ebb166f5268e0c9
+  https://github.com/openwrt/openwrt/compare/2f4311dfff...818516b92c
+- [cherrypick] #25925: update to kernel 6.18.58 (security and bug fixes)
+- [upstream] initial removal of eMudhra from ca-certificates
+
 20261020-00
 - update to 2f4311dfff8d4f242f6ae53eb8db728aecbc2878
   https://github.com/openwrt/openwrt/compare/cd2c55e43b...2f4311dfff
