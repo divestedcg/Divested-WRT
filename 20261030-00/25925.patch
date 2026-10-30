@@ -1,7 +1,7 @@
-From f4372e8de3f8d52214d95381922f7f0cb4c63f01 Mon Sep 17 00:00:00 2001
+From b08d385eb9c70fcce9feeea64b4d6de430383297 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
-Date: Sun, 11 Oct 2026 11:50:16 -0400
-Subject: [PATCH 1/4] kernel: bump 6.18 to 6.18.56
+Date: Sun, 25 Oct 2026 22:26:44 +0000
+Subject: [PATCH 1/6] kernel: bump 6.18 to 6.18.56
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.56
 
@@ -16,6 +16,8 @@ Manually rebased:
   linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
 
 All other patches automatically rebased via update_kernel.sh
+
+Add CC_OPT_ to config-filter for the new CONFIG_CC_OPT_INLINE_MEMSET.
 
 1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.56&id=1a62eb293f60a3b761786ee35534c4061231b10c
 2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.56&id=8b495843267b93bc1b395d51f929bcb1f97f84ba
@@ -55,8 +57,10 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...te-the-QE-bit-on-devices-without-one.patch | 71 -------------------
  ...USB-serial-option-add-Quectel-EG060W.patch | 58 ---------------
  ...t-usb-qmi_wwan-add-Quectel-EG120K-EA.patch | 60 ----------------
+ target/linux/generic/config-filter            |  2 +-
  .../generic/hack-6.18/253-ksmbd-config.patch  |  2 +-
  ...lare-custom-execmem-alloc-free-funct.patch |  6 +-
+ ...-netfilter-add-xt_FLOWOFFLOAD-target.patch |  2 +-
  .../hack-6.18/660-fq_codel_defaults.patch     |  4 +-
  .../721-net-add-packet-mangeling.patch        |  2 +-
  ...hy-aquantia-enable-AQR112-and-AQR412.patch |  4 +-
@@ -70,11 +74,14 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  .../pending-6.18/630-packet_socket_type.patch |  6 +-
  ...ow_offload-handle-netdevice-events-f.patch |  8 +--
  ...net-mtk_eth_soc-enable-threaded-NAPI.patch |  2 +-
+ ...ble-tear-down-direct-xmit-flows-when.patch |  2 +-
  ...phy-aquantia-add-support-for-CUX3410.patch |  6 +-
  ..._eth_soc-optimize-dma-ring-address-i.patch | 20 +++---
  ...th_soc-reduce-rx-ring-size-for-older.patch | 16 ++---
  ..._eth_soc-per-SoC-QDMA-TX-queue-count.patch | 16 ++---
  .../pending-6.18/920-mangle_bootargs.patch    |  2 +-
+ ...-net-stmmac-force-name-from-dt-alias.patch |  4 +-
+ ...rm64-of-add-CMDLINE_OVERRIDE-support.patch |  2 +-
  ...support-for-Dosilicon-DS35Q1GA-DS35M.patch |  2 +-
  .../121-hack-spi-nand-1b-bbm.patch            |  4 +-
  .../330-snand-mtk-bmt-support.patch           |  6 +-
@@ -89,7 +96,7 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...low-glue-layer-to-pass-reference-clo.patch |  4 +-
  ...and-qpic-only-support-max-4-bytes-ID.patch |  2 +-
  .../1011-net-stmmac-use-GFP_DMA32.patch       |  4 +-
- 61 files changed, 130 insertions(+), 360 deletions(-)
+ 66 files changed, 136 insertions(+), 366 deletions(-)
  delete mode 100644 target/linux/bcm27xx/patches-6.18/0008-of-overlay-Correct-symbol-path-fixups.patch
  delete mode 100644 target/linux/generic/backport-6.18/438-v7.3-mtd-spinand-Do-not-update-the-QE-bit-on-devices-without-one.patch
  delete mode 100644 target/linux/generic/backport-6.18/782-v7.3-USB-serial-option-add-Quectel-EG060W.patch
@@ -835,6 +842,19 @@ index 64f3b00b172497..00000000000000
 - 	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
 - 	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0620)},	/* Quectel EM160R-GL */
 - 	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
+diff --git a/target/linux/generic/config-filter b/target/linux/generic/config-filter
+index 43c1b1131218b3..9b7b5a80bd6f10 100644
+--- a/target/linux/generic/config-filter
++++ b/target/linux/generic/config-filter
+@@ -2,7 +2,7 @@
+ # CONFIG_ARM64_AS_.* is not set
+ # CONFIG_ARM64_CONT_.*_SHIFT is not set
+ # CONFIG_AS_.* is not set
+-# CONFIG_CC_(CAN|HAS|IS|VERSION)_.* is not set
++# CONFIG_CC_(CAN|HAS|IS|OPT|VERSION)_.* is not set
+ # CONFIG_CC_IMPLICIT_FALLTHROUGH is not set
+ # CONFIG_CC_NO_ARRAY_BOUNDS is not set
+ CONFIG_CLANG_VERSION=.*
 diff --git a/target/linux/generic/hack-6.18/253-ksmbd-config.patch b/target/linux/generic/hack-6.18/253-ksmbd-config.patch
 index 1d95b84b011fa9..634d1182dbe6d2 100644
 --- a/target/linux/generic/hack-6.18/253-ksmbd-config.patch
@@ -879,6 +899,19 @@ index c7dfea37e3d450..0ecf207fb13319 100644
   	return !!(execmem_info->ranges[type].flags & EXECMEM_ROX_CACHE);
   }
   
+diff --git a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+index ea23c135bfc327..eeb6db046252e5 100644
+--- a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
++++ b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
+@@ -105,7 +105,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  		      void (*iter)(struct nf_flowtable *flowtable,
+  				   struct flow_offload *flow, void *data),
+  		      void *data)
+-@@ -636,6 +634,7 @@ static void nf_flow_offload_gc_step(stru
++@@ -641,6 +639,7 @@ static void nf_flow_offload_gc_step(stru
+  		nf_flow_offload_stats(flow_table, flow);
+  	}
+  }
 diff --git a/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch b/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch
 index e8d0c1669da477..f407f396300e8f 100644
 --- a/target/linux/generic/hack-6.18/660-fq_codel_defaults.patch
@@ -892,7 +925,7 @@ index e8d0c1669da477..f407f396300e8f 100644
 + 	mtu = min_t(u32, psched_mtu(qdisc_dev(sch)), FQ_CODEL_QUANTUM_MAX);
 + 	q->quantum = clamp_t(u32, mtu, 256, FQ_CODEL_QUANTUM_MAX);
 diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-index 694be38ac454df..2d2462829a129b 100644
+index 694be38ac454df..ea133231612619 100644
 --- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 +++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 @@ -97,7 +97,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
@@ -900,7 +933,7 @@ index 694be38ac454df..2d2462829a129b 100644
  --- a/net/core/dev.c
  +++ b/net/core/dev.c
 -@@ -3867,6 +3867,11 @@ static int xmit_one(struct sk_buff *skb,
-+@@ -3887,6 +3887,11 @@ static int xmit_one(struct sk_buff *skb,
++@@ -3883,6 +3883,11 @@ static int xmit_one(struct sk_buff *skb,
   	if (dev_nit_active_rcu(dev))
   		dev_queue_xmit_nit(skb, dev);
   
@@ -1132,6 +1165,19 @@ index b60f46dfbbe1a0..c07e376d85e08e 100644
   		dev_err(eth->dev, "failed to allocated dummy device\n");
   		goto err_unreg_netdev;
   	}
+diff --git a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+index dd1883c8249325..413963c57ebcc0 100644
+--- a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
++++ b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+@@ -251,7 +251,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  static void nf_flow_offload_gc_step(struct nf_flowtable *flow_table,
+  				    struct flow_offload *flow, void *data)
+  {
+-@@ -572,6 +610,8 @@ static void nf_flow_offload_gc_step(stru
++@@ -577,6 +615,8 @@ static void nf_flow_offload_gc_step(stru
+  
+  	if (nf_flow_has_expired(flow) ||
+  	    nf_ct_is_dying(flow->ct) ||
 diff --git a/target/linux/generic/pending-6.18/715-net-phy-aquantia-add-support-for-CUX3410.patch b/target/linux/generic/pending-6.18/715-net-phy-aquantia-add-support-for-CUX3410.patch
 index 33069f28364d46..10f8e22d0bedb0 100644
 --- a/target/linux/generic/pending-6.18/715-net-phy-aquantia-add-support-for-CUX3410.patch
@@ -1422,6 +1468,41 @@ index a2745ddea72cde..774e388d15daac 100644
   	  For complete descriptions of memory sealing, please see
   	  Documentation/userspace-api/mseal.rst
   
+diff --git a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+index f8f2f47e52fa37..cea5fe9f6ebe7a 100644
+--- a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
++++ b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -7491,6 +7491,7 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7506,6 +7506,7 @@ int stmmac_dvr_probe(struct device *devi
+  {
+  	struct net_device *ndev = NULL;
+  	struct stmmac_priv *priv;
+@@ -33,7 +33,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+  	u32 rxq;
+  	int i, ret = 0;
+  
+-@@ -7745,7 +7746,24 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7760,7 +7761,24 @@ int stmmac_dvr_probe(struct device *devi
+  		goto error_phy_setup;
+  	}
+  
+diff --git a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
+index 9eb18b1772ba51..dfa3d2aaca3e36 100644
+--- a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
++++ b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
+@@ -60,7 +60,7 @@ Signed-off-by: Sascha Plumhoff <sapl@plumhoff.net>
+  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+ --- a/arch/arm64/Kconfig
+ +++ b/arch/arm64/Kconfig
+-@@ -2438,6 +2438,14 @@ config CMDLINE_FORCE
++@@ -2468,6 +2468,14 @@ config CMDLINE_FORCE
+  
+  endchoice
+  
 diff --git a/target/linux/mediatek/patches-6.18/010-v7.0-mtd-spinand-add-support-for-Dosilicon-DS35Q1GA-DS35M.patch b/target/linux/mediatek/patches-6.18/010-v7.0-mtd-spinand-add-support-for-Dosilicon-DS35Q1GA-DS35M.patch
 index 22a307de8c1493..d609b99945494d 100644
 --- a/target/linux/mediatek/patches-6.18/010-v7.0-mtd-spinand-add-support-for-Dosilicon-DS35Q1GA-DS35M.patch
@@ -1700,48 +1781,57 @@ index faa0ffa69b7fea..c47effa7354c69 100644
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 
-From 2869195428b990fb4053db4b28d0545ed4e23b72 Mon Sep 17 00:00:00 2001
+From c4d1bf879ab14e96b7c7f754fbcb4e2885510e91 Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
-Date: Thu, 15 Oct 2026 20:43:47 -0400
-Subject: [PATCH 2/4] kernel: bump 6.18 to 6.18.57
+Date: Sun, 25 Oct 2026 23:01:13 +0000
+Subject: [PATCH 2/6] kernel: bump 6.18 to 6.18.57
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.57
 
 Removed upstreamed:
-  linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch[1]
-  linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch[2]
-  linux/rockchip/patches-6.18/045-43-v7.0-media-verisilicon-Fix-kernel-panic-due-to-__initconst-misuse.patch[3]
-  linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch[4]
+  linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch[1]
+  linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch[2]
+  linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch[3]
+  linux/rockchip/patches-6.18/045-43-v7.0-media-verisilicon-Fix-kernel-panic-due-to-__initconst-misuse.patch[4]
 
 Manually rebased:
-  linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
+  linux/generic/backport-6.18/706-03-v7.2-netfilter-flowtable-bail-out-if-forward-path-cannot-b.patch
   linux/bcm27xx/patches-6.18/0351-brcmfmac-Fix-interoperating-DPP-and-other-encryption.patch
 
 All other patches automatically rebased via update_kernel.sh
 
-Added mac80211 build patch to gate struct sockaddr_unsized at 6.18.57
-since stable commit 946dc5835c8f now provides it.
+mac80211: 6.18.57 backports struct sockaddr_unsized[5], so add
+160-backports-sockaddr_unsized-is-in-6.18.57.patch to only define it
+in backports for older kernels.
 
-Folded raspberrypi/linux 65085cf6cd89 into bcm27xx 0319 for the new
-iommu attach_dev() signature.
+kernel: 6.18.57 makes rpcsec_gss_krb5 use crypto/krb5[6], so add
+kmod-crypto-krb5 and make kmod-fs-nfs-common-rpcsec depend on it.
 
-1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=6c5d98f24f99596c0075c05d17b099d298f0246b
-2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=5133ef7c893c2c3aee7dd12503dc480de9dbfbb5
-3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=07861e84b766c6db8014bc34138f3be4a62aad2a
-4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=af98611ad109efcbfe3ba68eb10124ebc3257224
+ltq-ifxos: 6.18.57 converts proto_ops bind() to sockaddr_unsized[5],
+so cast the bind address accordingly on 6.18.57+.
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=af98611ad109efcbfe3ba68eb10124ebc3257224
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=6c5d98f24f99596c0075c05d17b099d298f0246b
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=5133ef7c893c2c3aee7dd12503dc480de9dbfbb5
+4. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=07861e84b766c6db8014bc34138f3be4a62aad2a
+5. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=946dc5835c8fbe5eb5ceb13f5717778911ff4586
+6. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.57&id=08efba8d6256053ac1f2fabd2b7b2ac60ab97aae
 
 Build system: x86/64
 Build-tested: x86/64-glibc
 Run-tested: x86/64-glibc
 
+Co-developed-by: Andre Heider <a.heider@gmail.com>
 Signed-off-by: John Audia <therealgraysky@proton.me>
 ---
- ...s-sockaddr_unsized-landed-in-6.18.57.patch |  20 ++
+ .../lantiq/ltq-ifxos/patches/100-compat.patch |  12 +
+ package/kernel/linux/modules/crypto.mk        |  26 ++
+ package/kernel/linux/modules/fs.mk            |  10 +-
+ ...ports-sockaddr_unsized-is-in-6.18.57.patch |  23 ++
  ...52-bcm2708_fb-Add-framebuffer-driver.patch |   4 +-
- ...Better-coalescing-parameter-defaults.patch |   4 +-
  ...53x-Add-ti-tca9554-compatible-string.patch |   2 +-
  ...ci_sync-Add-fallback-bd-address-prop.patch |   4 +-
- ...0319-drivers-iommu-Add-BCM2712-IOMMU.patch |   5 +-
+ ...0319-drivers-iommu-Add-BCM2712-IOMMU.patch |   9 +-
  ...nt-to-request-a-particular-dev-fbN-n.patch |   6 +-
  ...eroperating-DPP-and-other-encryption.patch |  24 +-
  ...th-hci_sync-Fix-crash-on-NULL-parent.patch |   2 +-
@@ -1752,25 +1842,27 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...884-nvme-host-pci-Revert-to-upstream.patch |   8 +-
  ...ert-nvme-host-pci-Revert-to-upstream.patch |   8 +-
  ...erver-fix-signing-multi-iov-response.patch |   8 +-
+ ...ce_path_ctx-to-dev_fill_forward_path.patch |   2 +-
+ ...le-bail-out-if-forward-path-cannot-b.patch |  18 +-
  ...30-fix-CPU-port-VLAN-not-being-reset.patch |  14 +-
  ...-mt7530-untag-VLAN-aware-bridge-PVID.patch |   4 +-
  ...ix-.get_stats64-sleeping-in-atomic-c.patch | 224 ------------------
  .../721-net-add-packet-mangeling.patch        |   6 +-
  .../generic/hack-6.18/902-debloat_proc.patch  |   6 +-
  target/linux/generic/kernel-6.18              |   4 +-
- ...t-send-arp-replies-if-src-and-target.patch |  10 +-
+ ...t-send-arp-replies-if-src-and-target.patch |   8 +-
  .../pending-6.18/630-packet_socket_type.patch |  10 +-
  .../pending-6.18/655-increase_skb_pad.patch   |   2 +-
  ...ng-with-source-address-failed-policy.patch |  16 +-
  ..._F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch |   4 +-
- ...ble-set-out-ifindex-when-the-forward.patch |   2 +-
  ...les-ignore-EOPNOTSUPP-on-flowtable-d.patch |   2 +-
+ ...ble-tear-down-direct-xmit-flows-when.patch |   4 +-
  ...e-single-creation-of-sysfs-entry-for.patch |   4 +-
  .../pending-6.18/834-ledtrig-libata.patch     |   8 +-
  ...dsa-add-out-of-band-tagging-protocol.patch |   4 +-
+ ...-net-stmmac-force-name-from-dt-alias.patch |   4 +-
  .../001-MIPS-lantiq-add-pcie-driver.patch     |   2 +-
  ...1-add-.of_xlate-and-defer-arm_iommu_.patch |   8 +-
- ...dsa-add-out-of-band-tagging-protocol.patch |   4 +-
  ...ent-that-v4l2_m2m_get_vq-never-retur.patch |   6 +-
  ...-copy-frame-flags-in-v4l2_m2m_buf_co.patch |   6 +-
  ...a-kref-to-the-v4l2_m2m_dev-structure.patch | 103 --------
@@ -1778,30 +1870,107 @@ Signed-off-by: John Audia <therealgraysky@proton.me>
  ...rnel-panic-due-to-__initconst-misuse.patch |  56 -----
  ...chip-translate-DMA-for-IOMMU-masters.patch |   2 +-
  ...p-add-the-crypto-domain-of-the-rv112.patch |   2 +-
+ ...ap-the-mmu-registers-non-exclusively.patch |   2 +-
+ ...omain-rockchip-add-rv1126-npu-domain.patch |   2 +-
  ...-precheck-and-delay-for-CQE-pending-.patch |   2 +-
  .../1011-net-stmmac-use-GFP_DMA32.patch       |   2 +-
- 44 files changed, 122 insertions(+), 666 deletions(-)
- create mode 100644 package/kernel/mac80211/patches/build/230-backports-sockaddr_unsized-landed-in-6.18.57.patch
+ 50 files changed, 176 insertions(+), 687 deletions(-)
+ create mode 100644 package/kernel/mac80211/patches/build/160-backports-sockaddr_unsized-is-in-6.18.57.patch
  delete mode 100644 target/linux/generic/backport-6.18/948-v7.1-net-dsa-mt7530-fix-.get_stats64-sleeping-in-atomic-c.patch
  delete mode 100644 target/linux/rockchip/patches-6.18/045-15-v7.0-media-v4l2-mem2mem-Add-a-kref-to-the-v4l2_m2m_dev-structure.patch
  delete mode 100644 target/linux/rockchip/patches-6.18/045-16-v7.0-media-verisilicon-Avoid-G2-bus-error-while-decoding-H.264-an.patch
  delete mode 100644 target/linux/rockchip/patches-6.18/045-43-v7.0-media-verisilicon-Fix-kernel-panic-due-to-__initconst-misuse.patch
 
-diff --git a/package/kernel/mac80211/patches/build/230-backports-sockaddr_unsized-landed-in-6.18.57.patch b/package/kernel/mac80211/patches/build/230-backports-sockaddr_unsized-landed-in-6.18.57.patch
+diff --git a/package/kernel/lantiq/ltq-ifxos/patches/100-compat.patch b/package/kernel/lantiq/ltq-ifxos/patches/100-compat.patch
+index f5f652c41250c9..ad9a9b3a3467ba 100644
+--- a/package/kernel/lantiq/ltq-ifxos/patches/100-compat.patch
++++ b/package/kernel/lantiq/ltq-ifxos/patches/100-compat.patch
+@@ -90,6 +90,18 @@
+  }
+  
+  /**
++@@ -291,7 +249,11 @@ IFX_int_t IFXOS_SocketBind(
++ 
++    IFXOS_RETURN_IF_POINTER_NULL(pSocAddr, IFX_ERROR);
++ 
+++#if LINUX_VERSION_CODE < KERNEL_VERSION(6,18,57)
++    ret = (socFd->ops->bind(socFd, (struct sockaddr*) pSocAddr, sizeof(IFXOS_sockAddr_t)));
+++#else
+++   ret = (socFd->ops->bind(socFd, (struct sockaddr_unsized*) pSocAddr, sizeof(IFXOS_sockAddr_t)));
+++#endif
++ 
++    if (ret != 0)
++    {
+ --- a/src/linux/ifxos_linux_thread_drv.c
+ +++ b/src/linux/ifxos_linux_thread_drv.c
+ @@ -154,7 +154,7 @@ IFXOS_STATIC int IFXOS_KernelThreadStart
+diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modules/crypto.mk
+index 3e9492f43c7ad5..a862504afc1c0a 100644
+--- a/package/kernel/linux/modules/crypto.mk
++++ b/package/kernel/linux/modules/crypto.mk
+@@ -558,6 +558,32 @@ endef
+ 
+ $(eval $(call KernelPackage,crypto-kpp))
+ 
++define KernelPackage/crypto-krb5
++  TITLE:=Kerberos 5 crypto library
++  DEPENDS:= \
++	+kmod-crypto-manager \
++	+kmod-crypto-aead \
++	+kmod-crypto-authenc \
++	+kmod-crypto-hmac \
++	+kmod-crypto-cmac \
++	+kmod-crypto-sha1 \
++	+kmod-crypto-sha256 \
++	+kmod-crypto-sha512 \
++	+kmod-crypto-cbc \
++	+kmod-crypto-cts
++  KCONFIG:= \
++	CONFIG_CRYPTO_KRB5 \
++	CONFIG_CRYPTO_KRB5ENC \
++	CONFIG_CRYPTO_KRB5_SELFTESTS=n
++  FILES:= \
++	$(LINUX_DIR)/crypto/krb5enc.ko \
++	$(LINUX_DIR)/crypto/krb5/krb5.ko
++  AUTOLOAD:=$(call AutoLoad,09,krb5enc krb5)
++  $(call AddDepends/crypto)
++endef
++
++$(eval $(call KernelPackage,crypto-krb5))
++
+ define KernelPackage/crypto-lib-chacha20
+   TITLE:=ChaCha library interface
+   KCONFIG:=CONFIG_CRYPTO_LIB_CHACHA
+diff --git a/package/kernel/linux/modules/fs.mk b/package/kernel/linux/modules/fs.mk
+index 6c796ffd8a6260..b16b777be700e0 100644
+--- a/package/kernel/linux/modules/fs.mk
++++ b/package/kernel/linux/modules/fs.mk
+@@ -484,15 +484,7 @@ define KernelPackage/fs-nfs-common-rpcsec
+   TITLE:=NFS Secure RPC
+   DEPENDS:= \
+ 	+kmod-fs-nfs-common \
+-	+kmod-crypto-manager \
+-	+kmod-crypto-authenc \
+-	+kmod-crypto-hmac \
+-	+kmod-crypto-cmac \
+-	+kmod-crypto-sha1 \
+-	+kmod-crypto-sha256 \
+-	+kmod-crypto-sha512 \
+-	+kmod-crypto-cbc \
+-	+kmod-crypto-cts
++	+kmod-crypto-krb5
+   KCONFIG:= \
+ 	CONFIG_SUNRPC_GSS \
+ 	CONFIG_RPCSEC_GSS_KRB5
+diff --git a/package/kernel/mac80211/patches/build/160-backports-sockaddr_unsized-is-in-6.18.57.patch b/package/kernel/mac80211/patches/build/160-backports-sockaddr_unsized-is-in-6.18.57.patch
 new file mode 100644
-index 00000000000000..b9c3bdf6b6699c
+index 00000000000000..f4b2c1c172d265
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/build/230-backports-sockaddr_unsized-landed-in-6.18.57.patch
-@@ -0,0 +1,20 @@
-+From: John Audia <therealgraysky@proton.me>
-+Subject: [PATCH] backports: sockaddr_unsized landed in 6.18.57
++++ b/package/kernel/mac80211/patches/build/160-backports-sockaddr_unsized-is-in-6.18.57.patch
+@@ -0,0 +1,23 @@
++Linux 6.18.57 backported struct sockaddr_unsized to include/linux/socket.h,
++so only define it for older kernels.
 +
-+Linux 6.18.57 backported struct sockaddr_unsized to include/linux/socket.h
-+via stable commit 946dc5835c8f ("net: Convert proto_ops bind() callbacks
-+to use sockaddr_unsized"), so only define it for older kernels.
-+
-+Signed-off-by: John Audia <therealgraysky@proton.me>
-+---
 +--- a/backport-include/linux/socket.h
 ++++ b/backport-include/linux/socket.h
 +@@ -11,7 +11,7 @@
@@ -1813,6 +1982,15 @@ index 00000000000000..b9c3bdf6b6699c
 + /**
 +  * struct sockaddr_unsized - Unspecified size sockaddr for callbacks
 +  * @sa_family: Address family (AF_UNIX, AF_INET, AF_INET6, etc.)
++@@ -28,7 +28,7 @@
++ 	__kernel_sa_family_t	sa_family;	/* address family, AF_xxx */
++ 	char			sa_data[];	/* flexible address data */
++ };
++-#endif /* < 6.19 */
+++#endif /* < 6.18.57 */
++ 
++ #ifndef __sockaddr_check_size
++ #define __sockaddr_check_size(size)	\
 diff --git a/target/linux/bcm27xx/patches-6.18/0052-bcm2708_fb-Add-framebuffer-driver.patch b/target/linux/bcm27xx/patches-6.18/0052-bcm2708_fb-Add-framebuffer-driver.patch
 index 37f5047b292815..a303e632828749 100644
 --- a/target/linux/bcm27xx/patches-6.18/0052-bcm2708_fb-Add-framebuffer-driver.patch
@@ -1835,21 +2013,6 @@ index 37f5047b292815..a303e632828749 100644
   	case FBIOPAN_DISPLAY:
   	case FBIOGET_CON2FBMAP:
   	case FBIOPUT_CON2FBMAP:
-diff --git a/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch b/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
-index 28e7171902035f..f7230eeb2f9056 100644
---- a/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
-+++ b/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
-@@ -13,8 +13,8 @@ future.
- 
- Signed-off-by: Phil Elwell <phil@raspberrypi.org>
- ---
-- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 ++++--
-- 1 file changed, 4 insertions(+), 2 deletions(-)
-+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
- 
- --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
- +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 diff --git a/target/linux/bcm27xx/patches-6.18/0266-gpio-pca953x-Add-ti-tca9554-compatible-string.patch b/target/linux/bcm27xx/patches-6.18/0266-gpio-pca953x-Add-ti-tca9554-compatible-string.patch
 index 571f12eed4398c..d22a5fb3a70cb0 100644
 --- a/target/linux/bcm27xx/patches-6.18/0266-gpio-pca953x-Add-ti-tca9554-compatible-string.patch
@@ -1886,9 +2049,21 @@ index ecf084ed592f9e..0e3421ffed5581 100644
   	if (!ret) {
   		if (hci_test_quirk(hdev, HCI_QUIRK_USE_BDADDR_PROPERTY) &&
 diff --git a/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch b/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
-index 7fa1853aade078..c965dfaf178656 100644
+index 7fa1853aade078..b6cac479bd500e 100644
 --- a/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
 +++ b/target/linux/bcm27xx/patches-6.18/0319-drivers-iommu-Add-BCM2712-IOMMU.patch
+@@ -75,9 +75,9 @@ Signed-off-by: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>
+  drivers/iommu/Kconfig               |   7 +
+  drivers/iommu/Makefile              |   1 +
+  drivers/iommu/bcm2712-iommu-cache.c |  77 +++
+- drivers/iommu/bcm2712-iommu.c       | 763 ++++++++++++++++++++++++++++
++ drivers/iommu/bcm2712-iommu.c       | 764 ++++++++++++++++++++++++++++
+  drivers/iommu/bcm2712-iommu.h       |  47 ++
+- 5 files changed, 895 insertions(+)
++ 5 files changed, 896 insertions(+)
+  create mode 100644 drivers/iommu/bcm2712-iommu-cache.c
+  create mode 100644 drivers/iommu/bcm2712-iommu.c
+  create mode 100644 drivers/iommu/bcm2712-iommu.h
 @@ -185,7 +185,7 @@ Signed-off-by: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>
  +builtin_platform_driver(bcm2712_iommu_cache_driver);
  --- /dev/null
@@ -2210,6 +2385,90 @@ index 2d4bfe871fd929..3df98cdfc3f7ba 100644
   	hdr->Flags |= SMB2_FLAGS_SIGNED;
   	memset(hdr->Signature, 0, SMB2_SIGNATURE_SIZE);
   
+diff --git a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
+index f60610aa23dbd4..4a964e84ca2824 100644
+--- a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
++++ b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
+@@ -89,7 +89,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  struct net_device *dev_get_by_name_rcu(struct net *net, const char *name);
+ --- a/net/core/dev.c
+ +++ b/net/core/dev.c
+-@@ -744,41 +744,37 @@ static struct net_device_path *dev_fwd_p
++@@ -750,41 +750,37 @@ static struct net_device_path *dev_fwd_p
+  	return &stack->path[k];
+  }
+  
+diff --git a/target/linux/generic/backport-6.18/706-03-v7.2-netfilter-flowtable-bail-out-if-forward-path-cannot-b.patch b/target/linux/generic/backport-6.18/706-03-v7.2-netfilter-flowtable-bail-out-if-forward-path-cannot-b.patch
+index 9355cb410c9816..be057d0dc2c611 100644
+--- a/target/linux/generic/backport-6.18/706-03-v7.2-netfilter-flowtable-bail-out-if-forward-path-cannot-b.patch
++++ b/target/linux/generic/backport-6.18/706-03-v7.2-netfilter-flowtable-bail-out-if-forward-path-cannot-b.patch
+@@ -71,17 +71,17 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  				info->num_encaps++;
+  				break;
+  			case DEV_PATH_BR_VLAN_UNTAG:
+--				if (WARN_ON_ONCE(info->num_encaps-- == 0)) {
++-				if (info->num_encaps == 0) {
+ -					info->indev = NULL;
+ -					break;
+ -				}
+-+				if (WARN_ON_ONCE(info->num_encaps-- == 0))
+++				if (info->num_encaps == 0)
+ +					return -1;
+ +
++ 				info->num_encaps--;
+  				break;
+  			case DEV_PATH_BR_VLAN_KEEP:
+- 				break;
+-@@ -166,8 +166,7 @@ static void nft_dev_path_info(const stru
++@@ -167,8 +167,7 @@ static void nft_dev_path_info(const stru
+  			info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
+  			break;
+  		default:
+@@ -91,7 +91,7 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  		}
+  	}
+  	if (!info->outdev)
+-@@ -178,6 +177,8 @@ static void nft_dev_path_info(const stru
++@@ -179,6 +178,8 @@ static void nft_dev_path_info(const stru
+  	if (nf_flowtable_hw_offload(flowtable) &&
+  	    nft_is_valid_ether_device(info->indev))
+  		info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
+@@ -100,7 +100,7 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  }
+  
+  static bool nft_flowtable_find_dev(const struct net_device *dev,
+-@@ -197,10 +198,10 @@ static bool nft_flowtable_find_dev(const
++@@ -198,10 +199,10 @@ static bool nft_flowtable_find_dev(const
+  	return found;
+  }
+  
+@@ -115,7 +115,7 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  {
+  	const struct dst_entry *dst = route->tuple[dir].dst;
+  	struct net_device_path_stack stack;
+-@@ -208,15 +209,16 @@ static void nft_dev_forward_path(struct
++@@ -209,15 +210,16 @@ static void nft_dev_forward_path(struct
+  	unsigned char ha[ETH_ALEN];
+  	int i;
+  
+@@ -137,7 +137,7 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  	route->tuple[!dir].in.ifindex = info.indev->ifindex;
+  	for (i = 0; i < info.num_encaps; i++) {
+  		route->tuple[!dir].in.encap[i].id = info.encap[i].id;
+-@@ -231,6 +233,8 @@ static void nft_dev_forward_path(struct
++@@ -232,6 +234,8 @@ static void nft_dev_forward_path(struct
+  		route->tuple[dir].out.hw_ifindex = info.hw_outdev->ifindex;
+  		route->tuple[dir].xmit_type = info.xmit_type;
+  	}
+@@ -146,7 +146,7 @@ Signed-off-by: Julius Bairaktaris <julius@bairaktaris.de>
+  }
+  
+  int nft_flow_route(const struct nft_pktinfo *pkt, const struct nf_conn *ct,
+-@@ -275,11 +279,19 @@ int nft_flow_route(const struct nft_pkti
++@@ -276,11 +280,19 @@ int nft_flow_route(const struct nft_pkti
+  	nft_default_forward_path(route, this_dst, dir);
+  	nft_default_forward_path(route, other_dst, !dir);
+  
 diff --git a/target/linux/generic/backport-6.18/721-01-v7.1-net-dsa-mt7530-fix-CPU-port-VLAN-not-being-reset.patch b/target/linux/generic/backport-6.18/721-01-v7.1-net-dsa-mt7530-fix-CPU-port-VLAN-not-being-reset.patch
 index 05e436eecd2371..e34651b78de232 100644
 --- a/target/linux/generic/backport-6.18/721-01-v7.1-net-dsa-mt7530-fix-CPU-port-VLAN-not-being-reset.patch
@@ -2530,7 +2789,7 @@ index c05167c6f0d485..00000000000000
 - 
 - struct mt7530_hw_vlan_entry {
 diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-index 2d2462829a129b..2617635100e4ff 100644
+index ea133231612619..5dc1baa0ae42e1 100644
 --- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 +++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
 @@ -52,7 +52,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
@@ -2555,8 +2814,8 @@ index 2d2462829a129b..2617635100e4ff 100644
   	help
  --- a/net/core/dev.c
  +++ b/net/core/dev.c
--@@ -3887,6 +3887,11 @@ static int xmit_one(struct sk_buff *skb,
-+@@ -3893,6 +3893,11 @@ static int xmit_one(struct sk_buff *skb,
+-@@ -3883,6 +3883,11 @@ static int xmit_one(struct sk_buff *skb,
++@@ -3889,6 +3889,11 @@ static int xmit_one(struct sk_buff *skb,
   	if (dev_nit_active_rcu(dev))
   		dev_queue_xmit_nit(skb, dev);
   
@@ -2601,10 +2860,10 @@ index cd97aa8548e1f0..f95022dd49e61a 100644
 +LINUX_VERSION-6.18 = .57
 +LINUX_KERNEL_HASH-6.18.57 = 5bd9acdc82ec5efc3790ae840e5aaa40dfde7efff261cf6dde902dc570acf98c
 diff --git a/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch b/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
-index c7db07d220ef08..a254cac9243b33 100644
+index c7db07d220ef08..2bf84af3d16110 100644
 --- a/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
 +++ b/target/linux/generic/pending-6.18/151-net-bridge-do-not-send-arp-replies-if-src-and-target.patch
-@@ -15,20 +15,20 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+@@ -15,7 +15,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  
  --- a/net/bridge/br_arp_nd_proxy.c
  +++ b/net/bridge/br_arp_nd_proxy.c
@@ -2613,10 +2872,7 @@ index c7db07d220ef08..a254cac9243b33 100644
   			if ((p && (p->flags & BR_PROXYARP)) ||
   			    (dst && (dst->flags & BR_PROXYARP_WIFI)) ||
   			    br_is_neigh_suppress_enabled(dst, vid)) {
- -				if (!vid)
- +				replied = true;
--+				if (!memcmp(n->ha, sha, dev->addr_len))
-++				if (!memcmp(ha, sha, dev->addr_len))
+@@ -25,10 +25,10 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  +					replied = false;
  +				else if (!vid)
   					br_arp_send(br, p, skb->dev, sip, tip,
@@ -2790,19 +3046,6 @@ index a170c7370b6b37..1773a5d4958de1 100644
   /* interface handling */
   #define MAC80211_SUPPORTED_FEATURES_TX	(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | \
   					 NETIF_F_HW_CSUM | NETIF_F_SG | \
-diff --git a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-index c7bc90a7274391..ce8f281431846e 100644
---- a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-+++ b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-@@ -49,7 +49,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
- 
- --- a/net/netfilter/nf_flow_table_path.c
- +++ b/net/netfilter/nf_flow_table_path.c
--@@ -213,6 +213,8 @@ static void nft_dev_forward_path(struct
-+@@ -206,6 +206,8 @@ static void nft_dev_forward_path(struct
-  
-  	if (info.outdev)
-  		route->tuple[dir].out.ifindex = info.outdev->ifindex;
 diff --git a/target/linux/generic/pending-6.18/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch b/target/linux/generic/pending-6.18/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch
 index fdf46267b9ca01..66018aeb1eef93 100644
 --- a/target/linux/generic/pending-6.18/701-netfilter-nf_tables-ignore-EOPNOTSUPP-on-flowtable-d.patch
@@ -2816,6 +3059,28 @@ index fdf46267b9ca01..66018aeb1eef93 100644
   
   	err = flowtable->data.type->setup(&flowtable->data,
   					  ops->dev, FLOW_BLOCK_BIND);
+diff --git a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+index 413963c57ebcc0..5e2aad723857e1 100644
+--- a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
++++ b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
+@@ -290,7 +290,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  			if (path->type == DEV_PATH_PPPOE)
+  				memcpy(info->h_dest, path->encap.h_dest, ETH_ALEN);
+  			break;
+-@@ -163,6 +168,14 @@ static int nft_dev_path_info(const struc
++@@ -164,6 +169,14 @@ static int nft_dev_path_info(const struc
+  			case DEV_PATH_BR_VLAN_KEEP:
+  				break;
+  			}
+@@ -305,7 +305,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  			info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
+  			break;
+  		default:
+-@@ -230,6 +243,9 @@ static int nft_dev_forward_path(struct n
++@@ -231,6 +244,9 @@ static int nft_dev_forward_path(struct n
+  	if (info.xmit_type == FLOW_OFFLOAD_XMIT_DIRECT) {
+  		memcpy(route->tuple[dir].out.h_source, info.h_source, ETH_ALEN);
+  		memcpy(route->tuple[dir].out.h_dest, info.h_dest, ETH_ALEN);
 diff --git a/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch b/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch
 index f4ffbbe9e6ae14..5d7d43cd00ef4e 100644
 --- a/target/linux/generic/pending-6.18/812-PCI-sysfs-enforce-single-creation-of-sysfs-entry-for.patch
@@ -2900,6 +3165,28 @@ index 8d4f234e76d4d4..9a87dab5e91d83 100644
   #if IS_ENABLED(CONFIG_INET_PSP)
   	[SKB_EXT_PSP] = SKB_EXT_CHUNKSIZEOF(struct psp_skb_ext),
   #endif
+diff --git a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+index cea5fe9f6ebe7a..5c46824fe3b18d 100644
+--- a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
++++ b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+ 
+ --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+ +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+-@@ -7506,6 +7506,7 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7525,6 +7525,7 @@ int stmmac_dvr_probe(struct device *devi
+  {
+  	struct net_device *ndev = NULL;
+  	struct stmmac_priv *priv;
+@@ -33,7 +33,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+  	u32 rxq;
+  	int i, ret = 0;
+  
+-@@ -7760,7 +7761,24 @@ int stmmac_dvr_probe(struct device *devi
++@@ -7779,7 +7780,24 @@ int stmmac_dvr_probe(struct device *devi
+  		goto error_phy_setup;
+  	}
+  
 diff --git a/target/linux/lantiq/patches-6.18/001-MIPS-lantiq-add-pcie-driver.patch b/target/linux/lantiq/patches-6.18/001-MIPS-lantiq-add-pcie-driver.patch
 index 00b8479d0ad697..9deb789c6fa9e7 100644
 --- a/target/linux/lantiq/patches-6.18/001-MIPS-lantiq-add-pcie-driver.patch
@@ -2953,28 +3240,6 @@ index a8d34d05c47ab5..e1d7d3ee786b04 100644
   	.probe_finalize = mtk_iommu_v1_probe_finalize,
   	.release_device	= mtk_iommu_v1_release_device,
   	.device_group	= generic_device_group,
-diff --git a/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch b/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
-index ee04281311173f..5ad791c8f37399 100644
---- a/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
-+++ b/target/linux/qualcommax/patches-6.18/0950-net-dsa-add-out-of-band-tagging-protocol.patch
-@@ -83,7 +83,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
- +#endif
- --- a/include/linux/skbuff.h
- +++ b/include/linux/skbuff.h
--@@ -4935,6 +4935,9 @@ enum skb_ext_id {
-+@@ -4937,6 +4937,9 @@ enum skb_ext_id {
-  #if IS_ENABLED(CONFIG_INET_PSP)
-  	SKB_EXT_PSP,
-  #endif
-@@ -126,7 +126,7 @@ Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-  #include <net/dst.h>
-  #include <net/sock.h>
-  #include <net/checksum.h>
--@@ -5120,6 +5124,9 @@ static const u8 skb_ext_type_len[] = {
-+@@ -5124,6 +5128,9 @@ static const u8 skb_ext_type_len[] = {
-  #if IS_ENABLED(CONFIG_INET_PSP)
-  	[SKB_EXT_PSP] = SKB_EXT_CHUNKSIZEOF(struct psp_skb_ext),
-  #endif
 diff --git a/target/linux/rockchip/patches-6.18/045-01-v6.19-media-v4l2-mem2mem-Document-that-v4l2_m2m_get_vq-never-retur.patch b/target/linux/rockchip/patches-6.18/045-01-v6.19-media-v4l2-mem2mem-Document-that-v4l2_m2m_get_vq-never-retur.patch
 index b92291197fa45a..ea515deb8cc784 100644
 --- a/target/linux/rockchip/patches-6.18/045-01-v6.19-media-v4l2-mem2mem-Document-that-v4l2_m2m_get_vq-never-retur.patch
@@ -3400,6 +3665,32 @@ index df586a0ff282c5..a1810d60871829 100644
   	[RV1126_PD_NVM]		= DOMAIN_RV1126("nvm", BIT(7), BIT(11), BIT(11),  false),
   	[RV1126_PD_SDIO]	= DOMAIN_RV1126("sdio", BIT(8), BIT(13), BIT(13),  false),
   	[RV1126_PD_USB]		= DOMAIN_RV1126("usb", BIT(9), BIT(15), BIT(15),  false),
+diff --git a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
+index 46386d7f442c7a..c3a4d0963a2ea5 100644
+--- a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
++++ b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/iommu/rockchip-iommu.c
+ +++ b/drivers/iommu/rockchip-iommu.c
+-@@ -1236,8 +1236,9 @@ static int rk_iommu_probe(struct platfor
++@@ -1246,8 +1246,9 @@ static int rk_iommu_probe(struct platfor
+  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+  		if (!res)
+  			continue;
+diff --git a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
+index f6b570351827cd..e8ee4a28642e04 100644
+--- a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
++++ b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
+@@ -14,7 +14,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/pmdomain/rockchip/pm-domains.c
+ +++ b/drivers/pmdomain/rockchip/pm-domains.c
+-@@ -1104,6 +1104,8 @@ static const struct rockchip_domain_info
++@@ -1118,6 +1118,8 @@ static const struct rockchip_domain_info
+  };
+  
+  static const struct rockchip_domain_info rv1126_pm_domains[] = {
 diff --git a/target/linux/starfive/patches-6.18/0013-drivers-nvme-Add-precheck-and-delay-for-CQE-pending-.patch b/target/linux/starfive/patches-6.18/0013-drivers-nvme-Add-precheck-and-delay-for-CQE-pending-.patch
 index ba17406604084d..09546d7dbccad7 100644
 --- a/target/linux/starfive/patches-6.18/0013-drivers-nvme-Add-precheck-and-delay-for-CQE-pending-.patch
@@ -3427,84 +3718,10 @@ index c47effa7354c69..1166dddf47bfa6 100644
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 
-From 4c8dddd1b484af31e0f619d5df11d8a9a811350b Mon Sep 17 00:00:00 2001
+From 9ad58232c483d88c7e30bf467a2cd0635081deea Mon Sep 17 00:00:00 2001
 From: John Audia <therealgraysky@proton.me>
-Date: Fri, 16 Oct 2026 15:20:19 -0400
-Subject: [PATCH 3/4] kernel: add kmod-crypto-krb5 for 6.18 rpcsec
-
-Linux 6.18.57 backports upstream bf8672b99402 ("SUNRPC: Add Kconfig
-dependency on CRYPTO_KRB5") and the series moving rpcsec_gss_krb5 to
-crypto/krb5, as a stable dependency of b94f6719dcd9 ("SUNRPC: Reject
-short RFC 4121 MIC tokens in gss_krb5_verify_mic_v2").
-rpcsec_gss_krb5.ko now imports crypto_krb5_* from krb5.ko, which no
-package ships, so kmod-fs-nfs-common-rpcsec fails its dependency check.
-
-Package krb5.ko and krb5enc.ko as kmod-crypto-krb5 and depend on it on
-6.18. krb5enc is not a symbol dependency but is loaded by name for the
-AES-SHA1 enctypes.
-
-Signed-off-by: John Audia <therealgraysky@proton.me>
----
- package/kernel/linux/modules/crypto.mk | 22 +++++++++++++++++++++-
- package/kernel/linux/modules/fs.mk     |  3 ++-
- 2 files changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modules/crypto.mk
-index 3e9492f43c7ad5..8494f0393de30c 100644
---- a/package/kernel/linux/modules/crypto.mk
-+++ b/package/kernel/linux/modules/crypto.mk
-@@ -558,6 +558,27 @@ endef
- 
- $(eval $(call KernelPackage,crypto-kpp))
- 
-+
-+define KernelPackage/crypto-krb5
-+  TITLE:=Kerberos 5 crypto library
-+  DEPENDS:=+kmod-crypto-manager +kmod-crypto-authenc \
-+	+kmod-crypto-hmac +kmod-crypto-cmac +kmod-crypto-sha1 \
-+	+kmod-crypto-sha256 +kmod-crypto-sha512 +kmod-crypto-cbc \
-+	+kmod-crypto-cts
-+  KCONFIG:= \
-+	CONFIG_CRYPTO_KRB5 \
-+	CONFIG_CRYPTO_KRB5ENC \
-+	CONFIG_CRYPTO_KRB5_SELFTESTS=n
-+  FILES:= \
-+	$(LINUX_DIR)/crypto/krb5enc.ko \
-+	$(LINUX_DIR)/crypto/krb5/krb5.ko
-+  AUTOLOAD:=$(call AutoLoad,09,krb5enc krb5)
-+  $(call AddDepends/crypto)
-+endef
-+
-+$(eval $(call KernelPackage,crypto-krb5))
-+
-+
- define KernelPackage/crypto-lib-chacha20
-   TITLE:=ChaCha library interface
-   KCONFIG:=CONFIG_CRYPTO_LIB_CHACHA
-@@ -865,4 +886,3 @@ define KernelPackage/crypto-xxhash
- endef
- 
- $(eval $(call KernelPackage,crypto-xxhash))
--
-diff --git a/package/kernel/linux/modules/fs.mk b/package/kernel/linux/modules/fs.mk
-index 6c796ffd8a6260..00dd28e197efdd 100644
---- a/package/kernel/linux/modules/fs.mk
-+++ b/package/kernel/linux/modules/fs.mk
-@@ -492,7 +492,8 @@ define KernelPackage/fs-nfs-common-rpcsec
- 	+kmod-crypto-sha256 \
- 	+kmod-crypto-sha512 \
- 	+kmod-crypto-cbc \
--	+kmod-crypto-cts
-+	+kmod-crypto-cts \
-+	+kmod-crypto-krb5
-   KCONFIG:= \
- 	CONFIG_SUNRPC_GSS \
- 	CONFIG_RPCSEC_GSS_KRB5
-
-From 06f7fe68d708c6e293a2e18235bf3001503aeda5 Mon Sep 17 00:00:00 2001
-From: John Audia <therealgraysky@proton.me>
-Date: Fri, 23 Oct 2026 10:00:37 -0400
-Subject: [PATCH 4/4] kernel: bump 6.18 to 6.18.58
+Date: Sun, 25 Oct 2026 23:10:47 +0000
+Subject: [PATCH 3/6] kernel: bump 6.18 to 6.18.58
 
 Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.58
 
@@ -3516,57 +3733,9 @@ Run-tested: x86/64-glibc
 
 Signed-off-by: John Audia <therealgraysky@proton.me>
 ---
- ...-pass-net_device_path_ctx-to-dev_fill_forward_path.patch | 2 +-
- .../hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch | 2 +-
- .../generic/hack-6.18/721-net-add-packet-mangeling.patch    | 2 +-
- target/linux/generic/kernel-6.18                            | 4 ++--
- ...tfilter-flowtable-set-out-ifindex-when-the-forward.patch | 2 +-
- ...tfilter-flowtable-tear-down-direct-xmit-flows-when.patch | 6 +++---
- .../903-net-stmmac-force-name-from-dt-alias.patch           | 4 ++--
- .../901-arm64-of-add-CMDLINE_OVERRIDE-support.patch         | 2 +-
- ...mmu-rockchip-map-the-mmu-registers-non-exclusively.patch | 2 +-
- .../189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch    | 2 +-
- 10 files changed, 14 insertions(+), 14 deletions(-)
+ target/linux/generic/kernel-6.18 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
-index f60610aa23dbd4..4a964e84ca2824 100644
---- a/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
-+++ b/target/linux/generic/backport-6.18/706-01-v7.3-net-pass-net_device_path_ctx-to-dev_fill_forward_path.patch
-@@ -89,7 +89,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-  struct net_device *dev_get_by_name_rcu(struct net *net, const char *name);
- --- a/net/core/dev.c
- +++ b/net/core/dev.c
--@@ -744,41 +744,37 @@ static struct net_device_path *dev_fwd_p
-+@@ -750,41 +750,37 @@ static struct net_device_path *dev_fwd_p
-  	return &stack->path[k];
-  }
-  
-diff --git a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-index c645f98333d817..d10d2f0a43baff 100644
---- a/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-+++ b/target/linux/generic/hack-6.18/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
-@@ -105,7 +105,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  		      void (*iter)(struct nf_flowtable *flowtable,
-  				   struct flow_offload *flow, void *data),
-  		      void *data)
--@@ -636,6 +634,7 @@ static void nf_flow_offload_gc_step(stru
-+@@ -641,6 +639,7 @@ static void nf_flow_offload_gc_step(stru
-  		nf_flow_offload_stats(flow_table, flow);
-  	}
-  }
-diff --git a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-index 2617635100e4ff..5dc1baa0ae42e1 100644
---- a/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-+++ b/target/linux/generic/hack-6.18/721-net-add-packet-mangeling.patch
-@@ -97,7 +97,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  	help
- --- a/net/core/dev.c
- +++ b/net/core/dev.c
--@@ -3893,6 +3893,11 @@ static int xmit_one(struct sk_buff *skb,
-+@@ -3889,6 +3889,11 @@ static int xmit_one(struct sk_buff *skb,
-  	if (dev_nit_active_rcu(dev))
-  		dev_queue_xmit_nit(skb, dev);
-  
 diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
 index f95022dd49e61a..2307a67f177b06 100644
 --- a/target/linux/generic/kernel-6.18
@@ -3576,108 +3745,919 @@ index f95022dd49e61a..2307a67f177b06 100644
 -LINUX_KERNEL_HASH-6.18.57 = 5bd9acdc82ec5efc3790ae840e5aaa40dfde7efff261cf6dde902dc570acf98c
 +LINUX_VERSION-6.18 = .58
 +LINUX_KERNEL_HASH-6.18.58 = 069b19f9032c4dac8149ae4b6520c35debca0f42a9f6d52ee55ba6ca9b818013
-diff --git a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-index ce8f281431846e..88acce7b29b00a 100644
---- a/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-+++ b/target/linux/generic/pending-6.18/699-netfilter-flowtable-set-out-ifindex-when-the-forward.patch
-@@ -49,7 +49,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+
+From 30857fdacd1506c6a35717541ecd76a45ac96f12 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Mon, 26 Oct 2026 14:30:26 -0400
+Subject: [PATCH 4/6] kernel: bump 6.18 to 6.18.59
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.59
+
+Removed upstreamed:
+  linux/generic/backport-6.18/950-v7.3-cgroup-fix-spurious-SIGKILL-of-CLONE_INTO_CGROUP-children.patch[1]
+  linux/bcm27xx/patches-6.18/0783-drm-vc4-hdmi-Move-packet-RAM-enable-to-pm_runtime.patch[2]
+  linux/qualcommax/patches-6.18/0092-v7.3-pinctrl-qcom-ipq5018-add-missing-pwm3-function-on-gpio13.patch[3]
+
+All other patches automatically rebased via update_kernel.sh
+
+1. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.59&id=2f9dd8214d4213cac785e4e4441538053cce52fb
+2. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.59&id=6b03e354526f6bad60ed3a7f08fec8b7d29d2f27
+3. https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.18.59&id=e76e6284de2ba2c0da9aa21ab4e17a885186a4b2
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ package/kernel/linux/modules/netdevices.mk    | 18 +++-
+ .../900-unaligned_access_hacks.patch          | 12 +--
+ ...Better-coalescing-parameter-defaults.patch |  4 +-
+ ...t-Workaround-2-for-Pi4-Ethernet-fail.patch |  2 +-
+ ...-t-prevent-IRQ-usage-of-output-GPIOs.patch |  2 +-
+ ...et-bcmgenet-Add-eee-module-parameter.patch |  2 +-
+ ...-vc4-hdmi-Add-a-clear_infoframe-hook.patch |  2 +-
+ ...hotplug-interrupt-with-force_hotplug.patch |  2 +-
+ ...equest-for-min-clocks-when-hdmi-outp.patch |  4 +-
+ ...the-2pixel-clock-odd-timings-workaro.patch | 10 +--
+ ...-jack-detection-to-HDMI-audio-driver.patch |  2 +-
+ ...-phys-addresses-for-slave-DMA-config.patch |  4 +-
+ ...one-logging-message-that-got-promote.patch |  2 +-
+ ...et-bcmgenet-Add-eee-module-parameter.patch |  2 +-
+ ...net-Workaround-2-for-Pi4-Ethernet-fa.patch |  2 +-
+ ...emove-unused-packet_ram_enabled-flag.patch |  4 +-
+ ...Move-packet-RAM-enable-to-pm_runtime.patch | 85 -------------------
+ ...4-hdmi-switch-to-generic-CEC-helpers.patch |  2 +-
+ ...erver-fix-signing-multi-iov-response.patch |  8 +-
+ ...-net-pppoe-implement-GRO-GSO-support.patch |  2 +-
+ ...IGKILL-of-CLONE_INTO_CGROUP-children.patch | 83 ------------------
+ ...y-to-free-deferred-skbs-while-waitin.patch |  4 +-
+ .../generic/hack-6.18/902-debloat_proc.patch  |  2 +-
+ ...950-silence-unused-variable-warnings.patch |  4 +-
+ target/linux/generic/kernel-6.18              |  4 +-
+ ..._F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch |  2 +-
+ ...-add-missing-pwm3-function-on-gpio13.patch | 48 -----------
+ 27 files changed, 59 insertions(+), 259 deletions(-)
+ delete mode 100644 target/linux/bcm27xx/patches-6.18/0783-drm-vc4-hdmi-Move-packet-RAM-enable-to-pm_runtime.patch
+ delete mode 100644 target/linux/generic/backport-6.18/950-v7.3-cgroup-fix-spurious-SIGKILL-of-CLONE_INTO_CGROUP-children.patch
+ delete mode 100644 target/linux/qualcommax/patches-6.18/0092-v7.3-pinctrl-qcom-ipq5018-add-missing-pwm3-function-on-gpio13.patch
+
+diff --git a/package/kernel/linux/modules/netdevices.mk b/package/kernel/linux/modules/netdevices.mk
+index 19b5967e33e944..a849ff6a474a50 100644
+--- a/package/kernel/linux/modules/netdevices.mk
++++ b/package/kernel/linux/modules/netdevices.mk
+@@ -183,6 +183,22 @@ endef
+ $(eval $(call KernelPackage,libeth))
  
- --- a/net/netfilter/nf_flow_table_path.c
- +++ b/net/netfilter/nf_flow_table_path.c
--@@ -206,6 +206,8 @@ static void nft_dev_forward_path(struct
-+@@ -214,6 +214,8 @@ static void nft_dev_forward_path(struct
-  
-  	if (info.outdev)
-  		route->tuple[dir].out.ifindex = info.outdev->ifindex;
-diff --git a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
-index 26f627fb2ca793..39f2eb64b25380 100644
---- a/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
-+++ b/target/linux/generic/pending-6.18/708-netfilter-flowtable-tear-down-direct-xmit-flows-when.patch
-@@ -248,7 +248,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-  static void nf_flow_offload_gc_step(struct nf_flowtable *flow_table,
-  				    struct flow_offload *flow, void *data)
-  {
--@@ -572,6 +610,8 @@ static void nf_flow_offload_gc_step(stru
-+@@ -577,6 +615,8 @@ static void nf_flow_offload_gc_step(stru
-  
-  	if (nf_flow_has_expired(flow) ||
-  	    nf_ct_is_dying(flow->ct) ||
-@@ -287,7 +287,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-  			if (path->type == DEV_PATH_PPPOE)
-  				memcpy(info->h_dest, path->encap.h_dest, ETH_ALEN);
-  			break;
--@@ -163,6 +168,13 @@ static void nft_dev_path_info(const stru
-+@@ -164,6 +169,13 @@ static void nft_dev_path_info(const stru
-  			case DEV_PATH_BR_VLAN_KEEP:
-  				break;
-  			}
-@@ -301,7 +301,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-  			info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
-  			break;
-  		default:
--@@ -230,6 +242,9 @@ static void nft_dev_forward_path(struct
-+@@ -231,6 +243,9 @@ static void nft_dev_forward_path(struct
-  	if (info.xmit_type == FLOW_OFFLOAD_XMIT_DIRECT) {
-  		memcpy(route->tuple[dir].out.h_source, info.h_source, ETH_ALEN);
-  		memcpy(route->tuple[dir].out.h_dest, info.h_dest, ETH_ALEN);
-diff --git a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
-index f8f2f47e52fa37..5c46824fe3b18d 100644
---- a/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
-+++ b/target/linux/ipq806x/patches-6.18/903-net-stmmac-force-name-from-dt-alias.patch
-@@ -25,7 +25,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
  
- --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
- +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
--@@ -7491,6 +7491,7 @@ int stmmac_dvr_probe(struct device *devi
-+@@ -7525,6 +7525,7 @@ int stmmac_dvr_probe(struct device *devi
-  {
-  	struct net_device *ndev = NULL;
-  	struct stmmac_priv *priv;
-@@ -33,7 +33,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
-  	u32 rxq;
-  	int i, ret = 0;
++define KernelPackage/libeth-xdp
++  SUBMENU:=$(NETWORK_DEVICES_MENU)
++  TITLE:=Common Intel Ethernet XDP library
++  DEPENDS:=+kmod-libeth
++  KCONFIG:=CONFIG_LIBETH_XDP
++  HIDDEN:=1
++  FILES:=$(LINUX_DIR)/drivers/net/ethernet/intel/libeth/libeth_xdp.ko
++endef
++
++define KernelPackage/libeth-xdp/description
++ Common Intel Ethernet XDP library
++endef
++
++$(eval $(call KernelPackage,libeth-xdp))
++
++
+ define KernelPackage/libphy
+   SUBMENU:=$(NETWORK_DEVICES_MENU)
+   TITLE:=PHY library
+@@ -1539,7 +1555,7 @@ $(eval $(call KernelPackage,i40e))
+ define KernelPackage/ice
+   SUBMENU:=$(NETWORK_DEVICES_MENU)
+   TITLE:=Intel(R) Ethernet Controller E810 Series support
+-  DEPENDS:=@PCI_SUPPORT +kmod-ptp +kmod-hwmon-core +kmod-libie +kmod-libie-adminq +kmod-libie-fwlog
++  DEPENDS:=@PCI_SUPPORT +kmod-ptp +kmod-hwmon-core +kmod-libie +kmod-libie-adminq +kmod-libie-fwlog +kmod-libeth-xdp
+   KCONFIG:=CONFIG_ICE \
+     CONFIG_ICE_HWMON=y \
+     CONFIG_ICE_HWTS=n \
+diff --git a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+index fcf7a1a219e145..71e409afacc795 100644
+--- a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+@@ -624,7 +624,7 @@ SVN-Revision: 35130
+  				     (__force __wsum)to);
+ --- a/include/net/ipv6.h
+ +++ b/include/net/ipv6.h
+-@@ -149,7 +149,7 @@ struct frag_hdr {
++@@ -147,7 +147,7 @@ struct frag_hdr {
+  	__u8	reserved;
+  	__be16	frag_off;
+  	__be32	identification;
+@@ -633,7 +633,7 @@ SVN-Revision: 35130
   
--@@ -7745,7 +7746,24 @@ int stmmac_dvr_probe(struct device *devi
-+@@ -7779,7 +7780,24 @@ int stmmac_dvr_probe(struct device *devi
-  		goto error_phy_setup;
+  /*
+   * Jumbo payload option, as described in RFC 2675 2.
+-@@ -650,8 +650,8 @@ static inline void __ipv6_addr_set_half(
++@@ -648,8 +648,8 @@ static inline void __ipv6_addr_set_half(
+  	}
+  #endif
+  #endif
+@@ -644,7 +644,7 @@ SVN-Revision: 35130
+  }
+  
+  static inline void ipv6_addr_set(struct in6_addr *addr,
+-@@ -710,6 +710,8 @@ static inline bool ipv6_prefix_equal(con
++@@ -708,6 +708,8 @@ static inline bool ipv6_prefix_equal(con
+  	const __be32 *a1 = addr1->s6_addr32;
+  	const __be32 *a2 = addr2->s6_addr32;
+  	unsigned int pdw, pbi;
+@@ -653,7 +653,7 @@ SVN-Revision: 35130
+  
+  	/* check complete u32 in prefix */
+  	pdw = prefixlen >> 5;
+-@@ -718,7 +720,9 @@ static inline bool ipv6_prefix_equal(con
++@@ -716,7 +718,9 @@ static inline bool ipv6_prefix_equal(con
+  
+  	/* check incomplete u32 in prefix */
+  	pbi = prefixlen & 0x1f;
+@@ -664,7 +664,7 @@ SVN-Revision: 35130
+  		return false;
+  
+  	return true;
+-@@ -835,13 +839,13 @@ static inline void ipv6_addr_set_v4mappe
++@@ -833,13 +837,13 @@ static inline void ipv6_addr_set_v4mappe
+   */
+  static inline int __ipv6_addr_diff32(const void *token1, const void *token2, int addrlen)
+  {
+@@ -680,7 +680,7 @@ SVN-Revision: 35130
+  		if (xb)
+  			return i * 32 + 31 - __fls(ntohl(xb));
+  	}
+-@@ -1036,17 +1040,18 @@ static inline u32 ip6_multipath_hash_fie
++@@ -1034,17 +1038,18 @@ static inline u32 ip6_multipath_hash_fie
+  static inline void ip6_flow_hdr(struct ipv6hdr *hdr, unsigned int tclass,
+  				__be32 flowlabel)
+  {
+diff --git a/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch b/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
+index 28e7171902035f..ce0f623a1a3ecf 100644
+--- a/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
++++ b/target/linux/bcm27xx/patches-6.18/0110-bcmgenet-Better-coalescing-parameter-defaults.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+ 
+ --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+ +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+-@@ -2744,7 +2744,7 @@ static void bcmgenet_init_tx_ring(struct
++@@ -2754,7 +2754,7 @@ static void bcmgenet_init_tx_ring(struct
+  
+  	bcmgenet_tdma_ring_writel(priv, index, 0, TDMA_PROD_INDEX);
+  	bcmgenet_tdma_ring_writel(priv, index, 0, TDMA_CONS_INDEX);
+@@ -27,7 +27,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  	/* Disable rate control for now */
+  	bcmgenet_tdma_ring_writel(priv, index, flow_period_val,
+  				  TDMA_FLOW_PERIOD);
+-@@ -4160,6 +4160,7 @@ static int bcmgenet_probe(struct platfor
++@@ -4170,6 +4170,7 @@ static int bcmgenet_probe(struct platfor
+  		priv->rx_rings[i].priv = priv;
+  		priv->rx_rings[i].index = i;
+  		priv->rx_rings[i].rx_max_coalesced_frames = 1;
+diff --git a/target/linux/bcm27xx/patches-6.18/0121-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch b/target/linux/bcm27xx/patches-6.18/0121-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
+index 8b413afb5ff25c..5ddac7ff332339 100644
+--- a/target/linux/bcm27xx/patches-6.18/0121-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
++++ b/target/linux/bcm27xx/patches-6.18/0121-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fail.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -2582,6 +2585,11 @@ static void reset_umac(struct bcmgenet_p
++@@ -2592,6 +2595,11 @@ static void reset_umac(struct bcmgenet_p
+  	bcmgenet_rbuf_ctrl_set(priv, 0);
+  	udelay(10);
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0168-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch b/target/linux/bcm27xx/patches-6.18/0168-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
+index 0742c526c8cda2..ce4029568e63e3 100644
+--- a/target/linux/bcm27xx/patches-6.18/0168-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
++++ b/target/linux/bcm27xx/patches-6.18/0168-gpiolib-Don-t-prevent-IRQ-usage-of-output-GPIOs.patch
+@@ -37,7 +37,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+  		gpiod_err(desc,
+  			  "%s: tried to set a GPIO tied to an IRQ as output\n",
+  			  __func__);
+-@@ -4058,8 +4060,8 @@ int gpiochip_lock_as_irq(struct gpio_chi
++@@ -4059,8 +4061,8 @@ int gpiochip_lock_as_irq(struct gpio_chi
   	}
   
-diff --git a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
-index 23b7ab7efaaedd..dfa3d2aaca3e36 100644
---- a/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
-+++ b/target/linux/layerscape/patches-6.18/901-arm64-of-add-CMDLINE_OVERRIDE-support.patch
-@@ -60,7 +60,7 @@ Signed-off-by: Sascha Plumhoff <sapl@plumhoff.net>
-  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
- --- a/arch/arm64/Kconfig
- +++ b/arch/arm64/Kconfig
--@@ -2436,6 +2436,14 @@ config CMDLINE_FORCE
-+@@ -2468,6 +2468,14 @@ config CMDLINE_FORCE
+  	/* To be valid for IRQ the line needs to be input or open drain */
+diff --git a/target/linux/bcm27xx/patches-6.18/0256-net-bcmgenet-Add-eee-module-parameter.patch b/target/linux/bcm27xx/patches-6.18/0256-net-bcmgenet-Add-eee-module-parameter.patch
+index cb83ec83442548..ab9a4f0fbe5e12 100644
+--- a/target/linux/bcm27xx/patches-6.18/0256-net-bcmgenet-Add-eee-module-parameter.patch
++++ b/target/linux/bcm27xx/patches-6.18/0256-net-bcmgenet-Add-eee-module-parameter.patch
+@@ -26,7 +26,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
   
-  endchoice
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -3439,6 +3442,17 @@ static int bcmgenet_open(struct net_devi
++@@ -3449,6 +3452,17 @@ static int bcmgenet_open(struct net_devi
   
-diff --git a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
-index 46386d7f442c7a..c3a4d0963a2ea5 100644
---- a/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
-+++ b/target/linux/rockchip/patches-6.18/182-01-iommu-rockchip-map-the-mmu-registers-non-exclusively.patch
-@@ -23,7 +23,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	bcmgenet_phy_pause_set(dev, priv->rx_pause, priv->tx_pause);
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0447-drm-vc4-hdmi-Add-a-clear_infoframe-hook.patch b/target/linux/bcm27xx/patches-6.18/0447-drm-vc4-hdmi-Add-a-clear_infoframe-hook.patch
+index 8551647c174b21..f7293bc9dd87c6 100644
+--- a/target/linux/bcm27xx/patches-6.18/0447-drm-vc4-hdmi-Add-a-clear_infoframe-hook.patch
++++ b/target/linux/bcm27xx/patches-6.18/0447-drm-vc4-hdmi-Add-a-clear_infoframe-hook.patch
+@@ -39,7 +39,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  #define SCRAMBLING_POLLING_DELAY_MS	1000
+  
+  static void vc4_hdmi_enable_scrambling(struct drm_encoder *encoder)
+-@@ -1667,6 +1685,7 @@ vc4_hdmi_connector_clock_valid(const str
++@@ -1661,6 +1679,7 @@ vc4_hdmi_connector_clock_valid(const str
+  static const struct drm_connector_hdmi_funcs vc4_hdmi_hdmi_connector_funcs = {
+  	.tmds_char_rate_valid	= vc4_hdmi_connector_clock_valid,
+  	.write_infoframe	= vc4_hdmi_write_infoframe,
+diff --git a/target/linux/bcm27xx/patches-6.18/0449-vc4-hdmi-Ignore-hotplug-interrupt-with-force_hotplug.patch b/target/linux/bcm27xx/patches-6.18/0449-vc4-hdmi-Ignore-hotplug-interrupt-with-force_hotplug.patch
+index d80fb7c707aa48..90d8a4f94aaa1c 100644
+--- a/target/linux/bcm27xx/patches-6.18/0449-vc4-hdmi-Ignore-hotplug-interrupt-with-force_hotplug.patch
++++ b/target/linux/bcm27xx/patches-6.18/0449-vc4-hdmi-Ignore-hotplug-interrupt-with-force_hotplug.patch
+@@ -30,7 +30,7 @@ Signed-off-by: Dom Cobley <popcornmix@gmail.com>
  
- --- a/drivers/iommu/rockchip-iommu.c
- +++ b/drivers/iommu/rockchip-iommu.c
--@@ -1236,8 +1236,9 @@ static int rk_iommu_probe(struct platfor
-+@@ -1246,8 +1246,9 @@ static int rk_iommu_probe(struct platfor
-  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-  		if (!res)
+ --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+ +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+-@@ -2369,7 +2369,7 @@ static irqreturn_t vc4_hdmi_hpd_irq_thre
++@@ -2363,7 +2363,7 @@ static irqreturn_t vc4_hdmi_hpd_irq_thre
+  	struct drm_connector *connector = &vc4_hdmi->connector;
+  	struct drm_device *dev = connector->dev;
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0463-drm-vc4-Remove-request-for-min-clocks-when-hdmi-outp.patch b/target/linux/bcm27xx/patches-6.18/0463-drm-vc4-Remove-request-for-min-clocks-when-hdmi-outp.patch
+index 2e62d7a3330aa5..18e3f6807609dc 100644
+--- a/target/linux/bcm27xx/patches-6.18/0463-drm-vc4-Remove-request-for-min-clocks-when-hdmi-outp.patch
++++ b/target/linux/bcm27xx/patches-6.18/0463-drm-vc4-Remove-request-for-min-clocks-when-hdmi-outp.patch
+@@ -39,8 +39,8 @@ Signed-off-by: Dom Cobley <popcornmix@gmail.com>
+  	clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
+  	clk_disable_unprepare(vc4_hdmi->pixel_clock);
+  
+-@@ -3101,6 +3103,8 @@ static int vc4_hdmi_runtime_suspend(stru
+- 	struct vc4_hdmi *vc4_hdmi = dev_get_drvdata(dev);
++@@ -3100,6 +3102,8 @@ static int vc4_hdmi_runtime_suspend(stru
++ 	spin_unlock_irqrestore(&vc4_hdmi->hw_lock, flags);
+  
+  	clk_disable_unprepare(vc4_hdmi->audio_clock);
+ +	/* we no longer require a minimum clock rate */
+diff --git a/target/linux/bcm27xx/patches-6.18/0464-drm-vc4-Disable-the-2pixel-clock-odd-timings-workaro.patch b/target/linux/bcm27xx/patches-6.18/0464-drm-vc4-Disable-the-2pixel-clock-odd-timings-workaro.patch
+index 591a56a7da80f9..6102ee4a4db455 100644
+--- a/target/linux/bcm27xx/patches-6.18/0464-drm-vc4-Disable-the-2pixel-clock-odd-timings-workaro.patch
++++ b/target/linux/bcm27xx/patches-6.18/0464-drm-vc4-Disable-the-2pixel-clock-odd-timings-workaro.patch
+@@ -146,7 +146,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  };
+ --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+ +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+-@@ -1710,7 +1710,9 @@ static int vc4_hdmi_encoder_atomic_check
++@@ -1704,7 +1704,9 @@ static int vc4_hdmi_encoder_atomic_check
+  	unsigned long long tmds_char_rate = mode->clock * 1000;
+  	unsigned long long tmds_bit_rate;
+  
+@@ -157,7 +157,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  		if (mode->flags & DRM_MODE_FLAG_DBLCLK) {
+  			/* Only try to fixup DBLCLK modes to get 480i and 576i
+  			 * working.
+-@@ -3353,6 +3355,7 @@ static const struct vc4_hdmi_variant bcm
++@@ -3355,6 +3357,7 @@ static const struct vc4_hdmi_variant bcm
+  		PHY_LANE_CK,
+  	},
+  	.unsupported_odd_h_timings	= true,
+@@ -165,7 +165,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  	.external_irq_controller	= true,
+  
+  	.init_resources		= vc5_hdmi_init_resources,
+-@@ -3382,6 +3385,7 @@ static const struct vc4_hdmi_variant bcm
++@@ -3384,6 +3387,7 @@ static const struct vc4_hdmi_variant bcm
+  		PHY_LANE_2,
+  	},
+  	.unsupported_odd_h_timings	= true,
+@@ -173,7 +173,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  	.external_irq_controller	= true,
+  
+  	.init_resources		= vc5_hdmi_init_resources,
+-@@ -3411,6 +3415,7 @@ static const struct vc4_hdmi_variant bcm
++@@ -3413,6 +3417,7 @@ static const struct vc4_hdmi_variant bcm
+  		PHY_LANE_CK,
+  	},
+  	.unsupported_odd_h_timings	= false,
+@@ -181,7 +181,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  	.external_irq_controller	= true,
+  
+  	.init_resources		= vc5_hdmi_init_resources,
+-@@ -3438,6 +3443,7 @@ static const struct vc4_hdmi_variant bcm
++@@ -3440,6 +3445,7 @@ static const struct vc4_hdmi_variant bcm
+  		PHY_LANE_CK,
+  	},
+  	.unsupported_odd_h_timings	= false,
+diff --git a/target/linux/bcm27xx/patches-6.18/0480-vc4-Add-jack-detection-to-HDMI-audio-driver.patch b/target/linux/bcm27xx/patches-6.18/0480-vc4-Add-jack-detection-to-HDMI-audio-driver.patch
+index 2bf8925a8abcc7..bc59b54b81c274 100644
+--- a/target/linux/bcm27xx/patches-6.18/0480-vc4-Add-jack-detection-to-HDMI-audio-driver.patch
++++ b/target/linux/bcm27xx/patches-6.18/0480-vc4-Add-jack-detection-to-HDMI-audio-driver.patch
+@@ -26,7 +26,7 @@ Signed-off-by: David Turner <david.turner@raspberrypi.com>
+  	 * NOTE: This function should really be called with vc4_hdmi->mutex
+  	 * held, but doing so results in reentrancy issues since
+  	 * cec_s_phys_addr() might call .adap_enable, which leads to that
+-@@ -2344,6 +2350,8 @@ static int vc4_hdmi_audio_init(struct vc
++@@ -2338,6 +2344,8 @@ static int vc4_hdmi_audio_init(struct vc
+  	dai_link->platforms->name = dev_name(dev);
+  	dai_link->init = vc4_hdmi_codec_init;
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0481-drm-vc4-Use-phys-addresses-for-slave-DMA-config.patch b/target/linux/bcm27xx/patches-6.18/0481-drm-vc4-Use-phys-addresses-for-slave-DMA-config.patch
+index 8ddf7e2457b2bb..30d7a539f3bd34 100644
+--- a/target/linux/bcm27xx/patches-6.18/0481-drm-vc4-Use-phys-addresses-for-slave-DMA-config.patch
++++ b/target/linux/bcm27xx/patches-6.18/0481-drm-vc4-Use-phys-addresses-for-slave-DMA-config.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+ 
+ --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+ +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+-@@ -2236,7 +2236,7 @@ static int vc4_hdmi_audio_init(struct vc
++@@ -2230,7 +2230,7 @@ static int vc4_hdmi_audio_init(struct vc
+  	struct snd_soc_dai_link *dai_link = &vc4_hdmi->audio.link;
+  	struct snd_soc_card *card = &vc4_hdmi->audio.card;
+  	struct device *dev = &vc4_hdmi->pdev->dev;
+@@ -22,7 +22,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+  	int index, len;
+  	int ret;
+  
+-@@ -2272,22 +2272,18 @@ static int vc4_hdmi_audio_init(struct vc
++@@ -2266,22 +2266,18 @@ static int vc4_hdmi_audio_init(struct vc
+  	}
+  
+  	/*
+diff --git a/target/linux/bcm27xx/patches-6.18/0484-drm-vc4-Correct-one-logging-message-that-got-promote.patch b/target/linux/bcm27xx/patches-6.18/0484-drm-vc4-Correct-one-logging-message-that-got-promote.patch
+index bdb548b379b844..22c700a97948dc 100644
+--- a/target/linux/bcm27xx/patches-6.18/0484-drm-vc4-Correct-one-logging-message-that-got-promote.patch
++++ b/target/linux/bcm27xx/patches-6.18/0484-drm-vc4-Correct-one-logging-message-that-got-promote.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ 
+ --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+ +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+-@@ -3235,7 +3235,7 @@ static int vc4_hdmi_bind(struct device *
++@@ -3237,7 +3237,7 @@ static int vc4_hdmi_bind(struct device *
+  	vc4_hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
+  	of_node_put(ddc_node);
+  	if (!vc4_hdmi->ddc) {
+diff --git a/target/linux/bcm27xx/patches-6.18/0689-Revert-net-bcmgenet-Add-eee-module-parameter.patch b/target/linux/bcm27xx/patches-6.18/0689-Revert-net-bcmgenet-Add-eee-module-parameter.patch
+index a408926fe8fe1b..25a85c16c2eab9 100644
+--- a/target/linux/bcm27xx/patches-6.18/0689-Revert-net-bcmgenet-Add-eee-module-parameter.patch
++++ b/target/linux/bcm27xx/patches-6.18/0689-Revert-net-bcmgenet-Add-eee-module-parameter.patch
+@@ -20,7 +20,7 @@ This reverts commit 712989f8e002e8a088f24a6cef4d8c1ed1a74e08.
+  
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -3442,17 +3439,6 @@ static int bcmgenet_open(struct net_devi
++@@ -3452,17 +3449,6 @@ static int bcmgenet_open(struct net_devi
+  
+  	bcmgenet_phy_pause_set(dev, priv->rx_pause, priv->tx_pause);
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0691-Revert-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fa.patch b/target/linux/bcm27xx/patches-6.18/0691-Revert-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fa.patch
+index 215064f5102a7b..8f38d29aec8c34 100644
+--- a/target/linux/bcm27xx/patches-6.18/0691-Revert-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fa.patch
++++ b/target/linux/bcm27xx/patches-6.18/0691-Revert-net-bcmgenet-Workaround-2-for-Pi4-Ethernet-fa.patch
+@@ -20,7 +20,7 @@ This reverts commit dfad8d6677d4c11a5b6d599f81802486f5c1d973.
+  
+  static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+  {
+-@@ -2585,11 +2582,6 @@ static void reset_umac(struct bcmgenet_p
++@@ -2595,11 +2592,6 @@ static void reset_umac(struct bcmgenet_p
+  	bcmgenet_rbuf_ctrl_set(priv, 0);
+  	udelay(10);
+  
+diff --git a/target/linux/bcm27xx/patches-6.18/0782-drm-vc4-hdmi-Remove-unused-packet_ram_enabled-flag.patch b/target/linux/bcm27xx/patches-6.18/0782-drm-vc4-hdmi-Remove-unused-packet_ram_enabled-flag.patch
+index c970bc133a023b..7c34e65a1d68ac 100644
+--- a/target/linux/bcm27xx/patches-6.18/0782-drm-vc4-hdmi-Remove-unused-packet_ram_enabled-flag.patch
++++ b/target/linux/bcm27xx/patches-6.18/0782-drm-vc4-hdmi-Remove-unused-packet_ram_enabled-flag.patch
+@@ -24,8 +24,8 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+  	if (!drm_dev_enter(drm, &idx))
+  		goto out;
+  
+-@@ -1647,7 +1645,6 @@ static void vc4_hdmi_encoder_post_crtc_e
+- 			   VC4_HDMI_RAM_PACKET_ENABLE);
++@@ -1641,7 +1639,6 @@ static void vc4_hdmi_encoder_post_crtc_e
++ 			  VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE));
+  
+  		spin_unlock_irqrestore(&vc4_hdmi->hw_lock, flags);
+ -		vc4_hdmi->packet_ram_enabled = true;
+diff --git a/target/linux/bcm27xx/patches-6.18/0783-drm-vc4-hdmi-Move-packet-RAM-enable-to-pm_runtime.patch b/target/linux/bcm27xx/patches-6.18/0783-drm-vc4-hdmi-Move-packet-RAM-enable-to-pm_runtime.patch
+deleted file mode 100644
+index 55d733bcaa7250..00000000000000
+--- a/target/linux/bcm27xx/patches-6.18/0783-drm-vc4-hdmi-Move-packet-RAM-enable-to-pm_runtime.patch
++++ /dev/null
+@@ -1,85 +0,0 @@
+-From ec0db8fae4cd6d743284353f568ab0356f2f9692 Mon Sep 17 00:00:00 2001
+-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+-Date: Thu, 11 Jun 2026 12:47:43 +0100
+-Subject: [PATCH] drm/vc4: hdmi: Move packet RAM enable to pm_runtime
+-
+-Audio can be triggered by the HPD handler and start up before
+-video has been restored, calling vc4_hdmi_write_infoframe
+-for the audio infoframe.
+-vc4_hdmi_write_infoframe checks that the packet RAM to store
+-the infoframes is enabled, but that is only enabled when
+-video is enabled in vc4_hdmi_encoder_post_crtc_enable.
+-
+-The packet RAM enable is only a power saving thing, so
+-move enabling/disabling to the runtime_pm hooks.
+-
+-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+----
+- drivers/gpu/drm/vc4/vc4_hdmi.c | 21 +++++++++++++--------
+- 1 file changed, 13 insertions(+), 8 deletions(-)
+-
+---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+-@@ -846,7 +846,7 @@ static void vc4_hdmi_encoder_post_crtc_d
+- 
+- 	spin_lock_irqsave(&vc4_hdmi->hw_lock, flags);
+- 
+--	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, 0);
+-+	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, VC4_HDMI_RAM_PACKET_ENABLE);
+- 
+- 	HDMI_WRITE(HDMI_VID_CTL, HDMI_READ(HDMI_VID_CTL) | VC4_HD_VID_CTL_CLRRGB);
+- 
+-@@ -1620,9 +1620,6 @@ static void vc4_hdmi_encoder_post_crtc_e
+- 		WARN_ONCE(ret, "Timeout waiting for "
+- 			  "VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE\n");
+- 	} else {
+--		HDMI_WRITE(HDMI_RAM_PACKET_CONFIG,
+--			   HDMI_READ(HDMI_RAM_PACKET_CONFIG) &
+--			   ~(VC4_HDMI_RAM_PACKET_ENABLE));
+- 		HDMI_WRITE(HDMI_SCHEDULER_CONTROL,
+- 			   HDMI_READ(HDMI_SCHEDULER_CONTROL) &
+- 			   ~VC4_HDMI_SCHEDULER_CONTROL_MODE_HDMI);
+-@@ -1641,9 +1638,6 @@ static void vc4_hdmi_encoder_post_crtc_e
+- 		WARN_ON(!(HDMI_READ(HDMI_SCHEDULER_CONTROL) &
+- 			  VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE));
+- 
+--		HDMI_WRITE(HDMI_RAM_PACKET_CONFIG,
+--			   VC4_HDMI_RAM_PACKET_ENABLE);
+--
+- 		spin_unlock_irqrestore(&vc4_hdmi->hw_lock, flags);
+- 
+- 		drm_atomic_helper_connector_hdmi_update_infoframes(connector, state);
+-@@ -3104,6 +3098,12 @@ static int vc5_hdmi_init_resources(struc
+- static int vc4_hdmi_runtime_suspend(struct device *dev)
+- {
+- 	struct vc4_hdmi *vc4_hdmi = dev_get_drvdata(dev);
+-+	unsigned long flags;
+-+
+-+	spin_lock_irqsave(&vc4_hdmi->hw_lock, flags);
+-+	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, 0);
+-+	spin_unlock_irqrestore(&vc4_hdmi->hw_lock, flags);
+-+
+- 
+- 	clk_disable_unprepare(vc4_hdmi->audio_clock);
+- 	/* we no longer require a minimum clock rate */
+-@@ -3116,7 +3116,7 @@ static int vc4_hdmi_runtime_suspend(stru
+- static int vc4_hdmi_runtime_resume(struct device *dev)
+- {
+- 	struct vc4_hdmi *vc4_hdmi = dev_get_drvdata(dev);
+--	unsigned long __maybe_unused flags;
+-+	unsigned long flags;
+- 	u32 __maybe_unused value;
+- 	unsigned long rate;
+- 	int ret;
+-@@ -3164,6 +3164,11 @@ static int vc4_hdmi_runtime_resume(struc
+- 	}
+- #endif
+- 
+-+	spin_lock_irqsave(&vc4_hdmi->hw_lock, flags);
+-+	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG,
+-+		   VC4_HDMI_RAM_PACKET_ENABLE);
+-+	spin_unlock_irqrestore(&vc4_hdmi->hw_lock, flags);
+-+
+- 	return 0;
+- 
+- err_disable_clk:
+diff --git a/target/linux/bcm27xx/patches-6.18/0869-drm-vc4-hdmi-switch-to-generic-CEC-helpers.patch b/target/linux/bcm27xx/patches-6.18/0869-drm-vc4-hdmi-switch-to-generic-CEC-helpers.patch
+index 34631255360ad7..4949031450307e 100644
+--- a/target/linux/bcm27xx/patches-6.18/0869-drm-vc4-hdmi-switch-to-generic-CEC-helpers.patch
++++ b/target/linux/bcm27xx/patches-6.18/0869-drm-vc4-hdmi-switch-to-generic-CEC-helpers.patch
+@@ -286,7 +286,7 @@ Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+  {
+  	return 0;
+  }
+-@@ -3289,7 +3260,7 @@ static int vc4_hdmi_bind(struct device *
++@@ -3286,7 +3257,7 @@ static int vc4_hdmi_bind(struct device *
+  	if (ret)
+  		goto err_put_runtime_pm;
+  
+diff --git a/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch b/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch
+index 3df98cdfc3f7ba..492c550fb5702a 100644
+--- a/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch
++++ b/target/linux/generic/backport-6.18/502-v7.3-smb-server-fix-signing-multi-iov-response.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Steve French <stfrench@microsoft.com>
+ 
+ --- a/fs/smb/server/smb2pdu.c
+ +++ b/fs/smb/server/smb2pdu.c
+-@@ -9108,6 +9108,39 @@ int smb2_check_sign_req(struct ksmbd_wor
++@@ -9113,6 +9113,39 @@ int smb2_check_sign_req(struct ksmbd_wor
+  }
+  
+  /**
+@@ -65,7 +65,7 @@ Signed-off-by: Steve French <stfrench@microsoft.com>
+   * smb2_set_sign_rsp() - handler for rsp packet sign processing
+   * @work:   smb work containing notify command buffer
+   *
+-@@ -9117,18 +9150,13 @@ void smb2_set_sign_rsp(struct ksmbd_work
++@@ -9122,18 +9155,13 @@ void smb2_set_sign_rsp(struct ksmbd_work
+  	struct smb2_hdr *hdr;
+  	char signature[SMB2_HMACSHA256_SIZE];
+  	struct kvec *iov;
+@@ -86,7 +86,7 @@ Signed-off-by: Steve French <stfrench@microsoft.com>
+  
+  	ksmbd_sign_smb2_pdu(work->conn, work->sess->sess_key, iov, n_vec,
+  			    signature);
+-@@ -9207,7 +9235,7 @@ void smb3_set_sign_rsp(struct ksmbd_work
++@@ -9212,7 +9240,7 @@ void smb3_set_sign_rsp(struct ksmbd_work
+  	struct channel *chann;
+  	char signature[SMB2_CMACAES_SIZE];
+  	struct kvec *iov;
+@@ -95,7 +95,7 @@ Signed-off-by: Steve French <stfrench@microsoft.com>
+  	char *signing_key;
+  
+  	hdr = ksmbd_resp_buf_curr(work);
+-@@ -9229,12 +9257,7 @@ void smb3_set_sign_rsp(struct ksmbd_work
++@@ -9234,12 +9262,7 @@ void smb3_set_sign_rsp(struct ksmbd_work
+  	hdr->Flags |= SMB2_FLAGS_SIGNED;
+  	memset(hdr->Signature, 0, SMB2_SIGNATURE_SIZE);
+  
+diff --git a/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch b/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
+index 29aada755175de..0081522250f591 100644
+--- a/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
++++ b/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
+@@ -248,7 +248,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  static struct sk_buff *sit_ip6ip6_gro_receive(struct list_head *head,
+  					      struct sk_buff *skb)
+-@@ -388,6 +389,7 @@ INDIRECT_CALLABLE_SCOPE int ipv6_gro_com
++@@ -387,6 +388,7 @@ INDIRECT_CALLABLE_SCOPE int ipv6_gro_com
+  out:
+  	return err;
+  }
+diff --git a/target/linux/generic/backport-6.18/950-v7.3-cgroup-fix-spurious-SIGKILL-of-CLONE_INTO_CGROUP-children.patch b/target/linux/generic/backport-6.18/950-v7.3-cgroup-fix-spurious-SIGKILL-of-CLONE_INTO_CGROUP-children.patch
+deleted file mode 100644
+index 30bceaf223c4e3..00000000000000
+--- a/target/linux/generic/backport-6.18/950-v7.3-cgroup-fix-spurious-SIGKILL-of-CLONE_INTO_CGROUP-children.patch
++++ /dev/null
+@@ -1,83 +0,0 @@
+-From 8e359920216689b3b79e0fe8961a77fe312a511f Mon Sep 17 00:00:00 2001
+-From: Etienne Perot <eperot@google.com>
+-Date: Fri, 28 Aug 2026 21:52:51 +0000
+-Subject: [PATCH] cgroup: fix spurious SIGKILL of CLONE_INTO_CGROUP children
+-
+-Since commit b69bb476dee9 ("cgroup: fix race between fork and
+-cgroup.kill"), the fork path snapshots the kill_seq of the child's
+-future cgroup into kargs->kill_seq, and cgroup_post_fork() SIGKILLs
+-the child if that cgroup's kill_seq has changed in the meantime, to
+-catch forks racing with a cgroup.kill sweep.
+-
+-For CLONE_INTO_CGROUP, however, the snapshot in cgroup_css_set_fork()
+-is taken before the target cgroup has been resolved: kargs->cgrp is
+-always NULL at this point (it is only set at the end of the function).
+-So the "if (kargs->cgrp)" branch is dead code and the snapshot always
+-records the kill_seq of the parent's cgroup. cgroup_post_fork() then
+-compares it with the kill_seq of the target cgroup, so the child gets
+-SIGKILLed whenever the two cgroups have been killed a different number
+-of times.
+-
+-As a result, once cgroup.kill has been written to a cgroup, every
+-child subsequently cloned into it with clone3(CLONE_INTO_CGROUP) is
+-killed on the spot, for as long as the cgroup exists: kill_seq is not
+-exposed to userspace and never resets.
+-
+-Re-snapshot kill_seq from the target cgroup once it has been resolved,
+-and drop the dead branch at the early snapshot site.
+-
+-This does not reopen the race fixed by b69bb476dee9. For
+-CLONE_INTO_CGROUP, everything from the snapshot to the check in
+-cgroup_post_fork() runs with cgroup_mutex held, and kill_seq is
+-only ever incremented under cgroup_mutex.
+-
+-tj: Updated the comment above kill_seq to reflect the new serialization
+-rules as suggested by Shakeel Butt.
+-
+-Fixes: b69bb476dee9 ("cgroup: fix race between fork and cgroup.kill")
+-Cc: stable@vger.kernel.org
+-Cc: Shakeel Butt <shakeel.butt@linux.dev>
+-Assisted-by: LLM
+-Signed-off-by: Etienne Perot <eperot@google.com>
+-Signed-off-by: Tejun Heo <tj@kernel.org>
+----
+- include/linux/cgroup-defs.h | 5 ++++-
+- kernel/cgroup/cgroup.c      | 6 ++----
+- 2 files changed, 6 insertions(+), 5 deletions(-)
+-
+---- a/include/linux/cgroup-defs.h
+-+++ b/include/linux/cgroup-defs.h
+-@@ -518,7 +518,10 @@ struct cgroup {
+- 
+- 	int nr_threaded_children;	/* # of live threaded child cgroups */
+- 
+--	/* sequence number for cgroup.kill, serialized by css_set_lock. */
+-+	/*
+-+	 * Sequence number for cgroup.kill. Incremented with both cgroup_mutex
+-+	 * and css_set_lock held. Readers hold either one.
+-+	 */
+- 	unsigned int kill_seq;
+- 
+- 	struct kernfs_node *kn;		/* cgroup kernfs entry */
+---- a/kernel/cgroup/cgroup.c
+-+++ b/kernel/cgroup/cgroup.c
+-@@ -6734,10 +6734,7 @@ static int cgroup_css_set_fork(struct ke
+- 	spin_lock_irq(&css_set_lock);
+- 	cset = task_css_set(current);
+- 	get_css_set(cset);
+--	if (kargs->cgrp)
+--		kargs->kill_seq = kargs->cgrp->kill_seq;
+--	else
+--		kargs->kill_seq = cset->dfl_cgrp->kill_seq;
+-+	kargs->kill_seq = cset->dfl_cgrp->kill_seq;
+- 	spin_unlock_irq(&css_set_lock);
+- 
+- 	if (!(kargs->flags & CLONE_INTO_CGROUP)) {
+-@@ -6801,6 +6798,7 @@ static int cgroup_css_set_fork(struct ke
+- 
+- 	put_css_set(cset);
+- 	kargs->cgrp = dst_cgrp;
+-+	kargs->kill_seq = dst_cgrp->kill_seq;
+- 	return ret;
+- 
+- err:
+diff --git a/target/linux/generic/hack-6.18/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch b/target/linux/generic/hack-6.18/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
+index caf7ca6cfcc3cf..d2c51e23ce4a6e 100644
+--- a/target/linux/generic/hack-6.18/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
++++ b/target/linux/generic/hack-6.18/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
+@@ -16,7 +16,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/net/core/page_pool.c
+ +++ b/net/core/page_pool.c
+-@@ -1210,8 +1210,9 @@ static void page_pool_release_retry(stru
++@@ -1211,8 +1211,9 @@ static void page_pool_release_retry(stru
+  {
+  	struct delayed_work *dwq = to_delayed_work(wq);
+  	struct page_pool *pool = container_of(dwq, typeof(*pool), release_dw);
+@@ -27,7 +27,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+  	inflight = page_pool_release(pool);
+  	/* In rare cases, a driver bug may cause inflight to go negative.
+-@@ -1223,6 +1224,21 @@ static void page_pool_release_retry(stru
++@@ -1224,6 +1225,21 @@ static void page_pool_release_retry(stru
+  	if (inflight <= 0)
+  		return;
+  
+diff --git a/target/linux/generic/hack-6.18/902-debloat_proc.patch b/target/linux/generic/hack-6.18/902-debloat_proc.patch
+index 7e77916925d495..d94d24de1d3c43 100644
+--- a/target/linux/generic/hack-6.18/902-debloat_proc.patch
++++ b/target/linux/generic/hack-6.18/902-debloat_proc.patch
+@@ -331,7 +331,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -4361,6 +4361,8 @@ static __net_initdata struct pernet_oper
++@@ -4364,6 +4364,8 @@ static __net_initdata struct pernet_oper
+  
+  static int __init proto_init(void)
+  {
+diff --git a/target/linux/generic/hack-6.18/950-silence-unused-variable-warnings.patch b/target/linux/generic/hack-6.18/950-silence-unused-variable-warnings.patch
+index 77dba5857c29bd..bfb691620eaba7 100644
+--- a/target/linux/generic/hack-6.18/950-silence-unused-variable-warnings.patch
++++ b/target/linux/generic/hack-6.18/950-silence-unused-variable-warnings.patch
+@@ -13,7 +13,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+ 
+ --- a/include/net/ipv6.h
+ +++ b/include/net/ipv6.h
+-@@ -248,6 +248,8 @@ extern int sysctl_mld_qrv;
++@@ -246,6 +246,8 @@ extern int sysctl_mld_qrv;
+  	struct inet6_dev *_idev = (idev);				\
+  	unsigned long _field = (field);					\
+  	unsigned long _val = (val);					\
+@@ -22,7 +22,7 @@ Signed-off-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
+  	if (likely(_idev != NULL))					\
+  		mod##SNMP_ADD_STATS((_idev)->stats.statname, _field,  _val); \
+  	mod##SNMP_ADD_STATS((net)->mib.statname##_statistics, _field, _val);\
+-@@ -257,6 +259,7 @@ extern int sysctl_mld_qrv;
++@@ -255,6 +257,7 @@ extern int sysctl_mld_qrv;
+  ({									\
+  	struct inet6_dev *_idev = (idev);				\
+  	unsigned long _val = (val);					\
+diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
+index 2307a67f177b06..0afbaf49c909f1 100644
+--- a/target/linux/generic/kernel-6.18
++++ b/target/linux/generic/kernel-6.18
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.18 = .58
+-LINUX_KERNEL_HASH-6.18.58 = 069b19f9032c4dac8149ae4b6520c35debca0f42a9f6d52ee55ba6ca9b818013
++LINUX_VERSION-6.18 = .59
++LINUX_KERNEL_HASH-6.18.59 = 53a55ac9863a5547e292b8e381d4e4c2240dd1127d5428a7c44dbc550be23963
+diff --git a/target/linux/generic/pending-6.18/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch b/target/linux/generic/pending-6.18/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+index 1773a5d4958de1..b2afe42e1def15 100644
+--- a/target/linux/generic/pending-6.18/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
++++ b/target/linux/generic/pending-6.18/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+@@ -96,7 +96,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  }
+ --- a/net/core/sock.c
+ +++ b/net/core/sock.c
+-@@ -2620,7 +2620,7 @@ void sk_setup_caps(struct sock *sk, stru
++@@ -2623,7 +2623,7 @@ void sk_setup_caps(struct sock *sk, stru
+  		icsk->icsk_ack.dst_quick_ack = dst_metric(dst, RTAX_QUICKACK);
+  	}
+  	if (sk->sk_route_caps & NETIF_F_GSO)
+diff --git a/target/linux/qualcommax/patches-6.18/0092-v7.3-pinctrl-qcom-ipq5018-add-missing-pwm3-function-on-gpio13.patch b/target/linux/qualcommax/patches-6.18/0092-v7.3-pinctrl-qcom-ipq5018-add-missing-pwm3-function-on-gpio13.patch
+deleted file mode 100644
+index ddcf152f9ac752..00000000000000
+--- a/target/linux/qualcommax/patches-6.18/0092-v7.3-pinctrl-qcom-ipq5018-add-missing-pwm3-function-on-gpio13.patch
++++ /dev/null
+@@ -1,48 +0,0 @@
+-From c6c159fcdb4e9a678eda0831f971e4a3a488ec47 Mon Sep 17 00:00:00 2001
+-From: Gilberto Conde <gilbertorconde@gmail.com>
+-Date: Mon, 21 Sep 2026 10:34:19 +0100
+-Subject: [PATCH] pinctrl: qcom: ipq5018: add missing pwm3 function on gpio13
+-
+-GPIO13 supports the PWM3 function at mux select value 4, but the
+-pingroup table leaves that slot empty and gpio13 is not listed in
+-pwm3_groups. Selecting pwm3 on gpio13 is therefore rejected by the
+-pinmux core:
+-
+-  ipq5018-tlmm: invalid group "gpio13" for function "pwm3"
+-
+-The GL.iNet GL-X2000 drives its fan from PWM3 on this pin, and the
+-vendor firmware muxes it with select value 4:
+-
+-  gpio13 : out low  func4 8mA no pull
+-
+-Add pwm3 to the fourth function slot of gpio13 and list gpio13 in
+-pwm3_groups. With this the pin muxes as expected:
+-
+-  pin 13 (GPIO_13): device 1941010.pwm function pwm3 group gpio13
+-
+-Fixes: 725d1c891658 ("pinctrl: qcom: Add IPQ5018 pinctrl driver")
+-Signed-off-by: Gilberto Conde <gilbertorconde@gmail.com>
+-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+-Link: https://patch.msgid.link/20260921093419.2870168-1-gilbertorconde@gmail.com
+-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+----
+---- a/drivers/pinctrl/qcom/pinctrl-ipq5018.c
+-+++ b/drivers/pinctrl/qcom/pinctrl-ipq5018.c
+-@@ -565,7 +565,7 @@ static const char * const qdss_cti_trig_
+- };
+- 
+- static const char * const pwm3_groups[] = {
+--	"gpio45",
+-+	"gpio45", "gpio13",
+- };
+- 
+- static const char * const qdss_cti_trig_in_b1_groups[] = {
+-@@ -691,7 +691,7 @@ static const struct msm_pingroup ipq5018
+- 	PINGROUP(10, blsp0_spi, blsp1_uart0, led0, gcc_plltest, qdss_tracedata_a, _, _, _, _),
+- 	PINGROUP(11, blsp0_spi, blsp1_uart0, _, gcc_tlmm, qdss_tracedata_a, _, _, _, _),
+- 	PINGROUP(12, blsp0_spi, blsp0_i2c, blsp1_uart0, _, gcc_plltest, qdss_tracedata_a, _, _, _),
+--	PINGROUP(13, blsp0_spi, blsp0_i2c, blsp1_uart0, _, qdss_tracedata_a, _, _, _, _),
+-+	PINGROUP(13, blsp0_spi, blsp0_i2c, blsp1_uart0, pwm3, qdss_tracedata_a, _, _, _, _),
+- 	PINGROUP(14, pcie0_clk, _, _, cri_trng0, qdss_tracedata_a, _, _, _, _),
+- 	PINGROUP(15, _, _, cri_trng1, qdss_tracedata_a, _, _, _, _, _),
+- 	PINGROUP(16, pcie0_wake, _, _, cri_trng, qdss_tracedata_a, _, _, _, _),
+
+From d492cc97c6f75d08608b1b186556934bcc9139a8 Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Tue, 27 Oct 2026 08:17:54 +0000
+Subject: [PATCH 5/6] generic: filter CONFIG_CC_HAVE_ symbols
+
+These are compiler capability symbols like the other CC_ entries.
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ target/linux/generic/config-filter | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/target/linux/generic/config-filter b/target/linux/generic/config-filter
+index 9b7b5a80bd6f10..dd087121386241 100644
+--- a/target/linux/generic/config-filter
++++ b/target/linux/generic/config-filter
+@@ -2,7 +2,7 @@
+ # CONFIG_ARM64_AS_.* is not set
+ # CONFIG_ARM64_CONT_.*_SHIFT is not set
+ # CONFIG_AS_.* is not set
+-# CONFIG_CC_(CAN|HAS|IS|OPT|VERSION)_.* is not set
++# CONFIG_CC_(CAN|HAS|HAVE|IS|OPT|VERSION)_.* is not set
+ # CONFIG_CC_IMPLICIT_FALLTHROUGH is not set
+ # CONFIG_CC_NO_ARRAY_BOUNDS is not set
+ CONFIG_CLANG_VERSION=.*
+
+From ab4587fe75ac9bfba1b9437a5520f3330f577abb Mon Sep 17 00:00:00 2001
+From: John Audia <therealgraysky@proton.me>
+Date: Fri, 30 Oct 2026 15:00:25 -0400
+Subject: [PATCH 6/6] kernel: bump 6.18 to 6.18.60
+
+Changelog: https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.60
+
+All patches automatically rebased via update_kernel.sh
+
+Build system: x86/64
+Build-tested: x86/64-glibc
+Run-tested: x86/64-glibc
+
+Signed-off-by: John Audia <therealgraysky@proton.me>
+---
+ .../ath79/patches-6.18/900-unaligned_access_hacks.patch   | 4 ++--
+ ....4-PCI-Expose-devm_pci_alloc_host_bridge_release.patch | 2 +-
+ .../650-v7.2-net-pppoe-implement-GRO-GSO-support.patch    | 8 ++++----
+ target/linux/generic/kernel-6.18                          | 4 ++--
+ ...-cfg80211-add-the-flow-key-and-flow-description-.patch | 2 +-
+ 5 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+index 71e409afacc795..706c519c9ed67c 100644
+--- a/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.18/900-unaligned_access_hacks.patch
+@@ -337,7 +337,7 @@ SVN-Revision: 35130
+  #endif /* _LINUX_TYPES_H */
+ --- a/net/ipv4/af_inet.c
+ +++ b/net/ipv4/af_inet.c
+-@@ -1487,7 +1487,7 @@ struct sk_buff *inet_gro_receive(struct
++@@ -1490,7 +1490,7 @@ struct sk_buff *inet_gro_receive(struct
+  		goto out;
+  
+  	NAPI_GRO_CB(skb)->proto = proto;
+@@ -588,7 +588,7 @@ SVN-Revision: 35130
+  			goto next_ht;
+ --- a/net/ipv6/ip6_offload.c
+ +++ b/net/ipv6/ip6_offload.c
+-@@ -271,7 +271,7 @@ INDIRECT_CALLABLE_SCOPE struct sk_buff *
++@@ -275,7 +275,7 @@ INDIRECT_CALLABLE_SCOPE struct sk_buff *
   			continue;
-diff --git a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
-index f6b570351827cd..e8ee4a28642e04 100644
---- a/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
-+++ b/target/linux/rockchip/patches-6.18/189-02-pmdomain-rockchip-add-rv1126-npu-domain.patch
-@@ -14,7 +14,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  
+  		iph2 = (struct ipv6hdr *)(p->data + off);
+diff --git a/target/linux/bcm53xx/patches-6.18/348-v7.4-PCI-Expose-devm_pci_alloc_host_bridge_release.patch b/target/linux/bcm53xx/patches-6.18/348-v7.4-PCI-Expose-devm_pci_alloc_host_bridge_release.patch
+index 69142283335a3b..4b6a485d1fb277 100644
+--- a/target/linux/bcm53xx/patches-6.18/348-v7.4-PCI-Expose-devm_pci_alloc_host_bridge_release.patch
++++ b/target/linux/bcm53xx/patches-6.18/348-v7.4-PCI-Expose-devm_pci_alloc_host_bridge_release.patch
+@@ -24,7 +24,7 @@ Link: https://patch.msgid.link/20261013220421.1588051-2-bhelgaas@google.com
  
- --- a/drivers/pmdomain/rockchip/pm-domains.c
- +++ b/drivers/pmdomain/rockchip/pm-domains.c
--@@ -1104,6 +1104,8 @@ static const struct rockchip_domain_info
-+@@ -1118,6 +1118,8 @@ static const struct rockchip_domain_info
+ --- a/drivers/pci/pci.h
+ +++ b/drivers/pci/pci.h
+-@@ -436,6 +436,7 @@ enum pci_bar_type {
++@@ -455,6 +455,7 @@ enum pci_bar_type {
+  	pci_bar_mem64,		/* A 64-bit memory BAR */
   };
   
-  static const struct rockchip_domain_info rv1126_pm_domains[] = {
+diff --git a/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch b/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
+index 0081522250f591..9b2b9b85a5044f 100644
+--- a/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
++++ b/target/linux/generic/backport-6.18/650-v7.2-net-pppoe-implement-GRO-GSO-support.patch
+@@ -222,7 +222,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	unregister_pernet_device(&pppoe_net_ops);
+ --- a/net/ipv4/af_inet.c
+ +++ b/net/ipv4/af_inet.c
+-@@ -1526,6 +1526,7 @@ out:
++@@ -1529,6 +1529,7 @@ out:
+  
+  	return pp;
+  }
+@@ -230,7 +230,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  static struct sk_buff *ipip_gro_receive(struct list_head *head,
+  					struct sk_buff *skb)
+-@@ -1611,6 +1612,7 @@ int inet_gro_complete(struct sk_buff *sk
++@@ -1614,6 +1615,7 @@ int inet_gro_complete(struct sk_buff *sk
+  out:
+  	return err;
+  }
+@@ -240,7 +240,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  {
+ --- a/net/ipv6/ip6_offload.c
+ +++ b/net/ipv6/ip6_offload.c
+-@@ -306,6 +306,7 @@ out:
++@@ -310,6 +310,7 @@ out:
+  
+  	return pp;
+  }
+@@ -248,7 +248,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  static struct sk_buff *sit_ip6ip6_gro_receive(struct list_head *head,
+  					      struct sk_buff *skb)
+-@@ -387,6 +388,7 @@ INDIRECT_CALLABLE_SCOPE int ipv6_gro_com
++@@ -391,6 +392,7 @@ INDIRECT_CALLABLE_SCOPE int ipv6_gro_com
+  out:
+  	return err;
+  }
+diff --git a/target/linux/generic/kernel-6.18 b/target/linux/generic/kernel-6.18
+index 0afbaf49c909f1..dfd22b547fce87 100644
+--- a/target/linux/generic/kernel-6.18
++++ b/target/linux/generic/kernel-6.18
+@@ -1,2 +1,2 @@
+-LINUX_VERSION-6.18 = .59
+-LINUX_KERNEL_HASH-6.18.59 = 53a55ac9863a5547e292b8e381d4e4c2240dd1127d5428a7c44dbc550be23963
++LINUX_VERSION-6.18 = .60
++LINUX_KERNEL_HASH-6.18.60 = 3c2f44ef6acc021a7ad444d9a2e6ec1ef488ff09368793d0004a6080f69d621e
+diff --git a/target/linux/generic/pending-6.18/797-00-wifi-cfg80211-add-the-flow-key-and-flow-description-.patch b/target/linux/generic/pending-6.18/797-00-wifi-cfg80211-add-the-flow-key-and-flow-description-.patch
+index 0277c0cd30f90a..e5e8dd41408302 100644
+--- a/target/linux/generic/pending-6.18/797-00-wifi-cfg80211-add-the-flow-key-and-flow-description-.patch
++++ b/target/linux/generic/pending-6.18/797-00-wifi-cfg80211-add-the-flow-key-and-flow-description-.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ 
+ --- a/include/net/cfg80211.h
+ +++ b/include/net/cfg80211.h
+-@@ -4012,6 +4012,141 @@ struct cfg80211_nan_band_config {
++@@ -4013,6 +4013,141 @@ struct cfg80211_nan_band_config {
+  };
+  
+  /**

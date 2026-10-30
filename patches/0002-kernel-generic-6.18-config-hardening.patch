@@ -12,10 +12,10 @@ Signed-off-by: Tavi <tavi@divested.dev>
  1 file changed, 166 insertions(+)
 
 diff --git a/target/linux/generic/config-6.18 b/target/linux/generic/config-6.18
-index c6c6cd106a..13a1b5e822 100644
+index 8e0b742885..94600cb621 100644
 --- a/target/linux/generic/config-6.18
 +++ b/target/linux/generic/config-6.18
-@@ -8265,3 +8265,169 @@ CONFIG_ZRAM_DEF_COMP="unset-value"
+@@ -8442,3 +8442,169 @@ CONFIG_ZRAM_DEF_COMP="unset-value"
  # CONFIG_ZSMALLOC is not set
  CONFIG_ZSMALLOC_CHAIN_SIZE=8
  # CONFIG_ZSWAP is not set
