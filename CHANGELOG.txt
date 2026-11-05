@@ -1,3 +1,9 @@
+20261105-00
+- update to 955b582a660c651197fbda3eb2142ffdf0e0c5df
+  https://github.com/openwrt/openwrt/compare/116414a355...955b582a66
+- [upstream] many security fixes
+  including unauthenticated rce in uhttpd (GHSA-788h-w5m4-j5xv)
+
 20261030-00
 - update to 116414a355720649d400975e48a3adb9b063040e
   https://github.com/openwrt/openwrt/compare/b5bc4becb4...116414a355
