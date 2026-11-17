@@ -1,3 +1,9 @@
+20261117-00
+- update to 27663a017ad8ac6883e11a81015db0c0fc341a9e
+  https://github.com/openwrt/openwrt/compare/3d5a743f1f...27663a017a
+- [cherrypick] #26530: update to kernel 6.18.64 (security and bug fixes)
+- [upstream] many security fixes
+
 20261110-00
 - update to 3d5a743f1f0cb77aed8ed63b2f9aa75700b4322c
   https://github.com/openwrt/openwrt/compare/955b582a66...3d5a743f1f

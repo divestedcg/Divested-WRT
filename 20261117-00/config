@@ -96,6 +96,7 @@ CONFIG_TARGET_MULTI_PROFILE=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-8x is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4-lite is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_bazis_ax3000wm is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_benton_sn-r1 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_buffalo_wsr-3000ax4p is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_buffalo_wsr-6000ax8 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_cetron_ct3003 is not set
@@ -321,6 +322,7 @@ CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_bananapi_bpi-r4=""
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-4e is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bananapi_bpi-r4-pro-8x is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_bazis_ax3000wm is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_benton_sn-r1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_buffalo_wsr-3000ax4p is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_buffalo_wsr-6000ax8 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cetron_ct3003 is not set
@@ -2691,6 +2693,24 @@ CONFIG_PACKAGE_wireless-regdb=m
 # CONFIG_PACKAGE_dejavu-fonts-ttf-DejaVuSerifCondensed-BoldItalic is not set
 # CONFIG_PACKAGE_dejavu-fonts-ttf-DejaVuSerifCondensed-Italic is not set
 # end of DejaVu
+
+#
+# Noto
+#
+# CONFIG_PACKAGE_noto-fonts-africa-americas is not set
+# CONFIG_PACKAGE_noto-fonts-cjk-sans is not set
+# CONFIG_PACKAGE_noto-fonts-cjk-sans-mono is not set
+# CONFIG_PACKAGE_noto-fonts-cjk-serif is not set
+# CONFIG_PACKAGE_noto-fonts-color-emoji is not set
+# CONFIG_PACKAGE_noto-fonts-core is not set
+# CONFIG_PACKAGE_noto-fonts-extra is not set
+# CONFIG_PACKAGE_noto-fonts-historic is not set
+# CONFIG_PACKAGE_noto-fonts-license is not set
+# CONFIG_PACKAGE_noto-fonts-south-asia is not set
+# CONFIG_PACKAGE_noto-fonts-southeast-asia is not set
+# CONFIG_PACKAGE_noto-fonts-symbols is not set
+# CONFIG_PACKAGE_noto-fonts-west-asia is not set
+# end of Noto
 # end of Fonts
 
 #
@@ -2990,6 +3010,7 @@ CONFIG_PACKAGE_kmod-i2c-mux-pca954x=m
 # CONFIG_PACKAGE_kmod-hid is not set
 # CONFIG_PACKAGE_kmod-hid-alps is not set
 # CONFIG_PACKAGE_kmod-hid-generic is not set
+# CONFIG_PACKAGE_kmod-hid-multitouch is not set
 # CONFIG_PACKAGE_kmod-input-adc-keys is not set
 # CONFIG_PACKAGE_kmod-input-core is not set
 # CONFIG_PACKAGE_kmod-input-gpio-encoder is not set
@@ -4336,7 +4357,6 @@ CONFIG_PACKAGE_ucode-mod-uloop=y
 # CONFIG_PACKAGE_libodbccr is not set
 # CONFIG_PACKAGE_libodbcinst is not set
 # CONFIG_PACKAGE_libpq is not set
-# CONFIG_PACKAGE_libpqxx is not set
 # CONFIG_PACKAGE_libsqlite3 is not set
 # CONFIG_PACKAGE_pgsqlodbc is not set
 # CONFIG_PACKAGE_psqlodbca is not set
@@ -4816,10 +4836,6 @@ CONFIG_PACKAGE_libxtables=y
 # CONFIG_PACKAGE_libulfius-gnutls is not set
 # CONFIG_PACKAGE_libulfius-nossl is not set
 # CONFIG_PACKAGE_libunbound is not set
-# CONFIG_PACKAGE_libuwsc-mbedtls is not set
-# CONFIG_PACKAGE_libuwsc-nossl is not set
-# CONFIG_PACKAGE_libuwsc-openssl is not set
-# CONFIG_PACKAGE_libuwsc-wolfssl is not set
 # end of Networking
 
 #
@@ -5301,13 +5317,11 @@ CONFIG_PACKAGE_libnl-core=y
 # CONFIG_PACKAGE_libnl-nf is not set
 CONFIG_PACKAGE_libnl-route=y
 CONFIG_PACKAGE_libnl-tiny=y
-# CONFIG_PACKAGE_libnopoll is not set
 # CONFIG_PACKAGE_libnpth is not set
 # CONFIG_PACKAGE_libnpupnp is not set
 # CONFIG_PACKAGE_liboath is not set
 # CONFIG_PACKAGE_libogg is not set
 # CONFIG_PACKAGE_libopcodes is not set
-# CONFIG_PACKAGE_libopen62541 is not set
 # CONFIG_PACKAGE_libopendkim is not set
 # CONFIG_PACKAGE_libopenelp is not set
 # CONFIG_PACKAGE_libopenobex is not set
@@ -5325,7 +5339,6 @@ CONFIG_PACKAGE_libnl-tiny=y
 # CONFIG_PACKAGE_libpagekite is not set
 # CONFIG_PACKAGE_libpam is not set
 # CONFIG_PACKAGE_libparted is not set
-# CONFIG_PACKAGE_libpbc is not set
 CONFIG_PACKAGE_libpcap=y
 
 #
@@ -5358,7 +5371,6 @@ CONFIG_PACKAGE_libpcap=y
 CONFIG_PACKAGE_libreadline=y
 # CONFIG_PACKAGE_libremarks is not set
 # CONFIG_PACKAGE_librouteros is not set
-# CONFIG_PACKAGE_libroxml is not set
 # CONFIG_PACKAGE_librrd1 is not set
 # CONFIG_PACKAGE_librtlsdr is not set
 # CONFIG_PACKAGE_libruby is not set
@@ -5380,7 +5392,6 @@ CONFIG_PACKAGE_libreadline=y
 CONFIG_PACKAGE_libsmartcols=y
 # CONFIG_PACKAGE_libsml is not set
 # CONFIG_PACKAGE_libsndfile is not set
-# CONFIG_PACKAGE_libsocketcan is not set
 # CONFIG_PACKAGE_libsocks is not set
 # CONFIG_PACKAGE_libsodium is not set
 # CONFIG_PACKAGE_libsoup3 is not set
@@ -5393,7 +5404,6 @@ CONFIG_PACKAGE_libss=m
 # CONFIG_PACKAGE_libssh is not set
 # CONFIG_PACKAGE_libssh2 is not set
 # CONFIG_PACKAGE_libstoken is not set
-# CONFIG_PACKAGE_libstrophe is not set
 # CONFIG_PACKAGE_libsyn123 is not set
 # CONFIG_PACKAGE_libsysrepo is not set
 # CONFIG_PACKAGE_libtalloc is not set
@@ -6554,6 +6564,7 @@ CONFIG_PACKAGE_ip-tiny=y
 CONFIG_PACKAGE_tc-tiny=y
 # CONFIG_PACKAGE_tcfilter is not set
 # CONFIG_PACKAGE_tcpproxy is not set
+# CONFIG_PACKAGE_udp-broadcast-relay-redux is not set
 # CONFIG_PACKAGE_vis is not set
 # CONFIG_PACKAGE_yggdrasil is not set
 # CONFIG_PACKAGE_yggdrasil-jumper is not set
@@ -8190,6 +8201,76 @@ CONFIG_PACKAGE_ucode-mod-html=y
 # CONFIG_PACKAGE_qt5svg is not set
 # CONFIG_PACKAGE_qt5translations is not set
 # CONFIG_PACKAGE_qt5virtualkeyboard is not set
+# CONFIG_PACKAGE_qt6base-concurrent is not set
+# CONFIG_PACKAGE_qt6base-core is not set
+# CONFIG_PACKAGE_qt6base-gui is not set
+# CONFIG_BUILD_qt6base-gui_OPENGL_OPENGLES2 is not set
+CONFIG_BUILD_qt6base-gui_OPENGL_NONE=y
+# CONFIG_PACKAGE_qt6base-network is not set
+# CONFIG_PACKAGE_qt6base-plugin-imageformats-gif is not set
+# CONFIG_PACKAGE_qt6base-plugin-imageformats-jpeg is not set
+# CONFIG_PACKAGE_qt6base-plugin-input-evdevkeyboard is not set
+# CONFIG_PACKAGE_qt6base-plugin-input-evdevmouse is not set
+# CONFIG_PACKAGE_qt6base-plugin-input-evdevtablet is not set
+# CONFIG_PACKAGE_qt6base-plugin-input-evdevtouch is not set
+# CONFIG_PACKAGE_qt6base-plugin-platforms-linuxfb is not set
+# CONFIG_PACKAGE_qt6base-plugin-platforms-minimal is not set
+# CONFIG_PACKAGE_qt6base-plugin-platforms-offscreen is not set
+# CONFIG_PACKAGE_qt6base-plugin-platforms-vnc is not set
+# CONFIG_PACKAGE_qt6base-test is not set
+# CONFIG_PACKAGE_qt6base-widgets is not set
+# CONFIG_PACKAGE_qt6base-xml is not set
+# CONFIG_PACKAGE_qt6labs-animation is not set
+# CONFIG_PACKAGE_qt6labs-folderlistmodel is not set
+# CONFIG_PACKAGE_qt6labs-platform is not set
+# CONFIG_PACKAGE_qt6labs-qmlmodels is not set
+# CONFIG_PACKAGE_qt6labs-settings is not set
+# CONFIG_PACKAGE_qt6labs-sharedimage is not set
+# CONFIG_PACKAGE_qt6labs-wavefrontmesh is not set
+# CONFIG_PACKAGE_qt6quick is not set
+# CONFIG_PACKAGE_qt6quick-controls2 is not set
+# CONFIG_PACKAGE_qt6quick-dialogs2 is not set
+# CONFIG_PACKAGE_qt6quick-effects is not set
+# CONFIG_PACKAGE_qt6quick-layouts is not set
+# CONFIG_PACKAGE_qt6quick-particles is not set
+# CONFIG_PACKAGE_qt6quick-qml is not set
+# CONFIG_PACKAGE_qt6quick-qml-core is not set
+# CONFIG_PACKAGE_qt6quick-qml-debug is not set
+# CONFIG_PACKAGE_qt6quick-qml-meta is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtcore is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-animation is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-folderlistmodel is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-platform is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-qmlmodels is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-settings is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-sharedimage is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtlabs-wavefrontmesh is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtnetwork is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtqml is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtqml-models is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtqml-workerscript is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtqml-xmllistmodel is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-controls is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-dialogs is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-effects is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-layouts is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-particles is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-shapes is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-templates is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qtquick-window is not set
+# CONFIG_PACKAGE_qt6quick-qml-mod-qttest is not set
+# CONFIG_PACKAGE_qt6quick-qml-models is not set
+# CONFIG_PACKAGE_qt6quick-qml-network is not set
+# CONFIG_PACKAGE_qt6quick-qml-workerscript is not set
+# CONFIG_PACKAGE_qt6quick-qml-xmllistmodel is not set
+# CONFIG_PACKAGE_qt6quick-shapes is not set
+# CONFIG_PACKAGE_qt6quick-templates2 is not set
+# CONFIG_PACKAGE_qt6quick-test is not set
+# CONFIG_PACKAGE_qt6quick-widgets is not set
+# CONFIG_PACKAGE_qt6svg is not set
+# CONFIG_PACKAGE_qt6svg-widgets is not set
+# CONFIG_PACKAGE_qt6translations is not set
 # CONFIG_PACKAGE_wayland-protocols is not set
 # CONFIG_PACKAGE_wayland-scanner is not set
 # end of Frameworks and Toolkits
