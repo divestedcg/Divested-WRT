@@ -1,0 +1,65 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+a1128efa945e3fe76a0e559174d0db352648ee62b2a4bb03dbfcbed1b9306ddf *config.buildinfo
+68c13a2438f27466f75a85d6e0c651f592ab4ec6b9fe02ea65537eb6250930c9 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-asus_zenwifi-bt8-factory.bin
+10cff3119e88db2059a501a0615eb37b65a21d6dad3cb43d528a75abd712b3ee *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-asus_zenwifi-bt8-initramfs-kernel.bin
+0239c736c65988e54c75b380057e3a9910086e4dd66ceaaa919630b1b4c28603 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-asus_zenwifi-bt8-squashfs-sysupgrade.bin
+bca6003bef30536e3a73f83fc0ac8d73ec44de62f0779053e8e45353b546639e *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-emmc-bl31-uboot.fip
+6decc5e0ac9ef38bc78f4de8d4df825473a248898c24add4252cd74006f2fd20 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-emmc-gpt.bin
+20178cbf751ad00f3788c1f9d1b8a73230dc69fbc3a6cec553b2c3889f6dd543 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-emmc-preloader-8g.bin
+1b476bd1d95fadca22163b0927048225fe948ca049182f1d06fe6d30ba1eef99 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-emmc-preloader.bin
+5fa72bd29ddf634c75c3f167b7920d7655249dc0a6677f3ae8697120149c1649 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-initramfs-recovery.itb
+529541ffc1b755997ac71d12b81c34e6f4dddb25f36faa1456d288c6536e8ac6 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-sdcard.img.gz
+eda75bcb76bdcbb2de50b75d34c59757660c9effe6045e43b94d7cda7a679177 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-sdcard_8g.img.gz
+a9db91e1d943e6631321cec991cb0333bd483e373e12b85bbe91099ba178e8f5 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-snand-bl31-uboot.fip
+19963dc63ef7612ccd382b4e09ae2229e699e6d266c6bbb4a8ed9457b92ee1cb *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-snand-preloader-8g.bin
+8b7571156e97b9159eca4137aeea0e27f82f23840c5db16c43e86c07b499646e *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-snand-preloader.bin
+17a7a6ae75e7e1041a26bf4d3e7e76580d81da78e0d266956902ba9ddd994437 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-bananapi_bpi-r4-squashfs-sysupgrade.itb
+e3e80dbd0bfc9ba72ba54d54cf3d6e4bfd7b8d7ef9dacc01521af28ed4f9e355 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt3000-initramfs-kernel.bin
+e75c85c90c6a2cc560f4f6087d076107e0cf33cce711b9175a4f614fa7fc639e *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt3000-squashfs-sysupgrade.bin
+66fe57d59168e9cd1ca989e6dd282b0033b2f819ca186ab2ae143129e835a72b *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt3600be-initramfs-kernel.bin
+4a7f306868e23f1e4de17143ef10522003e6e93868b101bc3c1c4c0c18a456c9 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt3600be-squashfs-sysupgrade.bin
+ce133c0758098af0dcba3763c0751f0a4d95dd9e0332eacbd85f4b990632e027 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt6000-bl31-uboot.fip
+f4aa19aea5e1f16c409e7263802ca0ca7a1f611738869850089f48a7cd62e36e *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt6000-initramfs-kernel.bin
+165b4f5f544e31cd605a7f5ff873cbf2d7b85a98d4f4905531145d195b896b97 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt6000-preloader.bin
+5c4e49019a218db226f86a007782cfde0012605072532f5d0a1f285acd4e3c23 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt6000-squashfs-factory.bin
+22a202da107c6d1bb0e8943d2a036a3f9b5bc94cf68c4e889ad5a125f004910a *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-glinet_gl-mt6000-squashfs-sysupgrade.bin
+816971db53d6f087813ffded7c818e03b8318e404a769f848e5b50bb9ddc76b6 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-factory.ubi
+7e056bda276f3b51853cee649beb17269afb5e5bfc3a59e4ec04c7b0a4d7ec2a *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-initramfs.itb
+3f3f74f2c5188f1325ea95e41314fb5ea370c1865985b62c83125c60223b80a5 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-nor-bl31-uboot.fip
+c7618a2423db9ab7a53549db09861cba247ad1988b423746473e5837120b05c8 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-nor-factory.bin
+1033efc4e20cf69ac5f9efd8a289a860bafa0738e0ce202279e3b96c48d44519 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-nor-preloader.bin
+dee5f38323a4ffc979e7bd231328947f6ead49429426e23c95bf094a2c7c5275 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-snand-bl31-uboot.fip
+fabafd8af239553afc3fe6570851408d06af03e4e5b3a6f53f14cd176c76173d *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-snand-factory.bin
+cf26e0b5473791020f8373148b63c0fda9c1629c18786b798a5e479178f36d40 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-snand-preloader.bin
+1f9dc412892611350294cbcdba311ada2b4b0e691ef6b284057892e163e4621a *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-openwrt_one-squashfs-sysupgrade.itb
+6cbd3432cce073a5fc99f0bfe53d4a81ddda29a088514aa6b28797566e36d14c *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-ubnt_unifi-6-plus-initramfs-kernel.bin
+e53975f96725a6109c5e135941bdaaed8d6baadd1525c7e639a80ecc324a6044 *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic-ubnt_unifi-6-plus-squashfs-sysupgrade.bin
+b0581c6b5e6e44802e0a4187a03b628ea44e56b033d1c5c6e7bf0524311ad99d *divested-wrt-snapshot-r38550+8-ce51f2ff0f-mediatek-filogic.manifest
+929de2c322756a56d61bfc8de8b79a2c58e9fce322587d2da0c1374e83a0b8cb *feeds.buildinfo
+074bb265f1b0b91735395dc2b7589d4b5a6e51e4f44f9de30aafe4989a55dcc7 *mt7981-ram-ddr3-bl2.bin
+2370d3742ab53f2a44008cb7b36cceaa3c151374b6c9800f43cfbd42fd1f1b94 *mt7981-ram-ddr4-bl2.bin
+f3e70a766033f891c9b386f42f50c90653000fa1d923967c0b30497da7163851 *mt7986-ram-ddr3-bl2.bin
+386a336e740f6f93ecc125af36720c268d40b2ddddae6dacd29354194aae30b9 *mt7986-ram-ddr4-bl2.bin
+b7b5204defce66556805900c429328c06632cfc5f732f677dbaee4d21005de9d *mt7987-ram-comb-bl2.bin
+893d38bb82ecd2069ac7c45ba1433c7b9044c583ee8a15f4f3036ea9fed8afde *mt7988-ram-comb-bl2.bin
+00aea5b91ab7babc2147cdbe9f07bd177fa26c5d264968c93ccf6f168d81acbd *mt7988-ram-ddr4-bl2.bin
+b60ee6e55d34ae5d9b94cda68457150f3309b4a82b0e5061bfbd935ad6563893 *profiles.json
+e16a61f6444feeeba8b9cf551e4a17a4a2f12290ae31d4d88d36f498d9272b73 *version.buildinfo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEY5X8mRHtzWFYcS33ut/Kvdv1tpQFAmsGnbAACgkQut/Kvdv1
+tpQ8SQ//a7hgMO1UvA/CIqpJSfFU+O3LglwJrLYYT6Dxkum9R+9HLNcWs2y8U90Q
+9erTf+j962sMO3GyBN9CPJVRZy5hB/BU3Pwx+ApTifN26jnHD7NUL5YuZrZGelxK
+lYMByQGGyt0BPVisrvkhm0KbVNIBHheuUIlJ8w/5tCQqDVx7uZPcKVC/v0bx5j5Z
+JdpGQJxdfMOjC8nx+IOa5H/Hd6cXIR+BNF/QAxuxCXeWUkOLyWbA4iSIKu1ow2Kk
+FAQaZhug+sTtV00Y/NPXYmBVcWnWStKEYPwWcBGs8KaARoPZat7zvn/rck/dX8e7
+ETboCzyhrJOHNDQWzgJjkCv0lYqMYMOPg0PVg3HdiIVEthvzJFJ53SQQKlV+ZcTC
+Z15OBp1X9H+WXZ/XJ9nmEpwTRD+ZQ+01RCfbQctGlhSfOyq7zpiMO3nAXM6KY9n3
+0OPfTknvZHq/qixnypxYlcAi6nczkzoTSgKy7+9bY3v3tXR/+8bzbUU+YH7wLjJZ
+8WdGfUkq4VyC+CUvFebO1EVNXagh5HSfzK/GUW42pBTmX25XZZz7jUhttvYFVi5i
+Tnv+5MMjdYIBEi5MToxKOYjzUosDgvVjD/XG8P94s0D0PhyRi+A0M7ugE9/FC5iZ
+TDB9H52ye8Fn6kbIi9y6oZkBp/Z5fnAA52UClB/AMolsjKf4pBg=
+=hhTn
+-----END PGP SIGNATURE-----

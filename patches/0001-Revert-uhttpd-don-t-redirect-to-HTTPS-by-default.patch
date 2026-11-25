@@ -11,7 +11,7 @@ Signed-off-by: Tavi <tavi@divested.dev>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/package/network/services/uhttpd/files/uhttpd.config b/package/network/services/uhttpd/files/uhttpd.config
-index ce76fe6b6b..3f143f356e 100644
+index fb8397aeb5..4e46154aa9 100644
 --- a/package/network/services/uhttpd/files/uhttpd.config
 +++ b/package/network/services/uhttpd/files/uhttpd.config
 @@ -10,7 +10,7 @@ config uhttpd main
