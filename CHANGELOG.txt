@@ -1,3 +1,8 @@
+20261127-00
+- update to cdc3827a7bcd844e920772fa4f368deb894c78eb
+  https://github.com/openwrt/openwrt/compare/ce51f2ff0f...cdc3827a7b
+- [upstream] dnsmasq update (security fixes)
+
 20261125-00
 - update to ce51f2ff0f34914f9c8d0fee7ef3bf6d2d292d20
   https://github.com/openwrt/openwrt/compare/27663a017a...ce51f2ff0f
